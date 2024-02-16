@@ -1,0 +1,14 @@
+=== Weekly Team Report (Team 30: ScheduSmart) ===
+
+Week 1	(Srum master: Reece Ausmus)
+<Date>	<Hours>	<Commit ID>	<Task or Topic>						(<Comments>)
+<Date>	<Hours>	<Commit ID>	<Task or Topic>						(<Comments>)
+...
+
+
+Week 2 	(Plan) (Scrum master: Reece Ausmus)
+[Meetings]
+<Date>	<Topic>
+
+[Individual Goals]
+<Name>:	<Goal description>
