@@ -1,51 +1,37 @@
 # this class manage all types of communication between firebase and python
 
-import firebase
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import auth
-from firebase_admin import exceptions
-import requests
+import pyrebase
+from firebaseConfig import firebaseConfig
 
 
 # print project id
 def printing_id():
-    print(cred.project_id)
+    pass
 
 
-# function to create an account with following requirements:
-#   * username has formate <name>@<whatever>.<whatever>
-#       (required by firebase)
-#   * password length at least 6
-# if the requirements did not reach, 1 is return
 def create_account_by_username_and_password(username, password):
     try:
-        auth.create_user(email=username, password=password)
+        auth.create_user_with_email_and_password(username, password)
         return 0
-    except ValueError:
+    except:
+        print("invalid username or password to create account")
         return 1
-    except exceptions.FirebaseError:
-        return 2
 
 
 def login_account_with_username_and_password(username, password):
     try:
-        auth.ge
-        user_info = auth.get_user_by_email(username)
-        print(user_info)
+        auth.sign_in_with_email_and_password(username, password)
         return 0
-    except ValueError as e:
-        print(e)
+    except:
+        print("invalid username or password")
         return 1
-    except auth.UserNotFoundError:
-        return 2
-    except exceptions.FirebaseError:
-        return 3
 
 
 ##### build a connection between firebase and flask #####
 
-# the string should be the PATH you put your json document on Google Drive
-# DON"T PUT THAT DOCUMENT(json) ON PUBLIC
-cred = credentials.Certificate(r"D:\code\private\schedusmart-483d7-firebase-adminsdk-vtz3t-f4f4c9445a.json")
-firebase_admin.initialize_app(cred)
+# Make sure you download the firebaseConfig.py file in google doc
+firebase = pyrebase.initialize_app(firebaseConfig)
+
+db = firebase.database()
+auth = firebase.auth()
+storage = firebase.storage()
