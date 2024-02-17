@@ -3,3 +3,7 @@
 
 #Personal Weekly Reports
 docs/individual_reports
+
+#firebase config
+google drive:  project -> important file -> firebaseConfig.py
+To use it:  just download the file and put it in the same file with fire_base.py
