@@ -1,6 +1,7 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 1	(Srum master: Reece Ausmus)
+
 <Date>	<Hours>	<Commit ID>	<Task or Topic>						(<Comments>)
 <Date>	<Hours>	<Commit ID>	<Task or Topic>						(<Comments>)
 ...
@@ -12,3 +13,8 @@ Week 2 	(Plan) (Scrum master: Reece Ausmus)
 
 [Individual Goals]
 <Name>:	<Goal description>
+
+==========================================================================
+2/15 30min <d4e6a4ed> <setting up github and directory we need>
+2/16 4hr <1a6612f5> <make connection between firebase and ability to create and login into an account>             (the reason it take that long is because I   
+     went to the wrong track for import firebase and then struggling to download pyrebase. Anyways, reach me if you guys can't downwload pyrebase)
