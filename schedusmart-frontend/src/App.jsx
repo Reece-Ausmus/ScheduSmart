@@ -13,6 +13,10 @@ import NoPage from './pages/NoPage'
 //    npm run dev 
 // save program to update to local server
 
+// to create new page
+// create new .jsx file in pages
+// <Route path="/new_page_name" element={<NewPage/>} />
+
 export default function App() {
   return (
     <div>
