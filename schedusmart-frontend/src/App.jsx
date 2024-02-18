@@ -9,7 +9,7 @@ import NoPage from './pages/NoPage'
 // to run program 
 // Open new terminal
 // cd into ScheduSmart\schedusmart-frontend
-// run command: 
+// run command: s
 //    npm run dev 
 // save program to update to local server
 
