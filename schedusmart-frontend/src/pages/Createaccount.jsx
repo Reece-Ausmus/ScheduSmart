@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Header from '../components/Header'
+import './Createaccount.css'
 
 export default function Createaccount() {
     const [name, setName] = useState('');
@@ -8,7 +8,9 @@ export default function Createaccount() {
 
     return (
         <div>
-            <div>
+            <div className='headers'>
+            </div>
+            <div className="group-form">
                 <label htmlFor="name">Name:</label>
                 <input
                     type="text"
@@ -17,7 +19,7 @@ export default function Createaccount() {
                     onChange={(e) => setName(e.target.value)}
                 />
             </div>
-            <div>
+            <div className="group-form">
                 <label htmlFor="username">Username:</label>
                 <input
                     type="text"
@@ -26,7 +28,7 @@ export default function Createaccount() {
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </div>
-            <div>
+            <div className="group-form">
                 <label htmlFor="email">Email:</label>
                 <input
                     type="email"
