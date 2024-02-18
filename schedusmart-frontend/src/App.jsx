@@ -5,6 +5,7 @@ import Welcome from './pages/Welcome'
 import Settings from './pages/Settings'
 import Dashboard from './pages/Dashboard'
 import NoPage from './pages/NoPage'
+import Createaccount from './pages/Createaccount'
 
 // to run program 
 // Open new terminal
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/settings" element={<Settings/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="*" element={<NoPage/>} />
+          <Route path="/createaccount" element={<Createaccount/>} />
         </Routes>
       </BrowserRouter>
     </div>
