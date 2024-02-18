@@ -27,7 +27,7 @@ export default function Dashboard() {
         <Header/>
         <h2>Dashboard!</h2>
         <button onClick={() => {setGoToSettings(true)}}>Settings</button> 
-        <button onClick={() => {setGoToWelcome(true)}}>Sign Out</button>
+        <button onClick={() => {setGoToWelcome(true)}}>Welcome</button>
         </>
     );
 }
