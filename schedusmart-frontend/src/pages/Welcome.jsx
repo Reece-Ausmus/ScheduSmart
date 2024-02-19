@@ -24,6 +24,7 @@ export default function Welcome() {
         <button>Sign-in! This does nothing until sign-in is implemented</button>
         <button onClick={handleButtonClick}>Create an account!</button>
         <button onClick={() => {setGoToDash(true)}}>Dashboard | For testing purposes</button>
+        <button onClick={() => { window.location.href = '/signout'}}>Sign out</button>
         </>
     );
 }
