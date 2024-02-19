@@ -1,28 +1,19 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 1	(Srum master: Reece Ausmus)
-
-<Date>	<Hours>	<Commit ID>	<Task or Topic>						(<Comments>)
-<Date>	<Hours>	<Commit ID>	<Task or Topic>						(<Comments>)
-...
-2/15 0.5 hr <d4e6a4ed> <setting up github and directory we need>
-2/16 4 hr   <1a6612f5> <make connection between firebase and ability to create and login into an account>             (the reason it take that long is because I   
-     went to the wrong track for import firebase and then struggling to download pyrebase. Anyways, reach me if you guys can't downwload pyrebase)
-2/18 1.5 hr <57f8cca>  <make connection with the main page and create-accounts page>
-2/18 3 hr   <8306e73>  <build create-accounts UI page>
-2/18 3 hr	  <6291af6>  <finish some features of create-accounts UI page>
-2/18 4 hr   <N/A>      <Started work on sign-in functionality using MUI components> (Took a long time because of research)
+2/15/24   0.5hrs    d4e6a4ed  setting up github and directory we need
+2/16/24   4hrs      1a6612f5  make connection between firebase and ability to create and login into an account     (the reason it take that long is because I went to the wrong track for import firebase and then struggling to download pyrebase. Anyways, reach me if you guys can't downwload pyrebase)
+2/18/24   1.5hrs    57f8cca   make connection with the main page and create-accounts page
+2/18/24   3hrs      8306e73   build create-accounts UI page
+2/18/24   3hrs	     6291af6   finish some features of create-accounts UI page
+2/18/24   4hrs      N/A       Started work on sign-in functionality using MUI components> (Took a long time because of research)
 
 Week 2 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
-<Date>	<Topic>
 2/17      Discuss user stories and plan ahead
 
 [Individual Goals]
-<Name>:	<Goal description>
-
-==========================================================================
-Reece Ausmus: 
+Reece Ausmus: Start work on calendar and assignment tracker UIs. Research and implement unit testing for UIs and event creation.
 Cassie Chang: 
 Stanley Huang: 
 Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing. 
