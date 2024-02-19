@@ -16,7 +16,7 @@ Week 1	(Srum master: Reece Ausmus)
 Week 2 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
 <Date>	<Topic>
-2/17      Discuss user stories and plan ahead
+2/24      Discuss user stories and plan ahead
 
 [Individual Goals]
 <Name>:	<Goal description>
