@@ -1,3 +1,5 @@
+/* This documentation is used for changing style of elements in create-account UI page */
+
 .headers{
     text-align: left;
     font-size: 40px;
@@ -38,5 +40,13 @@
 
   .create_button{
     position:relative;
+    top:20px;
+  }
+
+  .button{
+    display: flex;
+    gap: 20px;
+    position:relative;
+    left:70px;
     top:20px;
   }

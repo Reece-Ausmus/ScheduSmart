@@ -1,3 +1,5 @@
+// This documentation is used for building create-account UI page
+
 import { useState } from 'react';
 import './Createaccount.css'
 
@@ -36,9 +38,10 @@ export default function Createaccount() {
                 <label htmlFor="confirm-password">Confirm Password:</label>
                 <input type="password" id="confirm-password" value={confirm_password} onChange={(e) => confirmpassword(e.target.value)} />
             </div>
-            <div className="create_button"><button type="submit">Create Account</button></div>
-
-
+            <div class="button">
+                <button type="submit">Create Account</button>
+                <button onClick={() => { window.location.href = '/'}}>Go Back</button>
+            </div>
         </div>
     );
 }
