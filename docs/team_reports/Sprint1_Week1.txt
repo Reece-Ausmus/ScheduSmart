@@ -16,7 +16,7 @@ Week 1	(Srum master: Reece Ausmus)
 Week 2 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
 <Date>	<Topic>
-2/17      Discuss user stories and plan ahead
+2/24      Discuss user stories and plan ahead
 
 [Individual Goals]
 <Name>:	<Goal description>
@@ -25,6 +25,6 @@ Week 2 	(Plan) (Scrum master: Reece Ausmus)
 Reece Ausmus: 
 Cassie Chang: 
 Stanley Huang: 
-Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing. 
+Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing. Implement Sign-in/out components.
 Himanshu Sinha: Begin work on assignment tracker. By week end, frontend should be complete, with backend starting. 
 Gloria Xu: 
