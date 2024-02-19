@@ -18,3 +18,6 @@ Week 2 	(Plan) (Scrum master: Reece Ausmus)
 2/15 30min <d4e6a4ed> <setting up github and directory we need>
 2/16 4hr <1a6612f5> <make connection between firebase and ability to create and login into an account>             (the reason it take that long is because I   
      went to the wrong track for import firebase and then struggling to download pyrebase. Anyways, reach me if you guys can't downwload pyrebase)
+2/18 1.5hr <57f8cca> <make connection with the main page and create-accounts page>
+2/18 3hr   <8306e73> <build create-accounts UI page>
+2/18 3hrs	 <6291af6> <finish some features of create-accounts UI page>
