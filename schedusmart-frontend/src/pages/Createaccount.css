@@ -1,7 +1,7 @@
 .headers{
     text-align: left;
     font-size: 40px;
-    color:#24457b;
+    color:#213547;
     position:absolute;
     top: 0px; 
     left: 100px;
@@ -10,47 +10,33 @@
 .sub-headers{
     text-align: left;
     font-size: 20px;
-    color:#24457b;
+    color:#213547;
     position:absolute;
     top: 80px; 
     left: 103px;
 }
 
-.group-form{
+.group{
     padding-top: 20px;
 }
 
-.group-form label {
+.group label {
     margin-bottom: 8px;
-    color:#24457b;
+    color:#213547;
     font-size: 25px;
     font-family: "Quicksand";
     font-weight: bold;
     font-style: normal;
   }
   
-  .group-form input {
-    /* width: 100%; */
+  .group input {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
   }
 
-  .name-form {
-    position:absolute;
-    top: 150px; 
-    left: 100px;
-  }
-
-  .username-form {
-    position:absolute;
-    top: 230px; 
-    left: 100px;
-  }
-
-  .email-form {
-    position:absolute;
-    top: 310px; 
-    left: 100px;
+  .create_button{
+    position:relative;
+    top:20px;
   }
