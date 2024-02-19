@@ -8,6 +8,7 @@ Week 1	(Srum master: Reece Ausmus)
 2/18/24   3 hrs     8306e73   Build create-accounts UI page
 2/18/24   3 hrs	6291af6   Finish some features of create-accounts UI page
 2/18/24   4 hrs     N/A       Started work on sign-in functionality using MUI components (Took a long time because of research)
+2/18/24   3 hrs     a518e55   basically done (logout) only wait for login info
 
 Week 2 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
@@ -16,7 +17,7 @@ Week 2 	(Plan) (Scrum master: Reece Ausmus)
 
 [Individual Goals]
 Reece Ausmus: Start work on assignment tracker UIs. Research and implement unit testing for UIs and event creation.
-Cassie Chang: 
+Cassie Chang: Start work on interactive web tour and drag and drop functions
 Stanley Huang: Working on connecting backend and frontend. Build UI for calender. Transport and update personal data into firebase
 Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing for sign in/out. Create unit test for sign in. Research time-zones for calendar.
 Himanshu Sinha: Begin work on assignment tracker. By week end, frontend should be complete, with backend starting. 
