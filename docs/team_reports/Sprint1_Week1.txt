@@ -17,6 +17,6 @@ Week 2 	(Plan) (Scrum master: Reece Ausmus)
 Reece Ausmus: Start work on calendar and assignment tracker UIs. Research and implement unit testing for UIs and event creation.
 Cassie Chang: 
 Stanley Huang: 
-Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing. Implement Sign-in/out components.
+Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing. 
 Himanshu Sinha: Begin work on assignment tracker. By week end, frontend should be complete, with backend starting. 
-Gloria Xu: 
+Gloria Xu: Finish work on createaccount UI and start to work on the database system and calendar system.
