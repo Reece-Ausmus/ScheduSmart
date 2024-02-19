@@ -8,9 +8,13 @@ export default function Createaccount() {
 
     return (
         <div>
-            <div className='headers'>
+            <div className="headers" >
+                <p> Create Account Form </p>
             </div>
-            <div className="group-form">
+            <div className="sub-headers">
+                <p> Complete your profile by filling in this account creation form </p>
+            </div>
+            <div className="group-form name-form">
                 <label htmlFor="name">Name:</label>
                 <input
                     type="text"
@@ -19,7 +23,7 @@ export default function Createaccount() {
                     onChange={(e) => setName(e.target.value)}
                 />
             </div>
-            <div className="group-form">
+            <div className="group-form username-form">
                 <label htmlFor="username">Username:</label>
                 <input
                     type="text"
@@ -28,7 +32,7 @@ export default function Createaccount() {
                     onChange={(e) => setUsername(e.target.value)}
                 />
             </div>
-            <div className="group-form">
+            <div className="group-form email-form">
                 <label htmlFor="email">Email:</label>
                 <input
                     type="email"
