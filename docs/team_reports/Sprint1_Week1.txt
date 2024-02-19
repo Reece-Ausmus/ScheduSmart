@@ -26,5 +26,5 @@ Reece Ausmus:
 Cassie Chang: 
 Stanley Huang: 
 Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing. 
-Himanshu Sinha: 
+Himanshu Sinha: Begin work on assignment tracker. By week end, frontend should be complete, with backend starting. 
 Gloria Xu: 
