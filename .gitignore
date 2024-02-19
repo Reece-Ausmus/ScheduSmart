@@ -1,5 +1,5 @@
 #Mac-created file
-.DS_Store
+*.DS_Store
 
 #Personal Weekly Reports
 docs/individual_reports
