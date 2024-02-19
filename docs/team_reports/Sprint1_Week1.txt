@@ -15,7 +15,7 @@ Week 2 	(Plan) (Scrum master: Reece Ausmus)
 2/25/24   Discuss current progress and complete weekly report. Ask questions to Project Coordinator
 
 [Individual Goals]
-Reece Ausmus: Start work on calendar and assignment tracker UIs. Research and implement unit testing for UIs and event creation.
+Reece Ausmus: Start work on assignment tracker UIs. Research and implement unit testing for UIs and event creation.
 Cassie Chang: 
 Stanley Huang: 
 Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing. 
