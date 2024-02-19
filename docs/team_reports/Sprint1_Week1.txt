@@ -3,7 +3,7 @@
 Week 1	(Srum master: Reece Ausmus)
 2/15/24   0.5 hrs   d4e6a4ed  Setting up github and directory we need
 2/16/24   0.5 hrs   0c3f4df   Created boilerplate code and directories
-2/16/24   4 hrs     1a6612f5  Make connection between firebase and ability to create and login into an account     (the reason it take that long is because I went to the wrong track for import firebase and then struggling to download pyrebase. Anyways, reach me if you guys can't downwload pyrebase)
+2/16/24   4 hrs     1a6612f5  Make connection between firebase and ability to create and login into an account     (the reason it take that long is because I went to the wrong track for importing firebase and then struggling to download pyrebase.)
 2/18/24   1.5 hrs   57f8cca   Make connection with the main page and create-accounts page
 2/18/24   3 hrs     8306e73   Build create-accounts UI page
 2/18/24   3 hrs	6291af6   Finish some features of create-accounts UI page
@@ -17,7 +17,7 @@ Week 2 	(Plan) (Scrum master: Reece Ausmus)
 [Individual Goals]
 Reece Ausmus: Start work on assignment tracker UIs. Research and implement unit testing for UIs and event creation.
 Cassie Chang: 
-Stanley Huang: 
+Stanley Huang: Working on connecting backend and frontend. Build UI for calender. Transport and update personal data into firebase
 Bradley Norris: Start work on MUI (Material UI) visual interfaces and template importing for sign in/out. Create unit test for sign in. Research time-zones for calendar.
 Himanshu Sinha: Begin work on assignment tracker. By week end, frontend should be complete, with backend starting. 
 Gloria Xu: Finish work on createaccount UI and start to work on the database system and calendar system.
