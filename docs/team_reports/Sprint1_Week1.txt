@@ -6,7 +6,7 @@ Week 1	(Srum master: Reece Ausmus)
 2/16/24   4 hrs     1a6612f5  Make connection between firebase and ability to create and login into an account     (the reason it take that long is because I went to the wrong track for importing firebase and then struggling to download pyrebase.)
 2/18/24   1.5 hrs   57f8cca   Make connection with the main page and create-accounts page
 2/18/24   3 hrs     8306e73   Build create-accounts UI page
-2/18/24   3 hrs	6291af6   Finish some features of create-accounts UI page
+2/18/24   3 hrs     6291af6   Finish some features of create-accounts UI page
 2/18/24   4 hrs     N/A       Started work on sign-in functionality using MUI components (Took a long time because of research)
 2/18/24   3 hrs     a518e55   basically done (logout) only wait for login info
 
