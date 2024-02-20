@@ -1,0 +1,14 @@
+Virtual environment is an environment that you can set up for all of us to use, so we don't have to install package every time a new package is added to the code.
+To use it, you need to first activate it
+Its file is in backend
+
+For windows,
+  on your terminal, cd schedusmart-backend
+  then do '.venv\Scripts\activate'
+
+For mac, (I never try it, but it's from tutorial)
+  cd schedusmart-backend
+  source env/bin/activate
+
+If everything works correctly, 
+  in you terminal there should be something like (env) to illustrate you are using virtual enviroment
