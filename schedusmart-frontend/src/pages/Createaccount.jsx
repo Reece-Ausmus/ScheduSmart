@@ -3,6 +3,11 @@
 import { useState } from 'react';
 import './Createaccount.css'
 
+//this can be change when flask's ip become static
+//currently it's localhost
+
+const flaskURL = "http://127.0.0.1:5000";
+
 export default function Createaccount() {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
@@ -38,7 +43,51 @@ export default function Createaccount() {
                 <label htmlFor="confirm-password">Confirm Password:</label>
                 <input type="password" id="confirm-password" value={confirm_password} onChange={(e) => confirmpassword(e.target.value)} />
             </div>
-            <div class="button">
+            <div class="button" onClick={async () => {
+                if (password.localeCompare(confirm_password)) {
+                    alert("confirm password does not match");
+                }
+                else if (!name.localeCompare('')) {
+                    alert("please fill up your name");
+                }
+                else if (!username.localeCompare('')) {
+                    alert("please fill up your username");
+                }
+                else if (!email.localeCompare('')) {
+                    alert("please fill up your email");
+                }
+                else if (!password.localeCompare('')) {
+                    alert("please fill up your password");
+                }
+                else if (password.length < 6) {
+                    alert("Password must be at least 6 characters long.")
+                }
+                else {
+                    console.log("success");
+                    const new_account = {name, username, email, password};
+                    const response = await fetch(flaskURL + '/create_account', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(new_account)
+                    })
+                    if (!response.ok) {
+                        alert("something went wrong, refresh your website");
+                    } else{
+                        switch(response.status) {
+                            case 201:
+                                console.log("create account successfully");
+                                window.location.href = '/'
+                                break;
+                            case 205:
+                                alert("invalid email.");
+                                break;
+                        }
+                    }
+                } 
+            }
+            }>
                 <button type="submit">Create Account</button>
                 <button onClick={() => { window.location.href = '/'}}>Go Back</button>
             </div>

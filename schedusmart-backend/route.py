@@ -17,7 +17,7 @@ account = Blueprint('login', __name__)
 def create_account():
     receive_account = request.get_json()
     try:
-        a = create_account_by_username_and_password(receive_account['user_name'], receive_account['password'])
+        a = create_account_by_username_and_password(receive_account['email'], receive_account['password'])
         # TODO: add additional information to the account can be add here
         if a == 1:
             return 'username has been used', 205
