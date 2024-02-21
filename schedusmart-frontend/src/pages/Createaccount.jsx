@@ -47,7 +47,8 @@ export default function Createaccount() {
                 <label htmlFor="confirm-password">Confirm Password:</label>
                 <input type="password" id="confirm-password" value={confirm_password} onChange={(e) => confirmpassword(e.target.value)} />
             </div>
-            <div class="button" onClick={async () => {
+            <div class="button">
+                <button  onClick={async () => {
                 if (password.localeCompare(confirm_password)) {
                     alert("confirm password does not match");
                 }
@@ -91,8 +92,7 @@ export default function Createaccount() {
                     }
                 } 
             }
-            }>
-                <button type="submit">Create Account</button>
+            }>Create Account</button>
                 <button onClick={() => { window.location.href = '/'}}>Go Back</button>
             </div>
         </div>
