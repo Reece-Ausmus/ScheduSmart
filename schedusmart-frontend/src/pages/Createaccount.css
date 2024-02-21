@@ -18,8 +18,16 @@
     left: 103px;
 }
 
+.line{
+  color:#213547;
+}
+
 .group{
     padding-top: 20px;
+    display: flex;
+    gap: 20px;
+    position:relative;
+    left:50px;
 }
 
 .group label {
@@ -47,6 +55,6 @@
     display: flex;
     gap: 20px;
     position:relative;
-    left:70px;
+    left:130px;
     top:20px;
   }

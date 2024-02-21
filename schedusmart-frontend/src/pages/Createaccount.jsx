@@ -4,7 +4,8 @@ import { useState } from 'react';
 import './Createaccount.css'
 
 export default function Createaccount() {
-    const [name, setName] = useState('');
+    const [firstname, setfirstName] = useState('');
+    const [lastname, setlastName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,10 +17,13 @@ export default function Createaccount() {
             </div>
             <div className="sub-headers">
                 <p> Complete your profile by filling in this account creation form </p>
+                <hr className="line" />
             </div>
             <div className="group name">
-                <label htmlFor="name">Name:</label>
-                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                <label htmlFor="firstname">Name:</label>
+                <input type="text" id="firstname" value={firstname} onChange={(e) => setfirstName(e.target.value)} placeholder="First name" />
+                <label htmlFor="lastname"></label>
+                <input type="text" id="lastname" value={lastname} onChange={(e) => setlastName(e.target.value)} placeholder="Last name" />
             </div>
             <div className="group username">
                 <label htmlFor="username">Username:</label>
