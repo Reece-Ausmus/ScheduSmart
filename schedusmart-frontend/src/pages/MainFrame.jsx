@@ -1,11 +1,44 @@
 import { useState } from 'react';
 import './MainFrame.css'
+import Joyride from 'react-joyride';
+
+const steps = [
+    {
+        target: ".upperBarButton",
+        content: "Go to settings",
+        disableBeacon: true, // automate to start the tours
+    },
+    {
+        target: ".calender_container_controlbar",
+        content: "You can change the format",
+    }
+]
 
 export default function MainFrame() {
     const [detailInfo, setDetailInfo] = useState("Today");
     const [selectMode, setSelectMode]  = useState(1);
     return (
         <div className='container'>
+            <Joyride 
+                steps={steps} 
+                continuous={true}
+                styles={{
+                    options: {
+                      arrowColor: "#2d2d2d",
+                      backgroundColor: "#2d2d2d",
+                      overlayColor: "rgba(45, 45, 45, .3)",
+                      primaryColor: "#2d2d2d",
+                      textColor: "#ffffff",
+                    },
+                    spotlight: {
+                      backgroundColor: "transparent",
+                    },
+                }}
+                // show the progress
+                showProgress={true}
+                // user can skip the tours
+                showSkipButton={true}
+            />
             <div className='upperBar'>
                 <h1 className='title'>ScheduSmart</h1>
                 <button className='upperBarButton'>setting</button>
