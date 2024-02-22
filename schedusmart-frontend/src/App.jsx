@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import Signout from './pages/Signout'
 import NoPage from './pages/NoPage'
 import Createaccount from './pages/Createaccount'
+import MainFrame from './pages/MainFrame'
 
 // to run program 
 // Open new terminal
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/signout" element={<Signout/>} />
           <Route path="*" element={<NoPage/>} />
           <Route path="/createaccount" element={<Createaccount/>} />
+          <Route path="/calendar" element={<MainFrame/>}/>
         </Routes>
       </BrowserRouter>
     </div>

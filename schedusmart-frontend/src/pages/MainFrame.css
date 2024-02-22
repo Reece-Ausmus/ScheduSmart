@@ -1,0 +1,73 @@
+body{
+    background-color: #b1b1b1;
+    margin: 0px;
+}
+
+.upperBar{
+    color: white;
+    width: 100%;
+    height: 70px;
+}
+.title{
+    float: left;
+    font-size: 200px;
+}
+.upperBarButton{
+    background-color: #3c3c3c;
+    color: aliceblue;
+    float: right;
+    margin: 10px;
+}
+.title{
+    color: rgb(52, 52, 52);
+    font-size: 25px;
+}
+.calender_background{
+    padding: 10px;
+    width: 70%;
+    height: 600px;
+    background-color: #3c3c3c;
+    border-radius: 10px;
+}
+.calender_container{
+    position: relative;
+    top: 15px;
+    border-radius: 10px;
+    background-color: #b1b1b1;
+    height: 545px;
+}
+.modeButton {
+    margin-left:10px;
+    margin-top: 5px;
+    background-color: #2d2d2d;
+    border: 2px;
+    border-style: inset;
+    color:rgb(223, 118, 43);
+}
+.detailInfo{
+    float:left;
+    color: aliceblue;
+}
+.dayWord{
+    display: flex;
+    margin-left: 45%;
+}
+
+.dayBox{
+    border: 1px solid;
+    float: right;
+    height: 510px;
+    width: 80%;
+    border-radius: 10px;
+    background-color: aliceblue;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+.daytimebox{
+    float: left;
+    width: 10%;
+    margin-left: 5px;
+}
+.dayLine{
+    margin-top: 38px;
+}
