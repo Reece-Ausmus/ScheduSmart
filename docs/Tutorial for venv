@@ -9,7 +9,7 @@ For windows,
   Then, 
     cd schedusmart-backend
     python -m venv .\.venv
-    .\.venv\Script\activate
+    .\.venv\Scripts\activate
     .\.venv\Scripts\pip install -r .\requirments.txt
 the install will takes a few while, but after install, try
 pip list
