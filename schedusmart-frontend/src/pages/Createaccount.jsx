@@ -41,7 +41,7 @@ export default function Createaccount() {
             </div>
             <div className="group password">
                 <label htmlFor="password">Password:</label>
-                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
             </div>
             <div className="group confirm-password">
                 <label htmlFor="confirm-password">Confirm Password:</label>
