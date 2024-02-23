@@ -8,7 +8,7 @@ For windows,
   To do so, first, remove everything in .venv file (make it empty)
   Then, 
     cd schedusmart-backend
-    python -m venv ./.venv
+    python -m venv .\.venv
     .\.venv\Script\activate
     .\.venv\Scripts\pip install -r .\requirments.txt
 the install will takes a few while, but after install, try
