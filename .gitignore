@@ -9,3 +9,6 @@ schedusmart-backend/firebaseConfig.py
 
 #virtual environment
 schedusmart-backend/.venv
+
+#python cache
+*__pychache__
