@@ -20,6 +20,8 @@ import MainFrame from './pages/MainFrame'
 // create new .jsx file in pages
 // <Route path="/new_page_name" element={<NewPage/>} />
 
+// Ensure path to NoPage remains at the bottom 
+
 export default function App() {
   return (
     <div>
@@ -30,9 +32,9 @@ export default function App() {
           <Route path="/settings" element={<Settings/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/signout" element={<Signout/>} />
-          <Route path="*" element={<NoPage/>} />
           <Route path="/createaccount" element={<Createaccount/>} />
           <Route path="/calendar" element={<MainFrame/>}/>
+          <Route path="*" element={<NoPage/>} />
         </Routes>
       </BrowserRouter>
     </div>
