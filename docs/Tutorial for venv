@@ -3,12 +3,20 @@ To use it, you need to first activate it
 Its file is in backend
 
 For windows,
-  on your terminal, cd schedusmart-backend
-  then do '.venv\Scripts\activate'
+  it turns out that you will need to download the virtual environment by youself.
+  Make sure you pull everything from git (the requirements.txt is fatal)
+  To do so, first, remove everything in .venv file (make it empty)
+  Then, 
+    cd schedusmart-backend
+    python -m venv ./.venv
+    .\.venv\Script\activate
+    .\.venv\Scripts\pip install -r .\requirments.txt
+the install will takes a few while, but after install, try
+pip list
+If you see a bunch of things, then you are in the right track
+Try run 
+  flask --app server.py run 
+to start up the backend.
+If you see nothing, contact Stanley asap.
 
-For mac, (I never try it, but it's from tutorial)
-  cd schedusmart-backend
-  source env/bin/activate
-
-If everything works correctly, 
-  in you terminal there should be something like (env) to illustrate you are using virtual enviroment
+Boiler up!
