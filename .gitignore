@@ -6,3 +6,6 @@ docs/individual_reports
 
 #firebase config
 schedusmart-backend/firebaseConfig.py
+
+#virtual environment
+schedusmart-backend/.venv

@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=D:\code\html\ScheduSmart\schedusmart-backend\.venv
+set VIRTUAL_ENV=C:\Users\Himanshu\Documents\School\Purdue\Junior\Spring Semester\Software\ScheduSmart\schedusmart-backend\.venv
 
 if not defined PROMPT set PROMPT=$P$G
 
