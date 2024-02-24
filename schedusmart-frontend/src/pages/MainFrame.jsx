@@ -25,16 +25,25 @@ export default function MainFrame() {
   }
 
   function printerForMode3(date) {
-    return (date > 0 && date <= lastDayInt) ? date : null;
+    return date > 0 && date <= lastDayInt ? date : null;
   }
 
   const today = new Date();
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const todayMonth = today.getMonth();
+  const monthArray = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const todayYear = today.getFullYear();
   const lastDayInt = Math.floor(lastDay.getDate());
-
-  const [detailInfo, setDetailInfo] = useState(String(today.getMonth()) +"/"+ String(today.getDate()));
-  const [selectMode, setSelectMode] = useState(1);
   let date = todayseeker();
+
+  const [detailInfo, setDetailInfo] = useState(
+    String(today.getMonth()) + "/" + String(today.getDate())
+  );
+
+  const [selectMode, setSelectMode] = useState(1);
+
+
+
   return (
     <div className="container">
       <Joyride
@@ -73,7 +82,8 @@ export default function MainFrame() {
               document.getElementById("1").style.backgroundColor = "#2d2d2d";
               document.getElementById("2").style.backgroundColor = "#2d2d2d";
               document.getElementById("3").style.backgroundColor = "#2d2d2d";
-              document.getElementById("4").style.backgroundColor = "#cfcfcf";
+              document.getElementById("4").style.backgroundColor = "#cfcfcf";  
+              setDetailInfo(todayYear);
             }}
           >
             year
@@ -88,6 +98,7 @@ export default function MainFrame() {
               document.getElementById("2").style.backgroundColor = "#2d2d2d";
               document.getElementById("3").style.backgroundColor = "#cfcfcf";
               document.getElementById("4").style.backgroundColor = "#2d2d2d";
+              setDetailInfo(monthArray[todayMonth - 1]);
             }}
           >
             month
@@ -102,6 +113,7 @@ export default function MainFrame() {
               document.getElementById("2").style.backgroundColor = "#cfcfcf";
               document.getElementById("3").style.backgroundColor = "#2d2d2d";
               document.getElementById("4").style.backgroundColor = "#2d2d2d";
+              setDetailInfo(String(today.getMonth()) + "/" + String(today.getDate()));
             }}
           >
             week
@@ -116,6 +128,7 @@ export default function MainFrame() {
               document.getElementById("2").style.backgroundColor = "#2d2d2d";
               document.getElementById("3").style.backgroundColor = "#2d2d2d";
               document.getElementById("4").style.backgroundColor = "#2d2d2d";
+              setDetailInfo(String(today.getMonth()) + "/" + String(today.getDate()));
             }}
           >
             day
@@ -364,7 +377,26 @@ export default function MainFrame() {
           </div>
 
           <div style={{ display: selectMode === 4 ? "block" : "none" }}>
-            <p>Div 4 context</p>
+            <table>
+              <tr class="MonthBoxFor4">
+                <td class="MonthBoxFor4">January</td>
+                <td class="MonthBoxFor4">Febuary</td>
+                <td class="MonthBoxFor4">March</td>
+                <td class="MonthBoxFor4">April</td>
+              </tr>
+              <tr class="MonthBoxFor4">
+                <td class="MonthBoxFor4">May</td>
+                <td class="MonthBoxFor4">June</td>
+                <td class="MonthBoxFor4">July</td>
+                <td class="MonthBoxFor4">August</td>
+              </tr>
+              <tr class="MonthBoxFor4">
+                <td class="MonthBoxFor4">September</td>
+                <td class="MonthBoxFor4">October</td>
+                <td class="MonthBoxFor4">November</td>
+                <td class="MonthBoxFor4">December</td>
+              </tr>
+            </table>
           </div>
         </div>
       </div>
