@@ -15,6 +15,7 @@ export default function Createaccount() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirm_password, confirmpassword] = useState('');
+
     return (
         <div>
             <div className="headers" >
@@ -49,6 +50,8 @@ export default function Createaccount() {
             </div>
             <div class="button">
                 <button  onClick={async () => {
+                const letterRegex = /[a-zA-Z]/;
+                const numberRegex = /[0-9]/;
                 if (password.localeCompare(confirm_password)) {
                     alert("confirm password does not match");
                 }
@@ -66,6 +69,9 @@ export default function Createaccount() {
                 }
                 else if (password.length < 6) {
                     alert("Password must be at least 6 characters long.")
+                }
+                else if (!letterRegex.test(password) || !numberRegex.test(password)) {
+                    alert("Password must contain at least one letter and one number.");
                 }
                 else {
                     console.log("success");
