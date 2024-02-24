@@ -9,6 +9,7 @@ import NoPage from './pages/NoPage'
 import Createaccount from './pages/Createaccount'
 import MainFrame from './pages/MainFrame'
 import SignIn from './pages/SignIn'
+import TaskManager from './pages/TaskManager'
 
 // to run program 
 // Open new terminal
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/createaccount" element={<Createaccount/>} />
           <Route path="/signin" element={<SignIn/>} />
           <Route path="/calendar" element={<MainFrame/>}/>
+          <Route path="/taskmanager" element={<TaskManager/>}/>
           <Route path="*" element={<NoPage/>} />
         </Routes>
       </BrowserRouter>

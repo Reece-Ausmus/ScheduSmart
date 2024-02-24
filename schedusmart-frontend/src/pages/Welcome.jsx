@@ -21,6 +21,7 @@ export default function Welcome() {
         <button onClick={() => { window.location.href = '/createaccount'}}>Create an account!</button>
         <button onClick={() => {setGoToDash(true)}}>Dashboard | For testing purposes</button>
         <button onClick={() => { window.location.href = '/signout'}}>Sign out</button>
+        <button onClick={() => { window.location.href = '/taskmanager'}}>Task Manager</button>
         </>
     );
 }
