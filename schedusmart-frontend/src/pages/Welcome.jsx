@@ -17,7 +17,7 @@ export default function Welcome() {
         <>
         <Header/>
         <h2>Welcome!</h2>
-        <button>Sign-in! This does nothing until sign-in is implemented</button>
+        <button onClick={() => { window.location.href = '/signin'}}>Sign-in!</button>
         <button onClick={() => { window.location.href = '/createaccount'}}>Create an account!</button>
         <button onClick={() => {setGoToDash(true)}}>Dashboard | For testing purposes</button>
         <button onClick={() => { window.location.href = '/signout'}}>Sign out</button>
