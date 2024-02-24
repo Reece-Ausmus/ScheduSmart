@@ -30,13 +30,6 @@ export default function TaskManager() {
 
   return (
     <div className="task-manager-container">
-      <div className="headers">
-        <p>Task Manager</p>
-      </div>
-      <div className="sub-headers">
-        <p>Manage your tasks efficiently</p>
-        <hr className="line" />
-      </div>
       <div className="task-manager-header">
         <button onClick={addTask}>Add Task</button>
         <input 
