@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // CSS file is not created yet
-// import './TaskManager.css';
+import './TaskManager.css';
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -11,9 +11,21 @@ export default function TaskManager() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('');
 
+  // Task creator pop-up
+  const modal = document.querySelector("#modal");
+  const openModal = document.querySelector("#openModal");
+  const closeModal = document.querySelector("#closeModal");
+
+  if (modal) {
+    openModal && openModal.addEventListener("click", () => modal.showModal());
+
+    closeModal && closeModal.addEventListener("click", () => modal.close());
+  }
+  
+
   // Function to add a new task
   const addTask = () => {
-    // Implement logic to add a new task
+    // add task
   };
 
   // Function to handle search input change
@@ -29,9 +41,56 @@ export default function TaskManager() {
   };
 
   return (
+    <>
+      <button id="openModal">Add Task</button>
+      <dialog id="modal">
+        <p>
+          Task:<input 
+            type="text"
+            placeholder="Input task name"
+            value={tasks}
+            onChange={addTask}
+          />
+        </p>
+        <button id="closeModal">Close this modal</button>
+      </dialog>
+
+      <input 
+          type="text" 
+          placeholder="Search tasks..." 
+          value={searchQuery} 
+          onChange={handleSearchChange} 
+      />
+      <select value={sortOption} onChange={handleSortChange}>
+        <option value="">Sort By</option>
+        {
+          // Add sorting options 
+        } 
+      </select>
+      <div className="task-list">
+        {
+          // Render the list of tasks 
+        }
+        {tasks.map(task => (
+          <div key={task.id} className="task">
+            {
+              // Display task details 
+            }
+          </div>
+        ))}
+      </div>
+    </>
+
+    /*  
     <div className="task-manager-container">
       <div className="task-manager-header">
-        <button onClick={addTask}>Add Task</button>
+        <button id="openModal">Add Task</button>
+
+        <dialog id="modal">
+          <p>Add Task! Click the button below to add a task.</p>
+          <button id="closeModal">Create Task</button>
+        </dialog>
+
         <input 
           type="text" 
           placeholder="Search tasks..." 
@@ -40,17 +99,24 @@ export default function TaskManager() {
         />
         <select value={sortOption} onChange={handleSortChange}>
           <option value="">Sort By</option>
-          {/* Add sorting options */}
+          {
+            // Add sorting options 
+          } 
         </select>
       </div>
       <div className="task-list">
-        {/* Render the list of tasks */}
+        {
+          // Render the list of tasks 
+        }
         {tasks.map(task => (
           <div key={task.id} className="task">
-            {/* Display task details */}
+            {
+              // Display task details 
+            }
           </div>
         ))}
       </div>
     </div>
+    */
   );
 }
