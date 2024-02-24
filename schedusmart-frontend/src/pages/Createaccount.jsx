@@ -52,7 +52,7 @@ export default function Createaccount() {
                 if (password.localeCompare(confirm_password)) {
                     alert("confirm password does not match");
                 }
-                else if (!name.localeCompare('')) {
+                else if (!lastname.localeCompare('') && !firstname.localeCompare('')) {
                     alert("please fill up your name");
                 }
                 else if (!username.localeCompare('')) {
@@ -69,7 +69,7 @@ export default function Createaccount() {
                 }
                 else {
                     console.log("success");
-                    const new_account = {name, username, email, password};
+                    const new_account = {firstname,lastname,username, email, password};
                     const response = await fetch(flaskURL + '/create_account', {
                         method: 'POST',
                         headers: {
