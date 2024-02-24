@@ -52,10 +52,9 @@ export default function Createaccount() {
                 <button  onClick={async () => {
                 const letterRegex = /[a-zA-Z]/;
                 const numberRegex = /[0-9]/;
-                if (password.localeCompare(confirm_password)) {
-                    alert("confirm password does not match");
-                }
-                else if (!lastname.localeCompare('') && !firstname.localeCompare('')) {
+                const regex = /[\\"\s\'\\\x00-\x1F\x7F]/g; 
+
+                if (!lastname.localeCompare('') && !firstname.localeCompare('')) {
                     alert("please fill up your name");
                 }
                 else if (!username.localeCompare('')) {
@@ -67,6 +66,12 @@ export default function Createaccount() {
                 else if (!password.localeCompare('')) {
                     alert("please fill up your password");
                 }
+                else if (regex.test(firstname) || regex.test(lastname) || regex.test(username) || regex.test(password) || regex.test(confirm_password)) {
+                    alert("Input contains special characters. Please remove them and try again."); 
+                } // avoid special characters in input
+                else if (password.localeCompare(confirm_password)) {
+                    alert("confirm password does not match");
+                } 
                 else if (password.length < 6) {
                     alert("Password must be at least 6 characters long.")
                 }
