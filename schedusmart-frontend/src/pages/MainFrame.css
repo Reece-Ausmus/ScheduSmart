@@ -208,6 +208,7 @@ body{
     top: -3%;
 }
 .weekday{
+    color: #2d2d2d;
     display: inline;
 }
 .dayLine{
@@ -247,4 +248,31 @@ body{
     width: 90%;
     height: 87%;
     background-color: aliceblue;
+}
+table{
+    height: 500px;
+    width:95%;
+    margin-left: 2.5%;
+}
+
+tr, td {
+    color: black;
+    background-color: aliceblue;
+    padding: 4px;
+    vertical-align:top;
+    text-align: left;
+    border: 1px solid;
+    border-radius: 10%;
+    height: 15%;
+    width: 14.285%;
+}
+tr, th {
+    
+    background-color: #cfcfcf;
+    text-align:center;
+    vertical-align:middle;
+    border: 1px solid;
+    border-radius: 10%;
+    height: 10%;
+    width: 14.285%;
 }
