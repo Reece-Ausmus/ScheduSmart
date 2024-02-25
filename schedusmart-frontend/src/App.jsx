@@ -10,6 +10,7 @@ import Createaccount from './pages/Createaccount'
 import MainFrame from './pages/MainFrame'
 import SignIn from './pages/SignIn'
 import TaskManager from './pages/TaskManager'
+import DragAndDrop from './pages/MainFrameWithDragandDrug'
 
 // to run program 
 // Open new terminal
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/signin" element={<SignIn/>} />
           <Route path="/calendar" element={<MainFrame/>}/>
           <Route path="/taskmanager" element={<TaskManager/>}/>
+          <Route path="/draganddrop" element={<DragAndDrop/>}/>
           <Route path="*" element={<NoPage/>} />
         </Routes>
       </BrowserRouter>

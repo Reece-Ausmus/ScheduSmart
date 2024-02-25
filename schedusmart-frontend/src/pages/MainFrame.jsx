@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from 'react'
 import "./MainFrame.css";
 import Joyride from "react-joyride";
+import { Navigate } from 'react-router-dom'
 
 const steps = [
   {
@@ -42,6 +43,26 @@ export default function MainFrame() {
 
   const [selectMode, setSelectMode] = useState(1);
 
+  // handle drag & drop
+  const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false)
+
+  if (goToDragAndDrop) {
+      return(
+          <>
+          <Navigate to="/draganddrop" />
+          </>
+      );
+  }
+
+  const handleConfirmClick = () => {
+    if (window.confirm('Are you sure you want to sign out?')) {
+      //Yes
+      setGoToDragAndDrop(true)
+    } else {
+      //No
+      // do nothing
+    }
+  };
 
 
   return (
@@ -69,6 +90,7 @@ export default function MainFrame() {
       <div className="upperBar">
         <h1 className="title">ScheduSmart</h1>
         <button className="upperBarButton">setting</button>
+        <button className='upperBarButton' onClick={handleConfirmClick}>drag & drop</button>
         <button className="upperBarButton">logout</button>
       </div>
       <div className="calender_container">
