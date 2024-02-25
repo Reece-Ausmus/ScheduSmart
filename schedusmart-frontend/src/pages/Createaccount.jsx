@@ -79,7 +79,6 @@ export default function Createaccount() {
                     alert("Password must contain at least one letter and one number.");
                 }
                 else {
-                    console.log("success");
                     const new_account = {firstname,lastname,username, email, password};
                     const response = await fetch(flaskURL + '/create_account', {
                         method: 'POST',

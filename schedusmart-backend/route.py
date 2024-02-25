@@ -12,13 +12,13 @@ account = Blueprint('login', __name__)
 
 
 # to create an account, reach this route and send a json message with the following formate
-# {"username":"<user_name>", "password":"<password>"}
+# {"username":"<user_name>", "password":"<password>", ""}
 @account.route('/create_account', methods=['POST'])
 def create_account():
     receive_account = request.get_json()
     try:
-        a = create_account_by_username_and_password(receive_account['email'], receive_account['password'])
-        # TODO: add additional information to the account can be add here
+        a = create_account_by_username_and_password(receive_account)
+
         if a == 1:
             return 'username has been used', 205
     except:
@@ -27,6 +27,7 @@ def create_account():
     return 'Done', 201
 
 
+# this is where you modify login method
 @account.route('/login', methods=['POST'])
 def login():
     return 'login_confirm', 201
