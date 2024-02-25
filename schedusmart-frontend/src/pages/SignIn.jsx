@@ -13,7 +13,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AppBar } from '@mui/material';
+import { AppBar, IconButton, Menu, Toolbar } from '@mui/material';
+import { orange } from '@mui/material/colors';
 
 // To install the dependencies, run the following command in the terminal:
 // npm install @mui/material @emotion/react
@@ -21,7 +22,14 @@ import { AppBar } from '@mui/material';
 // npm install @mui/icons-material
 // npm install @material-ui/icons
 
-  const defaultTheme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: '#ab5600',
+    },
+  },
+});
   
   export default function SignIn() {
     const handleSubmit = (event) => {
@@ -34,11 +42,27 @@ import { AppBar } from '@mui/material';
     };
   
     return (
-      <ThemeProvider theme={defaultTheme}>
-        <AppBar position="static" color = "secondary">
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+      <ThemeProvider theme={theme}>
+        <AppBar position="static" color = "primary">
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Button variant="contained" href="./welcome">
+              <CalendarMonthIcon sx={{ marginRight: 1 }}/>
+              <Typography variant="body1" >
                 ScheduSmart
-            </Typography>
+              </Typography>
+            </Button>
+            <div>
+              <Button color="inherit">
+                Features
+              </Button>
+              <Button color="secondary">
+                Sign In
+              </Button>
+              <Button color="inherit" href="./createaccount">
+                Create Account
+              </Button>
+            </div>
+          </Toolbar>
         </AppBar>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -50,11 +74,11 @@ import { AppBar } from '@mui/material';
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'text.secondary' }}>
-              <CalendarMonthIcon />
-            </Avatar>
             <Typography component="h1" variant="h5" > 
               Sign in
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+              Enter your email and password
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
               <TextField
@@ -83,7 +107,7 @@ import { AppBar } from '@mui/material';
                 variant="contained"
                 sx={{ mt: 3, mb: 2, bgcolor: 'warning.main'}}
               >
-                Sign In
+                Login
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -92,7 +116,7 @@ import { AppBar } from '@mui/material';
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="./createaccount" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
