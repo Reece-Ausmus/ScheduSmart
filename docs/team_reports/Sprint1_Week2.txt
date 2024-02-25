@@ -1,7 +1,9 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 2	(Srum master: Reece Ausmus)
-
+2/20    2.5hr   288906a Finished the first version of the create-account UI page
+2/20    1hr     003e724 Modified the implementation of the create-account UI page
+2/23    3hr     26ded43 Added more features to restrict users' input
 
 Week 3 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
@@ -15,4 +17,4 @@ Cassie Chang:
 Stanley Huang: 
 Bradley Norris: 
 Himanshu Sinha: 
-Gloria Xu: 
+Gloria Xu: Continue to maintain the create-account UI page and finish the implementation of reminders
