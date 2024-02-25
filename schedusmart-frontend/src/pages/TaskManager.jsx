@@ -4,22 +4,24 @@ import "./TaskManager.css"
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
 
-let str = "";
+// let str = "";
 const initialList = [
-  { id: 0, title: 'Task Example', time: 4, date: "2024-02-25", desc: "Lorem Ipsum", seen: false },
-  { id: 1, title: 'Task Example Two', time: 2, date: "2024-09-23", desc: "Lorem Ipsum", seen: false },
-  { id: 2, title: 'Task Example Three', time: 5, date: "2059-09-23", desc: "Lorem Ipsum", seen: false },
+  { id: 0, title: 'Homework 2', time: 4, date: "2024-02-25", desc: "Complete design document and sumbit", seen: false },
+  { id: 1, title: 'Sprint Planning', time: 2, date: "2024-09-23", desc: "Speak with team coordinator", seen: false },
+  { id: 2, title: 'Midterm Study', time: 5, date: "2059-09-23", desc: "Look at slides lol", seen: false },
 ];
 let nextId = initialList.length
 
 export default function TaskManager() {
+  // select sort option
+  const [sortOption, setSortOption] = useState(0);
+
+  // used to hold data for tasks
   const [taskName, setTaskName] = useState('');
   const [taskTime, setTaskTime] = useState(0);
   const [taskDate, setTaskDate] = useState();
   const [taskDesc, setTaskDesc] = useState('');
   const [myList, setMyList] = useState(initialList);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState(0);
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -32,7 +34,7 @@ export default function TaskManager() {
     closeModal && closeModal.addEventListener("click", () => modal.close());
   }
 
-  // handle list making
+  // handle task list making
   function handleToggleMyList(listId, nextSeen) {
     const myNextList = [...myList];
     const list = myNextList.find(
@@ -42,13 +44,34 @@ export default function TaskManager() {
     setMyList(myNextList);
   }
 
+  // search list
+  const [searchQuery, setSearchQuery] = useState('');
+  const [foundList, setFoundList] = useState(myList);
+
+  // filter list
+  const filter = (e) => {
+    const keyword = e.target.value;
+
+    if (keyword !== '') {
+      const results = myList.filter((task) => {
+        return task.title.toLowerCase().includes(keyword.toLowerCase()) || task.desc.toLowerCase().includes(keyword.toLowerCase());
+      });
+      setFoundList(results)
+    } else {
+      setFoundList(myList)
+    }
+
+    setSearchQuery(keyword)
+  }
+
   return (
     <>
       <div>
         <h1>Task List</h1>
         <button id="openModal" onClick={() => {
-          setTaskName("")
+          setTaskName("New Task")
           setTaskTime(0)
+          setTaskDesc("Task Description")
         }}>Add Task</button>
       </div>
       <dialog id="modal">
@@ -87,29 +110,32 @@ export default function TaskManager() {
         }}>Add</button>
       </dialog>
       <input
+      type="search"
       value={searchQuery}
-      onChange={e => setSearchQuery(e.target.value)}
+      onChange={filter}
+      placeholder="Search"
       />
       <select value={sortOption} onChange={e => setSortOption(e.target.value)}>
         <option value="0">Sort By</option>
-        <option value="1">Created First</option>
-        <option value="2">Created Last</option>
-        <option value="3">Due First</option>
-        <option value="4">Due Last</option>
-        <option value="5">Largest Workload</option>
-        <option value="6">Smallest Workload</option>
+        <option value="1">Earliest created</option>
+        <option value="2">Latest created</option>
+        <option value="3">Earliest due</option>
+        <option value="4">Latest due</option>
+        <option value="5">Largest workload</option>
+        <option value="6">Smallest workload</option>
       </select>
       <ItemList
-        list={myList}
+        list={foundList}
         onToggle={handleToggleMyList} 
         option={sortOption}
-        filter={searchQuery}
       />
     </>
   );
 }
 
-function ItemList({ list, onToggle, option, filter }) {
+function ItemList({ list, onToggle, option}) {
+
+  let sortedList = list;
 
   const idAscending = [...list].sort((a, b) => a.id - b.id)
   const idDescending = [...list].sort((a, b) => b.id - a.id);
