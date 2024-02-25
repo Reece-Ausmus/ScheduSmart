@@ -7,7 +7,9 @@ const flaskURL = "http://127.0.0.1:5000";
 
 export default function TaskManager() {
   // State variables for managing tasks
-  const [tasks, setTasks] = useState([]);
+  let nextId = 0;
+  const [task, setTask] = useState('');
+  const [taskList, setTaskList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('');
 
@@ -43,18 +45,46 @@ export default function TaskManager() {
   return (
     <>
       <button id="openModal">Add Task</button>
-      <dialog id="modal">
-        <p>
-          Task:<input 
-            type="text"
-            placeholder="Input task name"
-            value={tasks}
-            onChange={addTask}
-          />
-        </p>
-        <button id="closeModal">Close this modal</button>
+      <dialog id="modal" class="dialog">
+        <button id="closeModal" class= "dialog-close-btn">Close</button>
+        <p>Hello</p>
+        <input
+        value={task}
+        onChange={e => setTask(e.target.value)}
+        />
+        <button onClick={() => {
+          taskList.push({
+            id: nextId++,
+            name: task,
+          });
+        }}>Create task</button>
       </dialog>
-
+      <input 
+          type="text" 
+          placeholder="Search tasks..." 
+          value={searchQuery} 
+          onChange={handleSearchChange} 
+      />
+      <select value={sortOption} onChange={handleSortChange}>
+        <option value="">Sort By</option>
+        {
+          // Add sorting options 
+        } 
+      </select>
+      <u1>
+        {taskList.map(task_i => (
+          <li key={task_i.id}>{task_i.name}</li>
+        ))}
+      </u1>
+    </>  
+  );
+}
+/*
+<button id="openModal">Add Task</button>
+      <dialog id="modal">
+        <p>Task</p>
+        <button id="closeModal" class="dialog-close-btn">Add Task</button>
+      </dialog>
       <input 
           type="text" 
           placeholder="Search tasks..." 
@@ -79,44 +109,4 @@ export default function TaskManager() {
           </div>
         ))}
       </div>
-    </>
-
-    /*  
-    <div className="task-manager-container">
-      <div className="task-manager-header">
-        <button id="openModal">Add Task</button>
-
-        <dialog id="modal">
-          <p>Add Task! Click the button below to add a task.</p>
-          <button id="closeModal">Create Task</button>
-        </dialog>
-
-        <input 
-          type="text" 
-          placeholder="Search tasks..." 
-          value={searchQuery} 
-          onChange={handleSearchChange} 
-        />
-        <select value={sortOption} onChange={handleSortChange}>
-          <option value="">Sort By</option>
-          {
-            // Add sorting options 
-          } 
-        </select>
-      </div>
-      <div className="task-list">
-        {
-          // Render the list of tasks 
-        }
-        {tasks.map(task => (
-          <div key={task.id} className="task">
-            {
-              // Display task details 
-            }
-          </div>
-        ))}
-      </div>
-    </div>
-    */
-  );
-}
+*/
