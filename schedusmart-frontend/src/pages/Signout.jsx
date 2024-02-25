@@ -5,8 +5,6 @@ import { Navigate } from 'react-router-dom'
 
 
 export default function Signout() {
-  const [isClicked, setIsClicked] = useState(false);
-
   const [goToWelcome, setGoToWelcome] = React.useState(false)
 
   if (goToWelcome) {
