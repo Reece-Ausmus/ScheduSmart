@@ -4,17 +4,22 @@ import "./TaskManager.css"
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
 
-let nextId = 1;
 let str = "";
 const initialList = [
-  { id: 0, title: 'Task Example', time: 4, date: "2003-09-23", seen: false },
+  { id: 0, title: 'Task Example', time: 4, date: "2024-02-25", desc: "Lorem Ipsum", seen: false },
+  { id: 1, title: 'Task Example Two', time: 2, date: "2024-09-23", desc: "Lorem Ipsum", seen: false },
+  { id: 2, title: 'Task Example Three', time: 5, date: "2059-09-23", desc: "Lorem Ipsum", seen: false },
 ];
+let nextId = initialList.length
 
 export default function TaskManager() {
   const [taskName, setTaskName] = useState('');
   const [taskTime, setTaskTime] = useState(0);
   const [taskDate, setTaskDate] = useState();
+  const [taskDesc, setTaskDesc] = useState('');
   const [myList, setMyList] = useState(initialList);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOption, setSortOption] = useState(0);
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -68,99 +73,89 @@ export default function TaskManager() {
         value={taskDate}
         onChange={e => setTaskDate(e.target.value)}
         />
+        <label for="desc">Description:</label>
+        <input
+        id="desc"
+        value={taskDesc}
+        onChange={e => setTaskDesc(e.target.value)}
+        />
         <button id="closeModal" onClick={() => {
           setMyList([
             ...myList,
-            {id: nextId, title: taskName, time: taskTime, date: taskDate, seen:false}
+            {id: nextId++, title: taskName, time: taskTime, date: taskDate, desc: taskDesc, seen:false}
           ]);
-          nextId = nextId + 1
         }}>Add</button>
       </dialog>
+      <input
+      value={searchQuery}
+      onChange={e => setSearchQuery(e.target.value)}
+      />
+      <select value={sortOption} onChange={e => setSortOption(e.target.value)}>
+        <option value="0">Sort By</option>
+        <option value="1">Created First</option>
+        <option value="2">Created Last</option>
+        <option value="3">Due First</option>
+        <option value="4">Due Last</option>
+        <option value="5">Largest Workload</option>
+        <option value="6">Smallest Workload</option>
+      </select>
       <ItemList
         list={myList}
         onToggle={handleToggleMyList} 
+        option={sortOption}
+        filter={searchQuery}
       />
     </>
   );
 }
 
-function ItemList({ list, onToggle }) {
+function ItemList({ list, onToggle, option, filter }) {
+
+  const idAscending = [...list].sort((a, b) => a.id - b.id)
+  const idDescending = [...list].sort((a, b) => b.id - a.id);
+  const dueAscending = [...list].sort((a, b) => new Date(a.date) - new Date(b.date))
+  const dueDescending = [...list].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const workAscending = [...list].sort((a, b) => a.time - b.time)
+  const workDescending = [...list].sort((a, b) => b.time - a.time);
+  
+  if (option == 0) {
+    sortedList = list;
+  } else if (option == 1) {
+    sortedList = idAscending;
+  } else if (option == 2) {
+    sortedList = idDescending;
+  } else if (option == 3) {
+    sortedList = dueAscending;
+  } else if (option == 4) {
+    sortedList = dueDescending;
+  } else if (option == 5) {
+    sortedList = workDescending;
+  } else if (option == 6) {
+    sortedList = workAscending;
+  } else {
+    sortedList = list; 
+  }
+
   return (
-    <ul>
-      {list.map(task => (
-        <li key={task.id}>
-          <label>
-            | {task.title} | Time to Complete: {task.time} hours | Due Date: {task.date}
-            <input
-              type="checkbox"
-              checked={task.seen}
-              onChange={e => {
-                onToggle(
-                  task.id,
-                  e.target.checked
-                );
-              }}
-            />
-          </label>
-        </li>
+    <div>
+      {sortedList.map(task => (
+        <div className="post" key={task.id} >
+          <h3>{task.title}</h3>
+          <p>{task.desc}</p>
+          <p>Estimated Workload: {task.time}</p>
+          <p>Deadline: {task.date}</p>
+          <input
+            type="checkbox"
+            checked={task.seen}
+            onChange={e => {
+              onToggle(
+                task.id,
+                e.target.checked
+              );
+            }}
+          />
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
-
-/*
-
-<button id="closeModal" class= "dialog-close-btn">Close</button>
-
-// State variables for managing tasks
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState('');
-
-  // Function to handle search input change
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-    // Implement logic to filter tasks based on search query
-  };
-
-  // Function to handle sort option change
-  const handleSortChange = (event) => {
-    setSortOption(event.target.value);
-    // Implement logic to sort tasks based on selected option
-  };
-
-
-// Task creator pop-up
-const modal = document.querySelector("#modal");
-const openModal = document.querySelector("#openModal");
-const closeModal = document.querySelector("#closeModal");
-
-if (modal) {
-  openModal && openModal.addEventListener("click", () => modal.showModal());
-
-  closeModal && closeModal.addEventListener("click", () => modal.close());
-}
-<button id="openModal">Add Task</button>
-      <dialog id="modal" class="dialog">
-        <button id="closeModal" class= "dialog-close-btn">Close</button>
-        <p>Hello</p>
-      </dialog>
-
-      </dialog>
-      <input 
-          type="text" 
-          placeholder="Search tasks..." 
-          value={searchQuery} 
-          onChange={handleSearchChange} 
-      />
-      <select value={sortOption} onChange={handleSortChange}>
-        <option value="">Sort By</option>
-        {
-          // Add sorting options 
-        } 
-      </select>
-      <u1>
-        {taskList.map(task_i => (
-          <li key={task_i.id}>{task_i.name}</li>
-        ))}
-      </u1>
-*/
