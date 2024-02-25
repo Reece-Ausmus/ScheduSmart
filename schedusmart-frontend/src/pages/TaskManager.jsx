@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import './TaskManager.css';
+import "./TaskManager.css"
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
 
 let nextId = 1;
+let str = "";
 const initialList = [
   { id: 0, title: 'Task Example', time: 4, date: "2003-09-23", seen: false },
 ];
@@ -38,38 +39,41 @@ export default function TaskManager() {
 
   return (
     <>
-      <h1>Task List</h1>
-      <button id="openModal">Add Task</button>
-      <dialog id="modal" class="dialog">
-        <label>
-        Task Name: 
-          <input
-          value={taskName}
-          onChange={e => setTaskName(e.target.value)}
-          />
-        </label>
-        Time:
-        <label>
-          <input 
-          type="number"
-          min="1"
-          value={taskTime}
-          onChange={e => setTaskTime(e.target.value)}
-          />
-          Hours
-        </label>
-        <label>
-          <input
-          type="date"
-          value={taskDate}
-          onChange={e => setTaskDate(e.target.value)}
-          />
-        </label>
-        <button id="closeModal" class="dialog-close-btn" onClick={() => {
+      <div>
+        <h1>Task List</h1>
+        <button id="openModal" onClick={() => {
+          setTaskName("")
+          setTaskTime(0)
+        }}>Add Task</button>
+      </div>
+      <dialog id="modal">
+        <label for="name">Task Name:</label>
+        <input
+        id="name"
+        value={taskName}
+        onChange={e => setTaskName(e.target.value)}
+        />
+        <label for="time">Workload:</label>
+        <input 
+        type="number"
+        id="time"
+        min="1"
+        value={taskTime}
+        onChange={e => setTaskTime(e.target.value)}
+        />
+        <label for="date">Due Date:</label>
+        <input
+        type="date"
+        id="date"
+        value={taskDate}
+        onChange={e => setTaskDate(e.target.value)}
+        />
+        <button id="closeModal" onClick={() => {
           setMyList([
             ...myList,
-            {id: nextId++, title: taskName, time: taskTime, date: taskDate, seen:false}
+            {id: nextId, title: taskName, time: taskTime, date: taskDate, seen:false}
           ]);
+          nextId = nextId + 1
         }}>Add</button>
       </dialog>
       <ItemList
