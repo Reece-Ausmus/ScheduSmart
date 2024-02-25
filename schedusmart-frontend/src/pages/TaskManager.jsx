@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-// CSS file is not created yet
 import './TaskManager.css';
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
 
+let nextId = 1;
+const initialList = [
+  { id: 0, title: 'Task Example', time: 4, date: "2003-09-23", seen: false },
+];
+
 export default function TaskManager() {
-  // State variables for managing tasks
-  let nextId = 0;
-  const [task, setTask] = useState('');
-  const [taskList, setTaskList] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState('');
+  const [taskName, setTaskName] = useState('');
+  const [taskTime, setTaskTime] = useState(0);
+  const [taskDate, setTaskDate] = useState();
+  const [myList, setMyList] = useState(initialList);
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -23,12 +25,92 @@ export default function TaskManager() {
 
     closeModal && closeModal.addEventListener("click", () => modal.close());
   }
-  
 
-  // Function to add a new task
-  const addTask = () => {
-    // add task
-  };
+  // handle list making
+  function handleToggleMyList(listId, nextSeen) {
+    const myNextList = [...myList];
+    const list = myNextList.find(
+      l => l.id === listId
+    );
+    list.seen = nextSeen;
+    setMyList(myNextList);
+  }
+
+  return (
+    <>
+      <h1>Task List</h1>
+      <button id="openModal">Add Task</button>
+      <dialog id="modal" class="dialog">
+        <label>
+        Task Name: 
+          <input
+          value={taskName}
+          onChange={e => setTaskName(e.target.value)}
+          />
+        </label>
+        Time:
+        <label>
+          <input 
+          type="number"
+          min="1"
+          value={taskTime}
+          onChange={e => setTaskTime(e.target.value)}
+          />
+          Hours
+        </label>
+        <label>
+          <input
+          type="date"
+          value={taskDate}
+          onChange={e => setTaskDate(e.target.value)}
+          />
+        </label>
+        <button id="closeModal" class="dialog-close-btn" onClick={() => {
+          setMyList([
+            ...myList,
+            {id: nextId++, title: taskName, time: taskTime, date: taskDate, seen:false}
+          ]);
+        }}>Add</button>
+      </dialog>
+      <ItemList
+        list={myList}
+        onToggle={handleToggleMyList} 
+      />
+    </>
+  );
+}
+
+function ItemList({ list, onToggle }) {
+  return (
+    <ul>
+      {list.map(task => (
+        <li key={task.id}>
+          <label>
+            | {task.title} | Time to Complete: {task.time} hours | Due Date: {task.date}
+            <input
+              type="checkbox"
+              checked={task.seen}
+              onChange={e => {
+                onToggle(
+                  task.id,
+                  e.target.checked
+                );
+              }}
+            />
+          </label>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/*
+
+<button id="closeModal" class= "dialog-close-btn">Close</button>
+
+// State variables for managing tasks
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOption, setSortOption] = useState('');
 
   // Function to handle search input change
   const handleSearchChange = (event) => {
@@ -42,22 +124,23 @@ export default function TaskManager() {
     // Implement logic to sort tasks based on selected option
   };
 
-  return (
-    <>
-      <button id="openModal">Add Task</button>
+
+// Task creator pop-up
+const modal = document.querySelector("#modal");
+const openModal = document.querySelector("#openModal");
+const closeModal = document.querySelector("#closeModal");
+
+if (modal) {
+  openModal && openModal.addEventListener("click", () => modal.showModal());
+
+  closeModal && closeModal.addEventListener("click", () => modal.close());
+}
+<button id="openModal">Add Task</button>
       <dialog id="modal" class="dialog">
         <button id="closeModal" class= "dialog-close-btn">Close</button>
         <p>Hello</p>
-        <input
-        value={task}
-        onChange={e => setTask(e.target.value)}
-        />
-        <button onClick={() => {
-          taskList.push({
-            id: nextId++,
-            name: task,
-          });
-        }}>Create task</button>
+      </dialog>
+
       </dialog>
       <input 
           type="text" 
@@ -76,37 +159,4 @@ export default function TaskManager() {
           <li key={task_i.id}>{task_i.name}</li>
         ))}
       </u1>
-    </>  
-  );
-}
-/*
-<button id="openModal">Add Task</button>
-      <dialog id="modal">
-        <p>Task</p>
-        <button id="closeModal" class="dialog-close-btn">Add Task</button>
-      </dialog>
-      <input 
-          type="text" 
-          placeholder="Search tasks..." 
-          value={searchQuery} 
-          onChange={handleSearchChange} 
-      />
-      <select value={sortOption} onChange={handleSortChange}>
-        <option value="">Sort By</option>
-        {
-          // Add sorting options 
-        } 
-      </select>
-      <div className="task-list">
-        {
-          // Render the list of tasks 
-        }
-        {tasks.map(task => (
-          <div key={task.id} className="task">
-            {
-              // Display task details 
-            }
-          </div>
-        ))}
-      </div>
 */
