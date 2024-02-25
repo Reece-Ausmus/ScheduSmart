@@ -4,7 +4,7 @@ import "./TaskManager.css"
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
 
-let str = "";
+// let str = "";
 const initialList = [
   { id: 0, title: 'Task Example', time: 4, date: "2024-02-25", desc: "Lorem Ipsum", seen: false },
   { id: 1, title: 'Task Example Two', time: 2, date: "2024-09-23", desc: "Lorem Ipsum", seen: false },
@@ -109,7 +109,9 @@ export default function TaskManager() {
   );
 }
 
-function ItemList({ list, onToggle, option, filter }) {
+function ItemList({ list, onToggle, option, filter}) {
+
+  let sortedList = list;
 
   const idAscending = [...list].sort((a, b) => a.id - b.id)
   const idDescending = [...list].sort((a, b) => b.id - a.id);
