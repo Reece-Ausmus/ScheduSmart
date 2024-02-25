@@ -14,4 +14,4 @@ schedusmart-backend/.venv
 schedusmart-backend/venv
 
 #python cache
-*__pychache__
+*__pycache__
