@@ -7,7 +7,7 @@ Week 2	(Srum master: Reece Ausmus)
 2/23    3hr     26ded43 Added more features to restrict users' input
 2/24    9hr     0e033b5 Finish the first version of main page UI including day, week, month, year, and task UI
 2/25    1hr     4f37525 Set up and putting account information into database
-
+2/25    4hr     6a928ef UI completed for Sign-in page to match, Buttons link to correct pages
 
 
 Week 3 	(Plan) (Scrum master: Reece Ausmus)
@@ -20,6 +20,6 @@ Week 3 	(Plan) (Scrum master: Reece Ausmus)
 Reece Ausmus: 
 Cassie Chang: 
 Stanley Huang: Do translation and set up event database and UI
-Bradley Norris: 
+Bradley Norris: 2FA, Time Zones, Calendar Export
 Himanshu Sinha: 
 Gloria Xu: Continue to maintain the create-account UI page and finish the implementation of reminders
