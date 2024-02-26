@@ -1,4 +1,53 @@
 # this class manage all types of communication between firebase and python
+#
+# Firebase Layout
+#
+# - Users
+#   |-  user_name1
+#       |-  first_name
+#       |-  last_name
+#       |-  email
+#       |-  calenders
+#           |-  cal_id1
+#           |-  cal_id2
+#           ...
+#       |-  task_lists
+#           |-  task_list_id1
+#           |-  task_list_id2
+#           ...
+#   |-  user_name2
+#       |-  first_name
+#       |-  last_name
+#       |-  email
+#       |-  calenders
+#           |-  cal_id1
+#           |-  cal_id2
+#           ...
+#       |-  task_lists
+#           |-  task_list_id1
+#           |-  task_list_id2
+#           ...
+#   ...
+# - Calendars
+#   |-  cal_id1
+#       |-  event_id1
+#       |-  event_id2
+#       ...
+#   |-  cal_id2
+#       |-  event_id1
+#       |-  event_id2
+#       ...
+#   ...
+# - Task_Lists
+#   |-  task_list_id1
+#       |-  task_id1
+#       |-  task_id2
+#       ...
+#   |-  task_list_id2
+#       |-  task_id1
+#       |-  task_id2
+#       ...
+#   ...
 
 import pyrebase
 from firebaseConfig import firebaseConfig
