@@ -13,14 +13,22 @@ class Account:
 class Task:
     """Tasks created by the user"""
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, id, title, time, date, seen) -> None:
+        self.id = id
+        self.title = title
+        self.time = time
+        self.date = date
+        self.seen = seen
+        self.completion_time = None
 
 class Event:
     """Events created by the user"""
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, id, title, start_time, end_time) -> None:
+        self.id = id
+        self.title = title
+        self.start_time = start_time
+        self.end_time = end_time
 
 class Collection:
     """Parent class for all collections of items such as tasks or events"""
