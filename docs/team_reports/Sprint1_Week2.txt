@@ -22,5 +22,5 @@ Reece Ausmus:
 Cassie Chang: finish the drag and drop features and ensure calendar format display properly
 Stanley Huang: Do translation and set up event database and UI
 Bradley Norris: 2FA, Time Zones, Calendar Export
-Himanshu Sinha: 
+Himanshu Sinha: Implement task manager backend once accounts are fully setup, implement weather features, add testing 
 Gloria Xu: Continue to maintain the create-account UI page and finish the implementation of reminders
