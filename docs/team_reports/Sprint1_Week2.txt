@@ -18,7 +18,7 @@ Week 3 	(Plan) (Scrum master: Reece Ausmus)
 3/3/24  Discuss current progress and complete weekly report. Ask questions to Project Coordinator
 
 [Individual Goals]
-Reece Ausmus: 
+Reece Ausmus: Implement availability (sleep, out-of-office, etc) and finish implementation of multiple calendars.
 Cassie Chang: finish the drag and drop features and ensure calendar format display properly
 Stanley Huang: Do translation and set up event database and UI
 Bradley Norris: 2FA, Time Zones, Calendar Export
