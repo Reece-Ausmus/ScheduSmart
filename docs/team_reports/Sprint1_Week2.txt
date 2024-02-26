@@ -3,9 +3,9 @@
 Week 2	(Srum master: Reece Ausmus)
 2/20    2.5hr   288906a Finished the first version of the create-account UI page
 2/20    1hr     003e724 Modified the implementation of the create-account UI page
-2/20    4hr     5216cd7 Adding route to connect frontend, backend, and database to create                          account
+2/20    4hr     5216cd7 Adding route to connect frontend, backend, and database to create account
 2/23    3hr     26ded43 Added more features to restrict users' input
-2/24    8hr     0e033b5 Finish the first version of main page UI including day, week,                              month, year UI
+2/24    8hr     0e033b5 Finish the first version of main page UI including day, week, month, year UI
 2/25    1hr     4f37525 Set up and putting account information into database
 
 
