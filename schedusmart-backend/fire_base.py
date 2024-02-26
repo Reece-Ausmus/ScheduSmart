@@ -101,5 +101,5 @@ db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
 
-user = auth.sign_in_with_email_and_password("ty@hn.ce", "123456r")
-delete_account(user)
+#user = auth.sign_in_with_email_and_password("ty@hn.ce", "123456r")
+#delete_account(user)
