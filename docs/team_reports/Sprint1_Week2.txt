@@ -4,6 +4,7 @@ Week 2	(Srum master: Reece Ausmus)
 2/20    2.5hr   288906a Finished the first version of the create-account UI page
 2/20    1hr     003e724 Modified the implementation of the create-account UI page
 2/20    5hr     5216cd7 Adding route to connect frontend, backend, and database to create account
+2/22    4hr     1e60396 create interactive web tours on mainframe
 2/23    3hr     26ded43 Added more features to restrict users' input
 2/24    9hr     0e033b5 Finish the first version of main page UI including day, week, month, year, and task UI
 2/25    1hr     4f37525 Set up and putting account information into database
@@ -18,7 +19,7 @@ Week 3 	(Plan) (Scrum master: Reece Ausmus)
 
 [Individual Goals]
 Reece Ausmus: 
-Cassie Chang: 
+Cassie Chang: finish the drag and drop features and ensure calendar format display properly
 Stanley Huang: Do translation and set up event database and UI
 Bradley Norris: 2FA, Time Zones, Calendar Export
 Himanshu Sinha: 
