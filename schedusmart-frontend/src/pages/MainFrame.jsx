@@ -451,7 +451,6 @@ export default function MainFrame() {
         // user can skip the tours
         showSkipButton={true}
       />
-<<<<<<< HEAD
       <div>
         <button className='add_button'> 
         Create
@@ -463,10 +462,7 @@ export default function MainFrame() {
         <button className='upperBarButton' onClick={handleConfirmClick}>drag & drop</button>
         <button className="upperBarButton">logout</button>
       </div>
-=======
       <div>{upperBarPackage()}</div>
-
->>>>>>> 6588f3b288d9f0d428a8a36aed4eebf878b0b8fa
       <div className="calender_container">
         <div className="calender_container_controlbar">
           <h2 className="detailInfo">{detailInfo}</h2>

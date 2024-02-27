@@ -287,3 +287,10 @@ tr, th {
     height: 30%;
     width: 25%;
 }
+.add_button{
+    background-color: #5a5a5a;
+    color: rgb(223, 118, 43);
+    float: right;
+    top: 35px;
+    margin: 10px;
+}
