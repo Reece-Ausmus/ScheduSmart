@@ -317,6 +317,7 @@ export default function MainFrame() {
     const [eventName, setEventName] = useState("");
     const [eventDate, setEventDate] = useState("");
     const [eventTime, setEventTime] = useState("");
+    const [eventRepetition, setEventRepetition] = useState(0);
 
     const togglePopup = () => {
       setShowPopup(!showPopup);
@@ -333,6 +334,10 @@ export default function MainFrame() {
     const handleEventTimeChange = (e) => {
       setEventTime(e.target.value);
     };
+
+    const handleEventRepetitionChange = (e) => {
+      setEventRepetition(e.target.value);
+    }
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -353,18 +358,34 @@ export default function MainFrame() {
             <div className="popup-content">
               <h2>Add Event</h2>
               <form onSubmit={handleSubmit}>
-              <div className="formgroup">
-                <label htmlFor="eventName">Event Name:</label>
-                <input type="text" id="eventName" value={eventName} onChange={handleEventNameChange}/>
-              </div>
-              <div className="formgroup">
-                <label htmlFor="eventDate">Event Date:</label>
-                <input type="date" id="eventDate" value={eventDate} onChange={handleEventDateChange}/>
-              </div>
-              <div className="formgroup">
-                <label htmlFor="eventTime">Event Time:</label>
-                <input type="time" id="eventTime" value={eventTime} onChange={handleEventTimeChange}/>
-              </div>
+                <div className="formgroup">
+                  <label htmlFor="eventName">Event Name:</label>
+                  <input type="text" id="eventName" value={eventName} onChange={handleEventNameChange}/>
+                </div>
+                <div className="formgroup">
+                  <label htmlFor="eventDate">Event Date:</label>
+                  <input type="date" id="eventDate" value={eventDate} onChange={handleEventDateChange}/>
+                </div>
+                <div className="formgroup">
+                  <label htmlFor="eventTime">Event Time:</label>
+                  <input type="time" id="eventTime" value={eventTime} onChange={handleEventTimeChange}/>
+                </div>
+                <div className="formgroup">
+                  <label htmlFor="eventRepetition">Repetition:</label>
+                  <select id="repetition" value={eventRepetition} onChange={handleEventRepetitionChange}>
+                    <option value="none">None</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+                {eventRepetition === 'custom' && (
+                  <div className="formgroup">
+                    <label htmlFor="customRepetition">Custom Repetition:</label>
+                    <input type="text" id="customRepetition" value={eventRepetition} onChange={handleEventRepetitionChange}/>
+                  </div>
+                )}
                 <button className="formbutton fb1" type="submit">Add</button>
                 <button className="formbutton fb2" onClick={togglePopup}>Cancel</button>
               </form>
