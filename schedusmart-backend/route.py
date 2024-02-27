@@ -17,8 +17,8 @@ account = Blueprint('login', __name__)
 def create_account():
     receive_account = request.get_json()
     try:
-        a = create_account_by_username_and_password(receive_account)
-        if a == 1:
+        ret = create_account_by_username_and_password(receive_account)
+        if ret == 1:
             return 'username has been used', 205
     except:
         traceback.print_exc()
@@ -31,7 +31,7 @@ def create_account():
 def login():
     receive_account = request.get_json()
     
-    user = login_account_with_email_and_password(receive_account)
-    if user == 1:
+    ret = login_account_with_email_and_password(receive_account)
+    if ret == 1:
         return 'invalid email or password', 205
     return 'Done', 201
