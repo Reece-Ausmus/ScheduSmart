@@ -148,6 +148,14 @@ def add_new_event_list(task_list_id, task_list):
     return 0
 
 
+# This function is used to add or update event to event_list that already exist
+# argument:
+# task_list_id = the id for the task list we are modifying
+# new_task with format = {
+#     "task_id": "<id>",
+#     "info": "<info>"
+#     ...
+# }
 def update_task_list(task_list_id, new_task):
     if not __task_list_exist(task_list_id):
         return f"Error: {task_list_id} does not exist in task list"
