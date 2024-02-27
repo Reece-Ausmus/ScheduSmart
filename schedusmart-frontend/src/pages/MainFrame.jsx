@@ -402,7 +402,7 @@ export default function MainFrame() {
             document.getElementById("2").style.backgroundColor = "#2d2d2d";
             document.getElementById("3").style.backgroundColor = "#cfcfcf";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
-            setDetailInfo(monthArray[todayMonth - 1]);
+            setDetailInfo(monthArray[todayMonth]);
           }}
         >
           month
