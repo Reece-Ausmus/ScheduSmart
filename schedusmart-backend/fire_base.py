@@ -70,6 +70,18 @@ def delete_account(user):
 
 def create_account_by_username_and_password(receive_account):
     try:
+        def transaction(transaction):
+            users = transaction.child("User").get()
+            if users is None:
+                return None
+            for user in users.each():
+                if user.val().get("user_name") == receive_account['username']:
+                    return None
+            return users
+        result=db.transaction(transaction)
+        if result is None:
+            print("Username already exists")
+            return 2
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
         data = {
             "first_name": receive_account['firstname'],
@@ -80,7 +92,7 @@ def create_account_by_username_and_password(receive_account):
         db.child("User").push(data)
         return 0
     except Exception as e:
-        print("invalid username or password to create account")
+        print("Failed to create account:", e)
         return 1
 
 
