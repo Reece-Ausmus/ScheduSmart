@@ -53,6 +53,10 @@ import pyrebase
 from firebaseConfig import firebaseConfig
 
 
+# to use this function, you will need to first log in the account with method:
+# login_account_with_username_and_password(username, password)
+# the method will return a user object that you will use for argument in this method
+# then the account will be properly deleted
 def delete_account(user):
     try:
         users = db.child("User").get()
@@ -67,6 +71,17 @@ def delete_account(user):
         return 1
 
 
+# this is used to create an account
+# the argument accept an array with following format:
+# user = {
+#     "email": "<email>",
+#     "password": "<password>",
+#     "firstname": '<firstname>',
+#     "lastname": '<lastname>',
+#     "username": '<username>'
+# }
+# if success, 0 is returned
+# else 1 is returned
 def create_account_by_username_and_password(receive_account):
     try:
         data = {
@@ -82,6 +97,10 @@ def create_account_by_username_and_password(receive_account):
         return 1
 
 
+# this method is used to log in with email and password (both argument are string)
+# if login successfully, a user object build by pyrebase will return,
+# which can be used to delete account or view token for security purpose
+# if fail (invalid email or password), 1 is return
 def login_account_with_username_and_password(username, password):
     try:
         return auth.sign_in_with_email_and_password(username, password)
