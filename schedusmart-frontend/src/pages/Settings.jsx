@@ -26,6 +26,7 @@ export default function Settings() {
         <>
         <Header/>
         <h2>Settings!</h2>
+        <h3>Weather App Testing</h3>
         <button onClick={() => {setGoToDash(true)}}>Dashboard</button>
         <button onClick={() => {setGoToWelcome(true)}}>Sign Out</button>
         </>

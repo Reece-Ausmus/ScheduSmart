@@ -1,22 +1,35 @@
 * {
     box-sizing: border-box;
+}
+
+#root {
     padding: 0px;
 }
-body{
+
+body {
     background-color: #b1b1b1;
     margin: 0px;
     padding: 0px;
 }
-.container{
-    height: 100%;
+.container {
+    height: 100vh;
     width: 100%;
+    padding: 0px;
+    background-color: #b1b1b1;
 }
 .title{
-    position: absolute;
     top: 35px;
     margin-left: 30px;
     font-size: 200px;
     display: inline;
+    color: rgb(52, 52, 52);
+    font-size: 25px;
+    margin-left: 40px;
+}
+.upperBar{
+    background-color: #b1b1b1;
+    height: 100px;
+    width: 100%;
 }
 .upperBarButton{
     background-color: #5a5a5a;
@@ -25,11 +38,7 @@ body{
     top: 35px;
     margin: 10px;
 }
-.title{
-    color: rgb(52, 52, 52);
-    font-size: 25px;
-    margin-left: 40px;
-}
+
 .calender_container{
     position: absolute;
     width: 60%;
@@ -41,6 +50,9 @@ body{
 .calender_container_controlbar{
     display: block;
     height: 13%;
+}
+.buttonGroup {
+    margin-right: 2%;
 }
 .modeButton {
     padding: auto;
@@ -224,9 +236,9 @@ body{
 }
 
 .event_container{
-    position: absolute;
+    float: right;
     right:2%;
-    width: 240px;
+    width: 20%;
     height: 600px;
     background-color: #3c3c3c;
     border-radius: 10px;
@@ -236,7 +248,6 @@ body{
     font-size: 25px;
 }
 .ToDoList{
-    position: absolute;
     margin-left: 5%;
     border-radius: 10px;
     width: 90%;
