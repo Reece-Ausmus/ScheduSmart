@@ -22,6 +22,8 @@ import { orange } from '@mui/material/colors';
 // npm install @mui/icons-material
 // npm install @material-ui/icons
 
+const flaskURL = "http://127.0.0.1:5000";
+
 const theme = createTheme({
   palette: {
     primary: orange,
@@ -31,15 +33,44 @@ const theme = createTheme({
   },
 });
   
-  export default function SignIn() {
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-      });
-    };
+export default function SignIn() {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Validate if email and password are not empty
+    if (!email || !password) {
+      alert('Please enter both email and password.');
+      return;
+    }
+
+    const response = await fetch(flaskURL + '/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    if (!response.ok) {
+      alert("something went wrong, refresh your website");
+    } else {
+      switch(response.status) {
+        case 201:
+          console.log("sign-in account successfull");
+          window.location.href = '/calendar'
+          break;
+        case 205:
+          alert("Invalid email or password.");
+          break;
+      }
+    }
+  };
   
     return (
       <ThemeProvider theme={theme}>
@@ -105,7 +136,7 @@ const theme = createTheme({
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, bgcolor: 'warning.main'}}
+                sx={{ mt: 3, mb: 2, bgcolor: 'warning.main' }}
               >
                 Login
               </Button>

@@ -6,9 +6,9 @@ const flaskURL = "http://127.0.0.1:5000";
 
 // let str = "";
 const initialList = [
-  { id: 0, title: 'Homework 2', time: 4, date: "2024-02-25", desc: "Complete design document and sumbit", seen: false },
-  { id: 1, title: 'Sprint Planning', time: 2, date: "2024-09-23", desc: "Speak with team coordinator", seen: false },
-  { id: 2, title: 'Midterm Study', time: 5, date: "2059-09-23", desc: "Look at slides lol", seen: false },
+  { id: 0, title: 'Homework 2', time: 4, date: "2024-02-25", desc: "Complete design document and sumbit", completed: false, completed_time: null },
+  { id: 1, title: 'Sprint Planning', time: 2, date: "2024-09-23", desc: "Speak with team coordinator", completed: false, completed_time: null },
+  { id: 2, title: 'Midterm Study', time: 5, date: "2059-09-23", desc: "Look at slides lol", completed: false, completed_time: null },
 ];
 let nextId = initialList.length
 
@@ -22,6 +22,7 @@ export default function TaskManager() {
   const [taskDate, setTaskDate] = useState();
   const [taskDesc, setTaskDesc] = useState('');
   const [myList, setMyList] = useState(initialList);
+  const [completedList, setCompletedList] = useState([]);
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -35,13 +36,33 @@ export default function TaskManager() {
   }
 
   // handle task list making
-  function handleToggleMyList(listId, nextSeen) {
-    const myNextList = [...myList];
-    const list = myNextList.find(
-      l => l.id === listId
-    );
-    list.seen = nextSeen;
-    setMyList(myNextList);
+  function handleToggleCompleted(taskID, completedStatus) {
+    let taskToUpdate = myList.find(task => task.id === taskID);
+    if (!taskToUpdate) {
+      taskToUpdate = completedList.find(task => task.id === taskID);
+    }
+    if (!taskToUpdate) {
+      return;
+    }
+    const currentTime = new Date().toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const updatedTask = {
+      ...taskToUpdate,
+      completed: completedStatus,
+      completed_time: completedStatus ? currentTime : null
+    };
+    if (completedStatus) {
+      setCompletedList(completedList => [...completedList, updatedTask]);
+      setMyList(myList => myList.filter(task => task.id !== taskID));
+    } else {
+      setMyList(myList => [...myList, updatedTask]);
+      setCompletedList(completedList => completedList.filter(task => task.id !== taskID));
+    }
   }
 
   // search list
@@ -105,7 +126,7 @@ export default function TaskManager() {
         <button id="closeModal" onClick={() => {
           setMyList([
             ...myList,
-            {id: nextId++, title: taskName, time: taskTime, date: taskDate, desc: taskDesc, seen:false}
+            {id: nextId++, title: taskName, time: taskTime, date: taskDate, desc: taskDesc, completed:false}
           ]);
         }}>Add</button>
       </dialog>
@@ -124,16 +145,47 @@ export default function TaskManager() {
         <option value="5">Largest workload</option>
         <option value="6">Smallest workload</option>
       </select>
-      <ItemList
+      {/*<ItemList
         list={foundList}
-        onToggle={handleToggleMyList} 
-        option={sortOption}
-      />
+        onToggle={handleToggleCompleted} 
+      option={sortOption}
+      />*/}
+      {/*<div className="task-columns">
+        <div className="task-column">
+          <h2>To Do</h2>
+          <ItemList
+            list={myList}
+            onToggle={handleToggleCompleted} 
+            option={sortOption}
+          />
+        </div>
+        <div className="task-column">
+          <h2>Completed</h2>
+          <CompletedList list={completedList} />
+        </div>
+      </div>*/}
+      <div className="task-columns-container">
+        <div className="task-column">
+          <h2>To Do</h2>
+          <TodoList
+            list={myList}
+            onToggle={handleToggleCompleted} 
+            option={sortOption}
+          />
+        </div>
+        <div className="task-column">
+          <h2>Completed</h2>
+          <CompletedList
+            list={completedList}
+            onToggle={handleToggleCompleted}
+          />
+        </div>
+      </div>
     </>
   );
 }
 
-function ItemList({ list, onToggle, option}) {
+function TodoList({ list, onToggle, option}) {
 
   let sortedList = list;
 
@@ -168,11 +220,37 @@ function ItemList({ list, onToggle, option}) {
         <div className="post" key={task.id} >
           <h3>{task.title}</h3>
           <p>{task.desc}</p>
-          <p>Estimated Workload: {task.time}</p>
+          <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
           <input
             type="checkbox"
-            checked={task.seen}
+            checked={task.completed}
+            onChange={e => {
+              onToggle(
+                task.id,
+                e.target.checked
+              );
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CompletedList({ list, onToggle }) {
+  return (
+    <div>
+      {list.map(task => (
+        <div className="post" key={task.id}>
+          <h3>{task.title}</h3>
+          <p>{task.desc}</p>
+          <p>Estimated Workload: {task.time} hour(s)</p>
+          <p>Deadline: {task.date}</p>
+          <p>Completed: {task.completed_time}</p>
+          <input
+            type="checkbox"
+            checked={task.completed}
             onChange={e => {
               onToggle(
                 task.id,

@@ -29,4 +29,9 @@ def create_account():
 # this is where you modify login method
 @account.route('/login', methods=['POST'])
 def login():
-    return 'login_confirm', 201
+    receive_account = request.get_json()
+    
+    user = login_account_with_email_and_password(receive_account)
+    if user == 1:
+        return 'invalid email or password', 205
+    return 'Done', 201
