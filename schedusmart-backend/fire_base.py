@@ -51,13 +51,8 @@
 #       ...
 #   ...
 
-# When using routes that need user_id to access that users data, use the following line:
-# user_id = session['user_id']
-# this will return the user_id that is the name of the file directory for the user data in firebase
-
 import pyrebase
 from firebaseConfig import firebaseConfig
-from flask import session
 
 
 # to use this function, you will need to first log in the account with method:
@@ -91,7 +86,6 @@ def delete_account(user):
 # else 1 is returned
 def create_account_by_username_and_password(receive_account):
     try:
-        user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
         data = {
             "first_name": receive_account['firstname'],
             "last_name": receive_account['lastname'],
@@ -99,12 +93,11 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email']
         }
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
-        db.child("User").push(new_user)
+        db.child("User").push(data)
         return 0
     except Exception as e:
         print("Failed to create account:", e)
         return 1
-
 
 # this method is used to log in with email and password (both argument are string)
 # if login successfully, a user object build by pyrebase will return,
@@ -122,6 +115,9 @@ def login_account_with_email_and_password(receive_account):
         print("invalid email or password")
         return 1
 
+# ##################################################################################################
+# The following code will be used to manipulate task in firebase
+# ##################################################################################################
 
 # build a connection between firebase and flask #######################
 
