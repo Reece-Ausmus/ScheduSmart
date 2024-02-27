@@ -456,12 +456,6 @@ export default function MainFrame() {
         Create
         </button>
       </div>
-      <div className="upperBar">
-        <h1 className="title">ScheduSmart</h1>
-        <button className="upperBarButton">setting</button>
-        <button className='upperBarButton' onClick={handleConfirmClick}>drag & drop</button>
-        <button className="upperBarButton">logout</button>
-      </div>
       <div>{upperBarPackage()}</div>
       <div className="calender_container">
         <div className="calender_container_controlbar">
