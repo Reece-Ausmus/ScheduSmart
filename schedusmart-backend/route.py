@@ -17,8 +17,8 @@ account = Blueprint('login', __name__)
 def create_account():
     receive_account = request.get_json()
     try:
-        a = create_account_by_username_and_password(receive_account)
-        if a == 1:
+        user = create_account_by_username_and_password(receive_account)
+        if user == 1:
             return 'username has been used', 205
         session['user_id'] = user
     except:
