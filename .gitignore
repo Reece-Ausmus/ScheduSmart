@@ -15,3 +15,6 @@ schedusmart-backend/venv
 
 #python cache
 *__pycache__
+
+#session data
+schedusmart-backend/flask_session
