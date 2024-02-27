@@ -55,28 +55,28 @@ export default function Createaccount() {
                 const regex = /[\\"\s\'\\\x00-\x1F\x7F]/g; 
 
                 if (!lastname.localeCompare('') && !firstname.localeCompare('')) {
-                    alert("please fill up your name");
+                    alert("Please fill up your name!");
                 }
                 else if (!username.localeCompare('')) {
-                    alert("please fill up your username");
+                    alert("Please fill up your username!");
                 }
                 else if (!email.localeCompare('')) {
-                    alert("please fill up your email");
+                    alert("Please fill up your email!");
                 }
                 else if (!password.localeCompare('')) {
-                    alert("please fill up your password");
+                    alert("Please fill up your password!");
                 }
                 else if (regex.test(firstname) || regex.test(lastname) || regex.test(username) || regex.test(password) || regex.test(confirm_password)) {
-                    alert("Input contains special characters. Please remove them and try again."); 
+                    alert("Input contains special characters. Please remove them and try again!"); 
                 } // avoid special characters in input
                 else if (password.localeCompare(confirm_password)) {
-                    alert("confirm password does not match");
+                    alert("Confirm password does not match!");
                 } 
                 else if (password.length < 6) {
-                    alert("Password must be at least 6 characters long.")
+                    alert("Password must be at least 6 characters long!")
                 }
                 else if (!letterRegex.test(password) || !numberRegex.test(password)) {
-                    alert("Password must contain at least one letter and one number.");
+                    alert("Password must contain at least one letter and one number!");
                 }
                 else {
                     const new_account = {firstname,lastname,username, email, password};
@@ -88,15 +88,15 @@ export default function Createaccount() {
                         body: JSON.stringify(new_account)
                     })
                     if (!response.ok) {
-                        alert("something went wrong, refresh your website");
+                        alert("Something went wrong, refresh your website!");
                     } else{
                         switch(response.status) {
                             case 201:
-                                console.log("create account successfully");
+                                console.log("Create account successfully");
                                 window.location.href = '/'
                                 break;
                             case 205:
-                                alert("invalid email.");
+                                alert("Username has been used. Please change it to another one!");
                                 break;
                         }
                     }
