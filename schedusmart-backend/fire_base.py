@@ -51,8 +51,13 @@
 #       ...
 #   ...
 
+# When using routes that need user_id to access that users data, use the following line:
+# user_id = session['user_id']
+# this will return the user_id that is the name of the file directory for the user data in firebase
+
 import pyrebase
 from firebaseConfig import firebaseConfig
+from flask import session
 
 
 # to use this function, you will need to first log in the account with method:
@@ -93,7 +98,11 @@ def create_account_by_username_and_password(receive_account):
             "user_name": receive_account['username'],
             "email": receive_account['email']
         }
-        user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
+
+        # duplicate code below, I (Reece) don't think it is necessary
+        #user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
+        
+        session['user_id'] = user
         db.child("User").push(data)
         return 0
     except Exception as e:
@@ -112,6 +121,7 @@ def login_account_with_email_and_password(receive_account):
             "email": receive_account['email'],
             "password": receive_account['password']
         }
+        session['user_id'] = user
         return 0
     except Exception:
         print("invalid email or password")
