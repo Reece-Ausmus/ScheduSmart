@@ -4,6 +4,10 @@ import traceback
 # To make code clean, please make
 # each route that serve the same object have the same variable_name
 
+# When using routes that need user_id to access that users data, use the following line:
+# user_id = session['user_id']
+# this will return the user_id that is the name of the file directory for the user data in firebase
+
 # To test the code, I recommend using postman app to see what is going on
 from flask import Blueprint, request, session
 from fire_base import *
