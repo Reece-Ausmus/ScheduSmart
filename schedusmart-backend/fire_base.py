@@ -53,7 +53,7 @@
 
 import pyrebase
 from firebaseConfig import firebaseConfig
-
+from flask import session
 
 # to use this function, you will need to first log in the account with method:
 # login_account_with_username_and_password(username, password)
@@ -93,7 +93,8 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email']
         }
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
-        db.child("User").push(data)
+        session['user_id'] = user['localId']
+        db.child("User").child(session['user_id']).set(data)
         return 0
     except Exception as e:
         print("Failed to create account:", e)
@@ -107,6 +108,7 @@ def create_account_by_username_and_password(receive_account):
 def login_account_with_email_and_password(receive_account):
     try:
         user = auth.sign_in_with_email_and_password(receive_account['email'], receive_account['password'])
+        session['user_id'] = user['localId']
         data = {
             "email": receive_account['email'],
             "password": receive_account['password']
