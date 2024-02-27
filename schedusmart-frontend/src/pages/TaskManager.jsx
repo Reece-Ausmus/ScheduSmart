@@ -4,7 +4,6 @@ import "./TaskManager.css"
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
 
-// let str = "";
 const initialList = [
   { id: 0, title: 'Homework 2', time: 4, date: "2024-02-25", desc: "Complete design document and sumbit", completed: false, completed_time: null },
   { id: 1, title: 'Sprint Planning', time: 2, date: "2024-09-23", desc: "Speak with team coordinator", completed: false, completed_time: null },
@@ -14,14 +13,15 @@ let nextId = initialList.length
 
 export default function TaskManager() {
   // select sort option
-  const [sortOption, setSortOption] = useState(0);
+  const [sortOptionTodo, setSortOptionTodo] = useState(0);
+  const [sortOptionCompleted, setSortOptionCompleted] = useState(0);
 
   // used to hold data for tasks
   const [taskName, setTaskName] = useState('');
   const [taskTime, setTaskTime] = useState(0);
   const [taskDate, setTaskDate] = useState();
   const [taskDesc, setTaskDesc] = useState('');
-  const [myList, setMyList] = useState(initialList);
+  const [todoList, setTodoList] = useState(initialList);
   const [completedList, setCompletedList] = useState([]);
 
   // Task creator pop-up
@@ -35,9 +35,9 @@ export default function TaskManager() {
     closeModal && closeModal.addEventListener("click", () => modal.close());
   }
 
-  // handle task list making
+  // handle completion checkbox toggle
   function handleToggleCompleted(taskID, completedStatus) {
-    let taskToUpdate = myList.find(task => task.id === taskID);
+    let taskToUpdate = todoList.find(task => task.id === taskID);
     if (!taskToUpdate) {
       taskToUpdate = completedList.find(task => task.id === taskID);
     }
@@ -58,31 +58,47 @@ export default function TaskManager() {
     };
     if (completedStatus) {
       setCompletedList(completedList => [...completedList, updatedTask]);
-      setMyList(myList => myList.filter(task => task.id !== taskID));
+      setTodoList(todoList => todoList.filter(task => task.id !== taskID));
     } else {
-      setMyList(myList => [...myList, updatedTask]);
+      setTodoList(todoList => [...todoList, updatedTask]);
       setCompletedList(completedList => completedList.filter(task => task.id !== taskID));
     }
   }
 
   // search list
-  const [searchQuery, setSearchQuery] = useState('');
-  const [foundList, setFoundList] = useState(myList);
+  const [searchQueryTodo, setSearchQueryTodo] = useState('');
+  const [searchQueryCompleted, setSearchQueryCompleted] = useState('');
+  const [foundList, setFoundList] = useState(todoList);
 
   // filter list
-  const filter = (e) => {
+  const filterTodo = (e) => {
     const keyword = e.target.value;
 
     if (keyword !== '') {
-      const results = myList.filter((task) => {
+      const results = todoList.filter((task) => {
         return task.title.toLowerCase().includes(keyword.toLowerCase()) || task.desc.toLowerCase().includes(keyword.toLowerCase());
       });
       setFoundList(results)
     } else {
-      setFoundList(myList)
+      setFoundList(todoList)
     }
 
-    setSearchQuery(keyword)
+    setSearchQueryTodo(keyword)
+  }
+
+  const filterCompleted = (e) => {
+    const keyword = e.target.value;
+
+    if (keyword !== '') {
+      const results = completedList.filter((task) => {
+        return task.title.toLowerCase().includes(keyword.toLowerCase()) || task.desc.toLowerCase().includes(keyword.toLowerCase());
+      });
+      setFoundList(results)
+    } else {
+      setFoundList(completedList)
+    }
+
+    setSearchQueryTodo(keyword)
   }
 
   return (
@@ -124,60 +140,59 @@ export default function TaskManager() {
         onChange={e => setTaskDesc(e.target.value)}
         />
         <button id="closeModal" onClick={() => {
-          setMyList([
-            ...myList,
+          setTodoList([
+            ...todoList,
             {id: nextId++, title: taskName, time: taskTime, date: taskDate, desc: taskDesc, completed:false}
           ]);
         }}>Add</button>
       </dialog>
-      <input
-      type="search"
-      value={searchQuery}
-      onChange={filter}
-      placeholder="Search"
-      />
-      <select value={sortOption} onChange={e => setSortOption(e.target.value)}>
-        <option value="0">Sort By</option>
-        <option value="1">Earliest created</option>
-        <option value="2">Latest created</option>
-        <option value="3">Earliest due</option>
-        <option value="4">Latest due</option>
-        <option value="5">Largest workload</option>
-        <option value="6">Smallest workload</option>
-      </select>
-      {/*<ItemList
-        list={foundList}
-        onToggle={handleToggleCompleted} 
-      option={sortOption}
-      />*/}
-      {/*<div className="task-columns">
-        <div className="task-column">
-          <h2>To Do</h2>
-          <ItemList
-            list={myList}
-            onToggle={handleToggleCompleted} 
-            option={sortOption}
-          />
-        </div>
-        <div className="task-column">
-          <h2>Completed</h2>
-          <CompletedList list={completedList} />
-        </div>
-      </div>*/}
       <div className="task-columns-container">
         <div className="task-column">
           <h2>To Do</h2>
+          <input
+            type="search"
+            value={searchQueryTodo}
+            onChange={filterTodo}
+            placeholder="Search"
+            />
+            <select value={sortOptionTodo} onChange={e => setSortOptionTodo(e.target.value)}>
+              <option value="0">Sort By</option>
+              <option value="1">Earliest created</option>
+              <option value="2">Latest created</option>
+              <option value="3">Earliest due</option>
+              <option value="4">Latest due</option>
+              <option value="5">Largest workload</option>
+              <option value="6">Smallest workload</option>
+          </select>
           <TodoList
-            list={myList}
+            list={todoList}
             onToggle={handleToggleCompleted} 
-            option={sortOption}
+            option={sortOptionTodo}
           />
         </div>
         <div className="task-column">
           <h2>Completed</h2>
+          <input
+            type="search"
+            value={searchQueryCompleted}
+            onChange={filterCompleted}
+            placeholder="Search"
+            />
+            <select value={sortOptionCompleted} onChange={e => setSortOptionCompleted(e.target.value)}>
+              <option value="0">Sort By</option>
+              <option value="1">Earliest created</option>
+              <option value="2">Latest created</option>
+              <option value="3">Earliest due</option>
+              <option value="4">Latest due</option>
+              <option value="5">Largest workload</option>
+              <option value="6">Smallest workload</option>
+              <option value="7">Earliest completed</option>
+              <option value="8">Latest completed</option>
+          </select>
           <CompletedList
             list={completedList}
             onToggle={handleToggleCompleted}
+            option={sortOptionCompleted}
           />
         </div>
       </div>
@@ -238,10 +253,44 @@ function TodoList({ list, onToggle, option}) {
   );
 }
 
-function CompletedList({ list, onToggle }) {
+function CompletedList({ list, onToggle, option }) {
+  
+  let sortedList = list;
+
+  const idAscending = [...list].sort((a, b) => a.id - b.id)
+  const idDescending = [...list].sort((a, b) => b.id - a.id);
+  const dueAscending = [...list].sort((a, b) => new Date(a.date) - new Date(b.date))
+  const dueDescending = [...list].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const workAscending = [...list].sort((a, b) => a.time - b.time)
+  const workDescending = [...list].sort((a, b) => b.time - a.time);
+  const completedAscending = [...list].sort((a, b) => new Date(a.completed_time) - new Date(b.completed_time))
+  const completedDescending = [...list].sort((a, b) => new Date(b.completed_time) - new Date(a.completed_time));
+  
+  if (option == 0) {
+    sortedList = list;
+  } else if (option == 1) {
+    sortedList = idAscending;
+  } else if (option == 2) {
+    sortedList = idDescending;
+  } else if (option == 3) {
+    sortedList = dueAscending;
+  } else if (option == 4) {
+    sortedList = dueDescending;
+  } else if (option == 5) {
+    sortedList = workDescending;
+  } else if (option == 6) {
+    sortedList = workAscending;
+  } else if (option == 7) {
+    sortedList = completedAscending;
+  } else if (option == 8) {
+    sortedList = completedDescending;
+  } else {
+    sortedList = list; 
+  }
+  
   return (
     <div>
-      {list.map(task => (
+      {sortedList.map(task => (
         <div className="post" key={task.id}>
           <h3>{task.title}</h3>
           <p>{task.desc}</p>
