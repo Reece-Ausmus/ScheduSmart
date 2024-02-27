@@ -6,9 +6,9 @@ const flaskURL = "http://127.0.0.1:5000";
 
 // let str = "";
 const initialList = [
-  { id: 0, title: 'Homework 2', time: 4, date: "2024-02-25", desc: "Complete design document and sumbit", completed: false },
-  { id: 1, title: 'Sprint Planning', time: 2, date: "2024-09-23", desc: "Speak with team coordinator", completed: false },
-  { id: 2, title: 'Midterm Study', time: 5, date: "2059-09-23", desc: "Look at slides lol", completed: false },
+  { id: 0, title: 'Homework 2', time: 4, date: "2024-02-25", desc: "Complete design document and sumbit", completed: false, completed_time: null },
+  { id: 1, title: 'Sprint Planning', time: 2, date: "2024-09-23", desc: "Speak with team coordinator", completed: false, completed_time: null },
+  { id: 2, title: 'Midterm Study', time: 5, date: "2059-09-23", desc: "Look at slides lol", completed: false, completed_time: null },
 ];
 let nextId = initialList.length
 
@@ -44,7 +44,18 @@ export default function TaskManager() {
     if (!taskToUpdate) {
       return;
     }
-    const updatedTask = { ...taskToUpdate, completed: completedStatus}
+    const currentTime = new Date().toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const updatedTask = {
+      ...taskToUpdate,
+      completed: completedStatus,
+      completed_time: completedStatus ? currentTime : null
+    };
     if (completedStatus) {
       setCompletedList(completedList => [...completedList, updatedTask]);
       setMyList(myList => myList.filter(task => task.id !== taskID));
@@ -209,7 +220,7 @@ function TodoList({ list, onToggle, option}) {
         <div className="post" key={task.id} >
           <h3>{task.title}</h3>
           <p>{task.desc}</p>
-          <p>Estimated Workload: {task.time}</p>
+          <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
           <input
             type="checkbox"
@@ -234,8 +245,9 @@ function CompletedList({ list, onToggle }) {
         <div className="post" key={task.id}>
           <h3>{task.title}</h3>
           <p>{task.desc}</p>
-          <p>Estimated Workload: {task.time}</p>
+          <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
+          <p>Completed: {task.completed_time}</p>
           <input
             type="checkbox"
             checked={task.completed}
