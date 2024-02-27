@@ -2,11 +2,12 @@
 #
 # Firebase Layout
 #
-# - Users
-#   |-  user_name1
+# - User
+#   |-  user_id
 #       |-  first_name
 #       |-  last_name
 #       |-  email
+#       |-  user_name
 #       |-  calenders
 #           |-  cal_id1
 #           |-  cal_id2
@@ -15,10 +16,11 @@
 #           |-  task_list_id1
 #           |-  task_list_id2
 #           ...
-#   |-  user_name2
+#   |-  user_id
 #       |-  first_name
 #       |-  last_name
 #       |-  email
+#       |-  user_name
 #       |-  calenders
 #           |-  cal_id1
 #           |-  cal_id2
