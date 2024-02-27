@@ -1,18 +1,48 @@
 from fire_base import *
 
+user = {
+    "email": "unitTest@purpose.only",
+    "password": "123465",
+    "firstname": 'firstname',
+    "lastname": 'lastname',
+    "username": 'username'
+}
+
 
 def testing_creating_invalid_account():
-    if create_account_by_username_and_password("", "") == 0:
-        print("fail to reject invalid username: 1")
+    user["email"] = ""
+    if create_account_by_username_and_password(user) == 0:
+        print("fail to reject invalid email: 1")
         assert False
-    if create_account_by_username_and_password("hello_kitty", "") == 0:
+    user["password"] = ""
+    if create_account_by_username_and_password(user) == 0:
         print("fail to reject invalid password: 1")
         assert False
-    if create_account_by_username_and_password("unit_test_account", "ersigubv") == 0:
+    user["password"] = "12345"
+    if create_account_by_username_and_password(user) == 0:
         print("fail to reject invalid username: 2")
         assert False
 
-#testing_creating_invalid_account()
-create_account_by_username_and_password("dev2@test.ing", "123456")
-a = login_account_with_username_and_password("dev@test.ing", "123456")
-print(a)
+
+def creating_same_email():
+    user["email"] = "unitTest@purpose.only"
+    user["password"] = "ThisIsJustPassword"
+    if create_account_by_username_and_password(user) == 1:
+        print("fail to create valid account")
+        assert False
+    if create_account_by_username_and_password(user) == 0:
+        print("fail to reject email account that already exist")
+        assert False
+    delete_user = login_account_with_username_and_password("unitTest@purpose.only", "ThisIsJustPassword")
+    delete_account(delete_user)
+
+
+def testToPullAccountInfo():
+    pass
+
+
+print("\n------unit test for account-----------")
+testing_creating_invalid_account()
+print("testing_creating_invalid_account\npass\n")
+creating_same_email()
+print("creating_same_email\npass\n")
