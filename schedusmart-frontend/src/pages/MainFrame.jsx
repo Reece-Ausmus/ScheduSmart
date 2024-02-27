@@ -312,6 +312,69 @@ export default function MainFrame() {
     );
   }
 
+  function addEvent() {
+    const [showPopup, setShowPopup] = useState(false);
+    const [eventName, setEventName] = useState("");
+    const [eventDate, setEventDate] = useState("");
+    const [eventTime, setEventTime] = useState("");
+
+    const togglePopup = () => {
+      setShowPopup(!showPopup);
+    };
+  
+    const handleEventNameChange = (e) => {
+      setEventName(e.target.value);
+    };
+  
+    const handleEventDateChange = (e) => {
+      setEventDate(e.target.value);
+    };
+
+    const handleEventTimeChange = (e) => {
+      setEventTime(e.target.value);
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      console.log("Event Name:", eventName);
+      console.log("Event Date:", eventDate);
+      console.log("Event Time:", eventTime);
+      setEventName("");
+      setEventDate("");
+      setEventTime("");
+      togglePopup();
+    };
+  
+    return (
+      <div className="add_button">
+        <button onClick={togglePopup}>Create</button>
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <h2>Add Event</h2>
+              <form onSubmit={handleSubmit}>
+              <div className="formgroup">
+                <label htmlFor="eventName">Event Name:</label>
+                <input type="text" id="eventName" value={eventName} onChange={handleEventNameChange}/>
+              </div>
+              <div className="formgroup">
+                <label htmlFor="eventDate">Event Date:</label>
+                <input type="date" id="eventDate" value={eventDate} onChange={handleEventDateChange}/>
+              </div>
+              <div className="formgroup">
+                <label htmlFor="eventTime">Event Time:</label>
+                <input type="time" id="eventTime" value={eventTime} onChange={handleEventTimeChange}/>
+              </div>
+                <button className="formbutton fb1" type="submit">Add</button>
+                <button className="formbutton fb2" onClick={togglePopup}>Cancel</button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   function calendarControlFlowButtonPackage() {
     return (
       <div className="buttonGroup">
@@ -451,11 +514,7 @@ export default function MainFrame() {
         // user can skip the tours
         showSkipButton={true}
       />
-      <div>
-        <button className='add_button'> 
-        Create
-        </button>
-      </div>
+      <div>{addEvent()}</div>
       <div>{upperBarPackage()}</div>
       <div className="calender_container">
         <div className="calender_container_controlbar">
