@@ -103,11 +103,16 @@ def create_account_by_username_and_password(receive_account):
 # if login successfully, a user object build by pyrebase will return,
 # which can be used to delete account or view token for security purpose
 # if fail (invalid email or password), 1 is return
-def login_account_with_username_and_password(username, password):
+def login_account_with_email_and_password(receive_account):
     try:
-        return auth.sign_in_with_email_and_password(username, password)
+        user =  auth.sign_in_with_email_and_password(receive_account['email'], receive_account['password'])
+        data = {
+            "email": receive_account['email'],
+            "password": receive_account['password']
+        }
+        return 0
     except Exception:
-        print("invalid username or password")
+        print("invalid email or password")
         return 1
 
 
