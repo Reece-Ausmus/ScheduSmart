@@ -317,6 +317,8 @@ export default function MainFrame() {
     const [eventName, setEventName] = useState("");
     const [eventDate, setEventDate] = useState("");
     const [eventTime, setEventTime] = useState("");
+    const [eventLocation, setEventLocation] = useState("");
+    const [eventDescription, setEventDescription] = useState("");
 
     const togglePopup = () => {
       setShowPopup(!showPopup);
@@ -334,14 +336,26 @@ export default function MainFrame() {
       setEventTime(e.target.value);
     };
 
+    const handleEventLocationChange = (e) => {
+      setEventLocation(e.target.value);
+    };
+
+    const handleEventDescriptionChange = (e) => {
+      setEventDescription(e.target.value);
+    };
+
     const handleSubmit = (e) => {
       e.preventDefault();
       console.log("Event Name:", eventName);
       console.log("Event Date:", eventDate);
       console.log("Event Time:", eventTime);
+      console.log("Event Location:", eventLocation);
+      console.log("Event Description:", eventDescription);
       setEventName("");
       setEventDate("");
       setEventTime("");
+      setEventLocation("");
+      setEventDescription("");
       togglePopup();
     };
   
@@ -364,6 +378,14 @@ export default function MainFrame() {
               <div className="formgroup">
                 <label htmlFor="eventTime">Event Time:</label>
                 <input type="time" id="eventTime" value={eventTime} onChange={handleEventTimeChange}/>
+              </div>
+              <div className="formgroup">
+                <label htmlFor="eventLocation">Event Location:</label>
+                <input type="text" id="eventLocation" value={eventLocation} onChange={handleEventLocationChange}/>
+              </div>
+              <div className="formgroup">
+                <label htmlFor="eventDescription">Event Description:</label>
+                <textarea id="eventDescription" value={eventDescription} onChange={handleEventDescriptionChange} rows="4" cols="50"/>
               </div>
                 <button className="formbutton fb1" type="submit">Add</button>
                 <button className="formbutton fb2" onClick={togglePopup}>Cancel</button>
