@@ -316,7 +316,8 @@ export default function MainFrame() {
     const [showPopup, setShowPopup] = useState(false);
     const [eventName, setEventName] = useState("");
     const [eventDate, setEventDate] = useState("");
-    const [eventTime, setEventTime] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
     const [eventLocation, setEventLocation] = useState("");
     const [eventDescription, setEventDescription] = useState("");
 
@@ -332,8 +333,12 @@ export default function MainFrame() {
       setEventDate(e.target.value);
     };
 
-    const handleEventTimeChange = (e) => {
-      setEventTime(e.target.value);
+    const handleStartTimeChange = (e) => {
+      setStartTime(e.target.value);
+    };
+  
+    const handleEndTimeChange = (e) => {
+      setEndTime(e.target.value);
     };
 
     const handleEventLocationChange = (e) => {
@@ -348,12 +353,14 @@ export default function MainFrame() {
       e.preventDefault();
       console.log("Event Name:", eventName);
       console.log("Event Date:", eventDate);
-      console.log("Event Time:", eventTime);
+      console.log("Start Time:", startTime);
+      console.log("End Time:", endTime);
       console.log("Event Location:", eventLocation);
       console.log("Event Description:", eventDescription);
       setEventName("");
       setEventDate("");
-      setEventTime("");
+      setStartTime("");
+      setEndTime("");
       setEventLocation("");
       setEventDescription("");
       togglePopup();
@@ -376,8 +383,10 @@ export default function MainFrame() {
                 <input type="date" id="eventDate" value={eventDate} onChange={handleEventDateChange}/>
               </div>
               <div className="formgroup">
-                <label htmlFor="eventTime">Event Time:</label>
-                <input type="time" id="eventTime" value={eventTime} onChange={handleEventTimeChange}/>
+                <label htmlFor="startTime">Start Time:</label>
+                <input type="time" id="startTime" value={startTime} onChange={handleStartTimeChange}/>
+                <label htmlFor="endTime">End Time:</label>
+                <input type="time" id="endTime" value={endTime} onChange={handleEndTimeChange}/>
               </div>
               <div className="formgroup">
                 <label htmlFor="eventLocation">Event Location:</label>
