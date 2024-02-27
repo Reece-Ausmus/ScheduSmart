@@ -87,6 +87,11 @@ export default function MainFrame() {
         // user can skip the tours
         showSkipButton={true}
       />
+      <div>
+        <button className='add_button'> 
+        Create
+        </button>
+      </div>
       <div className="upperBar">
         <h1 className="title">ScheduSmart</h1>
         <button className="upperBarButton">setting</button>
