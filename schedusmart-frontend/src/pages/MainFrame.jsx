@@ -535,13 +535,18 @@ export default function MainFrame() {
   function CalendarList({ calendars }) {
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
+    const [calendarList, setCalendarList] = useState(calendars);
     const [selectedCalendars, setSelectedCalendars] = useState([]);
   
     // Function to handle the creation of a new calendar
     const handleCreateCalendar = () => {
-      // Logic to create a new calendar with the name stored in newCalendarName
-      // You can implement your logic here
-      console.log("Creating calendar with name:", newCalendarName);
+      const calendarExists = calendarList.some(calendar => calendar.name === newCalendarName);
+      if (calendarExists) {
+        alert("A calendar with the same name already exists.");
+        setNewCalendarName("");
+       return;
+     }
+      setCalendarList([...calendarList, {id: nextCalendarID++, name: newCalendarName}]);
       // Clear the input field after creating the calendar
       setNewCalendarName("");
     };
@@ -573,7 +578,7 @@ export default function MainFrame() {
         </div>
         {/* List of existing calendars */}
         <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
-          {calendars.map((calendar) => (
+          {calendarList.map((calendar) => (
             <li key={calendar.id}>
               <input
                 type="checkbox"
@@ -707,10 +712,12 @@ export default function MainFrame() {
   };
 
   const [calendars, setCalendars] = useState([
-    { id: 1, name: "Calendar 1" },
-    { id: 2, name: "Calendar 2" },
-    { id: 3, name: "Calendar 3" },
+    { id: 0, name: "Personal" },
+    { id: 1, name: "School" },
+    { id: 2, name: "Work" },
   ]);
+
+  let nextCalendarID = calendars.length;
 
   return (
     <div className="container">
