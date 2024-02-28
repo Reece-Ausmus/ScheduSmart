@@ -3,7 +3,6 @@ import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
 import moment from 'moment';
-//import MonthStyle from "../components/MonthStyle";
 
 
 export default function MainFrame() {
@@ -196,7 +195,7 @@ export default function MainFrame() {
         </div>
         <div style={{ display: selectMode === 3 ? "block" : "none" }}>
           <div>
-            <div>{MonthStyle()}</div>
+            <div>{MonthStyle(todayMonth)}</div>
           </div>
         </div>
 
@@ -451,6 +450,83 @@ export default function MainFrame() {
     }
   };
 
+  // handle month 
+function MonthStyle(month) {  
+    return (
+      <div >
+        <div>
+            <table>
+              <tr>
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+              </tr>
+              {getDate(month)}
+            </table>
+          </div>
+      </div>
+    );
+  }
+  
+  // function to check and grey out previous & next months visible dates
+  function isExtraDays(week, date){
+    if (week === 0 && date > 10) {
+      return true;
+    } else if (week === 5 && date < 10) {
+      return true;
+    } else if (week === 4 && date < 10) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  //function to get all days by week
+  function getDate(month){
+    var calendar = [];
+  
+    const startDate = moment([todayYear, month])
+      .clone()
+      .startOf("month")
+      .startOf("week");
+  
+    const endDate = moment([todayYear, month]).clone().endOf("month");
+  
+    const day = startDate.clone().subtract(1, "day");
+  
+    // looping a month by a week
+    while (day.isBefore(endDate, "day")) {
+      calendar.push(
+        Array(7)
+          .fill(0)
+          .map(() => day.add(1, "day").clone().format("DD"))
+      );
+    }
+  
+    if (calendar.length > 0) {
+        return calendar.map((week, index) => (
+            <tr>
+            {week.map((day) => (
+                <td>
+                <span className="day-value">
+                    {isExtraDays(index, day) ? (
+                    <span className="isDates-grey">{day}</span>
+                    ) : (
+                    day
+                    )}
+                </span>
+                </td>
+            ))}
+            </tr>
+        ));
+        }
+  };
+
+
   return (
     <div className="container">
 
@@ -464,87 +540,3 @@ export default function MainFrame() {
     </div>
   );
 }
-
-
-// handle month 
-function MonthStyle() {
-  let index = 1
-
-  return (
-    <div >
-      <div>
-          <table>
-            <tr>
-              <th>Sun</th>
-              <th>Mon</th>
-              <th>Tue</th>
-              <th>Wed</th>
-              <th>Thu</th>
-              <th>Fri</th>
-              <th>Sat</th>
-            </tr>
-            {getDate(index)}
-          </table>
-        </div>
-    </div>
-  );
-}
-
-// getting all months
-const months = moment.months();
-
-const year = new Date().getFullYear();
-
-// function to check and grey out previous & next months visible dates
-const isExtraDays = (week, date) => {
-  if (week === 0 && date > 10) {
-    return true;
-  } else if (week === 5 && date < 10) {
-    return true;
-  } else if (week === 4 && date < 10) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-//function to get all days by week
-const getDate = (month) => {
-  var calendar = [];
-
-  const startDate = moment([year, month])
-    .clone()
-    .startOf("month")
-    .startOf("week");
-
-  const endDate = moment([year, month]).clone().endOf("month");
-
-  const day = startDate.clone().subtract(1, "day");
-
-  // looping a month by a week
-  while (day.isBefore(endDate, "day")) {
-    calendar.push(
-      Array(7)
-        .fill(0)
-        .map(() => day.add(1, "day").clone().format("DD"))
-    );
-  }
-
-  if (calendar.length > 0) {
-      return calendar.map((week, index) => (
-          <tr>
-          {week.map((day) => (
-              <td className="calender-col">
-              <span className="day-value">
-                  {isExtraDays(index, day) ? (
-                  <span className="isDates-grey">{day}</span>
-                  ) : (
-                  day
-                  )}
-              </span>
-              </td>
-          ))}
-          </tr>
-      ));
-      }
-};
