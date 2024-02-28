@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
+import moment from 'moment';
+//import MonthStyle from "../components/MonthStyle";
 
 
 export default function MainFrame() {
@@ -194,71 +196,7 @@ export default function MainFrame() {
         </div>
         <div style={{ display: selectMode === 3 ? "block" : "none" }}>
           <div>
-            <table>
-              <tr>
-                <th>Sun</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-                <th>Sat</th>
-              </tr>
-              <tr>
-                <td>{printerForMode3(date)}</td>
-                <td>{printerForMode3(date + 1)}</td>
-                <td>{printerForMode3(date + 2)}</td>
-                <td>{printerForMode3(date + 3)}</td>
-                <td>{printerForMode3(date + 4)}</td>
-                <td>{printerForMode3(date + 5)}</td>
-                <td>{printerForMode3(date + 6)}</td>
-              </tr>
-              <tr>
-                <td>{printerForMode3(date + 7)}</td>
-                <td>{printerForMode3(date + 8)}</td>
-                <td>{printerForMode3(date + 9)}</td>
-                <td>{printerForMode3(date + 10)}</td>
-                <td>{printerForMode3(date + 11)}</td>
-                <td>{printerForMode3(date + 12)}</td>
-                <td>{printerForMode3(date + 13)}</td>
-              </tr>
-              <tr>
-                <td>{printerForMode3(date + 14)}</td>
-                <td>{printerForMode3(date + 15)}</td>
-                <td>{printerForMode3(date + 16)}</td>
-                <td>{printerForMode3(date + 17)}</td>
-                <td>{printerForMode3(date + 18)}</td>
-                <td>{printerForMode3(date + 19)}</td>
-                <td>{printerForMode3(date + 20)}</td>
-              </tr>
-              <tr>
-                <td>{printerForMode3(date + 21)}</td>
-                <td>{printerForMode3(date + 22)}</td>
-                <td>{printerForMode3(date + 23)}</td>
-                <td>{printerForMode3(date + 24)}</td>
-                <td>{printerForMode3(date + 25)}</td>
-                <td>{printerForMode3(date + 26)}</td>
-                <td>{printerForMode3(date + 27)}</td>
-              </tr>
-              <tr>
-                <td>{printerForMode3(date + 28)}</td>
-                <td>{printerForMode3(date + 29)}</td>
-                <td>{printerForMode3(date + 30)}</td>
-                <td>{printerForMode3(date + 31)}</td>
-                <td>{printerForMode3(date + 32)}</td>
-                <td>{printerForMode3(date + 33)}</td>
-                <td>{printerForMode3(date + 34)}</td>
-              </tr>
-              <tr>
-                <td>{printerForMode3(date + 35)}</td>
-                <td>{printerForMode3(date + 36)}</td>
-                <td>{printerForMode3(date + 37)}</td>
-                <td>{printerForMode3(date + 38)}</td>
-                <td>{printerForMode3(date + 39)}</td>
-                <td>{printerForMode3(date + 40)}</td>
-                <td>{printerForMode3(date + 41)}</td>
-              </tr>
-            </table>
+            <div>{MonthStyle()}</div>
           </div>
         </div>
 
@@ -438,7 +376,7 @@ export default function MainFrame() {
             document.getElementById("3").style.backgroundColor = "#2d2d2d";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
             setDetailInfo(
-              String(today.getMonth()) + "/" + String(today.getDate())
+              String(temp)
             );
           }}
         >
@@ -455,7 +393,7 @@ export default function MainFrame() {
             document.getElementById("3").style.backgroundColor = "#2d2d2d";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
             setDetailInfo(
-              String(today.getMonth()) + "/" + String(today.getDate())
+              String(temp)
             );
           }}
         >
@@ -464,6 +402,7 @@ export default function MainFrame() {
       </div>
     );
   }
+  const temp = moment().format('MM/DD');
   const today = new Date();
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
   const todayMonth = today.getMonth();
@@ -525,3 +464,87 @@ export default function MainFrame() {
     </div>
   );
 }
+
+
+// handle month 
+function MonthStyle() {
+  let index = 1
+
+  return (
+    <div >
+      <div>
+          <table>
+            <tr>
+              <th>Sun</th>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+            </tr>
+            {getDate(index)}
+          </table>
+        </div>
+    </div>
+  );
+}
+
+// getting all months
+const months = moment.months();
+
+const year = new Date().getFullYear();
+
+// function to check and grey out previous & next months visible dates
+const isExtraDays = (week, date) => {
+  if (week === 0 && date > 10) {
+    return true;
+  } else if (week === 5 && date < 10) {
+    return true;
+  } else if (week === 4 && date < 10) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+//function to get all days by week
+const getDate = (month) => {
+  var calendar = [];
+
+  const startDate = moment([year, month])
+    .clone()
+    .startOf("month")
+    .startOf("week");
+
+  const endDate = moment([year, month]).clone().endOf("month");
+
+  const day = startDate.clone().subtract(1, "day");
+
+  // looping a month by a week
+  while (day.isBefore(endDate, "day")) {
+    calendar.push(
+      Array(7)
+        .fill(0)
+        .map(() => day.add(1, "day").clone().format("DD"))
+    );
+  }
+
+  if (calendar.length > 0) {
+      return calendar.map((week, index) => (
+          <tr>
+          {week.map((day) => (
+              <td className="calender-col">
+              <span className="day-value">
+                  {isExtraDays(index, day) ? (
+                  <span className="isDates-grey">{day}</span>
+                  ) : (
+                  day
+                  )}
+              </span>
+              </td>
+          ))}
+          </tr>
+      ));
+      }
+};
