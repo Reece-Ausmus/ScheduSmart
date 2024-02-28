@@ -429,24 +429,6 @@ export default function MainFrame() {
                   <label htmlFor="eventDescription">Event Description:</label>
                   <textarea id="eventDescription" value={eventDescription} onChange={handleEventDescriptionChange} rows="4" cols="50"/>
                 </div>
-                {/* 
-                <div className="formgroup">
-                  <label htmlFor="eventRepetition">Repetition:</label>
-                  <select id="repetition" value={eventRepetition} onChange={handleEventRepetitionChange}>
-                    <option value="none">None</option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="custom">Custom</option>
-                  </select>
-                </div>
-                {eventRepetition === 'custom' && (
-                  <div className="formgroup">
-                    <label htmlFor="customRepetition">Custom Repetition:</label>
-                    <input type="text" id="customRepetition" value={eventRepetition} onChange={handleEventRepetitionChange}/>
-                  </div>
-                )}
-                */}
                 <div className="event-repetition-form">
                   <h2>Event Repetition</h2>
                   <div className="repetition-options">
@@ -454,7 +436,6 @@ export default function MainFrame() {
                     <button onClick={() => handleRepetitionChange('weekly')}>Weekly</button>
                     <button onClick={() => handleRepetitionChange('monthly')}>Monthly</button>
                     <button onClick={() => handleRepetitionChange('yearly')}>Yearly</button>
-                    {/* Custom repetition */}
                     <button onClick={() => handleRepetitionChange('custom')}>Custom</button>
                     </div>
                     {repetitionType === 'custom' && (
@@ -551,6 +532,63 @@ export default function MainFrame() {
     );
   }
 
+  function CalendarList({ calendars }) {
+    // Define new states
+    const [newCalendarName, setNewCalendarName] = useState("");
+    const [selectedCalendars, setSelectedCalendars] = useState([]);
+  
+    // Function to handle the creation of a new calendar
+    const handleCreateCalendar = () => {
+      // Logic to create a new calendar with the name stored in newCalendarName
+      // You can implement your logic here
+      console.log("Creating calendar with name:", newCalendarName);
+      // Clear the input field after creating the calendar
+      setNewCalendarName("");
+    };
+  
+    // Function to handle the selection of a calendar
+    const handleCalendarSelection = (calendarId) => {
+      // Toggle the selection of the calendar
+      setSelectedCalendars((prevSelected) =>
+        prevSelected.includes(calendarId)
+          ? prevSelected.filter((id) => id !== calendarId)
+          : [...prevSelected, calendarId]
+      );
+    };
+  
+    return (
+      <div className="calendar-list">
+        {/* Create Calendar button and input */}
+        <div style={{ display: "flex", marginBottom: "10px" }}>
+          <input
+            type="text"
+            value={newCalendarName}
+            onChange={(e) => setNewCalendarName(e.target.value)}
+            placeholder="Enter new calendar name"
+            style={{ width: "calc(100% - 100px)", marginRight: "10px" }}
+          />
+          <button onClick={handleCreateCalendar} style={{ width: "100px" }}>
+            Create Calendar
+          </button>
+        </div>
+        {/* List of existing calendars */}
+        <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
+          {calendars.map((calendar) => (
+            <li key={calendar.id}>
+              <input
+                type="checkbox"
+                id={calendar.id}
+                checked={selectedCalendars.includes(calendar.id)}
+                onChange={() => handleCalendarSelection(calendar.id)}
+              />
+              <label htmlFor={calendar.id}>{calendar.name}</label>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
   function calendarControlFlowButtonPackage() {
     return (
       <div className="buttonGroup">
@@ -594,7 +632,7 @@ export default function MainFrame() {
             document.getElementById("3").style.backgroundColor = "#2d2d2d";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
             setDetailInfo(
-              String(today.getMonth()) + "/" + String(today.getDate())
+              String(today.getMonth() + 1) + "/" + String(today.getDate())
             );
           }}
         >
@@ -611,7 +649,7 @@ export default function MainFrame() {
             document.getElementById("3").style.backgroundColor = "#2d2d2d";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
             setDetailInfo(
-              String(today.getMonth()) + "/" + String(today.getDate())
+              String(today.getMonth() + 1) + "/" + String(today.getDate())
             );
           }}
         >
@@ -668,6 +706,12 @@ export default function MainFrame() {
     }
   };
 
+  const [calendars, setCalendars] = useState([
+    { id: 1, name: "Calendar 1" },
+    { id: 2, name: "Calendar 2" },
+    { id: 3, name: "Calendar 3" },
+  ]);
+
   return (
     <div className="container">
       <Joyride
@@ -692,13 +736,25 @@ export default function MainFrame() {
       />
       <div>{addEvent()}</div>
       <div>{upperBarPackage()}</div>
-      <div className="calender_container">
-        <div className="calender_container_controlbar">
-          <h2 className="detailInfo">{detailInfo}</h2>
-          <div>{calendarControlFlowButtonPackage()}</div>
+
+      {/* Parent container for CalendarList and calendar_container */}
+      <div className="main-calendar-content">
+        {/* CalendarList component */}
+        <div className="calendar-list-container">
+          <CalendarList calendars={calendars} />
         </div>
-        <div>{fourCalendarPackage()}</div>
+
+        {/* calendar_container */}
+        <div className="calender_container">
+          <div className="calender_container_controlbar">
+            <h2 className="detailInfo">{detailInfo}</h2>
+            <div>{calendarControlFlowButtonPackage()}</div>
+          </div>
+          <div>{fourCalendarPackage()}</div>
+        </div>
       </div>
+
+      {/* Event container */}
       <div className="event_container">
         <h1 className="Event_title">Assignment List</h1>
         <div className="ToDoList"></div>
