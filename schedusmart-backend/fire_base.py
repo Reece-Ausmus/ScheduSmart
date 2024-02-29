@@ -76,11 +76,7 @@ def delete_account(user):
 # the method will return a user object that you will use for argument in this method
 def get_user():
     try:
-        list = []
-        list.append({'title': 'test 1', 'rating': 'test 2'})
-        list.append({'title': 'test 1', 'rating': 'test 2'})
-        list.append({'title': 'test 1', 'rating': 'test 2'})
-        return list
+        return session
     except Exception as e:
         print("Failed to get account session")
         print(f"{e}")

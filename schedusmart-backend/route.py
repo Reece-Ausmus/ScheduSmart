@@ -36,7 +36,10 @@ def login():
         return 'invalid email or password', 205
     return 'Done', 201
 
-@account.route('/user_data', methods=['POST'])
+@account.route('/user_data', methods=['GET'])
 def user_data():
-    session = get_user()
-    return jsonify(session)
+    return jsonify(
+        message="This is jsonify",
+        date="November 11, 2021",
+        id="10",
+    )
