@@ -25,8 +25,7 @@ export default function Dashboard() {
 
     return(
         <>
-        <Header/>
-        <h2>Dashboard</h2>
+        <h1>Dashboard</h1>
         <div>
         <button onClick={() => {setGoToSettings(true)}}>Settings</button> 
         <button onClick={() => {setGoToWelcome(true)}}>Welcome</button>
