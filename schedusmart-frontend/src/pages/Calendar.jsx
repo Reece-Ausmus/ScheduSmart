@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
-// import moment from 'moment';
+import moment from 'moment';
 
 
 export default function MainFrame() {
@@ -195,7 +195,7 @@ export default function MainFrame() {
         </div>
         <div style={{ display: selectMode === 3 ? "block" : "none" }}>
           <div>
-            <div>{MonthStyle(todayMonth)}</div>
+            <div>{MonthStyle()}</div>
           </div>
         </div>
 
@@ -359,7 +359,8 @@ export default function MainFrame() {
             document.getElementById("2").style.backgroundColor = "#2d2d2d";
             document.getElementById("3").style.backgroundColor = "#cfcfcf";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
-            setDetailInfo(monthArray[todayMonth]);
+            // here is where origin month display
+            //setDetailInfo(currentMonth.format('MMMM'));
           }}
         >
           month
@@ -419,7 +420,9 @@ export default function MainFrame() {
     "November",
     "December",
   ];
-  const todayYear = today.getFullYear();
+
+  const d = moment();
+  let todayYear = d.format('YYYY');
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = todayseeker();
 
@@ -450,10 +453,25 @@ export default function MainFrame() {
     }
   };
 
+const [currentMonth, setCurrentMonth] = useState(d);
+
   // handle month 
-function MonthStyle(month) {  
+function MonthStyle() {  
+    //const [currentMonth, setCurrentMonth] = useState(d);
+
+    const incrementMonth = () => {
+      setCurrentMonth(moment(currentMonth.add(1, "months")));
+    }
+
+    const decrementMonth = () => {
+      setCurrentMonth(moment(currentMonth.subtract(1, "months")));
+    }
+
+
     return (
       <div >
+        <button>{currentMonth.format('MMMM')}</button>
+        <button onClick={decrementMonth}>Prev</button><button onClick={incrementMonth}>Next</button>
         <div>
             <table>
               <tr>
@@ -465,7 +483,7 @@ function MonthStyle(month) {
                 <th>Fri</th>
                 <th>Sat</th>
               </tr>
-              {getDate(month)}
+              {getDate(currentMonth.month())}
             </table>
           </div>
       </div>
@@ -487,6 +505,10 @@ function MonthStyle(month) {
   
   //function to get all days by week
   function getDate(month){
+    const d = moment();
+    let todayYear = d.format('YYYY');
+
+
     var calendar = [];
   
     const startDate = moment([todayYear, month])
