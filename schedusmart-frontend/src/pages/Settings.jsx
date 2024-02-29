@@ -1,25 +1,15 @@
 import Header from '../components/Header'
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import WeatherTest from './WeatherTest'
-import Weather from './Weather'
+import AccountInfo from "./AccountInfo.jsx"
 
 export default function Settings() {
-    const [goToDash, setGoToDash] = React.useState(false)
-    const [goToWelcome, setGoToWelcome] = React.useState(false)
+    const [goToCalendar, setGoToCalendar] = React.useState(false)
 
-    if (goToWelcome) {
+    if (goToCalendar) {
         return(
             <>
-            <Navigate to="/welcome" />
-            </>
-        );
-    }
-
-    if (goToDash) {
-        return(
-            <>
-            <Navigate to="/dashboard" />
+            <Navigate to="/calendar"/>
             </>
         );
     }
@@ -27,12 +17,9 @@ export default function Settings() {
     return(
         <>
         <div>
-        <Header/>
-        <h2>Settings!</h2>
-        <button onClick={() => {setGoToDash(true)}}>Dashboard</button>
-        <button onClick={() => {setGoToWelcome(true)}}>Sign Out</button>
+        <h2>Settings</h2>
+        <button onClick={() => {setGoToCalendar(true)}}>Calendar</button>
         </div>
-        <Weather/> 
         </>
     );
 }

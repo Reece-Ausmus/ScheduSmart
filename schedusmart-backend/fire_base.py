@@ -168,7 +168,6 @@ def update_task_list(task_list_id, new_task):
         return "one of the task does not contain 'task_id'"
     return 0
 
-
 # build a connection between firebase and flask #######################
 
 # Make sure you download the firebaseConfig.py file in google doc
