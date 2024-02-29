@@ -19,7 +19,7 @@ export default function Welcome() {
         <h2>Welcome!</h2>
         <button onClick={() => { window.location.href = '/signin'}}>Sign-in!</button>
         <button onClick={() => { window.location.href = '/createaccount'}}>Create an account!</button>
-        {/*<button onClick={() => {setGoToDash(true)}}>Dashboard | For testing purposes</button>*/}
+        <button onClick={() => { window.location.href = '/dashboard'}}>Dashboard</button>
         <button onClick={() => { window.location.href = '/taskmanager'}}>Task Manager</button>
         <button onClick={() => { window.location.href = '/calendar'}}>Calendar</button>
         <button onClick={() => { window.location.href = '/settings'}}>Settings</button>
