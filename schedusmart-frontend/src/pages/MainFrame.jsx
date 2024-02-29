@@ -3,6 +3,7 @@ import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
 import Weather from './Weather'
+import Timezone from './Timezone'
 
 const steps = [
   {
@@ -354,6 +355,9 @@ export default function MainFrame() {
         <div className="weather">
           <Weather/>
         </div>
+      </div>
+      <div className="timezone">
+        <Timezone />
       </div>
       </>
     );
