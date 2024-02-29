@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
+import Weather from './Weather'
 
 const steps = [
   {
@@ -301,14 +302,19 @@ export default function MainFrame() {
 
   function upperBarPackage() {
     return (
+      <>
       <div className="upperBar">
-        <h1 className="title">ScheduSmart</h1>
+        <h1 className="title"> 
+        Welcome to ScheduSmart!
+        </h1>
         <button className="upperBarButton">setting</button>
         <button className="upperBarButton" onClick={handleConfirmClick}>
           drag & drop
         </button>
         <button className="upperBarButton">logout</button>
       </div>
+      <div className="subtitle"><Weather/></div>
+      </>
     );
   }
 
