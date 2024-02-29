@@ -26,6 +26,15 @@ body {
     font-size: 25px;
     margin-left: 40px;
 }
+.subtitle{
+    top: 10px;
+    margin-left: 30px;
+    font-size: 50px;
+    display: inline-block;
+    color: rgb(52, 52, 52);
+    font-size: 25px;
+    margin-left: 40px;    
+}
 .upperBar{
     background-color: #b1b1b1;
     height: 100px;

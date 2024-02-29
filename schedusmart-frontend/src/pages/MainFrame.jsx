@@ -313,7 +313,7 @@ export default function MainFrame() {
         </button>
         <button className="upperBarButton">logout</button>
       </div>
-      <div className="subtitle"><Weather/></div>
+      <div className="dayWord"><Weather/></div>
       </>
     );
   }
