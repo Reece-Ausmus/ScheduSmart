@@ -14,6 +14,10 @@ const steps = [
     target: ".calender_container_controlbar",
     content: "You can change the format",
   },
+  {
+    target: ".weather_container",
+    content: "The current weather. Location can be changed in settings."
+  },
 ];
 
 export default function MainFrame() {
@@ -313,7 +317,11 @@ export default function MainFrame() {
         </button>
         <button className="upperBarButton">logout</button>
       </div>
-      <div className="dayWord"><Weather/></div>
+      <div className="weather_container">
+        <div className="weather">
+          <Weather/>
+        </div>
+      </div>
       </>
     );
   }
