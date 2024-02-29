@@ -21,7 +21,7 @@ export default function Weather() {
         <>
         {searchPressed()}
         {typeof weather.main != "undefined" ?
-            <>The temprature in {weather.name} is {weather.main.temp} ℉.</>
+            <>The temperature in {weather.name} is {weather.main.temp} ℉.</>
         : 
             "Please set location in settings to recieve weather information"
         }
