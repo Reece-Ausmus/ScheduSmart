@@ -16,10 +16,9 @@ export default function Settings() {
 
     return(
         <>
-        <div>
-        <h2>Settings</h2>
+        <h1>Settings</h1>
+        <AccountInfo/>
         <button onClick={() => {setGoToCalendar(true)}}>Calendar</button>
-        </div>
         </>
     );
 }

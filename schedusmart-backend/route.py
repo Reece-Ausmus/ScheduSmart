@@ -5,7 +5,7 @@ import traceback
 # each route that serve the same object have the same variable_name
 
 # To test the code, I recommend using postman app to see what is going on
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from fire_base import *
 
 account = Blueprint('login', __name__)
@@ -35,3 +35,8 @@ def login():
     if ret == 1:
         return 'invalid email or password', 205
     return 'Done', 201
+
+@account.route('/user_data', methods=['POST'])
+def user_data():
+    session = get_user()
+    return jsonify(session)
