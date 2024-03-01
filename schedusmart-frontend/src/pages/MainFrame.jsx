@@ -627,7 +627,8 @@ export default function MainFrame() {
                     <label htmlFor="eventDescription">Event Description:</label>
                     <textarea id="eventDescription" value={eventDescription} onChange={handleEventDescriptionChange} rows="4" cols="50"/>
                   </div>
-                  <div>
+                  <div className="formgroup">
+                    <label htmlFor="eventCalendar">Calendar:</label>
                     <select
                       id="eventCalendar"
                       value={eventCalendar}
