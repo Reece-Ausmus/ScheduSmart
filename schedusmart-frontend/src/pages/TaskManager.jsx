@@ -153,9 +153,9 @@ export default function TaskManager() {
   
     todoList.forEach((task) => {
       // Add task title
-      doc.setFont("normal", "bold");
+      doc.setFont("helvetica", "bold");
       doc.text(task.title, 15, y);
-      doc.setFont("normal", "normal");
+      doc.setFont("helvetica", "normal");
   
       y += lineHeight;
   
@@ -174,9 +174,9 @@ export default function TaskManager() {
     y += lineHeight * 2;
   
     // Add heading for Completed tasks
-    doc.setFont("normal", "bold");
+    doc.setFont("helvetica", "bold");
     doc.text("Completed Tasks", 15, y);
-    doc.setFont("normal", "normal");
+    doc.setFont("helvetica", "normal");
     y += lineHeight;
   
     // Add completed task items with spacing (modify as needed)
@@ -185,9 +185,15 @@ export default function TaskManager() {
       y += lineHeight * 2;  // Adjust spacing as needed
     });
   
-    // Trigger download without opening the document in a new tab
-    doc.save("task-list.pdf");
-    setIsDownloaded(true);
+    try {
+      // Trigger download without opening the document in a new tab
+      doc.save("task-list.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert(
+        "An error occurred while generating the PDF. Please try again or check your browser's settings."
+      );
+    }
   };
 
   // export to csv
@@ -208,7 +214,14 @@ export default function TaskManager() {
 
     const csvContent = csvData.map((row) => row.join(",")).join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-    saveAs(blob, "task-list.csv");
+    try {
+      saveAs(blob, "task-list.csv");
+    } catch (error) {
+      console.error("Error generating CSV:", error);
+      alert(
+        "An error occurred while generating the CSV. Please check your browser's settings or try a different format."
+      );
+    }
   };
 
   const handleExport = () => {
@@ -217,7 +230,7 @@ export default function TaskManager() {
     } else if (selectedFormat === "csv") {
       generateCSV();
     } else {
-      // Handle invalid format selection (optional)
+      // Handle invalid format selection
       console.error("Invalid export format selected:", selectedFormat);
     }
   };
