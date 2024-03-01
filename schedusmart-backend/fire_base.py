@@ -86,8 +86,12 @@ def get_user(response):
             "last_name": db.child("User").child(user_id).child('last_name').get().val(),
             "user_name": db.child("User").child(user_id).child('user_name').get().val(),
             "user_id": user_id,
+            "calendars": None,
             "return_status": 0
         }
+        cals = db.child("User").child(user_id).child("calendars").get().val()
+        if cals is not None:
+            data["calendars": cals]
         return data
     except Exception as e:
         return {
