@@ -8,6 +8,7 @@
 #       |-  last_name
 #       |-  email
 #       |-  user_name
+#       |- default_calendar_type
 #       |-  calenders
 #           |-  cal_id1
 #           |-  cal_id2
@@ -21,6 +22,7 @@
 #       |-  last_name
 #       |-  email
 #       |-  user_name
+#       |- default_calendar_type
 #       |-  calenders
 #           |-  cal_id1
 #           |-  cal_id2
