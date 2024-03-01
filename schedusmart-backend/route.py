@@ -17,13 +17,24 @@ account = Blueprint('login', __name__)
 def create_account():
     receive_account = request.get_json()
     try:
-        ret = create_account_by_username_and_password(receive_account)
+        data = create_account_by_username_and_password(receive_account)
+        ret = data['response_status']
         if ret == 2:
-            return 'username has been used', 205
+            response = jsonify({'error': 'username has been used'})
+            response.status_code = 205
+        elif ret == 1:
+            response = jsonify({'error': 'failed to create account'})
+            response.status_code = 206
+        else:
+            response = jsonify({
+            'message': 'Done',
+            'user_id': data['user_id']
+        })
+        response.status_code = 201
     except:
-        traceback.print_exc()
-        return 'missing information', 206
-    return 'Done', 201
+        response = jsonify({'error': 'failed to create account'})
+        response.status_code = 206
+    return response
 
 
 # this is where you modify login method
@@ -36,7 +47,7 @@ def login():
     if ret == 1:
         response = jsonify({'error': 'invalid email or password'})
         response.status_code = 205
-    if ret == 3:
+    elif ret == 3:
         response = jsonify({'error': 'Please verify your email'})
         response.status_code = 206
     else:
