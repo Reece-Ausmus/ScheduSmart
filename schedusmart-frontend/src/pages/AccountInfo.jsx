@@ -145,6 +145,7 @@ export default function AccountInfo(language) {
               switch (response.status) {
                 case 201:
                   console.log("Updated account info!");
+                  alert("Updated Account Info!")
                   break;
                 case 205:
                   console.log("Failed to update account");

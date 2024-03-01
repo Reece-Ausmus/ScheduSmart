@@ -317,7 +317,7 @@ export default function MainFrame() {
     // handle redirects
     const [goToSettings, setGoToSettings] = React.useState(false)
     const [goToSignOut, setGoToSignOut] = React.useState(false);
-    const [goToWelcome, setGoToWelcome] = React.useState(false)
+    const [goToTaskManager, setGoToTaskManager] = React.useState(false)
 
     if (goToSettings) {
       return(
@@ -327,10 +327,10 @@ export default function MainFrame() {
       );
     }
 
-    if (goToWelcome) {
+    if (goToTaskManager) {
       return(
           <>
-          <Navigate to="/welcome" />
+          <Navigate to="/taskmanager" />
           </>
       );
     }
@@ -352,6 +352,9 @@ export default function MainFrame() {
         </h1>
         <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
           Settings
+        </button>
+        <button className="upperBarButton" onClick={() => {setGoToTaskManager(true)}}>
+          Tasks
         </button>
         <button className="upperBarButton" onClick={() => {setGoToSignOut(true)}}>
           Signout
