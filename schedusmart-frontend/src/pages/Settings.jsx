@@ -2,7 +2,7 @@ import Header from "../components/Header";
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import AccountInfo from "./AccountInfo.jsx";
-import {LanguageProvider} from "./LanguageConfig.jsx";
+//import {LanguageProvider} from "./LanguageConfig.jsx";
 import languageData from "../components/language.json";
 import './Settings.css';
 
