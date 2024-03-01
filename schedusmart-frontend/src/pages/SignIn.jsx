@@ -67,9 +67,13 @@ export default function SignIn() {
           const userId = responseData.user_id;
           sessionStorage.setItem('user_id', userId);
           window.location.href = '/calendar'
+          window.location.href = '/calendar';     
           break;
         case 205:
           alert("Invalid email or password.");
+          break;
+        case 206:
+          alert("To login, please click on the verification link in the email we sent you!");
           break;
       }
     }
