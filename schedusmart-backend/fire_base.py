@@ -151,10 +151,11 @@ def login_account_with_email_and_password(receive_account):
         
         # Check if the user's email is not verified based on the database field
         user_id = user['localId']
-        email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
+        # 2FA CODE START ########################################################################################
+        # email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
         
 
-        # 2FA CODE START ########################################################################################
+        
         # Send verification email to certify login
         #if not email_verified:
         #    auth.send_email_verification(user['idToken'])
