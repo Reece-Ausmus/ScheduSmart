@@ -3,7 +3,11 @@ import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
 import Weather from './Weather'
+<<<<<<< HEAD
 import Timezone from './Timezone'
+=======
+import PopUpForm from '../components/PopupForm';
+>>>>>>> dashboard
 
 const steps = [
   {
@@ -348,12 +352,17 @@ export default function MainFrame() {
         <h1 className="title"> 
         Welcome to ScheduSmart!
         </h1>
+<<<<<<< HEAD
         <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
           Settings
         </button>
         <button className="upperBarButton" onClick={() => {setGoToWelcome(true)}}>
           Logout
         </button>
+=======
+        <button className="upperBarButton">setting</button>
+        <button className="upperBarButton">logout</button>
+>>>>>>> dashboard
       </div>
       <div className="weather_container">
         <div className="weather">
@@ -764,6 +773,51 @@ export default function MainFrame() {
       </div>
     );
   }
+
+  function PopUpForm() {
+    const [showPopup, setShowPopup] = useState(false);
+    const [amountOfTime, setAmountOfTime] = useState("");
+
+    const togglePopup = () => {
+      setShowPopup(!showPopup);
+    };
+  
+    const handleAmountOFTimeChange = (e) => {
+      setAmountOfTime(e.target.value);
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      console.log("Amount of Time:", amountOfTime);
+      setAmountOfTime("");
+      togglePopup();
+    };
+  
+    return (
+      <div className="add_button">
+        <button onClick={togglePopup}>Closest Available Time</button>
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <h2>Time (hr)</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="formgroup">
+                  <label htmlFor="aomuntOfTime">Enter the amount of time:</label>
+                  <input type="text" id="amountOfTime" value={amountOfTime} onChange={handleAmountOFTimeChange}/>
+                </div>
+                <button className="formbutton fb1" type="submit">Search</button>
+                <button className="formbutton fb2" onClick={togglePopup}>Cancel</button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+
+
+
   const today = new Date();
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
   const todayMonth = today.getMonth();
@@ -791,6 +845,20 @@ export default function MainFrame() {
 
   const [selectMode, setSelectMode] = useState(1);
 
+<<<<<<< HEAD
+=======
+  // handle drag & drop
+  const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
+
+  if (goToDragAndDrop) {
+    return (
+      <>
+        <Navigate to="/draganddrop" />
+      </>
+    );
+  }
+
+>>>>>>> dashboard
   const [calendars, setCalendars] = useState([
     { id: 0, name: "Personal" },
     { id: 1, name: "School" },
@@ -821,6 +889,7 @@ export default function MainFrame() {
         // user can skip the tours
         showSkipButton={true}
       />
+      <div>{PopUpForm()}</div>
       <div>{addEvent()}</div>
       <div>{upperBarPackage()}</div>
 
