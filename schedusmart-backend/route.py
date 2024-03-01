@@ -39,15 +39,27 @@ def login():
         return 'Please verify your email', 206
     return 'Done', 201
 
-@account.route('/user_data', methods=['POST'])
-        response = jsonify({'error': 'invalid email or password'})
-        response.status_code = 205
-    else:
-        response = jsonify({
+@account.route('/user_data')
+def user_data():
+    receive_user = request.get_json()
+    try: 
+        data = get_user(receive_user)
+        ret = data['return_status']
+        if ret == 1:
+            response = jsonify({'error': 'user not found'})
+            response.status_code = 202
+        elif ret == 0:
+            response = jsonify({
             'message': 'Done',
-            'user_id': data['user_id']
+            'user_id': data['user_id'],
+            'email': data['email'],
+            'user_name': data['user_name'],
         })
         response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
     return response
 
 
@@ -70,9 +82,3 @@ def create_calendar():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
-
-
-@account.route('/user_data')
-def user_data():
-    session = get_user()
-    return {"user" : ["id", "email", "name"]}

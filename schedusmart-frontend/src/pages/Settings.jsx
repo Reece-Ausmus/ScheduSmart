@@ -6,7 +6,12 @@ import LanguageSetting from "./LanguageConfig.jsx";
 import languageData from "../components/language.json";
 
 export default function Settings() {
-    
+  const [goToCalendar, setGoToCalendar] = React.useState(false);
+  const [language, setLanguage] = useState(0);
+  const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
+
+
+  if (goToCalendar) {
     return(
         <>
         <div>
@@ -45,3 +50,4 @@ export default function Settings() {
       ></LanguageSetting.Provider>
     </>
   );
+}      

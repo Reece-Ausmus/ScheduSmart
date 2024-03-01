@@ -75,12 +75,21 @@ def delete_account(user):
 
 # login_account_with_username_and_password(username, password)
 # the method will return a user object that you will use for argument in this method
-def get_user():
+def get_user(response):
+    user_id = response['userId']
     try:
-        return session
+        data = {
+            "email": db.child("User").child(user_id).get('email'),
+            "first_name": db.child("User").child(user_id).get('first_name'),
+            "last_name": db.child("User").child(user_id).get('last_name'),
+            "user_name": db.child("User").child(user_id).get('user_name'),
+            "password": db.child("User").child(user_id).get('password'),
+            "user_id": user_id,
+            "return_status": 0
+        }
+        return data
     except Exception as e:
-        print("Failed to get account session")
-        print(f"{e}")
+        print("Failed to get user", e)
         return 1
 
 # this is used to create an account
@@ -138,14 +147,12 @@ def login_account_with_email_and_password(receive_account):
             return 3
         
         # Set 'emailVerified' to False so that user will have to re-verify on next sign-in
-        user_id = user['localId']
+    
         db.child("User").child(user_id).update({"emailVerified": False})
-
-        session['user_id'] = user['localId']
         data = {
             "email": receive_account['email'],
             "password": receive_account['password'],
-            "user_id": user('localId'),
+            "user_id": user_id,
             "return_status": 0
         }
         return data
