@@ -58,7 +58,7 @@ def login():
         response.status_code = 201
     return response
 
-@account.route('/user_data')
+@account.route('/user_data', methods=['POST'])
 def user_data():
     receive_user = request.get_json()
     try: 
@@ -76,12 +76,12 @@ def user_data():
             'first_name': data['first_name'],
             'last_name': data['last_name'],
             'password': data['password'],
-        })
-        response.status_code = 201
+            })
+            response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status_code = 206
+        response.status_code = 205
     return response
 
 
