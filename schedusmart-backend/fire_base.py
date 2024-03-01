@@ -328,6 +328,32 @@ def add_new_event(event_info):
         return 1
     return 0
 
+def add_new_availability(availability_info):
+    user_id = availability_info['user_id']
+    availability_id = secrets.token_hex(16)
+    data = {
+        'name': availability_info['name'],
+        'desc': availability_info['desc'],
+        'start_time': availability_info['start_time'],
+        'end_time': availability_info['end_time'],
+        'start_date': availability_info['start_date'],
+        'end_date': availability_info['end_date'],
+        'location': availability_info['location'],
+        'calendar': availability_info['calendar'],
+        'repetition_type': availability_info['repetition_type'],
+        'repetition_unit': availability_info['repetition_unit'],
+        'repetition_val': availability_info['repetition_val']
+    }
+    try:
+        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        calendar_id = caldata['calendar_id']
+        print(calendar_id)
+        db.child("Calendars").child(calendar_id).child("Availability").child(availability_id).set(data)
+    except Exception as e:
+        print("Failed to create calendar:", e)
+        return 1
+    return 0
+
 
 # this func is to get the default calendar type
 def get_default_calendar_type(uid):
