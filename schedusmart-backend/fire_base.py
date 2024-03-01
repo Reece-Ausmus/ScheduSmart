@@ -112,13 +112,15 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email']
         }
     
-        existing_user = db.child("User").order_by_child("user_name").equal_to(data['user_name']).get()
-        if existing_user.each():
-            print("Username already exists")
-            return {
-                "error": "Username already exists",
-                "response_status": 2
-            }
+        existing_user = db.child("User").get().val()
+        if existing_user:
+            for userid, user_data in existing_user.items():
+                if user_data['user_name'] == data['user_name']:
+                    print("Username already exists")
+                    return {
+                        "error": "Username already exists",
+                        "response_status": 2
+                    }
 
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
         db.child("User").child(user['localId']).set(data)

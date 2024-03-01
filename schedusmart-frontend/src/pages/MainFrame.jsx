@@ -455,7 +455,7 @@ export default function MainFrame() {
   
     return (
       <div className="add_button">
-        <button onClick={togglePopup}>Create</button>
+        <button onClick={togglePopup}>Create Event</button>
         {showPopup && (
           <div className="popup">
             <div className="popup-content">
