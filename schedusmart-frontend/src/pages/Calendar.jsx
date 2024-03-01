@@ -256,11 +256,22 @@ export default function Calendar() {
   //  String(today.getMonth()) + "/" + String(today.getDate())
   //);
 
-  const [selectMode, setSelectMode] = useState(2);
+  const [selectMode, setSelectMode] = useState(1);
+
+  //useEffect(() => {
+  //  fetch(flaskURL + '/get_calendar_default_mode').then((data) => {
+  //    console.log(data)});
+  //});
 
   useEffect(() => {
-    fetch(flaskURL + '/calendarType').then(res => console.log(res));
+    fetch(flaskURL + '/get_calendar_default_mode').then(res => res.json()).then(data => {
+      setSelectMode(data.type);
+      console.log(data.type);
+    });
   }, []);
+
+
+  
 
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
