@@ -253,6 +253,11 @@ def add_new_calendar(calendar_info):
         return 2
     return 0
 
+# this func is to get the default calendar type
+def get_default_calendar_type(uid):
+    type = db.child("User").child("O4eABYSFUxNTJgUSfRogsY6D7Eh2").child("default_calendar_type").get()
+    return type.val()
+
 # build a connection between firebase and flask #######################
 
 # Make sure you download the firebaseConfig.py file in google doc

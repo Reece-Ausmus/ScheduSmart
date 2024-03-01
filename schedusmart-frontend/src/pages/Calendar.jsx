@@ -1,3 +1,4 @@
+// This document is used for the components of dashboard
 import React, { useState, useEffect } from "react";
 import "./MainFrame.css";
 import Joyride from "react-joyride";
@@ -5,6 +6,7 @@ import { Navigate } from "react-router-dom";
 import moment from 'moment';
 
 const flaskURL = "http://127.0.0.1:5000";
+const userId = sessionStorage.getItem('user_id');
 
 
 export default function Calendar() {
@@ -259,16 +261,68 @@ export default function Calendar() {
   const [selectMode, setSelectMode] = useState(1);
 
   //useEffect(() => {
-  //  fetch(flaskURL + '/get_calendar_default_mode').then((data) => {
-  //    console.log(data)});
-  //});
+  //  fetch(flaskURL + '/get_calendar_default_mode').then(res => res.json()).then(data => {
+  //    setSelectMode(data.type);
+  //    console.log(data.type);
+  //  });
+  //}, []);
 
-  useEffect(() => {
-    fetch(flaskURL + '/get_calendar_default_mode').then(res => res.json()).then(data => {
-      setSelectMode(data.type);
-      console.log(data.type);
-    });
+  /*useEffect(() => {
+    fetch(flaskURL + '/get_calendar_default_mode', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: userId })
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data.type));
   }, []);
+
+  const temp = async () =>{
+
+  }*/
+
+  useEffect(()=>{
+    getMode()
+}, [])
+
+let getMode = async ()=>{
+    let response = await fetch(flaskURL + '/get_calendar_default_mode',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+        },
+        body: JSON.stringify({ userId: userId }),
+        credentials: "include"
+    })
+    let data = await response.json()
+    setSelectMode(data.type)
+}
+
+
+  const handleInfo = async (event) => {
+    const response = await fetch(flaskURL + '/get_calendar_default_mode', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userId: userId,
+        }),
+        credentials: "include"
+    });
+    if (!response.ok) {
+        alert("Something went wrong ...")
+    } else {
+        switch(response.status) {
+            case 201:
+                console.log("Calendar created successfully");
+                setSelectMode(data.type);
+                console.log(data.type);
+                break;
+        }
+    }
+}
+
 
 
   
@@ -643,6 +697,7 @@ function MonthStyle() {
       <div className="calender_container">
         <div className="calender_container_controlbar">
           {/*<h2 className="detailInfo">{detailInfo}</h2> */}
+          <button onClick={handleInfo}>test</button>
           <div>{calendarControlFlowButtonPackage()}</div>
         </div>
         <div>{fourCalendarPackage()}</div>
