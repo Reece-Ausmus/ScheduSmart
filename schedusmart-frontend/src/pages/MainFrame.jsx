@@ -1039,7 +1039,7 @@ export default function MainFrame() {
   let date = todayseeker();
 
   const [detailInfo, setDetailInfo] = useState(
-    String(today.getMonth()) + "/" + String(today.getDate())
+    String(today.getMonth() + 1) + "/" + String(today.getDate())
   );
 
   const [selectMode, setSelectMode] = useState(1);
