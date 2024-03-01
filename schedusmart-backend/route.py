@@ -18,7 +18,7 @@ def create_account():
     receive_account = request.get_json()
     try:
         ret = create_account_by_username_and_password(receive_account)
-        if ret == 1:
+        if ret == 2:
             return 'username has been used', 205
     except:
         traceback.print_exc()

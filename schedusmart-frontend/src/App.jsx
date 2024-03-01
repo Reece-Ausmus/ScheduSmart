@@ -11,6 +11,7 @@ import MainFrame from './pages/MainFrame'
 import SignIn from './pages/SignIn'
 import TaskManager from './pages/TaskManager'
 import DragAndDrop from './pages/MainFrameWithDragandDrug'
+import Reminder from './pages/Reminder'
 
 // to run program 
 // Open new terminal
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/taskmanager" element={<TaskManager/>}/>
           <Route path="/draganddrop" element={<DragAndDrop/>}/>
           <Route path="*" element={<NoPage/>} />
+          <Route path="/reminder" element={<Reminder/>} />
         </Routes>
       </BrowserRouter>
     </div>

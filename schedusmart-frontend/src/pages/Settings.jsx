@@ -6,6 +6,7 @@ import LanguageSetting from "./LanguageConfig.jsx";
 import languageData from "../components/language.json";
 
 export default function Settings() {
+<<<<<<< Updated upstream
   const [goToCalendar, setGoToCalendar] = React.useState(false);
   const [language, setLanguage] = useState(0);
 
@@ -14,6 +15,20 @@ export default function Settings() {
       <>
         <Navigate to="/calendar" />
       </>
+=======
+    
+    return(
+        <>
+        <div>
+        <Header/>
+        <h2>Settings!</h2>
+        <button onClick={() => {window.location.href = '/dashboard'}}>Dashboard</button>
+        <button onClick={() => {window.location.href = '/welcome'}}>Sign Out</button>
+        <button onClick={() => {window.location.href = '/reminder'}}>Reminder</button>
+        </div>
+        <Weather/> 
+        </>
+>>>>>>> Stashed changes
     );
   }
 
