@@ -75,7 +75,6 @@ def user_data():
             'user_name': data['user_name'],
             'first_name': data['first_name'],
             'last_name': data['last_name'],
-            'password': data['password'],
             })
             response.status_code = 201
     except:

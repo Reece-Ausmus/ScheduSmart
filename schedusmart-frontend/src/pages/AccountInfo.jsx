@@ -26,20 +26,19 @@ export default function AccountInfo() {
         } else {
             switch(response.status) {
                 case 201:
-                    console.log("user found");
                     const responseData = await response.json();
                     const userId = responseData.user_id;
                     setFirstName(responseData.first_name);
                     setLastName(responseData.last_name);
                     setUsername(responseData.user_name);
                     setEmail(responseData.email);
-                    setPassword(responseData.password);
+                    console.log(userId);
                     break;
                 case 202:
                     alert("User Not Found");
                     break;
                 case 205:
-                    console.log("Failing to retrieve user data")
+                    alert("Failing to retrieve user data")
                     break;
             }
         }
@@ -50,7 +49,6 @@ export default function AccountInfo() {
     const [lastname, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [location, setLocation] = useState('West Lafayette');
 
     return (
@@ -77,11 +75,6 @@ export default function AccountInfo() {
             <div className="info">
                 <p>
                 Email: {email}
-                </p>
-            </div>
-            <div className="info">
-                <p>
-                Password: {password}
                 </p>
             </div>
             <div className="info">

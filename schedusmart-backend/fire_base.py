@@ -79,11 +79,10 @@ def get_user(response):
     user_id = response['userId']
     try:
         data = {
-            "email": db.child("User").child(user_id).get('email'),
-            "first_name": db.child("User").child(user_id).get('first_name'),
-            "last_name": db.child("User").child(user_id).get('last_name'),
-            "user_name": db.child("User").child(user_id).get('user_name'),
-            "password": db.child("User").child(user_id).get('password'),
+            "email": db.child("User").child(user_id).child('email').get().val(),
+            "first_name": db.child("User").child(user_id).child('first_name').get().val(),
+            "last_name": db.child("User").child(user_id).child('last_name').get().val(),
+            "user_name": db.child("User").child(user_id).child('user_name').get().val(),
             "user_id": user_id,
             "return_status": 0
         }
