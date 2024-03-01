@@ -105,6 +105,23 @@ def create_calendar():
         response.status_code = 206
     return response
 
+@account.route('/create_event', methods=['POST'])
+def create_event():
+    receive_event = request.get_json()
+    try:
+        ret = add_new_event(receive_event)
+        if ret == 1:
+            response = jsonify({'error': 'event not created'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
 # this is to retireve calendar default mode
 @account.route('/get_calendar_default_mode', methods=['POST'])
 def get_calendar_default_mode():

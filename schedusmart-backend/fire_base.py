@@ -263,11 +263,39 @@ def add_new_calendar(calendar_info):
 
     # add calendar_id to current users calendar list
     try:
-        db.child("User").child(user_id).child("calendars").push(calendar_id)
+        db.child("User").child(user_id).child("calendars").child(calendar_name).set({'calendar_id': calendar_id})
     except Exception as e:
         print("Failed to add calendar to user:", e)
         return 2
     return 0
+
+
+def add_new_event(event_info):
+    user_id = event_info['user_id']
+    event_id = secrets.token_hex(16)
+    data = {
+        'name': event_info['name'],
+        'desc': event_info['desc'],
+        'start_time': event_info['start_time'],
+        'end_time': event_info['end_time'],
+        'start_date': event_info['start_date'],
+        'end_date': event_info['end_date'],
+        'location': event_info['location'],
+        'calendar': event_info['calendar'],
+        'repetition_type': event_info['repetition_type'],
+        'repetition_unit': event_info['repetition_unit'],
+        'repetition_val': event_info['repetition_val']
+    }
+    try:
+        data = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        calendar_id = data['calendar_id']
+        print(calendar_id)
+        db.child("Calendars").child(calendar_id).child("Events").child(event_id).set(data)
+    except Exception as e:
+        print("Failed to create calendar:", e)
+        return 1
+    return 0
+
 
 # this func is to get the default calendar type
 def get_default_calendar_type(uid):
