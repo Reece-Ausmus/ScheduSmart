@@ -144,15 +144,18 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email'],
         }
 
-        existing_user = db.child("User").get().val()
-        if existing_user:
-            for userid, user_data in existing_user.items():
-                if user_data['user_name'] == data['user_name']:
-                    print("Username already exists")
-                    return {
-                        "error": "Username already exists",
-                        "response_status": 2
-                    }
+        # the following code is not working
+        #existing_user = db.child("User").get().val()
+        #
+        #if existing_user:
+        #    for userid, user_data in existing_user.items():
+        #        print(user_data)
+        #        if user_data['user_name'] == data['user_name']:
+        #            print("Username already exists")
+        #            return {
+        #                "error": "Username already exists",
+        #                "response_status": 2
+        #            }
 
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
         db.child("User").child(user['localId']).set(data)
@@ -160,10 +163,11 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email'],
             "password": receive_account['password'],
             "user_id": user['localId'],
-            "return_status": 0
+            "response_status": 0
         }
     except Exception as e:
         print("Failed to create account:", e)
+        print(f"{e}")
         return {
             "error": "Failed to create account",
             "response_status": 1
@@ -348,11 +352,3 @@ db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
 
-user = {
-    "user_name": "mick@gmail.com",
-    "password": "123456",
-    "language": "2",
-    "user_id": "igOcM0niMhQNVLKe2S0ncnU9kOC2"
-}
-# create_account_by_username_and_password(user)
-update_language(user)
