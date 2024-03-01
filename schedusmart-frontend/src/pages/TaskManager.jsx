@@ -305,13 +305,13 @@ export default function TaskManager() {
         >Calendar</button>
         </div>
         <dialog id="modal">
-          <label for="name">Task Name:</label>
+          <label htmlFor="name">Task Name:</label>
           <input
             id="name"
             value={taskName}
             onChange={(e) => setTaskName(e.target.value)}
           />
-          <label for="time">Workload:</label>
+          <label htmlFor="time">Workload:</label>
           <input
             type="number"
             id="time"
@@ -319,14 +319,14 @@ export default function TaskManager() {
             value={taskTime}
             onChange={(e) => setTaskTime(e.target.value)}
           />
-          <label for="date">Due Date:</label>
+          <label htmlFor="date">Due Date:</label>
           <input
             type="date"
             id="date"
             value={taskDate}
             onChange={(e) => setTaskDate(e.target.value)}
           />
-          <label for="desc">Description:</label>
+          <label htmlFor="desc">Description:</label>
           <input
             id="desc"
             value={taskDesc}

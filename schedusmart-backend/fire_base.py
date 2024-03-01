@@ -368,7 +368,7 @@ def update_format(info):
     mode = info['mode']
     user_id = info['user_id']
     try:
-        db.child("User").child(user_id).set(mode)
+        db.child("User").child(user_id).child("default_calendar_type").update(mode)
         return 0
     except Exception:
         print("Failed to set the calendar mode")
