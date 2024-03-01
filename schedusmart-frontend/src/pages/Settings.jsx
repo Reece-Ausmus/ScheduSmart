@@ -68,7 +68,7 @@ export default function Settings() {
       {showLanguageSettingUI && (
         <div>{languageSettingUIPackage()}</div>
       )}
-      {AccountInfo(language)}
+      <AccountInfo/>
       <button
         onClick={() => {
           switchLanguageUI();
@@ -86,10 +86,7 @@ export default function Settings() {
       <button onClick={() => { window.location.href = '/reminder' }}>Reminder</button>
       <button onClick={() => { window.location.href = '/dashboard' }}>Dashboard</button>
       <button onClick={() => { window.location.href = '/welcome' }}>Sign Out</button>
-      <LanguageSetting.Provider
-        value={{ language, setLanguage }}
-      ></LanguageSetting.Provider>
-      <dev className="reminder-settings">
+      <div className="reminder-settings">
         <p className='text'>visualization format:</p>
         <select value={showVirtual} onChange={handleVirtualSelectChange}>
           {visualOptions.map((option) => (
@@ -98,7 +95,13 @@ export default function Settings() {
             </option>
           ))}
         </select>
-      </dev>
+      </div>
     </>
   );
 }      
+
+/*
+<LanguageSetting.Provider
+        value={{ language, setLanguage }}
+      ></LanguageSetting.Provider>
+*/

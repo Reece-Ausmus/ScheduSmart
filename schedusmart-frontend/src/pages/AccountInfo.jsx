@@ -45,7 +45,6 @@ export default function AccountInfo() {
         }
     }
 
-
     const [firstname, setFirstName] = useState('');
     const [lastname, setLastName] = useState('');
     const [username, setUsername] = useState('');
@@ -56,25 +55,22 @@ export default function AccountInfo() {
     <div className="info_container">
             <button onClick={handleInfo}>Load Sensitive User Info</button>
       <div>
-        <h1> {languageData[language][0][0].accountInformation} </h1>
+        <h1> {languageData[0][0][0].accountInformation} </h1>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].firstName}: {firstname}</p>
+        <p>{languageData[0][0][0].firstName}: {firstname}</p>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].lastName}: {lastname}</p>
+        <p>{languageData[0][0][0].lastName}: {lastname}</p>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].userName}: {username}</p>
+        <p>{languageData[0][0][0].userName}: {username}</p>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].Email}: {email}</p>
+        <p>{languageData[0][0][0].Email}: {email}</p>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].password}: {password}</p>
-      </div>
-      <div className="info">
-        <p>{languageData[language][0][0].location}: {location}</p>
+        <p>{languageData[0][0][0].location}: {location}</p>
       </div>
     </div>
   );
