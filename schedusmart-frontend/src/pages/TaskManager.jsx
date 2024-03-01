@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./TaskManager.css";
+import { jsPDF } from "jspdf";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -133,10 +134,44 @@ export default function TaskManager() {
     setSearchQueryTodo(keyword);
   };
 
+
+
+  const [isDownloaded, setIsDownloaded] = useState(false);
+  // export to pdf
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    // Add title
+    doc.setFontSize(20);
+    doc.text("To-Do List", doc.internal.pageSize.getWidth() / 2, 20, "center");
+    doc.setFontSize(12);
+
+    // Add to-do list items with spacing
+    const yStart = 40; // Starting y-coordinate
+    let y = yStart; // Current y-coordinate
+    const lineHeight = 10; // Spacing between items
+
+    todoList.forEach((task) => {
+      // Add task title
+      doc.text(task.title, 15, y);
+      y += lineHeight;
+
+      doc.text(task.desc, 15, y);
+      y += lineHeight;
+      doc.text(`${task.time} hour(s) - ${task.date}`, 15, y);
+      y += lineHeight;
+    });
+
+    // Trigger download without opening the document in a new tab
+    doc.save("task-list.pdf");
+    setIsDownloaded(true);
+  };
+
   return (
     <>
       <div>
         <h1>Task List</h1>
+        <button onClick={generatePDF}>Export as PDF</button>
+        {isDownloaded && <p>Your PDF has been downloaded!</p>}
         <button
           id="openModal"
           onClick={() => {
