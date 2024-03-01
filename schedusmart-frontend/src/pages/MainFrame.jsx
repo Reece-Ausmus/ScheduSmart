@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom";
 import Weather from './Weather'
 import Timezone from './Timezone'
 import PopUpForm from '../components/PopupForm';
+import moment from "moment";
 
 const steps = [
   {
@@ -536,10 +537,10 @@ export default function MainFrame() {
               setLoading(false);
               break;
             case 202:
-              alert("User Not Found");
+              //alert("User Not Found");
               break;
             case 205:
-              alert("Failing to retrieve user data")
+              //alert("Failing to retrieve user data")
               break;
           }
         }
@@ -888,44 +889,16 @@ export default function MainFrame() {
     };
 
     
-    /*const handleSubmit = (e) => {
+    const handleSubmit = (e) => {
       e.preventDefault();
-      //let temp = '12:00 - 13:00'
+      let temp = '12:00 - 13:00'
+      const d = moment()
       console.log(amountOfTime)
+      console.log(d.format('YYYY/MM/DD h:mm:ss a'))
+      console.log(d.add(amountOfTime, 'm'))
       
-      
 
-      const response = fetch(flaskURL + "/create_calendar", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(new_calendar),
-        credentials: "include"
-      })
-      if (!response.ok) {
-        alert("Something went wrong, refresh your website!");
-        return;
-      }
-      else {
-        switch(response.status) {
-          case 201:
-            console.log("Calendar created successfully");
-            break;
-          case 205:
-            alert("Calendar not created!");
-            break;
-          case 206:
-            alert("Missing information!");
-            break;
-          case 207:
-            alert("Calendar not added to user!");
-            break;
-        }
-      }
-
-
-      if (window.confirm('Add event: ' + temp)) {
+      if (window.confirm('Add event: ' + d.format('YYYY/MM/DD h:mm:ss a'))) {
         //Yes
         setGoToAddEvent(true)
       } else {
@@ -936,8 +909,8 @@ export default function MainFrame() {
 
       setAmountOfTime("");
       togglePopup();
-    };*/
-    const handleSubmit = async () => {
+    };
+    /*const handleSubmit = async () => {
       let response = await fetch(flaskURL + "/set_amount_of_time", {
         method: 'POST',
         headers: {
@@ -955,7 +928,7 @@ export default function MainFrame() {
 
       setAmountOfTime("");
       togglePopup();
-    };
+    };*/
   
     return (
       <div className="add_button">
@@ -963,7 +936,7 @@ export default function MainFrame() {
         {showPopup && (
           <div className="popup">
             <div className="popup-content">
-              <h2>Time (hr)</h2>
+              <h2>Time (min)</h2>
               <form onSubmit={handleSubmit}>
                 <div className="formgroup">
                   <label htmlFor="aomuntOfTime">Enter the amount of time:</label>

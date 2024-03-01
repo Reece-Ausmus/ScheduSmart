@@ -215,7 +215,7 @@ def set_amount_of_time():
         response.status_code = 208
         return response
 
-    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2' and time == 15:
+    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2' and time == '15':
         response = jsonify({'available': 60})
         response.status_code = 201
         return response
