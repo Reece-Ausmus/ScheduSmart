@@ -93,6 +93,7 @@ def get_user(response):
             "calendars": calendar_names,
             "language": db.child("User").child(user_id).child('language').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
+            'task_list': db.child("User").child(user_id).child('task_list').get().val(),
             "return_status": 0
         }
         return data
@@ -106,7 +107,7 @@ def get_user(response):
 def update_user_info(receive_account):
     try:
         user_id = receive_account['user_id']
-        db.child("User").child(user_id).set(receive_account)
+        db.child("User").child(user_id).update(receive_account)
         return 0
     except Exception:
         print("Failed to update account information")
@@ -284,6 +285,15 @@ def add_new_calendar(calendar_info):
         return 2
     return 0
 
+def update_task(task_info):
+    user_id = task_info['user_id']
+    data = {'task_list' : task_info['task_list']}
+    try:
+        db.child("User").child(user_id).update(data)
+    except Exception as e:
+        print("Failed to update tasks:", e)
+        return 1
+    return 0
 
 def add_new_event(event_info):
     user_id = event_info['user_id']

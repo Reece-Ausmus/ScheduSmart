@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./TaskManager.css";
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
+const userId = sessionStorage.getItem("user_id");
 
 const initialList = [
   {
@@ -38,6 +39,44 @@ const initialList = [
 let nextId = initialList.length;
 
 export default function TaskManager() {
+  const handleInfo = async (event) => {
+    const response = await fetch(flaskURL + "/user_data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+      }),
+      credentials: "include",
+    });
+    if (!response.ok) {
+      alert("Account Info Not Found. Please log-out and log-in again");
+    } else {
+      switch (response.status) {
+        case 201:
+          const responseData = await response.json();
+          const userId = responseData.user_id;
+          if (typeof(responseData.task_list) != undefined) {
+            setTodoList(responseData.task_list)
+            nextId = todoList.length;
+          }
+          console.log(userId);
+          break;
+        case 202:
+          alert("List Not Found");
+          break;
+        case 205:
+          alert("Failing to retrieve user data");
+          break;
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleInfo();
+  }, []);
+
   // select sort option
   const [sortOptionTodo, setSortOptionTodo] = useState(0);
   const [sortOptionCompleted, setSortOptionCompleted] = useState(0);
@@ -240,15 +279,15 @@ export default function TaskManager() {
       <div>
         <h1>Task List</h1>
         <select
-        value={selectedFormat}
-        onChange={(e) => setSelectedFormat(e.target.value)}
-      >
-        <option value="pdf">PDF</option>
-        <option value="csv">CSV</option>
-      </select>
-      <button onClick={handleExport}>
-        Export as {selectedFormat.toUpperCase()}
-      </button>
+          value={selectedFormat}
+          onChange={(e) => setSelectedFormat(e.target.value)}
+        >
+          <option value="pdf">PDF</option>
+          <option value="csv">CSV</option>
+        </select>
+        <button onClick={handleExport}>
+          Export as {selectedFormat.toUpperCase()}
+        </button>
         <button
           id="openModal"
           onClick={() => {
@@ -259,41 +298,46 @@ export default function TaskManager() {
         >
           Add Task
         </button>
-      </div>
-      <dialog id="modal">
-        <label for="name">Task Name:</label>
-        <input
-          id="name"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
-        />
-        <label for="time">Workload:</label>
-        <input
-          type="number"
-          id="time"
-          min="1"
-          value={taskTime}
-          onChange={(e) => setTaskTime(e.target.value)}
-        />
-        <label for="date">Due Date:</label>
-        <input
-          type="date"
-          id="date"
-          value={taskDate}
-          onChange={(e) => setTaskDate(e.target.value)}
-        />
-        <label for="desc">Description:</label>
-        <input
-          id="desc"
-          value={taskDesc}
-          onChange={(e) => setTaskDesc(e.target.value)}
-        />
         <button
-          id="closeModal"
-          onClick={() => {
-            setTodoList([
-              ...todoList,
-              {
+        onClick={() => {
+        window.location.href = "/calendar";
+        }}
+        >Calendar</button>
+        </div>
+        <dialog id="modal">
+          <label for="name">Task Name:</label>
+          <input
+            id="name"
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
+          />
+          <label for="time">Workload:</label>
+          <input
+            type="number"
+            id="time"
+            min="1"
+            value={taskTime}
+            onChange={(e) => setTaskTime(e.target.value)}
+          />
+          <label for="date">Due Date:</label>
+          <input
+            type="date"
+            id="date"
+            value={taskDate}
+            onChange={(e) => setTaskDate(e.target.value)}
+          />
+          <label for="desc">Description:</label>
+          <input
+            id="desc"
+            value={taskDesc}
+            onChange={(e) => setTaskDesc(e.target.value)}
+          />
+          <button
+            id="closeModal"
+            onClick={() => {
+              setTodoList([
+                ...todoList,
+                {
                 id: nextId++,
                 title: taskName,
                 time: taskTime,
@@ -301,11 +345,11 @@ export default function TaskManager() {
                 desc: taskDesc,
                 completed: false,
               },
-            ]);
-          }}
-        >
-          Add
-        </button>
+              ]);
+            }}
+          >
+            Add
+          </button>
       </dialog>
       <div className="task-columns-container">
         <div className="task-column">
@@ -363,6 +407,43 @@ export default function TaskManager() {
           />
         </div>
       </div>
+      <button
+        onClick={async () => {
+            const info = {
+              user_id: userId,
+              task_list: todoList 
+            };
+            const response = await fetch(flaskURL + "/update_task", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+
+              body: JSON.stringify(info),
+            });
+            if (!response.ok) {
+              alert("something went wrong, refresh your website");
+            } else {
+              switch (response.status) {
+                case 201:
+                  console.log("Updated task list!");
+                  alert("Task list saved!")
+                  break;
+                case 205:
+                  console.log("Failed to save task list! Check Connection!");
+                  alert("Failed to save task list! Check New Information!");
+                  break;
+                case 206:
+                  console.log("Saved task list! Missing info!");
+                  alert("Failed to save task list!");
+                  break;
+              }
+            }
+          }
+        }
+      >
+        Save Tasks
+      </button>
     </>
   );
 }
