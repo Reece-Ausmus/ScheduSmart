@@ -31,6 +31,8 @@ export default function Welcome() {
       >
         Create an account!
       </button>
+
+      {/* 
       <button
         onClick={() => {
           window.location.href = "/dashboard";
@@ -59,6 +61,7 @@ export default function Welcome() {
       >
         Settings
       </button>
+      */}
     </>
   );
 }
