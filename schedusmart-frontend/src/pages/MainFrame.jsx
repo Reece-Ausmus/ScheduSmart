@@ -3,11 +3,8 @@ import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
 import Weather from './Weather'
-<<<<<<< HEAD
 import Timezone from './Timezone'
-=======
 import PopUpForm from '../components/PopupForm';
->>>>>>> dashboard
 
 const steps = [
   {
@@ -352,17 +349,12 @@ export default function MainFrame() {
         <h1 className="title"> 
         Welcome to ScheduSmart!
         </h1>
-<<<<<<< HEAD
         <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
           Settings
         </button>
         <button className="upperBarButton" onClick={() => {setGoToWelcome(true)}}>
           Logout
         </button>
-=======
-        <button className="upperBarButton">setting</button>
-        <button className="upperBarButton">logout</button>
->>>>>>> dashboard
       </div>
       <div className="weather_container">
         <div className="weather">
@@ -845,8 +837,6 @@ export default function MainFrame() {
 
   const [selectMode, setSelectMode] = useState(1);
 
-<<<<<<< HEAD
-=======
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
 
@@ -858,7 +848,6 @@ export default function MainFrame() {
     );
   }
 
->>>>>>> dashboard
   const [calendars, setCalendars] = useState([
     { id: 0, name: "Personal" },
     { id: 1, name: "School" },
