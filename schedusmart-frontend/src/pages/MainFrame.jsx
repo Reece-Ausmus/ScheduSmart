@@ -877,6 +877,7 @@ export default function MainFrame() {
   function PopUpForm() {
     const [showPopup, setShowPopup] = useState(false);
     const [amountOfTime, setAmountOfTime] = useState("");
+    const [availableTime, setAvailableTime] = useState("");
 
     const togglePopup = () => {
       setShowPopup(!showPopup);
@@ -886,9 +887,72 @@ export default function MainFrame() {
       setAmountOfTime(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    
+    /*const handleSubmit = (e) => {
       e.preventDefault();
-      console.log("Amount of Time:", amountOfTime);
+      //let temp = '12:00 - 13:00'
+      console.log(amountOfTime)
+      
+      
+
+      const response = fetch(flaskURL + "/create_calendar", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(new_calendar),
+        credentials: "include"
+      })
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      }
+      else {
+        switch(response.status) {
+          case 201:
+            console.log("Calendar created successfully");
+            break;
+          case 205:
+            alert("Calendar not created!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+          case 207:
+            alert("Calendar not added to user!");
+            break;
+        }
+      }
+
+
+      if (window.confirm('Add event: ' + temp)) {
+        //Yes
+        setGoToAddEvent(true)
+      } else {
+        //No
+        // do nothing
+      }
+
+
+      setAmountOfTime("");
+      togglePopup();
+    };*/
+    const handleSubmit = async () => {
+      let response = await fetch(flaskURL + "/set_amount_of_time", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'user_id': userId,
+          'time': amountOfTime
+        }),
+        credentials: "include"
+      })
+      let data = await response.json();
+      console.log(data.available);
+      //setSelectMode(data.type);
+
       setAmountOfTime("");
       togglePopup();
     };
@@ -907,6 +971,7 @@ export default function MainFrame() {
                 </div>
                 <button className="formbutton fb1" type="submit">Search</button>
                 <button className="formbutton fb2" onClick={togglePopup}>Cancel</button>
+                {/*<button onClick={addEvent}>Add Event</button>TODO*/}
               </form>
             </div>
           </div>

@@ -127,10 +127,10 @@ def create_event():
 @account.route('/get_calendar_default_mode', methods=['POST'])
 def get_calendar_default_mode():
     receive_user = request.get_json()
-    if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
-        response = jsonify({'message': 'Done'})
-        response.status_code = 206
-        return
+    #if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
+    #    response = jsonify({'message': 'Done'})
+    #    response.status_code = 206
+    #    return
 
     data = get_default_calendar_type(receive_user['userId'])
     response = jsonify({'type':data})
@@ -198,3 +198,25 @@ def get_language():
     except Exception as e:
         print("crash in get language")
     return response
+# this is to retireve calendar default mode
+@account.route('/set_amount_of_time', methods=['POST'])
+def set_amount_of_time():
+    receive_user = request.get_json()
+    uid = receive_user['userId']
+    time = receive_user['time']
+    
+    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2':
+        response = jsonify({'available': 60})
+        response.status_code = 205
+        return response
+
+    if time == 15:
+        response = jsonify({'available': 60})
+        response.status_code = 208
+        return response
+
+    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2' and time == 15:
+        response = jsonify({'available': 60})
+        response.status_code = 201
+        return response
+
