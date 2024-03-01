@@ -57,7 +57,7 @@ export default function TaskManager() {
         case 201:
           const responseData = await response.json();
           const userId = responseData.user_id;
-          if (typeof(responseData.task_list) != undefined) {
+          if (typeof(responseData.task_list) !== null && typeof(responseData.task_list) !== undefined) {
             setTodoList(responseData.task_list)
             nextId = todoList.length;
           }

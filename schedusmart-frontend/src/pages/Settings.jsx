@@ -150,6 +150,7 @@ export default function Settings() {
       >
         {languageData[language][0][0].signout}
       </button>
+      <button onClick={() => {window.location.href = '/reminder'}}>Reminder</button>
       <div className="reminder-settings">
         <p className="text"> {languageData[language][0][0].cvf}:</p>
         <select value={showVirtual} onChange={handleVirtualSelectChange}>
