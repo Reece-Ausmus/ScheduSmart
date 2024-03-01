@@ -10,22 +10,6 @@ export default function Settings() {
   const [language, setLanguage] = useState(0);
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
 
-
-  if (goToCalendar) {
-    return(
-        <>
-        <div>
-        <Header/>
-        <h2>Settings!</h2>
-        <button onClick={() => {window.location.href = '/dashboard'}}>Dashboard</button>
-        <button onClick={() => {window.location.href = '/welcome'}}>Sign Out</button>
-        <button onClick={() => {window.location.href = '/reminder'}}>Reminder</button>
-        </div>
-        <Weather/> 
-        </>
-    );
-  }
-
   return (
     <>
       <h1>Settings</h1>
@@ -38,13 +22,13 @@ export default function Settings() {
       >
         language
       </button>
-      <button
-        onClick={() => {
-          setGoToCalendar(true);
-        }}
-      >
+      <button onClick={() => {
+          setGoToCalendar(true);}}>
         Calendar
       </button>
+      <button onClick={() => {window.location.href = '/reminder'}}>Reminder</button>
+      <button onClick={() => {window.location.href = '/dashboard'}}>Dashboard</button>
+      <button onClick={() => {window.location.href = '/welcome'}}>Sign Out</button>
       <LanguageSetting.Provider
         value={{ language, setLanguage }}
       ></LanguageSetting.Provider>
