@@ -135,3 +135,16 @@ def update_calendar_format():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
+# this is to retireve calendar default mode
+@account.route('/set_amount_of_time', methods=['POST'])
+def set_amount_of_time():
+    receive_user = request.get_json()
+    uid = receive_user['userId']
+    time = receive_user['time']
+    
+    if uid == 'O4eABYSFUxNTJgUSfRogsY6D7Eh2' and time == '15':
+        response = jsonify({'message': 'Done'})
+        response.status_code = 201
+        return response
+

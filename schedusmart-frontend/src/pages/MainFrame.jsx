@@ -769,6 +769,7 @@ export default function MainFrame() {
   function PopUpForm() {
     const [showPopup, setShowPopup] = useState(false);
     const [amountOfTime, setAmountOfTime] = useState("");
+    const [availableTime, setAvailableTime] = useState("");
 
     const togglePopup = () => {
       setShowPopup(!showPopup);
@@ -780,7 +781,39 @@ export default function MainFrame() {
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      console.log("Amount of Time:", amountOfTime);
+      let temp = '12:00 - 13:00'
+      console.log(amountOfTime)
+      
+      
+      
+    
+
+      //const [goToAddEvent, setGoToAddEvent] = useState(false);
+
+
+
+    /*let response = fetch(flaskURL + '/get_calendar_default_mode',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+        },
+        body: JSON.stringify({ userId: userId }),
+        credentials: "include"
+    })
+    let data = await response.json()
+    setSelectMode(data.type)
+     // alert('test')
+      //setAvailableTime(re)
+*/
+      if (window.confirm('Add event: ' + temp)) {
+        //Yes
+        setGoToAddEvent(true)
+      } else {
+        //No
+        // do nothing
+      }
+
+
       setAmountOfTime("");
       togglePopup();
     };
@@ -799,6 +832,7 @@ export default function MainFrame() {
                 </div>
                 <button className="formbutton fb1" type="submit">Search</button>
                 <button className="formbutton fb2" onClick={togglePopup}>Cancel</button>
+                {/*<button onClick={addEvent}>Add Event</button>TODO*/}
               </form>
             </div>
           </div>
