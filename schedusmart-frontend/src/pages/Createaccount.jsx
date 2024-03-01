@@ -48,7 +48,7 @@ export default function Createaccount() {
                 <label htmlFor="confirm-password">Confirm Password:</label>
                 <input type="password" id="confirm-password" value={confirm_password} onChange={(e) => confirmpassword(e.target.value)} />
             </div>
-            <div class="button">
+            <div className="button">
                 <button  onClick={async () => {
                 const letterRegex = /[a-zA-Z]/;
                 const numberRegex = /[0-9]/;
@@ -85,7 +85,8 @@ export default function Createaccount() {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(new_account)
+                        body: JSON.stringify(new_account),
+                        credentials: "include"
                     })
                     if (!response.ok) {
                         alert("Something went wrong, refresh your website!");
@@ -93,7 +94,10 @@ export default function Createaccount() {
                         switch(response.status) {
                             case 201:
                                 console.log("Create account successfully");
-                                window.location.href = '/'
+                                const responseData = await response.json();
+                                const userId = responseData.user_id;
+                                sessionStorage.setItem('user_id', userId);
+                                window.location.href = '/calendar'
                                 break;
                             case 205:
                                 alert("Username has been used. Please change it to another one!");

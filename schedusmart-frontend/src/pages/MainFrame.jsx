@@ -21,6 +21,10 @@ const steps = [
   },
 ];
 
+const flaskURL = "http://127.0.0.1:5000";
+
+const userId = sessionStorage.getItem('user_id');
+
 export default function MainFrame() {
   function todayseeker() {
     let date = today.getDate();
@@ -590,13 +594,59 @@ export default function MainFrame() {
     const [selectedCalendars, setSelectedCalendars] = useState([]);
   
     // Function to handle the creation of a new calendar
-    const handleCreateCalendar = () => {
+    const handleCreateCalendar = async () => {
+      if (!newCalendarName.localeCompare('')) {
+        alert("Please enter a calendar name!");
+        return;
+      }
+      const regex = /[\\"\t\n\'\\\x00-\x1F\x7F]/g; 
+      if (regex.test(newCalendarName)) {
+        alert("Calendar name includes prohibited characters!");
+        return;
+      }
       const calendarExists = calendarList.some(calendar => calendar.name === newCalendarName);
       if (calendarExists) {
         alert("A calendar with the same name already exists.");
         setNewCalendarName("");
-       return;
-     }
+        return;
+      }
+      //const new_calendar = {nextCalendarID, newCalendarName}
+      //nextCalendarID++;
+      const new_calendar = {
+        'newCalendarName': newCalendarName,
+        'user_id': userId
+      };
+      console.log(JSON.stringify(new_calendar));
+      console.log("here: " + userId);
+      const response = await fetch(flaskURL + "/create_calendar", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(new_calendar),
+        credentials: "include"
+      })
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      }
+      else {
+        switch(response.status) {
+          case 201:
+            console.log("Calendar created successfully");
+            break;
+          case 205:
+            alert("Calendar not created!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+          case 207:
+            alert("Calendar not added to user!");
+            break;
+        }
+      }
+
       setCalendarList([...calendarList, {id: nextCalendarID++, name: newCalendarName}]);
       // Clear the input field after creating the calendar
       setNewCalendarName("");
