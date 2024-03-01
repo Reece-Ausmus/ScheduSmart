@@ -26,15 +26,16 @@ export default function Settings() {
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
 
   const [visualOptions] = useState([
-    { id: 1, label: "day" },
-    { id: 2, label: "week" },
-    { id: 3, label: "month" },
-    { id: 4, label: "year" },
+    { id: 1, label: "day" ,value:1},
+    { id: 2, label: "week",value:2},
+    { id: 3, label: "month",value:3},
+    { id: 4, label: "year" ,value:4},
   ]);
   const [showVirtual, setShowVirsual] = useState(3);
   const handleVirtualSelectChange = (e) => {
     setShowVirsual(parseInt(e.target.value));
-    updateFormat(showVirtual);
+    console.log(parseInt(e.target.value));
+    updateFormat(parseInt(e.target.value));
   };
   function switchLanguageUI() {
     setShowLanguageSettingUI(!showLanguageSettingUI);
@@ -150,10 +151,10 @@ export default function Settings() {
         {languageData[language][0][0].signout}
       </button>
       <div className="reminder-settings">
-        <p className="text"> {languageData[language][0][0].cvf}.:</p>
+        <p className="text"> {languageData[language][0][0].cvf}:</p>
         <select value={showVirtual} onChange={handleVirtualSelectChange}>
           {visualOptions.map((option) => (
-            <option key={option.id} value={option.id}>
+            <option key={option.id} value={option.value}>
               {option.label}
             </option>
           ))}

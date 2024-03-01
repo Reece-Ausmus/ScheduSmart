@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "file-server": "^2.2.1",
     "luxon": "^3.4.4",
     "moment": "^2.30.1"
   }
