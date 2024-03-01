@@ -191,21 +191,21 @@ def login_account_with_email_and_password(receive_account):
         email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
 
         # Send verification email to certify login
-        # if not email_verified:
-        #    auth.send_email_verification(user['idToken'])
+        if not email_verified:
+            auth.send_email_verification(user['idToken'])
 
         # Update 'emailVerified' to True in the database
-        #    db.child("User").child(user_id).update({"emailVerified": True})
+            db.child("User").child(user_id).update({"emailVerified": True})
 
-        #    return {
-        #        "email": receive_account['email'],
-        #        "password": receive_account['password'],
-        #        "user_id": user_id,
-        #        "return_status": 3
-        #    }
+            return {
+                "email": receive_account['email'],
+                "password": receive_account['password'],
+                "user_id": user_id,
+                "return_status": 3
+            }
 
         # Set 'emailVerified' to False so that user will have to re-verify on next sign-in
-        # db.child("User").child(user_id).update({"emailVerified": False})
+        db.child("User").child(user_id).update({"emailVerified": False})
 
         # 2FA CODE END ##########################################################################################
 
