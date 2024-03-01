@@ -76,7 +76,8 @@ def user_data():
             'first_name': data['first_name'],
             'last_name': data['last_name'],
             'calendars': data['calendars'],
-            'location': data['location']
+            'location': data['location'],
+            'task_list': data['task_list'],
             })
             response.status_code = 201
     except:
@@ -113,6 +114,23 @@ def create_event():
         ret = add_new_event(receive_event)
         if ret == 1:
             response = jsonify({'error': 'event not created'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
+@account.route('/update_task', methods=['POST'])
+def update_task_list():
+    receive_event = request.get_json()
+    try:
+        ret = update_task(receive_event)
+        if ret == 1:
+            response = jsonify({'error': 'task not updated'})
             response.status_code = 205
         else:
             response = jsonify({'message': 'Done'})

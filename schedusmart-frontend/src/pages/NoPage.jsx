@@ -7,7 +7,13 @@ export default function Settings() {
     <>
       <Header />
       <h2>Error 404: Not Found</h2>
-      <button>Go back to welcome screen</button>
+      <button
+        onClick={() => {
+          window.location.href = "/welcome";
+        }}
+      >
+        Go back to welcome screen
+      </button>
     </>
   );
 }

@@ -115,6 +115,14 @@ export default function Settings() {
     }
   }
 
+  if (goToCalendar) {
+    return(
+        <>
+        <Navigate to="/calendar" />
+        </>
+    );
+  }
+
   return (
     <>
       <h1>{languageData[language][0][0].setting}</h1>
@@ -129,24 +137,10 @@ export default function Settings() {
       </button>
       <button
         onClick={() => {
-          setGoToCalendar(true);
+          window.location.href = "/calendar";
         }}
       >
         {languageData[language][0][0].calendar}
-      </button>
-      <button
-        onClick={() => {
-          window.location.href = "/reminder";
-        }}
-      >
-        {languageData[language][0][0].Reminder}
-      </button>
-      <button
-        onClick={() => {
-          window.location.href = "/dashboard";
-        }}
-      >
-        {languageData[language][0][0].dashBoard}
       </button>
       <button
         onClick={() => {

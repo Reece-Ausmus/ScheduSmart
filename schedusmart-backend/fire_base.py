@@ -96,6 +96,7 @@ def get_user(response):
             "calendars": calendars,
             "language": db.child("User").child(user_id).child('language').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
+            'task_list': db.child("User").child(user_id).child('task_list').get().val(),
             "return_status": 0
         }
         return data
@@ -109,7 +110,7 @@ def get_user(response):
 def update_user_info(receive_account):
     try:
         user_id = receive_account['user_id']
-        db.child("User").child(user_id).set(receive_account)
+        db.child("User").child(user_id).update(receive_account)
         return 0
     except Exception:
         print("Failed to update account information")
@@ -146,15 +147,18 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email'],
         }
 
-        existing_user = db.child("User").get().val()
-        if existing_user:
-            for userid, user_data in existing_user.items():
-                if user_data['user_name'] == data['user_name']:
-                    print("Username already exists")
-                    return {
-                        "error": "Username already exists",
-                        "response_status": 2
-                    }
+        # the following code is not working
+        #existing_user = db.child("User").get().val()
+        #
+        #if existing_user:
+        #    for userid, user_data in existing_user.items():
+        #        print(user_data)
+        #        if user_data['user_name'] == data['user_name']:
+        #            print("Username already exists")
+        #            return {
+        #                "error": "Username already exists",
+        #                "response_status": 2
+        #            }
 
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
         db.child("User").child(user['localId']).set(data)
@@ -162,10 +166,11 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email'],
             "password": receive_account['password'],
             "user_id": user['localId'],
-            "return_status": 0
+            "response_status": 0
         }
     except Exception as e:
         print("Failed to create account:", e)
+        print(f"{e}")
         return {
             "error": "Failed to create account",
             "response_status": 1
@@ -287,6 +292,15 @@ def add_new_calendar(calendar_info):
         return 2
     return 0
 
+def update_task(task_info):
+    user_id = task_info['user_id']
+    data = {'task_list' : task_info['task_list']}
+    try:
+        db.child("User").child(user_id).update(data)
+    except Exception as e:
+        print("Failed to update tasks:", e)
+        return 1
+    return 0
 
 def add_new_event(event_info):
     user_id = event_info['user_id']
@@ -341,11 +355,3 @@ db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
 
-user = {
-    "user_name": "mick@gmail.com",
-    "password": "123456",
-    "language": "2",
-    "user_id": "igOcM0niMhQNVLKe2S0ncnU9kOC2"
-}
-# create_account_by_username_and_password(user)
-update_language(user)
