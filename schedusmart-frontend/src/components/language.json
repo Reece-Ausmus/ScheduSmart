@@ -1,36 +1,36 @@
 [
-[
-[
-    {
+  [
+    [
+      {
         "setting": "Setting",
         "accountInformation": "Account Information",
         "firstName": "First Name",
-        "lastName":"Last Name",
-        "userName":"Username",
-        "Email": "email",
+        "lastName": "Last Name",
+        "userName": "Username",
+        "email": "Email",
         "password": "Password",
         "location": "Location",
-        "language": "language",
-        "calendar": "calendar",
+        "language": "Language",
+        "calendar": "Calendar",
         "cancel": "cancel"
-    }
-]
-],
-[
-[
-    {
+      }
+    ]
+  ],
+  [
+    [
+      {
         "setting": "設定",
         "accountInformation": "帳號資訊",
         "firstName": "名字",
-        "lastName":"姓氏",
-        "userName":"使用者名",
+        "lastName": "姓氏",
+        "userName": "使用者名",
         "Email": "電子郵件",
         "password": "密碼",
         "location": "位置",
         "language": "語言",
         "calendar": "日曆",
         "cancel": "取消"
-}
-]
-]
+      }
+    ]
+  ]
 ]

@@ -14,4 +14,7 @@ def create_app():
     from route import account
     app.register_blueprint(account)
 
+    from route import language
+    app.register_blueprint(language)
+
     return app

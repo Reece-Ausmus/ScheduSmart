@@ -87,17 +87,24 @@ def get_user(response):
             "user_name": db.child("User").child(user_id).child('user_name').get().val(),
             "user_id": user_id,
             "calendars": None,
+            "language": db.child("User").child(user_id).child('language').get().val(),
             "return_status": 0
         }
-        cals = db.child("User").child(user_id).child("calendars").get().val()
-        if cals is not None:
-            data["calendars": cals]
         return data
     except Exception as e:
         return {
             "error": "Cannot Find User",
             "return_status": 1
         }
+
+def update_user_info(receive_account):
+    try:
+        user_id = receive_account['user_id']
+        db.child("User").child(user_id).set(receive_account)
+        return 0
+    except Exception:
+        print("Failed to update account information")
+        return 1
 
 # this is used to create an account
 # the argument accept an array with following format:
@@ -156,7 +163,7 @@ def login_account_with_email_and_password(receive_account):
         # Check if the user's email is not verified based on the database field
         user_id = user['localId']
         # 2FA CODE START ########################################################################################
-        #email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
+        email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
         
 
         
@@ -304,7 +311,7 @@ def update_format(info):
     except Exception:
         print("Failed to set the calendar mode")
         return 1
-# build a connection between firebase and flask #######################
+# used to test with firebase #######################
 
 # Make sure you download the firebaseConfig.py file in google doc
 firebase = pyrebase.initialize_app(firebaseConfig)
@@ -312,3 +319,12 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
+
+user = {
+	"user_name": "mick@gmail.com",
+    "password":"123456",
+    "language":"3",
+    "user_id": "igOcM0niMhQNVLKe2S0ncnU9kOC2"
+}
+# create_account_by_username_and_password(user)
+update_user_info(user, "language", 2)

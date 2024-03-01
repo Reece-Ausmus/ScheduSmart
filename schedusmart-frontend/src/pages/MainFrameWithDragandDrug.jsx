@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "./MainFrame.css";
 
-
 export default function MainFrame() {
   function todayseeker() {
     let date = today.getDate();
@@ -19,7 +18,20 @@ export default function MainFrame() {
   const today = new Date();
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
   const todayMonth = today.getMonth();
-  const monthArray = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const monthArray = [
+    "January",
+    "Febuary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const todayYear = today.getFullYear();
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = todayseeker();
@@ -29,8 +41,6 @@ export default function MainFrame() {
   );
 
   const [selectMode, setSelectMode] = useState(1);
-
-
 
   return (
     <div className="container">
@@ -51,7 +61,7 @@ export default function MainFrame() {
               document.getElementById("1").style.backgroundColor = "#2d2d2d";
               document.getElementById("2").style.backgroundColor = "#2d2d2d";
               document.getElementById("3").style.backgroundColor = "#2d2d2d";
-              document.getElementById("4").style.backgroundColor = "#cfcfcf";  
+              document.getElementById("4").style.backgroundColor = "#cfcfcf";
               setDetailInfo(todayYear);
             }}
           >
@@ -82,7 +92,9 @@ export default function MainFrame() {
               document.getElementById("2").style.backgroundColor = "#cfcfcf";
               document.getElementById("3").style.backgroundColor = "#2d2d2d";
               document.getElementById("4").style.backgroundColor = "#2d2d2d";
-              setDetailInfo(String(today.getMonth()) + "/" + String(today.getDate()));
+              setDetailInfo(
+                String(today.getMonth()) + "/" + String(today.getDate())
+              );
             }}
           >
             week
@@ -97,7 +109,9 @@ export default function MainFrame() {
               document.getElementById("2").style.backgroundColor = "#2d2d2d";
               document.getElementById("3").style.backgroundColor = "#2d2d2d";
               document.getElementById("4").style.backgroundColor = "#2d2d2d";
-              setDetailInfo(String(today.getMonth()) + "/" + String(today.getDate()));
+              setDetailInfo(
+                String(today.getMonth()) + "/" + String(today.getDate())
+              );
             }}
           >
             day

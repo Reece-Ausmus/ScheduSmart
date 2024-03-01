@@ -25,6 +25,8 @@ def testing_creating_invalid_account():
 
 
 def creating_same_email():
+    temp_user = {"email": "unitTest@purpose.only", "password": "ThisIsJustPassword"}
+    delete_user = login_account_with_email_and_password(temp_user)
     user["email"] = "unitTest@purpose.only"
     user["password"] = "ThisIsJustPassword"
     if create_account_by_username_and_password(user) == 1:
@@ -33,7 +35,7 @@ def creating_same_email():
     if create_account_by_username_and_password(user) == 0:
         print("fail to reject email account that already exist")
         assert False
-    delete_user = login_account_with_email_and_password("unitTest@purpose.only", "ThisIsJustPassword")
+    delete_user = login_account_with_email_and_password(user)
     delete_account(delete_user)
 
 
