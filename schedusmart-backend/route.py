@@ -34,10 +34,18 @@ def login():
     data = login_account_with_email_and_password(receive_account)
     ret = data['return_status']
     if ret == 1:
-        return 'invalid email or password', 205
+        response = jsonify({'error': 'invalid email or password'})
+        response.status_code = 205
     if ret == 3:
-        return 'Please verify your email', 206
-    return 'Done', 201
+        response = jsonify({'error': 'Please verify your email'})
+        response.status_code = 206
+    else:
+        response = jsonify({
+            'message': 'Done',
+            'user_id': data['user_id']
+        })
+        response.status_code = 201
+    return response
 
 @account.route('/user_data')
 def user_data():
