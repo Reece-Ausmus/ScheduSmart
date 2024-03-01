@@ -45,7 +45,6 @@ export default function AccountInfo() {
         }
     }
 
-
     const [firstname, setFirstName] = useState('');
     const [lastname, setLastName] = useState('');
     const [username, setUsername] = useState('');
@@ -54,27 +53,34 @@ export default function AccountInfo() {
 
   return (
     <div className="info_container">
-            <button onClick={handleInfo}>Load Sensitive User Info</button>
+            <button onClick={handleInfo}>Reset to Default</button>
       <div>
-        <h1> {languageData[language][0][0].accountInformation} </h1>
+        <h1> {languageData[0][0][0].accountInformation} </h1>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].firstName}: {firstname}</p>
+        <label>
+            {languageData[0][0][0].firstName} <input value={firstname} onChange={(e) => setFirstName(e.target.value)}/>
+        </label>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].lastName}: {lastname}</p>
+        <label>
+            {languageData[0][0][0].lastName} <input value={lastname} onChange={(e) => setLastName(e.target.value)}/>
+        </label>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].userName}: {username}</p>
+        <label>
+            {languageData[0][0][0].userName} <input value={username} onChange={(e) => setUserName(e.target.value)}/>
+        </label>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].Email}: {email}</p>
+        <label>
+            {languageData[0][0][0].Email} <input value={email} onChange={(e) => setEmail(e.target.value)}/>
+        </label>
       </div>
       <div className="info">
-        <p>{languageData[language][0][0].password}: {password}</p>
-      </div>
-      <div className="info">
-        <p>{languageData[language][0][0].location}: {location}</p>
+        <label>
+            {languageData[0][0][0].location} <input value={location} onChange={(e) => setLocation(e.target.value)}/>
+        </label>
       </div>
     </div>
   );

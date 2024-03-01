@@ -18,6 +18,7 @@ export default function Signout() {
   const handleConfirmClick = () => {
     if (window.confirm('Are you sure you want to sign out?')) {
       //Yes
+      sessionStorage.clear()
       setGoToWelcome(true)
     } else {
       //No

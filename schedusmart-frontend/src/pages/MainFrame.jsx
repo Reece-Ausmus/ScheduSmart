@@ -315,7 +315,7 @@ export default function MainFrame() {
   function upperBarPackage() {
     // handle redirects
     const [goToSettings, setGoToSettings] = React.useState(false)
-    const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
+    const [goToSignOut, setGoToSignOut] = React.useState(false);
     const [goToWelcome, setGoToWelcome] = React.useState(false)
 
     if (goToSettings) {
@@ -334,10 +334,10 @@ export default function MainFrame() {
       );
     }
 
-    if (goToDragAndDrop) {
+    if (goToSignOut) {
     return (
       <>
-        <Navigate to="/draganddrop" />
+        <Navigate to="/signout" />
       </>
     );
     }
@@ -352,8 +352,8 @@ export default function MainFrame() {
         <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
           Settings
         </button>
-        <button className="upperBarButton" onClick={() => {setGoToWelcome(true)}}>
-          Logout
+        <button className="upperBarButton" onClick={() => {setGoToSignOut(true)}}>
+          Signout
         </button>
       </div>
       <div className="weather_container">
