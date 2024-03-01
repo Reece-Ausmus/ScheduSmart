@@ -88,6 +88,7 @@ def get_user(response):
             "user_id": user_id,
             "calendars": None,
             "language": db.child("User").child(user_id).child('language').get().val(),
+            "location": db.child("User").child(user_id).child('location').get().val(),
             "return_status": 0
         }
         return data
@@ -123,7 +124,7 @@ def create_account_by_username_and_password(receive_account):
             "first_name": receive_account['firstname'],
             "last_name": receive_account['lastname'],
             "user_name": receive_account['username'],
-            "email": receive_account['email']
+            "email": receive_account['email'],
         }
 
         existing_user = db.child("User").get().val()
@@ -299,4 +300,4 @@ user = {
     "user_id": "igOcM0niMhQNVLKe2S0ncnU9kOC2"
 }
 # create_account_by_username_and_password(user)
-update_user_info(user, "language", 2)
+#update_user_info(user, "language", 2)

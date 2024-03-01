@@ -33,6 +33,7 @@ export default function AccountInfo() {
           setLastName(responseData.last_name);
           setUsername(responseData.user_name);
           setEmail(responseData.email);
+          if (responseData.location != null) setLocation(responseData.location);
           console.log(userId);
           break;
         case 202:
@@ -128,6 +129,7 @@ export default function AccountInfo() {
               user_name: username,
               email: email,
               user_id: userId,
+              location: location, 
             };
             const response = await fetch(flaskURL + "/update_account_info", {
               method: "POST",
