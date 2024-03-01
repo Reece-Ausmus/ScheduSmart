@@ -452,7 +452,7 @@ export default function MainFrame() {
       );
     };
 
-    const handleSubmit = async () => {
+    const handleCreateEvent = async () => {
       const new_event = {
         'name': eventName,
         'desc': eventDescription,
@@ -504,7 +504,6 @@ export default function MainFrame() {
       setRepetitionType("none");
       setCustomFrequencyUnit("");
       setCustomFrequencyValue(1);
-      setSelectedCalendars([]);
       setEventCalendar("");
       togglePopup();
     };
@@ -516,13 +515,14 @@ export default function MainFrame() {
 
     useEffect(() => {
       const fetchData = async () => {
+        console.log(userId)
         const response = await fetch(flaskURL + '/user_data', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: sessionStorage.getItem('user_id')
+            'user_id': userId
           }),
           credentials: "include"
         });
@@ -643,7 +643,7 @@ export default function MainFrame() {
             <div className="popup">
               <div className="popup-content">
                 <h2>Add Event</h2>
-                <form onSubmit={handleSubmit}>
+                <div>
                   <div className="formgroup">
                     <label htmlFor="eventName">Event Name:</label>
                     <input type="text" id="eventName" value={eventName} onChange={handleEventNameChange}/>
@@ -675,7 +675,7 @@ export default function MainFrame() {
                       value={eventCalendar}
                       onChange={handleEventCalendarChange}
                     >
-                      <option value="">Select Calendar</option> {/* Placeholder option */}
+                      <option value="">Select Calendar</option>
                       {calendarList.map(cal => (
                         <option key={cal.id} value={cal.name}>
                           {cal.name}
@@ -686,100 +686,100 @@ export default function MainFrame() {
                   <div className="event-repetition-form">
                     <h2>Event Repetition</h2>
                     <div className="repetition-options">
-                      <button onClick={() => handleRepetitionChange('none')}>None</button>
-                      <button onClick={() => handleRepetitionChange('daily')}>Daily</button>
-                      <button onClick={() => handleRepetitionChange('weekly')}>Weekly</button>
-                      <button onClick={() => handleRepetitionChange('monthly')}>Monthly</button>
-                      <button onClick={() => handleRepetitionChange('yearly')}>Yearly</button>
-                      <button onClick={() => handleRepetitionChange('custom')}>Custom</button>
+                      <button type="button" onClick={() => handleRepetitionChange('none')}>None</button>
+                      <button type="button" onClick={() => handleRepetitionChange('daily')}>Daily</button>
+                      <button type="button" onClick={() => handleRepetitionChange('weekly')}>Weekly</button>
+                      <button type="button" onClick={() => handleRepetitionChange('monthly')}>Monthly</button>
+                      <button type="button" onClick={() => handleRepetitionChange('yearly')}>Yearly</button>
+                      <button type="button" onClick={() => handleRepetitionChange('custom')}>Custom</button>
+                    </div>
+                    {repetitionType === 'custom' && (
+                      <div className="custom-repetition">
+                        <label htmlFor="customFrequency">Repeat every</label>
+                        <input
+                          type="number"
+                          id="customFrequencyValue"
+                          value={customFrequencyValue}
+                          onChange={handleCustomFrequencyValueChange}
+                          min={1}
+                        />
+                        <select
+                          id="customFrequencyUnit"
+                          value={customFrequencyUnit}
+                          onChange={handleCustomFrequencyUnitChange}
+                          >
+                          <option value="days">days</option>
+                          <option value="weeks">weeks</option>
+                          <option value="months">months</option>
+                          <option value="years">years</option>
+                        </select>
+                        {customFrequencyUnit === 'weeks' && (
+                          <div className="day-selector">
+                            <p>Select specific days:</p>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedDays.includes('sun')}
+                                onChange={() => handleDayToggle('sun')}
+                              />
+                              Sunday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedDays.includes('mon')}
+                                onChange={() => handleDayToggle('mon')}
+                              />
+                              Monday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedDays.includes('tues')}
+                                onChange={() => handleDayToggle('tues')}
+                              />
+                              Tuesday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedDays.includes('wed')}
+                                onChange={() => handleDayToggle('wed')}
+                              />
+                              Wednesday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedDays.includes('thur')}
+                                onChange={() => handleDayToggle('thur')}
+                              />
+                              Thursday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedDays.includes('fri')}
+                                onChange={() => handleDayToggle('fri')}
+                              />
+                              Friday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={selectedDays.includes('sat')}
+                                onChange={() => handleDayToggle('sat')}
+                              />
+                              Saturday
+                            </label>
+                          </div>
+                        )}
                       </div>
-                      {repetitionType === 'custom' && (
-                        <div className="custom-repetition">
-                          <label htmlFor="customFrequency">Repeat every</label>
-                          <input
-                            type="number"
-                            id="customFrequencyValue"
-                            value={customFrequencyValue}
-                            onChange={handleCustomFrequencyValueChange}
-                            min={1}
-                          />
-                          <select
-                            id="customFrequencyUnit"
-                            value={customFrequencyUnit}
-                            onChange={handleCustomFrequencyUnitChange}
-                            >
-                            <option value="days">days</option>
-                            <option value="weeks">weeks</option>
-                            <option value="months">months</option>
-                            <option value="years">years</option>
-                          </select>
-                          {customFrequencyUnit === 'weeks' && (
-                            <div className="day-selector">
-                              <p>Select specific days:</p>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedDays.includes('sun')}
-                                  onChange={() => handleDayToggle('sun')}
-                                />
-                                Sunday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedDays.includes('mon')}
-                                  onChange={() => handleDayToggle('mon')}
-                                />
-                                Monday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedDays.includes('tues')}
-                                  onChange={() => handleDayToggle('tues')}
-                                />
-                                Tuesday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedDays.includes('wed')}
-                                  onChange={() => handleDayToggle('wed')}
-                                />
-                                Wednesday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedDays.includes('thur')}
-                                  onChange={() => handleDayToggle('thur')}
-                                />
-                                Thursday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedDays.includes('fri')}
-                                  onChange={() => handleDayToggle('fri')}
-                                />
-                                Friday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={selectedDays.includes('sat')}
-                                  onChange={() => handleDayToggle('sat')}
-                                />
-                                Saturday
-                              </label>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                    )}
                   </div>
-                  <button className="formbutton fb1" type="submit">Add</button>
+                  <button className="formbutton fb1" onClick={handleCreateEvent}>Add</button>
                   <button className="formbutton fb2" onClick={togglePopup}>Cancel</button>
-                </form>
+                </div>
               </div>
             </div>
           )}

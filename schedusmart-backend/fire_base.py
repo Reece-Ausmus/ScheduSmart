@@ -300,8 +300,8 @@ def add_new_event(event_info):
         'repetition_val': event_info['repetition_val']
     }
     try:
-        data = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        calendar_id = data['calendar_id']
+        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        calendar_id = caldata['calendar_id']
         print(calendar_id)
         db.child("Calendars").child(calendar_id).child("Events").child(event_id).set(data)
     except Exception as e:
