@@ -6,16 +6,6 @@ import LanguageSetting from "./LanguageConfig.jsx";
 import languageData from "../components/language.json";
 
 export default function Settings() {
-<<<<<<< Updated upstream
-  const [goToCalendar, setGoToCalendar] = React.useState(false);
-  const [language, setLanguage] = useState(0);
-
-  if (goToCalendar) {
-    return (
-      <>
-        <Navigate to="/calendar" />
-      </>
-=======
     
     return(
         <>
@@ -28,7 +18,6 @@ export default function Settings() {
         </div>
         <Weather/> 
         </>
->>>>>>> Stashed changes
     );
   }
 
@@ -56,4 +45,3 @@ export default function Settings() {
       ></LanguageSetting.Provider>
     </>
   );
-}
