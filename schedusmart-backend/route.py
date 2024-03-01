@@ -58,7 +58,7 @@ def login():
         response.status_code = 201
     return response
 
-@account.route('/user_data')
+@account.route('/user_data', methods=['POST'])
 def user_data():
     receive_user = request.get_json()
     try: 
@@ -75,13 +75,12 @@ def user_data():
             'user_name': data['user_name'],
             'first_name': data['first_name'],
             'last_name': data['last_name'],
-            'password': data['password'],
-        })
-        response.status_code = 201
+            })
+            response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status_code = 206
+        response.status_code = 205
     return response
 
 
@@ -103,4 +102,19 @@ def create_calendar():
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
+    return response
+
+# this is to retireve calendar default mode
+@account.route('/get_calendar_default_mode', methods=['POST'])
+def get_calendar_default_mode():
+    receive_user = request.get_json()
+    if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
+        response = jsonify({'message': 'Done'})
+        response.status_code = 206
+        return
+
+    data = get_default_calendar_type(receive_user['userId'])
+    response = jsonify({'type':data})
+    response.status_code = 201
+
     return response

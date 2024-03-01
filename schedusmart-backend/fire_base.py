@@ -8,6 +8,7 @@
 #       |-  last_name
 #       |-  email
 #       |-  user_name
+#       |- default_calendar_type
 #       |-  calenders
 #           |-  cal_id1
 #           |-  cal_id2
@@ -21,6 +22,7 @@
 #       |-  last_name
 #       |-  email
 #       |-  user_name
+#       |- default_calendar_type
 #       |-  calenders
 #           |-  cal_id1
 #           |-  cal_id2
@@ -79,18 +81,19 @@ def get_user(response):
     user_id = response['userId']
     try:
         data = {
-            "email": db.child("User").child(user_id).get('email'),
-            "first_name": db.child("User").child(user_id).get('first_name'),
-            "last_name": db.child("User").child(user_id).get('last_name'),
-            "user_name": db.child("User").child(user_id).get('user_name'),
-            "password": db.child("User").child(user_id).get('password'),
+            "email": db.child("User").child(user_id).child('email').get().val(),
+            "first_name": db.child("User").child(user_id).child('first_name').get().val(),
+            "last_name": db.child("User").child(user_id).child('last_name').get().val(),
+            "user_name": db.child("User").child(user_id).child('user_name').get().val(),
             "user_id": user_id,
             "return_status": 0
         }
         return data
     except Exception as e:
-        print("Failed to get user", e)
-        return 1
+        return {
+            "error": "Cannot Find User",
+            "return_status": 1
+        }
 
 # this is used to create an account
 # the argument accept an array with following format:
@@ -253,6 +256,11 @@ def add_new_calendar(calendar_info):
         print("Failed to add calendar to user:", e)
         return 2
     return 0
+
+# this func is to get the default calendar type
+def get_default_calendar_type(uid):
+    type = db.child("User").child("O4eABYSFUxNTJgUSfRogsY6D7Eh2").child("default_calendar_type").get()
+    return type.val()
 
 # build a connection between firebase and flask #######################
 

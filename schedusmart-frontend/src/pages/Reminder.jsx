@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import './Reminder.css';
+import './Settings.css';
+const flaskURL = "http://127.0.0.1:5000";
 
 export default function Reminder() {
+    const handleReminder = async (event) =>{
+        event.preventDefault();
+
+    }
     const [remindersOn, setRemindersOn] = useState(true);
     const toggleReminders = () => {
         setRemindersOn(prevState => !prevState);
