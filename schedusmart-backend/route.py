@@ -204,7 +204,7 @@ def set_amount_of_time():
     receive_user = request.get_json()
     uid = receive_user['userId']
     time = receive_user['time']
-    
+    '''
     if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2':
         response = jsonify({'available': 60})
         response.status_code = 205
@@ -219,4 +219,4 @@ def set_amount_of_time():
         response = jsonify({'available': 60})
         response.status_code = 201
         return response
-
+    '''

@@ -537,10 +537,10 @@ export default function MainFrame() {
               setLoading(false);
               break;
             case 202:
-              //alert("User Not Found");
+              alert("User Not Found");
               break;
             case 205:
-              //alert("Failing to retrieve user data")
+              alert("Failing to retrieve user data")
               break;
           }
         }
