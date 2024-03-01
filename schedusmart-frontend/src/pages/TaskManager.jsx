@@ -145,31 +145,46 @@ export default function TaskManager() {
     doc.setFontSize(20);
     doc.text("To-Do List", doc.internal.pageSize.getWidth() / 2, 20, "center");
     doc.setFontSize(12);
-
+  
     // Add to-do list items with spacing
     const yStart = 40; // Starting y-coordinate
     let y = yStart; // Current y-coordinate
     const lineHeight = 10; // Spacing between items
-
+  
     todoList.forEach((task) => {
       // Add task title
-      doc.setFont("normal", "bold"); 
+      doc.setFont("normal", "bold");
       doc.text(task.title, 15, y);
-      doc.setFont("normal", "normal"); 
-
+      doc.setFont("normal", "normal");
+  
       y += lineHeight;
-
+  
       doc.text(task.desc, 15, y);
       y += lineHeight;
       doc.text(`${task.time} hour(s) - ${task.date}`, 15, y);
       y += lineHeight;
-
+  
       // Add separator line
       doc.setLineWidth(0.5);
       doc.line(15, y + 2, doc.internal.pageSize.getWidth() - 15, y + 2);
       y += lineHeight * 2; // Increase spacing after separator
     });
-
+  
+    // Add a space between To-Do and Completed sections
+    y += lineHeight * 2;
+  
+    // Add heading for Completed tasks
+    doc.setFont("normal", "bold");
+    doc.text("Completed Tasks", 15, y);
+    doc.setFont("normal", "normal");
+    y += lineHeight;
+  
+    // Add completed task items with spacing (modify as needed)
+    completedList.forEach((task) => {
+      doc.text(task.title, 15, y);
+      y += lineHeight * 2;  // Adjust spacing as needed
+    });
+  
     // Trigger download without opening the document in a new tab
     doc.save("task-list.pdf");
     setIsDownloaded(true);
@@ -177,9 +192,10 @@ export default function TaskManager() {
 
   // export to csv
   const generateCSV = () => {
+    const allTasks = [...todoList, ...completedList]; // Combine all tasks
     const csvData = [
       ["ID", "Title", "Description", "Workload (hours)", "Deadline", "Completed", "Completed Time"],
-      ...todoList.map((task) => [
+      ...allTasks.map((task) => [
         task.id,
         task.title,
         task.desc,
