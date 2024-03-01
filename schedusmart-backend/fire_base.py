@@ -95,6 +95,15 @@ def get_user(response):
             "return_status": 1
         }
 
+def update_user_info(receive_account):
+    try:
+        user_id = receive_account['user_id']
+        db.child("User").child(user_id).set(receive_account)
+        return 0
+    except Exception:
+        print("Failed to update account information")
+        return 1
+
 # this is used to create an account
 # the argument accept an array with following format:
 # user = {
@@ -152,7 +161,7 @@ def login_account_with_email_and_password(receive_account):
         # Check if the user's email is not verified based on the database field
         user_id = user['localId']
         # 2FA CODE START ########################################################################################
-        # email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
+        email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
         
 
         

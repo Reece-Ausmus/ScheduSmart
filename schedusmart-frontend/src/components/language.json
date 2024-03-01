@@ -7,11 +7,11 @@
         "firstName": "First Name",
         "lastName":"Last Name",
         "userName":"Username",
-        "Email": "email",
+        "email": "Email",
         "password": "Password",
         "location": "Location",
-        "language": "language",
-        "calendar": "calendar",
+        "language": "Language",
+        "calendar": "Calendar",
         "cancel": "cancel"
     }
 ]
