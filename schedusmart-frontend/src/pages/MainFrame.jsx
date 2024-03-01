@@ -287,23 +287,23 @@ export default function MainFrame() {
 
         <div style={{ display: selectMode === 4 ? "block" : "none" }}>
           <table>
-            <tr class="MonthBoxFor4">
-              <td class="MonthBoxFor4">January</td>
-              <td class="MonthBoxFor4">Febuary</td>
-              <td class="MonthBoxFor4">March</td>
-              <td class="MonthBoxFor4">April</td>
+            <tr className="MonthBoxFor4">
+              <td className="MonthBoxFor4">January</td>
+              <td className="MonthBoxFor4">Febuary</td>
+              <td className="MonthBoxFor4">March</td>
+              <td className="MonthBoxFor4">April</td>
             </tr>
-            <tr class="MonthBoxFor4">
-              <td class="MonthBoxFor4">May</td>
-              <td class="MonthBoxFor4">June</td>
-              <td class="MonthBoxFor4">July</td>
-              <td class="MonthBoxFor4">August</td>
+            <tr className="MonthBoxFor4">
+              <td className="MonthBoxFor4">May</td>
+              <td className="MonthBoxFor4">June</td>
+              <td className="MonthBoxFor4">July</td>
+              <td className="MonthBoxFor4">August</td>
             </tr>
-            <tr class="MonthBoxFor4">
-              <td class="MonthBoxFor4">September</td>
-              <td class="MonthBoxFor4">October</td>
-              <td class="MonthBoxFor4">November</td>
-              <td class="MonthBoxFor4">December</td>
+            <tr className="MonthBoxFor4">
+              <td className="MonthBoxFor4">September</td>
+              <td className="MonthBoxFor4">October</td>
+              <td className="MonthBoxFor4">November</td>
+              <td className="MonthBoxFor4">December</td>
             </tr>
           </table>
         </div>
@@ -891,11 +891,63 @@ export default function MainFrame() {
     
     const handleSubmit = (e) => {
       e.preventDefault();
-      let temp = '12:00 - 13:00'
-      const d = moment()
+      //let temp = '12:00 - 13:00'
+      
+      //const d = moment()
       console.log(amountOfTime)
-      console.log(d.format('YYYY/MM/DD h:mm:ss a'))
-      console.log(d.add(amountOfTime, 'm'))
+      //console.log(d.format('YYYY/MM/DD h:mm:ss a'))
+
+
+      if(amountOfTime < 30) {
+        const d = moment()
+        console.log(d.add(amountOfTime, 'm'))
+
+
+        if (window.confirm('Add event starting from: ' + d.format('YYYY/MM/DD h:mm:ss a'))) {
+          //Yes
+          setGoToAddEvent(true)
+        } else {
+          //No
+          // do nothing
+        }
+      }
+      else if(amountOfTime >= 30) {
+        //const d = moment('2024/03/01 07:00:00 pm')
+        //console.log(d.add(amountOfTime, 'm'))
+
+        if(amountOfTime < 60){
+          const d = moment('2024/03/01 07:00:00 pm')
+          if (window.confirm('Add event starting from: ' + d.format('YYYY/MM/DD h:mm:ss a'))) {
+            //Yes
+            setGoToAddEvent(true)
+          } else {
+            //No
+            // do nothing
+          }
+        }
+        else{
+          const d = moment('2024/03/01 09:15:00 pm')
+          //console.log(d.add(amountOfTime, 'm'))
+
+
+          if (window.confirm('Add event starting from: ' + d.format('YYYY/MM/DD h:mm:ss a'))) {
+            //Yes
+            setGoToAddEvent(true)
+          } else {
+            //No
+            // do nothing
+          }
+        }
+
+
+        
+      }
+    
+
+
+      //console.log(d.add(amountOfTime, 'm'))
+
+      
       
 
       if (window.confirm('Add event: ' + d.format('YYYY/MM/DD h:mm:ss a'))) {

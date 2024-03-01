@@ -18,7 +18,7 @@ export default function AccountInfo(language) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        user_id: userId,
       }),
       credentials: "include",
     });

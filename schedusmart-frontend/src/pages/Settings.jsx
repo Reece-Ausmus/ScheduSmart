@@ -17,7 +17,7 @@ export default function Settings() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        user_id: userId,
       }),
       credentials: "include",
     });
@@ -35,7 +35,7 @@ export default function Settings() {
   const [showVirtual, setShowVirsual] = useState(3);
   const handleVirtualSelectChange = (e) => {
     setShowVirsual(parseInt(e.target.value));
-    updateFormat(e.target.value);
+    updateFormat(showVirtual);
   };
   function switchLanguageUI() {
     setShowLanguageSettingUI(!showLanguageSettingUI);
@@ -110,6 +110,8 @@ export default function Settings() {
         case 205:
           alert("Failed to change the calendar mode");
           break;
+        default:
+            alert("Unexpected response status: " + response.status);
       }
     }
   }
