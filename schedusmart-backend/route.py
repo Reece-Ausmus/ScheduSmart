@@ -118,3 +118,20 @@ def get_calendar_default_mode():
     response.status_code = 201
 
     return response
+
+@account.route('/update_format', methods=['POST'])
+def update_calendar_format():
+    info = request.get_json()
+    try:
+        ret = update_format(info)
+        if ret == 1:
+            response = jsonify({'error': 'calendar format can not be changed'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
