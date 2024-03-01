@@ -17,7 +17,7 @@ export default function Settings() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        user_id: userId,
       }),
       credentials: "include",
     });
