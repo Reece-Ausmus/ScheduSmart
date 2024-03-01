@@ -372,9 +372,9 @@ export default function MainFrame() {
   function CalendarList() {
     const [loading, setLoading] = useState(true);
     const [calendars, setCalendars] = useState([
-      { id: 0, name: "Personal" },
-      { id: 1, name: "School" },
-      { id: 2, name: "Work" },
+      { 'calender_id': 0, name: "Personal" },
+      { 'calender_id': 1, name: "School" },
+      { 'calender_id': 2, name: "Work" },
     ]);
   
     let nextCalendarID = 3;
@@ -532,8 +532,14 @@ export default function MainFrame() {
           switch(response.status) {
             case 201:
               const responseData = await response.json();
-              //setCalendarList(responseData.calendars);
-              setCalendars(responseData.calendars)
+              const newCalendars = responseData.calendars;
+              const updatedCalendarList = [...calendarList];
+
+              for (const calendarName in newCalendars) {
+                  const name = newCalendars[calendarName];
+                  updatedCalendarList.push({ 'calendar_id': calendarName, 'name': name });
+              }
+              setCalendarList(updatedCalendarList);
               setLoading(false);
               break;
             case 202:

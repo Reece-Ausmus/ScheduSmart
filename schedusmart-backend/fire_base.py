@@ -83,14 +83,17 @@ def get_user(response):
     user_id = response['user_id']
     try:
         calendars_data = db.child("User").child(user_id).child('calendars').get().val() or {}
-        calendar_names = list(calendars_data.keys())
+        calendars = {}
+        for cal_name, cal_info in calendars_data.items():
+            calendar_id = cal_info.get('calendar_id')
+            calendars[cal_name] = {"calendar_id": calendar_id}
         data = {
             "email": db.child("User").child(user_id).child('email').get().val(),
             "first_name": db.child("User").child(user_id).child('first_name').get().val(),
             "last_name": db.child("User").child(user_id).child('last_name').get().val(),
             "user_name": db.child("User").child(user_id).child('user_name').get().val(),
             "user_id": user_id,
-            "calendars": calendar_names,
+            "calendars": calendars,
             "language": db.child("User").child(user_id).child('language').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
             "return_status": 0
