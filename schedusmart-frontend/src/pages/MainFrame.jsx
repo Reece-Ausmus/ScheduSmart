@@ -375,9 +375,9 @@ export default function MainFrame() {
   function CalendarList() {
     const [loading, setLoading] = useState(true);
     const [calendars, setCalendars] = useState([
-      { 'calender_id': 0, name: "Personal" },
-      { 'calender_id': 1, name: "School" },
-      { 'calender_id': 2, name: "Work" },
+      { 'calendar_id': 0, 'name': "Personal" },
+      { 'calendar_id': 1, 'name': "School" },
+      { 'calendar_id': 2, 'name': "Work" },
     ]);
   
     let nextCalendarID = 3;
@@ -669,7 +669,7 @@ export default function MainFrame() {
 
               for (const calendarName in newCalendars) {
                   const name = newCalendars[calendarName];
-                  updatedCalendarList.push({ 'calendar_id': calendarName, 'name': name });
+                  updatedCalendarList.push({ 'calendar_id': name['calendar_id'], 'name': calendarName });
               }
               setCalendarList(updatedCalendarList);
               setLoading(false);
@@ -727,6 +727,8 @@ export default function MainFrame() {
         switch(response.status) {
           case 201:
             console.log("Calendar created successfully");
+            const responseData = await response.json();
+            setCalendarList([...calendarList, {'calendar_id': responseData['calendar_id'], 'name': newCalendarName}]);
             break;
           case 205:
             alert("Calendar not created!");
@@ -740,7 +742,6 @@ export default function MainFrame() {
         }
       }
 
-      setCalendarList([...calendarList, {id: nextCalendarID++, name: newCalendarName}]);
       // Clear the input field after creating the calendar
       setNewCalendarName("");
     };
@@ -1076,14 +1077,14 @@ export default function MainFrame() {
         {/* List of existing calendars */}
         <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
           {calendarList.map((calendar) => (
-            <li key={calendar.id}>
+            <li key={calendar['calendar_id']}>
               <input
                 type="checkbox"
-                id={calendar.id}
-                checked={selectedCalendars.includes(calendar.id)}
-                onChange={() => handleCalendarSelection(calendar.id)}
+                id={calendar['calendar_id']}
+                checked={selectedCalendars.includes(calendar['calendar_id'])}
+                onChange={() => handleCalendarSelection(calendar['calendar_id'])}
               />
-              <label htmlFor={calendar.id}>{calendar.name}</label>
+              <label htmlFor={calendar['calendar_id']}>{calendar['name']}</label>
             </li>
           ))}
         </ul>

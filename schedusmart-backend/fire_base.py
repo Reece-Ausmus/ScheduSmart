@@ -282,15 +282,18 @@ def add_new_calendar(calendar_info):
         db.child("Calendars").child(calendar_id).set(data)
     except Exception as e:
         print("Failed to create calendar:", e)
-        return 1
+        return {'response_status': 1}
 
     # add calendar_id to current users calendar list
     try:
         db.child("User").child(user_id).child("calendars").child(calendar_name).set({'calendar_id': calendar_id})
     except Exception as e:
         print("Failed to add calendar to user:", e)
-        return 2
-    return 0
+        return {'response_status': 2}
+    return {
+        'calendar_id': calendar_id,
+        'response_status': 0
+    }
 
 def update_task(task_info):
     user_id = task_info['user_id']

@@ -91,7 +91,8 @@ def user_data():
 def create_calendar():
     receive_calendar = request.get_json()
     try:
-        ret = add_new_calendar(receive_calendar)
+        response = add_new_calendar(receive_calendar)
+        ret = response['response_status']
         if ret == 1:
             response = jsonify({'error': 'calendar not created'})
             response.status_code = 205
@@ -99,7 +100,7 @@ def create_calendar():
             response = jsonify({'error': 'calendar not added to user'})
             response.status_code = 207
         else:
-            response = jsonify({'message': 'Done'})
+            response = jsonify({'calendar_id': response['calendar_id']})
             response.status_code = 201
     except:
         traceback.print_exc()
