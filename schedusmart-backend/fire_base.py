@@ -117,6 +117,25 @@ def create_account_by_username_and_password(receive_account):
 def login_account_with_email_and_password(receive_account):
     try:
         user = auth.sign_in_with_email_and_password(receive_account['email'], receive_account['password'])
+        
+        # Check if the user's email is not verified based on the database field
+        user_id = user['localId']
+        email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
+        
+        # Send verification email to certify login
+        if not email_verified:
+            auth.send_email_verification(user['idToken'])
+
+            # Update 'emailVerified' to True in the database
+            db.child("User").child(user_id).update({"emailVerified": True})
+
+            return 3
+        
+        # Set 'emailVerified' to False so that user will have to re-verify on next sign-in
+        user_id = user['localId']
+        db.child("User").child(user_id).update({"emailVerified": False})
+
+        session['user_id'] = user['localId']
         data = {
             "email": receive_account['email'],
             "password": receive_account['password'],
