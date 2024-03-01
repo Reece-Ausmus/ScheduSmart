@@ -287,23 +287,23 @@ export default function MainFrame() {
 
         <div style={{ display: selectMode === 4 ? "block" : "none" }}>
           <table>
-            <tr class="MonthBoxFor4">
-              <td class="MonthBoxFor4">January</td>
-              <td class="MonthBoxFor4">Febuary</td>
-              <td class="MonthBoxFor4">March</td>
-              <td class="MonthBoxFor4">April</td>
+            <tr className="MonthBoxFor4">
+              <td className="MonthBoxFor4">January</td>
+              <td className="MonthBoxFor4">Febuary</td>
+              <td className="MonthBoxFor4">March</td>
+              <td className="MonthBoxFor4">April</td>
             </tr>
-            <tr class="MonthBoxFor4">
-              <td class="MonthBoxFor4">May</td>
-              <td class="MonthBoxFor4">June</td>
-              <td class="MonthBoxFor4">July</td>
-              <td class="MonthBoxFor4">August</td>
+            <tr className="MonthBoxFor4">
+              <td className="MonthBoxFor4">May</td>
+              <td className="MonthBoxFor4">June</td>
+              <td className="MonthBoxFor4">July</td>
+              <td className="MonthBoxFor4">August</td>
             </tr>
-            <tr class="MonthBoxFor4">
-              <td class="MonthBoxFor4">September</td>
-              <td class="MonthBoxFor4">October</td>
-              <td class="MonthBoxFor4">November</td>
-              <td class="MonthBoxFor4">December</td>
+            <tr className="MonthBoxFor4">
+              <td className="MonthBoxFor4">September</td>
+              <td className="MonthBoxFor4">October</td>
+              <td className="MonthBoxFor4">November</td>
+              <td className="MonthBoxFor4">December</td>
             </tr>
           </table>
         </div>
@@ -522,7 +522,7 @@ export default function MainFrame() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: sessionStorage.getItem('user_id')
+            user_id: sessionStorage.getItem('user_id')
           }),
           credentials: "include"
         });
