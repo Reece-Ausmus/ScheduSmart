@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
 import moment from 'moment';
 
+const flaskURL = "http://127.0.0.1:5000";
 
-export default function MainFrame() {
+
+export default function Calendar() {
   function todayseeker() {
     let date = today.getDate();
     const day = today.getDay();
@@ -254,7 +256,11 @@ export default function MainFrame() {
   //  String(today.getMonth()) + "/" + String(today.getDate())
   //);
 
-  const [selectMode, setSelectMode] = useState(1);
+  const [selectMode, setSelectMode] = useState(2);
+
+  useEffect(() => {
+    fetch(flaskURL + '/calendarType').then(res => console.log(res));
+  }, []);
 
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
@@ -583,11 +589,11 @@ function MonthStyle() {
     const [currentYear, setCurrentYear] = useState(d);
 
     const incrementMonth = () => {
-      setCurrentYear(moment(currentMonth.add(1, "years")));
+      setCurrentYear(moment(currentYear.add(1, "years")));
     }
 
     const decrementMonth = () => {
-      setCurrentYear(moment(currentMonth.subtract(1, "years")));
+      setCurrentYear(moment(currentYear.subtract(1, "years")));
     }
 
     return(
@@ -622,6 +628,7 @@ function MonthStyle() {
   return (
     <div className="container">
 
+      {/*calendar*/}
       <div className="calender_container">
         <div className="calender_container_controlbar">
           {/*<h2 className="detailInfo">{detailInfo}</h2> */}
@@ -629,6 +636,14 @@ function MonthStyle() {
         </div>
         <div>{fourCalendarPackage()}</div>
       </div>
+
+
+      {/* Event container */}
+      <div className="event_container">
+        <h1 className="Event_title">Task List</h1>
+        <div className="ToDoList"></div>
+      </div>
     </div>
+
   );
 }
