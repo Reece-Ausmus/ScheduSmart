@@ -24,6 +24,11 @@ h2 {
 
 }
 
+p {
+  color: black;
+
+}
+
 button {
   background-color: #000000;
   color: rgb(223, 118, 43);

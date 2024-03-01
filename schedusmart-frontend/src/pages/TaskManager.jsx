@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./TaskManager.css";
 import { jsPDF } from "jspdf";
+import { saveAs } from "file-saver";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -135,8 +136,8 @@ export default function TaskManager() {
   };
 
 
-
-  const [isDownloaded, setIsDownloaded] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState("pdf");
+  
   // export to pdf
   const generatePDF = () => {
     const doc = new jsPDF();
@@ -152,13 +153,21 @@ export default function TaskManager() {
 
     todoList.forEach((task) => {
       // Add task title
+      doc.setFont("normal", "bold"); 
       doc.text(task.title, 15, y);
+      doc.setFont("normal", "normal"); 
+
       y += lineHeight;
 
       doc.text(task.desc, 15, y);
       y += lineHeight;
       doc.text(`${task.time} hour(s) - ${task.date}`, 15, y);
       y += lineHeight;
+
+      // Add separator line
+      doc.setLineWidth(0.5);
+      doc.line(15, y + 2, doc.internal.pageSize.getWidth() - 15, y + 2);
+      y += lineHeight * 2; // Increase spacing after separator
     });
 
     // Trigger download without opening the document in a new tab
@@ -166,12 +175,51 @@ export default function TaskManager() {
     setIsDownloaded(true);
   };
 
+  // export to csv
+  const generateCSV = () => {
+    const csvData = [
+      ["ID", "Title", "Description", "Workload (hours)", "Deadline", "Completed", "Completed Time"],
+      ...todoList.map((task) => [
+        task.id,
+        task.title,
+        task.desc,
+        task.time,
+        task.date,
+        task.completed,
+        task.completed_time ? new Date(task.completed_time).toLocaleString() : "",
+      ]),
+    ];
+
+    const csvContent = csvData.map((row) => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    saveAs(blob, "task-list.csv");
+  };
+
+  const handleExport = () => {
+    if (selectedFormat === "pdf") {
+      generatePDF();
+    } else if (selectedFormat === "csv") {
+      generateCSV();
+    } else {
+      // Handle invalid format selection (optional)
+      console.error("Invalid export format selected:", selectedFormat);
+    }
+  };
+
   return (
     <>
       <div>
         <h1>Task List</h1>
-        <button onClick={generatePDF}>Export as PDF</button>
-        {isDownloaded && <p>Your PDF has been downloaded!</p>}
+        <select
+        value={selectedFormat}
+        onChange={(e) => setSelectedFormat(e.target.value)}
+      >
+        <option value="pdf">PDF</option>
+        <option value="csv">CSV</option>
+      </select>
+      <button onClick={handleExport}>
+        Export as {selectedFormat.toUpperCase()}
+      </button>
         <button
           id="openModal"
           onClick={() => {
