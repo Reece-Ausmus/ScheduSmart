@@ -1,7 +1,8 @@
 // This documentation is used for building create-account UI page
 
-import { useState, useEffect } from 'react';
-import './AccountInfo.css'
+import { useState, useEffect } from "react";
+import "./AccountInfo.css";
+import languageData from "../components/language.json";
 
 //this can be change when flask's ip become static
 //currently it's localhost
@@ -51,37 +52,30 @@ export default function AccountInfo() {
     const [email, setEmail] = useState('');
     const [location, setLocation] = useState('West Lafayette');
 
-    return (
-        <div className="info_container">
+  return (
+    <div className="info_container">
             <button onClick={handleInfo}>Load Sensitive User Info</button>
-            <div>
-                <h1> Account Information </h1>
-            </div>
-            <div className="info">
-                <p>
-                First Name: {firstname}
-                </p>
-            </div>
-            <div className="info">
-                <p>
-                Last Name: {lastname}   
-                </p>
-            </div>
-            <div className="info">
-                <p>
-                Username: {username}
-                </p>
-            </div>
-            <div className="info">
-                <p>
-                Email: {email}
-                </p>
-            </div>
-            <div className="info">
-                <p>
-                Location: {location}
-                </p>
-            </div>
-        </div>
-    );
+      <div>
+        <h1> {languageData[language][0][0].accountInformation} </h1>
+      </div>
+      <div className="info">
+        <p>{languageData[language][0][0].firstName}: {firstname}</p>
+      </div>
+      <div className="info">
+        <p>{languageData[language][0][0].lastName}: {lastname}</p>
+      </div>
+      <div className="info">
+        <p>{languageData[language][0][0].userName}: {username}</p>
+      </div>
+      <div className="info">
+        <p>{languageData[language][0][0].Email}: {email}</p>
+      </div>
+      <div className="info">
+        <p>{languageData[language][0][0].password}: {password}</p>
+      </div>
+      <div className="info">
+        <p>{languageData[language][0][0].location}: {location}</p>
+      </div>
+    </div>
+  );
 }
