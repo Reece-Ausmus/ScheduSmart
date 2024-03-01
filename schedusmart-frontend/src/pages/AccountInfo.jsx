@@ -10,7 +10,7 @@ const flaskURL = "http://127.0.0.1:5000";
 
 export default function AccountInfo() {
     useEffect(() => {
-        fetch('/user_data').then(response => 
+        fetch(flaskURL + '/user_data').then(response => 
             response.json().then(data => {
                 console.log(data)
             })
