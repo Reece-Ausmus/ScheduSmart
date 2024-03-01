@@ -87,11 +87,9 @@ def get_user(response):
             "user_name": db.child("User").child(user_id).child('user_name').get().val(),
             "user_id": user_id,
             "calendars": None,
+            "language": db.child("User").child(user_id).child('language').get().val(),
             "return_status": 0
         }
-        cals = db.child("User").child(user_id).child("calendars").get().val()
-        if cals is not None:
-            data["calendars": cals]
         return data
     except Exception as e:
         return {
@@ -285,7 +283,7 @@ def update_format(info):
     except Exception:
         print("Failed to set the calendar mode")
         return 1
-# build a connection between firebase and flask #######################
+# used to test with firebase #######################
 
 # Make sure you download the firebaseConfig.py file in google doc
 firebase = pyrebase.initialize_app(firebaseConfig)
@@ -293,3 +291,12 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
+
+user = {
+	"user_name": "mick@gmail.com",
+    "password":"123456",
+    "language":"3",
+    "user_id": "igOcM0niMhQNVLKe2S0ncnU9kOC2"
+}
+# create_account_by_username_and_password(user)
+update_user_info(user, "language", 2)
