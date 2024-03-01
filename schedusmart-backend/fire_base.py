@@ -53,7 +53,8 @@
 
 import pyrebase
 from firebaseConfig import firebaseConfig
-from flask import session
+import secrets
+import traceback
 
 # to use this function, you will need to first log in the account with method:
 # login_account_with_username_and_password(username, password)
@@ -93,8 +94,7 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email']
         }
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
-        session['user_id'] = user['localId']
-        db.child("User").child(session['user_id']).set(data)
+        db.child("User").child(user['localId']).set(data)
         return 0
     except Exception as e:
         print("Failed to create account:", e)
@@ -108,15 +108,16 @@ def create_account_by_username_and_password(receive_account):
 def login_account_with_email_and_password(receive_account):
     try:
         user = auth.sign_in_with_email_and_password(receive_account['email'], receive_account['password'])
-        session['user_id'] = user['localId']
         data = {
             "email": receive_account['email'],
-            "password": receive_account['password']
+            "password": receive_account['password'],
+            "user_id": user('localId'),
+            "return_status": 0
         }
-        return 0
+        return data
     except Exception:
         print("invalid email or password")
-        return 1
+        return {"return_status": 1}
 
 
 # ##################################################################################################
@@ -168,6 +169,27 @@ def update_task_list(task_list_id, new_task):
         return "one of the task does not contain 'task_id'"
     return 0
 
+
+def add_new_calendar(calendar_info):
+    calendar_name = calendar_info['newCalendarName']
+    user_id = calendar_info['user_id']
+    calendar_id = secrets.token_hex(16)
+    data = {
+        "name": calendar_name
+    }
+    try:
+        db.child("Calendars").child(calendar_id).set(data)
+    except Exception as e:
+        print("Failed to create calendar:", e)
+        return 1
+
+    # add calendar_id to current users calendar list
+    try:
+        db.child("User").child(user_id).child("calendars").push(calendar_id)
+    except Exception as e:
+        print("Failed to add calendar to user:", e)
+        return 2
+    return 0
 
 # build a connection between firebase and flask #######################
 

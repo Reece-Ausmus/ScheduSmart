@@ -54,15 +54,18 @@ export default function SignIn() {
       body: JSON.stringify({
         email: email,
         password: password
-      })
+      }),
+      credentials: "include"
     });
-
     if (!response.ok) {
       alert("something went wrong, refresh your website");
     } else {
       switch(response.status) {
         case 201:
           console.log("sign-in account successfull");
+          const responseData = await response.json();
+          const userId = responseData.user_id;
+          sessionStorage.setItem('user_id', userId);
           window.location.href = '/calendar'
           break;
         case 205:

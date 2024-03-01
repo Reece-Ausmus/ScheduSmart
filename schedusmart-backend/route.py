@@ -5,7 +5,7 @@ import traceback
 # each route that serve the same object have the same variable_name
 
 # To test the code, I recommend using postman app to see what is going on
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from fire_base import *
 
 account = Blueprint('login', __name__)
@@ -31,7 +31,38 @@ def create_account():
 def login():
     receive_account = request.get_json()
     
-    ret = login_account_with_email_and_password(receive_account)
+    data = login_account_with_email_and_password(receive_account)
+    ret = data['return_status']
     if ret == 1:
-        return 'invalid email or password', 205
-    return 'Done', 201
+        response = jsonify({'error': 'invalid email or password'})
+        response.status_code = 205
+    else:
+        response = jsonify({
+            'message': 'Done',
+            'user_id': data['user_id']
+        })
+        response.status_code = 201
+    return response
+
+
+@account.route('/create_calendar', methods=['POST'])
+def create_calendar():
+    receive_calendar = request.get_json()
+    try:
+        ret = add_new_calendar(receive_calendar)
+        if ret == 1:
+            response = jsonify({'error': 'calendar not created'})
+            response.status_code = 205
+        elif ret == 2:
+            response = jsonify({'error': 'calendar not added to user'})
+            response.status_code = 207
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    #if 'Access-Control-Allow-Credentials' not in response.headers:
+    #    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
