@@ -779,30 +779,14 @@ export default function MainFrame() {
       setAmountOfTime(e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    
+    /*const handleSubmit = (e) => {
       e.preventDefault();
       //let temp = '12:00 - 13:00'
       console.log(amountOfTime)
       
       
-      
-    
 
-      //const [goToAddEvent, setGoToAddEvent] = useState(false);
-      /*let temp = async ()=>{
-        let response = await fetch(flaskURL + '/set_amount_of_time',{
-            method:'POST',
-            headers:{
-              'Content-Type':'application/json',
-            },
-            body: JSON.stringify({ userId: userId, time: amountOfTime }),
-            credentials: "include"
-        })
-        let data = await response.json();
-        console.log(data.time);
-        setSelectMode(data.time);
-      }*/
-    
       const response = fetch(flaskURL + "/create_calendar", {
         method: 'POST',
         headers: {
@@ -833,19 +817,6 @@ export default function MainFrame() {
       }
 
 
-    /*let response = fetch(flaskURL + '/get_calendar_default_mode',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-        },
-        body: JSON.stringify({ userId: userId }),
-        credentials: "include"
-    })
-    let data = await response.json()
-    setSelectMode(data.type)
-     // alert('test')
-      //setAvailableTime(re)
-*/
       if (window.confirm('Add event: ' + temp)) {
         //Yes
         setGoToAddEvent(true)
@@ -854,6 +825,25 @@ export default function MainFrame() {
         // do nothing
       }
 
+
+      setAmountOfTime("");
+      togglePopup();
+    };*/
+    const handleSubmit = async () => {
+      let response = await fetch(flaskURL + "/set_amount_of_time", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'user_id': userId,
+          'time': amountOfTime
+        }),
+        credentials: "include"
+      })
+      let data = await response.json();
+      console.log(data.available);
+      //setSelectMode(data.type);
 
       setAmountOfTime("");
       togglePopup();
