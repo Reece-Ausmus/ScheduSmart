@@ -10,6 +10,18 @@ const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
 
 export default function Settings() {
+  const fetchLanguage = async () => {
+    const response = await fetch(flaskURL + "/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userId,
+      }),
+      credentials: "include",
+    });
+  }
   const [goToCalendar, setGoToCalendar] = useState(false);
   const [language, setLanguage] = useState(0);
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
@@ -53,7 +65,7 @@ export default function Settings() {
         <button
           className="languageSettingButton"
           onClick={() => {
-            setLanguage(1);
+            setLanguage(2);
             switchLanguageUI();
           }}
         >
@@ -106,7 +118,7 @@ export default function Settings() {
     <>
       <h1>{languageData[language][0][0].setting}</h1>
       {showLanguageSettingUI && <div>{languageSettingUIPackage()}</div>}
-      <AccountInfo />
+      <div>{AccountInfo(language)}</div>
       <button
         onClick={() => {
           switchLanguageUI();
@@ -126,24 +138,24 @@ export default function Settings() {
           window.location.href = "/reminder";
         }}
       >
-        Reminder
+        {languageData[language][0][0].Reminder}
       </button>
       <button
         onClick={() => {
           window.location.href = "/dashboard";
         }}
       >
-        Dashboard
+        {languageData[language][0][0].dashBoard}
       </button>
       <button
         onClick={() => {
           window.location.href = "/welcome";
         }}
       >
-        Sign Out
+        {languageData[language][0][0].signout}
       </button>
       <div className="reminder-settings">
-        <p className="text"> Calendar visualization format:</p>
+        <p className="text"> {languageData[language][0][0].cvf}.:</p>
         <select value={showVirtual} onChange={handleVirtualSelectChange}>
           {visualOptions.map((option) => (
             <option key={option.id} value={option.id}>

@@ -10,7 +10,7 @@ import languageData from "../components/language.json";
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id"); //"Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2";
 
-export default function AccountInfo() {
+export default function AccountInfo(language) {
   const handleInfo = async (event) => {
     const response = await fetch(flaskURL + "/user_data", {
       method: "POST",
@@ -58,13 +58,13 @@ export default function AccountInfo() {
 
   return (
     <div className="info_container">
-      <button onClick={handleInfo}>Reset to Default</button>
+      <button onClick={handleInfo}>{languageData[language][0][0].restToDefault}</button>
       <div>
-        <h1> {languageData[0][0][0].accountInformation} </h1>
+        <h1> {languageData[language][0][0].accountInformation} </h1>
       </div>
       <div className="info">
         <label>
-          {languageData[0][0][0].firstName}{" "}
+          {languageData[language][0][0].firstName}{" "}
           <input
             value={firstname}
             onChange={(e) => setFirstName(e.target.value)}
@@ -73,7 +73,7 @@ export default function AccountInfo() {
       </div>
       <div className="info">
         <label>
-          {languageData[0][0][0].lastName}{" "}
+          {languageData[language][0][0].lastName}{" "}
           <input
             value={lastname}
             onChange={(e) => setLastName(e.target.value)}
@@ -82,7 +82,7 @@ export default function AccountInfo() {
       </div>
       <div className="info">
         <label>
-          {languageData[0][0][0].userName}{" "}
+          {languageData[language][0][0].userName}{" "}
           <input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -91,13 +91,13 @@ export default function AccountInfo() {
       </div>
       <div className="info">
         <label>
-          {languageData[0][0][0].email}{" "}
+          {languageData[language][0][0].email}{" "}
           <input value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
       </div>
       <div className="info">
         <label>
-          {languageData[0][0][0].location}{" "}
+          {languageData[language][0][0].location}{" "}
           <input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
@@ -159,7 +159,7 @@ export default function AccountInfo() {
           }
         }}
       >
-        Update Account
+        {languageData[language][0][0].Updateaccount}
       </button>
     </div>
   );

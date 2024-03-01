@@ -2,6 +2,7 @@
   [
     [
       {
+        "restToDefault": "Reset to Default",
         "setting": "Setting",
         "accountInformation": "Account Information",
         "firstName": "First Name",
@@ -10,26 +11,60 @@
         "email": "Email",
         "password": "Password",
         "location": "Location",
+        "Updateaccount": "Update Account",
         "language": "Language",
         "calendar": "Calendar",
-        "cancel": "cancel"
+        "Reminder": "Reminder",
+        "dashBoard": "Dashboard",
+        "signout": "Sign Out",
+        "cancel": "cancel",
+        "cvf": "Calendar visualization format"
       }
     ]
   ],
   [
     [
       {
-        "setting": "設定",
-        "accountInformation": "帳號資訊",
-        "firstName": "名字",
-        "lastName": "姓氏",
-        "userName": "使用者名",
-        "Email": "電子郵件",
-        "password": "密碼",
+        "restToDefault": "重置为默认值",
+        "setting": "设置",
+        "accountInformation": "账户信息",
+        "firstName": "名",
+        "lastName": "姓",
+        "userName": "暱稱",
+        "email": "电子邮件",
+        "password": "密码",
         "location": "位置",
-        "language": "語言",
-        "calendar": "日曆",
-        "cancel": "取消"
+        "Updateaccount": "更新账户",
+        "language": "语言",
+        "calendar": "日历",
+        "Reminder": "提醒",
+        "dashBoard": "仪表板",
+        "signout": "登出",
+        "cancel": "取消",
+        "cvf": "日历格式"
+      }
+    ]
+  ],
+  [
+    [
+      {
+        "restToDefault": "Restablecer a predeterminado",
+        "setting": "Ajuste",
+        "accountInformation": "Información de la cuenta",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "userName": "Nombre de usuario",
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "location": "Ubicación",
+        "Updateaccount": "Actualizar cuenta",
+        "language": "Idioma",
+        "calendar": "Calendario",
+        "Reminder": "Recordatorio",
+        "dashBoard": "Tablero de control",
+        "signout": "Cerrar sesión",
+        "cancel": "Cancelar",
+        "cvf": "Formato de visualización del calendario"
       }
     ]
   ]
