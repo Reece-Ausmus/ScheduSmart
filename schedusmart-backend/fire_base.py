@@ -114,7 +114,7 @@ def create_account_by_username_and_password(receive_account):
             "user_name": receive_account['username'],
             "email": receive_account['email']
         }
-    
+
         existing_user = db.child("User").get().val()
         if existing_user:
             for userid, user_data in existing_user.items():
@@ -262,6 +262,15 @@ def get_default_calendar_type(uid):
     type = db.child("User").child("O4eABYSFUxNTJgUSfRogsY6D7Eh2").child("default_calendar_type").get()
     return type.val()
 
+def update_format(info):
+    mode = info['mode']
+    user_id = info['user_id']
+    try:
+        db.child("User").child(user_id).set(mode)
+        return 0
+    except Exception:
+        print("Failed to set the calendar mode")
+        return 1
 # build a connection between firebase and flask #######################
 
 # Make sure you download the firebaseConfig.py file in google doc
