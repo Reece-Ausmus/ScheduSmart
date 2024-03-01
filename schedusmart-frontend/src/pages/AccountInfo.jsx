@@ -12,7 +12,7 @@ const userId = sessionStorage.getItem('user_id');
 
 export default function AccountInfo() {
     const handleInfo = async (event) => {
-        const response = await fetch(flaskURL + '/login', {
+        const response = await fetch(flaskURL + '/user_data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,8 +40,8 @@ export default function AccountInfo() {
                     alert("User Not Found");
                     break;
                 case 205:
-                    alert("Server Issue. Please exit and try to reconnect")
-                    break; 
+                    console.log("Failing to retrieve user data")
+                    break;
             }
         }
     }
@@ -56,6 +56,7 @@ export default function AccountInfo() {
 
   return (
     <div className="info_container">
+            <button onClick={handleInfo}>Load Sensitive User Info</button>
       <div>
         <h1> {languageData[language][0][0].accountInformation} </h1>
       </div>

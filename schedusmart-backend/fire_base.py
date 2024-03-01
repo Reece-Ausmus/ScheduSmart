@@ -89,8 +89,10 @@ def get_user(response):
         }
         return data
     except Exception as e:
-        print("Failed to get user", e)
-        return 1
+        return {
+            "error": "Cannot Find User",
+            "return_status": 1
+        }
 
 # this is used to create an account
 # the argument accept an array with following format:
