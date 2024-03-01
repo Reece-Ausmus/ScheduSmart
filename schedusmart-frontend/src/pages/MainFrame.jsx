@@ -387,7 +387,7 @@ export default function MainFrame() {
     const [endTime, setEndTime] = useState("");
     const [eventLocation, setEventLocation] = useState("");
     const [eventDescription, setEventDescription] = useState("");
-    const [repetitionType, setRepetitionType] = useState('daily'); // Default to daily
+    const [repetitionType, setRepetitionType] = useState('none'); // Default to daily
     const [customFrequencyValue, setCustomFrequencyValue] = useState(1); // Default custom frequency
     const [customFrequencyUnit, setCustomFrequencyUnit] = useState(""); // Default custom frequency
     const [selectedDays, setSelectedDays] = useState([]); // Array to store selected days
@@ -451,20 +451,60 @@ export default function MainFrame() {
       );
     };
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log("Event Name:", eventName);
-      console.log("Event Date:", eventDate);
-      console.log("Start Time:", startTime);
-      console.log("End Time:", endTime);
-      console.log("Event Location:", eventLocation);
-      console.log("Event Description:", eventDescription);
+    const handleSubmit = async () => {
+      const new_event = {
+        'name': eventName,
+        'desc': eventDescription,
+        'start_time': startTime,
+        'end_time': endTime,
+        'start_date': eventStartDate,
+        'end_date': eventEndDate,
+        'location': eventLocation,
+        'calendar': eventCalendar,
+        'repetition_type': repetitionType,
+        'repetition_unit': customFrequencyUnit,
+        'repetition_val': customFrequencyValue,
+        'user_id': userId
+      };
+      console.log(JSON.stringify(new_event));
+      const response = await fetch(flaskURL + "/create_event", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(new_event),
+        credentials: "include"
+      })
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      }
+      else {
+        switch(response.status) {
+          case 201:
+            console.log("Event created successfully");
+            break;
+          case 205:
+            alert("Event not created!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+        }
+      }
+
       setEventName("");
-      setEventDate("");
+      setEventStartDate("");
+      setEventEndDate("");
       setStartTime("");
       setEndTime("");
       setEventLocation("");
       setEventDescription("");
+      setRepetitionType("none");
+      setCustomFrequencyUnit("");
+      setCustomFrequencyValue(1);
+      setSelectedCalendars([]);
+      setEventCalendar("");
       togglePopup();
     };
 
@@ -481,7 +521,7 @@ export default function MainFrame() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: userId,
+            userId: sessionStorage.getItem('user_id')
           }),
           credentials: "include"
         });
@@ -645,6 +685,7 @@ export default function MainFrame() {
                   <div className="event-repetition-form">
                     <h2>Event Repetition</h2>
                     <div className="repetition-options">
+                      <button onClick={() => handleRepetitionChange('none')}>None</button>
                       <button onClick={() => handleRepetitionChange('daily')}>Daily</button>
                       <button onClick={() => handleRepetitionChange('weekly')}>Weekly</button>
                       <button onClick={() => handleRepetitionChange('monthly')}>Monthly</button>
