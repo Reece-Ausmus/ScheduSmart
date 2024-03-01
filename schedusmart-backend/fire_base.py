@@ -73,6 +73,15 @@ def delete_account(user):
         print(f"{e}")
         return 1
 
+# login_account_with_username_and_password(username, password)
+# the method will return a user object that you will use for argument in this method
+def get_user():
+    try:
+        return session
+    except Exception as e:
+        print("Failed to get account session")
+        print(f"{e}")
+        return 1
 
 # this is used to create an account
 # the argument accept an array with following format:

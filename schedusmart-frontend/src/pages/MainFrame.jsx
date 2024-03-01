@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./MainFrame.css";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
+import Weather from './Weather'
+import Timezone from './Timezone'
 
 const steps = [
   {
@@ -12,6 +14,10 @@ const steps = [
   {
     target: ".calender_container_controlbar",
     content: "You can change the format",
+  },
+  {
+    target: ".weather_container",
+    content: "The current weather. Location can be changed in settings."
   },
 ];
 
@@ -303,16 +309,61 @@ export default function MainFrame() {
     );
   }
 
+ 
+
   function upperBarPackage() {
+    // handle redirects
+    const [goToSettings, setGoToSettings] = React.useState(false)
+    const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
+    const [goToWelcome, setGoToWelcome] = React.useState(false)
+
+    if (goToSettings) {
+      return(
+          <>
+          <Navigate to="/settings" />
+          </>
+      );
+    }
+
+    if (goToWelcome) {
+      return(
+          <>
+          <Navigate to="/welcome" />
+          </>
+      );
+    }
+
+    if (goToDragAndDrop) {
     return (
+      <>
+        <Navigate to="/draganddrop" />
+      </>
+    );
+    }
+
+
+    return (
+      <>
       <div className="upperBar">
-        <h1 className="title">ScheduSmart</h1>
-        <button className="upperBarButton">setting</button>
-        <button className="upperBarButton" onClick={handleConfirmClick}>
-          drag & drop
+        <h1 className="title"> 
+        Welcome to ScheduSmart!
+        </h1>
+        <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
+          Settings
         </button>
-        <button className="upperBarButton">logout</button>
+        <button className="upperBarButton" onClick={() => {setGoToWelcome(true)}}>
+          Logout
+        </button>
       </div>
+      <div className="weather_container">
+        <div className="weather">
+          <Weather/>
+        </div>
+      </div>
+      <div className="timezone">
+        <Timezone />
+      </div>
+      </>
     );
   }
 
@@ -739,27 +790,6 @@ export default function MainFrame() {
   );
 
   const [selectMode, setSelectMode] = useState(1);
-
-  // handle drag & drop
-  const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
-
-  if (goToDragAndDrop) {
-    return (
-      <>
-        <Navigate to="/draganddrop" />
-      </>
-    );
-  }
-
-  const handleConfirmClick = () => {
-    if (window.confirm("Are you sure you want to sign out?")) {
-      //Yes
-      setGoToDragAndDrop(true);
-    } else {
-      //No
-      // do nothing
-    }
-  };
 
   const [calendars, setCalendars] = useState([
     { id: 0, name: "Personal" },

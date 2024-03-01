@@ -39,6 +39,23 @@ body {
     margin: 10px;
 }
 
+.weather_container{
+    float: left;
+    right: 2%;
+    width: 20%;
+    height: 60px;
+    background-color:#2d2d2d;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.weather{
+    color: rgb(223, 118, 43);
+    margin-top: 4%;
+    text-align: center;
+    font-size: 14px
+}
+
 .calender_container{
     position: absolute;
     width: 60%;
@@ -319,3 +336,7 @@ tr, th {
 .fb2{
     margin-left:20px;
 }
+
+.isDates-grey {
+    color: rgb(255, 0, 0);
+  }

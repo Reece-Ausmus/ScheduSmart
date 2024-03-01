@@ -1,0 +1,10 @@
+.info_container{
+    background-color:#2d2d2d;
+    border-radius: 10px;
+}
+
+.info{
+    color: rgb(223, 118, 43);
+    text-align: left;
+    font-size: 20px   
+}

@@ -63,6 +63,13 @@ def create_calendar():
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
-    #if 'Access-Control-Allow-Credentials' not in response.headers:
-    #    response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response
+
+
+@account.route('/user_data', methods=['GET'])
+def user_data():
+    return jsonify(
+        message="This is jsonify",
+        date="November 11, 2021",
+        id="10",
+    )
