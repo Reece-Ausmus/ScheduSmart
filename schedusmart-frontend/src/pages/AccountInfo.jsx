@@ -7,18 +7,47 @@ import './AccountInfo.css'
 //currently it's localhost
 
 const flaskURL = "http://127.0.0.1:5000";
+const userId = sessionStorage.getItem('user_id');
 
 export default function AccountInfo() {
-    useEffect(() => {
-        fetch(flaskURL + '/user_data').then(response => 
-            response.json().then(data => {
-                console.log(data)
-            })
-        );
-    }, []);
+    const handleInfo = async (event) => {
+        const response = await fetch(flaskURL + '/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: userId,
+            }),
+            credentials: "include"
+        });
+        if (!response.ok) {
+            alert("Account Info Not Found. Please log-out and log-in again")
+        } else {
+            switch(response.status) {
+                case 201:
+                    console.log("user found");
+                    const responseData = await response.json();
+                    const userId = responseData.user_id;
+                    setFirstName(responseData.first_name);
+                    setLastName(responseData.last_name);
+                    setUsername(responseData.user_name);
+                    setEmail(responseData.email);
+                    setPassword(responseData.password);
+                    break;
+                case 202:
+                    alert("User Not Found");
+                    break;
+                case 205:
+                    alert("Server Issue. Please exit and try to reconnect")
+                    break; 
+            }
+        }
+    }
 
-    const [firstname, setfirstName] = useState('');
-    const [lastname, setlastName] = useState('');
+
+    const [firstname, setFirstName] = useState('');
+    const [lastname, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
