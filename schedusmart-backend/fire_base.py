@@ -58,6 +58,7 @@ from firebaseConfig import firebaseConfig
 import secrets
 import traceback
 
+
 # to use this function, you will need to first log in the account with method:
 # login_account_with_username_and_password(username, password)
 # the method will return a user object that you will use for argument in this method
@@ -75,10 +76,11 @@ def delete_account(user):
         print(f"{e}")
         return 1
 
+
 # login_account_with_username_and_password(username, password)
 # the method will return a user object that you will use for argument in this method
 def get_user(response):
-    user_id = response['userId']
+    user_id = response['user_id']
     try:
         data = {
             "email": db.child("User").child(user_id).child('email').get().val(),
@@ -98,6 +100,7 @@ def get_user(response):
             "return_status": 1
         }
 
+
 def update_user_info(receive_account):
     try:
         user_id = receive_account['user_id']
@@ -106,6 +109,17 @@ def update_user_info(receive_account):
     except Exception:
         print("Failed to update account information")
         return 1
+
+
+def update_language(data):
+    try:
+        user_id = data['user_id']
+        db.child("User").child(user_id).update({"language": data["language"]})
+        return 0
+    except Exception:
+        print("fail to update language")
+        return 1
+
 
 # this is used to create an account
 # the argument accept an array with following format:
@@ -160,19 +174,17 @@ def create_account_by_username_and_password(receive_account):
 def login_account_with_email_and_password(receive_account):
     try:
         user = auth.sign_in_with_email_and_password(receive_account['email'], receive_account['password'])
-        
+
         # Check if the user's email is not verified based on the database field
         user_id = user['localId']
         # 2FA CODE START ########################################################################################
         email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
-        
 
-        
         # Send verification email to certify login
-        #if not email_verified:
+        # if not email_verified:
         #    auth.send_email_verification(user['idToken'])
 
-            # Update 'emailVerified' to True in the database
+        # Update 'emailVerified' to True in the database
         #    db.child("User").child(user_id).update({"emailVerified": True})
 
         #    return {
@@ -181,12 +193,12 @@ def login_account_with_email_and_password(receive_account):
         #        "user_id": user_id,
         #        "return_status": 3
         #    }
-        
+
         # Set 'emailVerified' to False so that user will have to re-verify on next sign-in
-        #db.child("User").child(user_id).update({"emailVerified": False})
+        # db.child("User").child(user_id).update({"emailVerified": False})
 
         # 2FA CODE END ##########################################################################################
-        
+
         data = {
             "email": receive_account['email'],
             "password": receive_account['password'],
@@ -303,6 +315,7 @@ def get_default_calendar_type(uid):
     type = db.child("User").child("O4eABYSFUxNTJgUSfRogsY6D7Eh2").child("default_calendar_type").get()
     return type.val()
 
+
 def update_format(info):
     mode = info['mode']
     user_id = info['user_id']
@@ -312,6 +325,8 @@ def update_format(info):
     except Exception:
         print("Failed to set the calendar mode")
         return 1
+
+
 # used to test with firebase #######################
 
 # Make sure you download the firebaseConfig.py file in google doc
@@ -322,10 +337,10 @@ auth = firebase.auth()
 storage = firebase.storage()
 
 user = {
-	"user_name": "mick@gmail.com",
-    "password":"123456",
-    "language":"3",
+    "user_name": "mick@gmail.com",
+    "password": "123456",
+    "language": "2",
     "user_id": "igOcM0niMhQNVLKe2S0ncnU9kOC2"
 }
 # create_account_by_username_and_password(user)
-#update_user_info(user, "language", 2)
+update_language(user)

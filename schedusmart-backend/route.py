@@ -9,7 +9,7 @@ from flask import Blueprint, request, jsonify
 from fire_base import *
 
 account = Blueprint('login', __name__)
-
+language = Blueprint('language', __name__)
 
 # to create an account, reach this route and send a json message with the following formate
 # {"username":"<user_name>", "password":"<password>", ""}
@@ -170,4 +170,31 @@ def update_account_info():
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
+    return response
+
+@language.route('/set_language', methods=['POST'])
+def set_language():
+    data = request.get_json()
+    response = jsonify({'message': 'fail'})
+    response.status_code = 202
+    try:
+        if update_language(data) == 0:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        pass
+    return response
+
+@language.route('/get_language', methods=['POST'])
+def get_language():
+    data = request.get_json()
+    response = jsonify({'message': 'fail'})
+    response.status_code = 202
+    try:
+        data = get_user(data)
+        if data["return_status"] == 0:
+            response = jsonify(data["language"])
+            response.status_code = 201
+    except Exception as e:
+        print("crash in get language")
     return response
