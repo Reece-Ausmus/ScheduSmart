@@ -294,8 +294,9 @@ let getMode = async ()=>{
         body: JSON.stringify({ userId: userId }),
         credentials: "include"
     })
-    let data = await response.json()
-    setSelectMode(data.type)
+    let data = await response.json();
+    console.log(data.type);
+    setSelectMode(data.type);
 }
 
 
@@ -697,7 +698,7 @@ function MonthStyle() {
       <div className="calender_container">
         <div className="calender_container_controlbar">
           {/*<h2 className="detailInfo">{detailInfo}</h2> */}
-          <button onClick={handleInfo}>test</button>
+          {/*<button onClick={handleInfo}>test</button>*/}
           <div>{calendarControlFlowButtonPackage()}</div>
         </div>
         <div>{fourCalendarPackage()}</div>

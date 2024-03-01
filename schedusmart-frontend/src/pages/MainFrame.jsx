@@ -781,7 +781,7 @@ export default function MainFrame() {
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      let temp = '12:00 - 13:00'
+      //let temp = '12:00 - 13:00'
       console.log(amountOfTime)
       
       
@@ -789,7 +789,48 @@ export default function MainFrame() {
     
 
       //const [goToAddEvent, setGoToAddEvent] = useState(false);
-
+      /*let temp = async ()=>{
+        let response = await fetch(flaskURL + '/set_amount_of_time',{
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json',
+            },
+            body: JSON.stringify({ userId: userId, time: amountOfTime }),
+            credentials: "include"
+        })
+        let data = await response.json();
+        console.log(data.time);
+        setSelectMode(data.time);
+      }*/
+    
+      const response = fetch(flaskURL + "/create_calendar", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(new_calendar),
+        credentials: "include"
+      })
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      }
+      else {
+        switch(response.status) {
+          case 201:
+            console.log("Calendar created successfully");
+            break;
+          case 205:
+            alert("Calendar not created!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+          case 207:
+            alert("Calendar not added to user!");
+            break;
+        }
+      }
 
 
     /*let response = fetch(flaskURL + '/get_calendar_default_mode',{

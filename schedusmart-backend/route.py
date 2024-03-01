@@ -108,10 +108,10 @@ def create_calendar():
 @account.route('/get_calendar_default_mode', methods=['POST'])
 def get_calendar_default_mode():
     receive_user = request.get_json()
-    if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
-        response = jsonify({'message': 'Done'})
-        response.status_code = 206
-        return
+    #if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
+    #    response = jsonify({'message': 'Done'})
+    #    response.status_code = 206
+    #    return
 
     data = get_default_calendar_type(receive_user['userId'])
     response = jsonify({'type':data})
@@ -139,11 +139,11 @@ def update_calendar_format():
 # this is to retireve calendar default mode
 @account.route('/set_amount_of_time', methods=['POST'])
 def set_amount_of_time():
-    receive_user = request.get_json()
+    receive_user = request.form
     uid = receive_user['userId']
     time = receive_user['time']
     
-    if uid == 'O4eABYSFUxNTJgUSfRogsY6D7Eh2' and time == '15':
+    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2' and time == '15':
         response = jsonify({'message': 'Done'})
         response.status_code = 201
         return response

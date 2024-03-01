@@ -259,7 +259,7 @@ def add_new_calendar(calendar_info):
 
 # this func is to get the default calendar type
 def get_default_calendar_type(uid):
-    type = db.child("User").child("O4eABYSFUxNTJgUSfRogsY6D7Eh2").child("default_calendar_type").get()
+    type = db.child("User").child(uid).child("default_calendar_type").get()
     return type.val()
 
 def update_format(info):
