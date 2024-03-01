@@ -82,13 +82,15 @@ def delete_account(user):
 def get_user(response):
     user_id = response['user_id']
     try:
+        calendars_data = db.child("User").child(user_id).child('calendars').get().val() or {}
+        calendar_names = list(calendars_data.keys())
         data = {
             "email": db.child("User").child(user_id).child('email').get().val(),
             "first_name": db.child("User").child(user_id).child('first_name').get().val(),
             "last_name": db.child("User").child(user_id).child('last_name').get().val(),
             "user_name": db.child("User").child(user_id).child('user_name').get().val(),
             "user_id": user_id,
-            "calendars": None,
+            "calendars": calendar_names,
             "language": db.child("User").child(user_id).child('language').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
             "return_status": 0
@@ -300,8 +302,8 @@ def add_new_event(event_info):
         'repetition_val': event_info['repetition_val']
     }
     try:
-        data = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        calendar_id = data['calendar_id']
+        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        calendar_id = caldata['calendar_id']
         print(calendar_id)
         db.child("Calendars").child(calendar_id).child("Events").child(event_id).set(data)
     except Exception as e:
