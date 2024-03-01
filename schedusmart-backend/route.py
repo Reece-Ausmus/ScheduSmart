@@ -104,3 +104,18 @@ def create_calendar():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
+# this is to retireve calendar default mode
+@account.route('/get_calendar_default_mode', methods=['POST'])
+def get_calendar_default_mode():
+    receive_user = request.get_json()
+    if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
+        response = jsonify({'message': 'Done'})
+        response.status_code = 206
+        return
+
+    data = get_default_calendar_type(receive_user['userId'])
+    response = jsonify({'type':data})
+    response.status_code = 201
+
+    return response
