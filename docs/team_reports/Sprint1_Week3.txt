@@ -6,8 +6,8 @@ Week 3	(Srum master: Reece Ausmus)
 02/27/24    3 hrs   e405850     adding the function to view, modify, and add events to firebase
 02/29/24    2 hrs   82025c7     created ability to add calendars to a user
 02/29/24    4 hrs   a7528eb     adding ability to select, change and stored the language user prefer to use
-02/29/24    3 hrs   3c01608 month will change following the real situation format with ugly format
-2/29        3 hrs   2fae842 default calendar can be shown once the page open
+02/29/24    3 hrs   3c01608     month will change following the real situation format with ugly format
+2/29        3 hrs   2fae842     default calendar can be shown once the page open
 03/01/24    2 hrs   fe32edb     created ability to add events to a calendars
 
 Week 4 	(Plan) (Scrum master: Reece Ausmus)
