@@ -20,5 +20,5 @@ Reece Ausmus: I intend to do a lot of planning and some pseudocode this week so 
 Cassie Chang: Plan for Springt 2 
 Stanley Huang: Plan for Springt 2, clean the code in backend and update the comments
 Bradley Norris: 
-Himanshu Sinha: 
+Himanshu Sinha: Plan for sprint 2, as well as begin work on integrating the task manager into the mainframe
 Gloria Xu: 
