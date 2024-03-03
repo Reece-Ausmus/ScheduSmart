@@ -7,7 +7,7 @@ Week 3	(Srum master: Reece Ausmus)
 02/29/24    2 hrs   82025c7     created ability to add calendars to a user
 02/29/24    4 hrs   a7528eb     adding ability to select, change and stored the language user prefer to use
 02/29/24    3 hrs   3c01608 month will change following the real situation format with ugly format
-2/29 3 hrs 2fae842 default calendar can be shown once the page open
+2/29        3 hrs   2fae842 default calendar can be shown once the page open
 03/01/24    2 hrs   fe32edb     created ability to add events to a calendars
 
 Week 4 	(Plan) (Scrum master: Reece Ausmus)
@@ -17,7 +17,7 @@ Week 4 	(Plan) (Scrum master: Reece Ausmus)
 
 [Individual Goals]
 Reece Ausmus: I intend to do a lot of planning and some pseudocode this week so that I can jump into implementation in Sprint 2 Week 2.
-Cassie Chang: Plan for Springt 2, 
+Cassie Chang: Plan for Springt 2 
 Stanley Huang: Plan for Springt 2, clean the code in backend and update the comments
 Bradley Norris: 
 Himanshu Sinha: 
