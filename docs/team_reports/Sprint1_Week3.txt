@@ -14,13 +14,14 @@ Week 3	(Srum master: Reece Ausmus)
 03/01/24    2 hrs   fe32edb     created ability to add events to a calendars
 03/01/24    3 hrs   ae0d016     added pdf/csv exporting ability for schedule
 03/01/24    2 hrs   49df715     finished virsualization format
+
 Week 4 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
 3/9/24  Discuss current progress on sprint 2.
 3/10/24 This meeting is temporary as it is over spring break.
 
 [Individual Goals]
-Reece Ausmus: I intend to do a lot of planning and some pseudocode this week so that I can jump into implementation in Sprint 2 Week 2.
+Reece Ausmus: I intend to do a lot of planning and some pseudocode this week so that I can jump into implementation in Sprint 2 Week 2. I also want to refactor a lot of my code and document it.
 Cassie Chang: Plan for Sprint 2 
 Stanley Huang: Plan for Sprint 2, clean the code in backend and update the comments
 Bradley Norris: Plan for Sprint 2, update my comments on code I've written 
