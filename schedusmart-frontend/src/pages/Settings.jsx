@@ -6,9 +6,10 @@ import languageData from "../components/language.json";
 import "./Settings.css";
 
 const flaskURL = "http://127.0.0.1:5000";
-const userId = sessionStorage.getItem("user_id");
+
 
 export default function Settings() {
+  const userId = sessionStorage.getItem("user_id");
   const fetchLanguage = async () => {
     const response = await fetch(flaskURL + "/", {
       method: "POST",
@@ -85,6 +86,10 @@ export default function Settings() {
   }
 
   async function updateFormat(calendar_mode) {
+    if (userId === "undefined") {
+      alert("userId disappear, so it will eventually fail");
+      return;
+    }
     const info = {
       mode: calendar_mode,
       user_id: userId,

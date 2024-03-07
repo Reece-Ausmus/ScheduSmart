@@ -197,13 +197,12 @@ def update_account_info():
     try:
         ret = update_user_info(info)
         if ret == 1:
-            response = jsonify({'error' : 'update info failed'})
+            response = jsonify({'error': 'update info failed'})
             response.status_code = 205
         else:
-            response = jsonify({'message' : 'Done'})
+            response = jsonify({'message': 'Done'})
             response.status_code = 201
     except:
-        traceback.print_exc()
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response

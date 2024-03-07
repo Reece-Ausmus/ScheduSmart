@@ -148,9 +148,9 @@ def create_account_by_username_and_password(receive_account):
         }
 
         # the following code is not working
-        #existing_user = db.child("User").get().val()
+        # existing_user = db.child("User").get().val()
         #
-        #if existing_user:
+        # if existing_user:
         #    for userid, user_data in existing_user.items():
         #        print(user_data)
         #        if user_data['user_name'] == data['user_name']:
@@ -187,24 +187,24 @@ def login_account_with_email_and_password(receive_account):
         # Check if the user's email is not verified based on the database field
         user_id = user['localId']
         # 2FA CODE START ########################################################################################
-        email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
+        # email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
 
         # Send verification email to certify login
-        if not email_verified:
-            auth.send_email_verification(user['idToken'])
+        # if not email_verified:
+        #     auth.send_email_verification(user['idToken'])
 
-        # Update 'emailVerified' to True in the database
-            db.child("User").child(user_id).update({"emailVerified": True})
+            # Update 'emailVerified' to True in the database
+        #     db.child("User").child(user_id).update({"emailVerified": True})
 
-            return {
-                "email": receive_account['email'],
-                "password": receive_account['password'],
-                "user_id": user_id,
-                "return_status": 3
-            }
+        #     return {
+        #         "email": receive_account['email'],
+        #         "password": receive_account['password'],
+        #         "user_id": user_id,
+        #         "return_status": 3
+        #     }
 
         # Set 'emailVerified' to False so that user will have to re-verify on next sign-in
-        db.child("User").child(user_id).update({"emailVerified": False})
+        # db.child("User").child(user_id).update({"emailVerified": False})
 
         # 2FA CODE END ##########################################################################################
 
@@ -294,15 +294,17 @@ def add_new_calendar(calendar_info):
         'response_status': 0
     }
 
+
 def update_task(task_info):
     user_id = task_info['user_id']
-    data = {'task_list' : task_info['task_list']}
+    data = {'task_list': task_info['task_list']}
     try:
         db.child("User").child(user_id).update(data)
     except Exception as e:
         print("Failed to update tasks:", e)
         return 1
     return 0
+
 
 def add_new_event(event_info):
     user_id = event_info['user_id']
@@ -329,6 +331,7 @@ def add_new_event(event_info):
         print("Failed to create calendar:", e)
         return 1
     return 0
+
 
 def add_new_availability(availability_info):
     user_id = availability_info['user_id']
@@ -367,7 +370,7 @@ def update_format(info):
     mode = info['mode']
     user_id = info['user_id']
     try:
-        db.child("User").child(user_id).child("default_calendar_type").update(mode)
+        db.child("User").child(user_id).update({"default_calendar_type": mode})
         return 0
     except Exception:
         print("Failed to set the calendar mode")
@@ -382,4 +385,7 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-
+#  data = {"user_id": "7yAPxCWH2UOxS1nE6stB3mY4SaD3",
+#         "mode": "1"
+#         }
+# update_format(data)
