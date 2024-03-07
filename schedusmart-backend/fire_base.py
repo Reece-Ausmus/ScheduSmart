@@ -169,8 +169,7 @@ def create_account_by_username_and_password(receive_account):
             "response_status": 0
         }
     except Exception as e:
-        print("Failed to create account:", e)
-        print(f"{e}")
+        print("Failed to create account:")
         return {
             "error": "Failed to create account",
             "response_status": 1
