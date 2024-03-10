@@ -8,6 +8,7 @@ export default function Dashboard() {
     const [goToSettings, setGoToSettings] = React.useState(false)
     const [goToSignOut, setGoToSignOut] = React.useState(false);
     const [goToTaskManager, setGoToTaskManager] = React.useState(false)
+    const [goToNotes, setGoToNotes] = React.useState(false)
 
     if (goToSettings) {
       return(
@@ -33,6 +34,14 @@ export default function Dashboard() {
     );
     }
 
+    if (goToNotes) {
+      return (
+        <>
+          <Navigate to="/notes" />
+        </>
+      );
+      }
+
 
     return (
       <>
@@ -45,6 +54,9 @@ export default function Dashboard() {
         </button>
         <button className="upperBarButton" onClick={() => {setGoToTaskManager(true)}}>
           Tasks
+        </button>
+        <button className="upperBarButton" onClick={() => {setGoToNotes(true)}}>
+          Notes
         </button>
         <button className="upperBarButton" onClick={() => {setGoToSignOut(true)}}>
           Signout
