@@ -1,7 +1,7 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 4	(Srum master: Reece Ausmus)
-
+3/10 1 hrs f8e5040 create a button to redirect users to notes page
 
 Week 5 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
@@ -10,8 +10,8 @@ Week 5 	(Plan) (Scrum master: Reece Ausmus)
 
 [Individual Goals]
 Reece Ausmus: Implement pseudocode and planning that I have done the previous week.
-Cassie Chang:
+Cassie Chang: Plan to finish notes function and start to integrate Jenkins and GitHub
 Stanley Huang:
 Bradley Norris:
 Himanshu Sinha:
-Gloria Xu:
+Gloria Xu:  finish settings page styling and adding map feature to the function of adding events
