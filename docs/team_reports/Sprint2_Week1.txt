@@ -15,5 +15,5 @@ Reece Ausmus: Implement pseudocode and planning that I have done the previous we
 Cassie Chang: Plan to finish notes function and start to integrate Jenkins and GitHub
 Stanley Huang: Change the mainframe's css to make it cleaner and add events to the calendar
 Bradley Norris:
-Himanshu Sinha:
+Himanshu Sinha: Update frontend for task manager and settings page. Work on task manager back-end.
 Gloria Xu:  finish settings page styling and adding map feature to the function of adding events
