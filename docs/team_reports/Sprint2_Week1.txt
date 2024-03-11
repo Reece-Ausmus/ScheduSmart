@@ -1,0 +1,17 @@
+=== Weekly Team Report (Team 30: ScheduSmart) ===
+
+Week 4	(Srum master: Reece Ausmus)
+
+
+Week 5 	(Plan) (Scrum master: Reece Ausmus)
+[Meetings]
+3/16/24 (Potential) Discuss current progress on sprint 2.
+3/17/24 (Potential) Discuss current progress on sprint 2 with TA.
+
+[Individual Goals]
+Reece Ausmus: Implement pseudocode and planning that I have done the previous week.
+Cassie Chang:
+Stanley Huang:
+Bradley Norris:
+Himanshu Sinha:
+Gloria Xu:
