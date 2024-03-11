@@ -1,6 +1,8 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 4	(Srum master: Reece Ausmus)
+3/1 <1hr>     <f617e6>     <fixing update format function from sprint 1>
+3/10 <3hr>     <6f168a>     <spliting mainframe to calendar and dashboard component, modifying mainframe's CSS, and finding the problem why it's not working>   {not yet fixed since I have to get the agreement from other team members}
 3/10 1 hrs f8e5040 create a button to redirect users to notes page
 
 Week 5 	(Plan) (Scrum master: Reece Ausmus)
@@ -11,7 +13,7 @@ Week 5 	(Plan) (Scrum master: Reece Ausmus)
 [Individual Goals]
 Reece Ausmus: Implement pseudocode and planning that I have done the previous week.
 Cassie Chang: Plan to finish notes function and start to integrate Jenkins and GitHub
-Stanley Huang:
+Stanley Huang: Change the mainframe's css to make it cleaner and add events to the calendar
 Bradley Norris:
 Himanshu Sinha:
 Gloria Xu:  finish settings page styling and adding map feature to the function of adding events
