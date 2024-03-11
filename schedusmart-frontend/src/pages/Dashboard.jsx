@@ -1,36 +1,67 @@
 import Header from '../components/Header'
 import React from 'react'
 import { Navigate } from 'react-router-dom'
-import Calendar from './Calendar'
+import './MainFrame.css'
 
 export default function Dashboard() {
+    // handle redirects
     const [goToSettings, setGoToSettings] = React.useState(false)
-    const [goToWelcome, setGoToWelcome] = React.useState(false)
-
-    if (goToWelcome) {
-        return(
-            <>
-            <Navigate to="/welcome" />
-            </>
-        );
-    }
+    const [goToSignOut, setGoToSignOut] = React.useState(false);
+    const [goToTaskManager, setGoToTaskManager] = React.useState(false)
+    const [goToNotes, setGoToNotes] = React.useState(false)
 
     if (goToSettings) {
-        return(
-            <>
-            <Navigate to="/settings" />
-            </>
-        );
+      return(
+          <>
+          <Navigate to="/settings" />
+          </>
+      );
     }
 
-    return(
+    if (goToTaskManager) {
+      return(
+          <>
+          <Navigate to="/taskmanager" />
+          </>
+      );
+    }
+
+    if (goToSignOut) {
+    return (
+      <>
+        <Navigate to="/signout" />
+      </>
+    );
+    }
+
+    if (goToNotes) {
+      return (
         <>
-        <h1>Dashboard</h1>
-        <div>
-        <button onClick={() => {setGoToSettings(true)}}>Settings</button> 
-        <button onClick={() => {setGoToWelcome(true)}}>Welcome</button>
-        </div>
-        <Calendar/>
+          <Navigate to="/notes" />
         </>
+      );
+      }
+
+
+    return (
+      <>
+      <div className="upperBar">
+        <h1 className="title"> 
+        Welcome to ScheduSmart!
+        </h1>
+        <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
+          Settings
+        </button>
+        <button className="upperBarButton" onClick={() => {setGoToTaskManager(true)}}>
+          Tasks
+        </button>
+        <button className="upperBarButton" onClick={() => {setGoToNotes(true)}}>
+          Notes
+        </button>
+        <button className="upperBarButton" onClick={() => {setGoToSignOut(true)}}>
+          Signout
+        </button>
+      </div>
+      </>
     );
 }

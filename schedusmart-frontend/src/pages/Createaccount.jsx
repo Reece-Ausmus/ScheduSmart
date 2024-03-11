@@ -97,7 +97,7 @@ export default function Createaccount() {
                                 const responseData = await response.json();
                                 const userId = responseData.user_id;
                                 sessionStorage.setItem('user_id', userId);
-                                window.location.href = '/calendar'
+                                window.location.href = '/signin'
                                 break;
                             case 205:
                                 alert("Username has been used. Please change it to another one!");

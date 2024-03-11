@@ -2,15 +2,7 @@
     box-sizing: border-box;
 }
 
-#root {
-    padding: 0px;
-}
 
-body {
-    background-color: #b1b1b1;
-    margin: 0px;
-    padding: 0px;
-}
 .container {
     height: 100vh;
     width: 100%;

@@ -22,17 +22,15 @@ export default function Settings() {
       credentials: "include",
     });
   }
-  const [goToCalendar, setGoToCalendar] = useState(false);
   const [language, setLanguage] = useState(0);
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
-
+  const [showVirtual, setShowVirsual] = useState(3);
   const [visualOptions] = useState([
     { id: 1, label: "day" ,value:1},
     { id: 2, label: "week",value:2},
     { id: 3, label: "month",value:3},
     { id: 4, label: "year" ,value:4},
   ]);
-  const [showVirtual, setShowVirsual] = useState(3);
   const handleVirtualSelectChange = (e) => {
     setShowVirsual(parseInt(e.target.value));
     console.log(parseInt(e.target.value));
@@ -119,14 +117,6 @@ export default function Settings() {
             alert("Unexpected response status: " + response.status);
       }
     }
-  }
-
-  if (goToCalendar) {
-    return(
-        <>
-        <Navigate to="/calendar" />
-        </>
-    );
   }
 
   return (
