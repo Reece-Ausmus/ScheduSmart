@@ -10,6 +10,8 @@ from fire_base import *
 
 account = Blueprint('login', __name__)
 language = Blueprint('language', __name__)
+events = Blueprint('events_controller', __name__)
+
 
 # to create an account, reach this route and send a json message with the following formate
 # {"username":"<user_name>", "password":"<password>", ""}
@@ -27,9 +29,9 @@ def create_account():
             response.status_code = 206
         else:
             response = jsonify({
-            'message': 'Done',
-            'user_id': data['user_id']
-        })
+                'message': 'Done',
+                'user_id': data['user_id']
+            })
         response.status_code = 201
     except:
         response = jsonify({'error': 'failed to create account'})
@@ -41,7 +43,7 @@ def create_account():
 @account.route('/login', methods=['POST'])
 def login():
     receive_account = request.get_json()
-    
+
     data = login_account_with_email_and_password(receive_account)
     ret = data['return_status']
     if ret == 1:
@@ -58,10 +60,11 @@ def login():
         response.status_code = 201
     return response
 
+
 @account.route('/user_data', methods=['POST'])
 def user_data():
     receive_user = request.get_json()
-    try: 
+    try:
         data = get_user(receive_user)
         ret = data['return_status']
         if ret == 1:
@@ -69,15 +72,15 @@ def user_data():
             response.status_code = 202
         elif ret == 0:
             response = jsonify({
-            'message': 'Done',
-            'user_id': data['user_id'],
-            'email': data['email'],
-            'user_name': data['user_name'],
-            'first_name': data['first_name'],
-            'last_name': data['last_name'],
-            'calendars': data['calendars'],
-            'location': data['location'],
-            'task_list': data['task_list'],
+                'message': 'Done',
+                'user_id': data['user_id'],
+                'email': data['email'],
+                'user_name': data['user_name'],
+                'first_name': data['first_name'],
+                'last_name': data['last_name'],
+                'calendars': data['calendars'],
+                'location': data['location'],
+                'task_list': data['task_list'],
             })
             response.status_code = 201
     except:
@@ -108,6 +111,7 @@ def create_calendar():
         response.status_code = 206
     return response
 
+
 @account.route('/create_event', methods=['POST'])
 def create_event():
     receive_event = request.get_json()
@@ -124,6 +128,20 @@ def create_event():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
+
+@events.route('/get_events', methods=['POST'])
+def get_events():
+    calendar = request.get_json()
+    ret = f_get_events(calendar)
+    if ret == 1:
+        response = jsonify({"response": "can't retrieve events"})
+        response.status_code = 205
+    else:
+        response = jsonify(ret)
+        response.status_code = 200
+    return response
+
 
 @account.route('/create_availability', methods=['POST'])
 def create_availability():
@@ -142,6 +160,7 @@ def create_availability():
         response.status_code = 206
     return response
 
+
 @account.route('/update_task', methods=['POST'])
 def update_task_list():
     receive_event = request.get_json()
@@ -159,20 +178,22 @@ def update_task_list():
         response.status_code = 206
     return response
 
-# this is to retireve calendar default mode
+
+# this is to retrieve calendar default mode
 @account.route('/get_calendar_default_mode', methods=['POST'])
 def get_calendar_default_mode():
     receive_user = request.get_json()
-    #if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
+    # if receive_user['userId'] != 'O4eABYSFUxNTJgUSfRogsY6D7Eh2':
     #    response = jsonify({'message': 'Done'})
     #    response.status_code = 206
     #    return
 
     data = get_default_calendar_type(receive_user['userId'])
-    response = jsonify({'type':data})
+    response = jsonify({'type': data})
     response.status_code = 201
 
     return response
+
 
 @account.route('/update_format', methods=['POST'])
 def update_calendar_format():
@@ -191,6 +212,7 @@ def update_calendar_format():
         response.status_code = 206
     return response
 
+
 @account.route('/update_account_info', methods=['POST'])
 def update_account_info():
     info = request.get_json()
@@ -207,6 +229,7 @@ def update_account_info():
         response.status_code = 206
     return response
 
+
 @language.route('/set_language', methods=['POST'])
 def set_language():
     data = request.get_json()
@@ -219,6 +242,7 @@ def set_language():
     except:
         pass
     return response
+
 
 @language.route('/get_language', methods=['POST'])
 def get_language():
@@ -233,7 +257,9 @@ def get_language():
     except Exception as e:
         print("crash in get language")
     return response
-# this is to retireve calendar default mode
+
+
+# this is to retrieve calendar default mode
 @account.route('/set_amount_of_time', methods=['POST'])
 def set_amount_of_time():
     receive_user = request.get_json()

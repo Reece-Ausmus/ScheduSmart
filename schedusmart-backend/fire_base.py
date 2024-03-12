@@ -193,7 +193,7 @@ def login_account_with_email_and_password(receive_account):
         # if not email_verified:
         #     auth.send_email_verification(user['idToken'])
 
-            # Update 'emailVerified' to True in the database
+        # Update 'emailVerified' to True in the database
         #     db.child("User").child(user_id).update({"emailVerified": True})
 
         #     return {
@@ -240,7 +240,7 @@ def __task_list_exist(task_list_id):
 #     "task_id": "<id>",
 #     "info": "<info>"
 # }
-def add_new_event_list(task_list_id, task_list):
+def add_new_task_list(task_list_id, task_list):
     if __task_list_exist(task_list_id):
         return f"tasklist: {task_list_id} already exist"
     for task in task_list:
@@ -268,6 +268,9 @@ def update_task_list(task_list_id, new_task):
     except KeyError:
         return "one of the task does not contain 'task_id'"
     return 0
+
+
+# end of the task functions ###################
 
 
 def add_new_calendar(calendar_info):
@@ -333,6 +336,20 @@ def add_new_event(event_info):
     return 0
 
 
+# get events info by calendar id
+def f_get_events(calendar):
+    try:
+        data_events = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
+        data_event_counter = 0
+        data_event = []
+        for data in data_events.each():
+            data_event.append(data.val())
+        return data_event
+    except Exception as e:
+        print(f"fail to retrieve events data: \n{e}")
+    return 1
+
+
 def add_new_availability(availability_info):
     user_id = availability_info['user_id']
     availability_id = secrets.token_hex(16)
@@ -385,7 +402,4 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-#  data = {"user_id": "7yAPxCWH2UOxS1nE6stB3mY4SaD3",
-#         "mode": "1"
-#         }
-# update_format(data)
+
