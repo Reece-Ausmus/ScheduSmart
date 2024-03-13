@@ -31,6 +31,8 @@
     margin: 10px;
 }
 
+
+
 .weather_container{
     float: left;
     right: 2%;
@@ -51,14 +53,25 @@
 .calender_container{
     position: absolute;
     width: 60%;
-    height: 600px;
+    height: 680px;
     background-color: #3c3c3c;
     border-radius: 10px;
-    margin-left: 10px;
+    padding: 10px;
 }
+
+.month_table{
+    height: 600px;
+    width: 100%;
+}
+
+
+
 .calender_container_controlbar{
     display: block;
     height: 13%;
+}
+.sub_main_calnedar_box{
+    height: auto;
 }
 .buttonGroup {
     margin-right: 2%;
@@ -79,169 +92,17 @@
     float:left;
     color: aliceblue;
 }
-.calender1{
-    display: inline;
-    position: absolute;
-    top: 70px;
-    border-radius: 10px;
-    background-color: #b1b1b1;
-    height: 85%;
-    width: 96%;
-    margin: 2%;
-}
-.calender2{
-    display: inline;
-    position: absolute;
-    top: 70px;
-    border-radius: 10px;
-    background-color: #b1b1b1;
-    height: 85%;
-    width: 96%;
-    margin: 2%;
-}
-.dayBox{
-    position: absolute;
-    right: 1%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 85%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-.dayBox1{
-    position: absolute;
-    left: 12%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 11%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-#weekday1{
-    position: absolute;
-    left: 15%;
-    top: -3%;
-}
-.dayBox2{
-    position: absolute;
-    left: 24%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 11%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-#weekday2{
-    position: absolute;
-    left: 27%;
-    top: -3%;
-}
-.dayBox3{
-    position: absolute;
-    left: 36%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 11%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-#weekday3{
-    position: absolute;
-    left: 39%;
-    top: -3%;
-}
-.dayBox4{
-    position: absolute;
-    left:48%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 11%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-#weekday4{
-    position: absolute;
-    left: 51%;
-    top: -3%;
-}
-.dayBox5{
-    position: absolute;
-    left: 60%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 11%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-#weekday5{
-    position: absolute;
-    left: 63%;
-    top: -3%;
-}
-.dayBox6{
-    position: absolute;
-    left: 72%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 11%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-#weekday6{
-    position: absolute;
-    left: 76%;
-    top: -3%;
-}
-.dayBox7{
-    position: absolute;
-    left:84%;
-    top: 5%;    
-    border: 1px solid;
-    float: right;
-    height: 90%;
-    width: 11%;
-    border-radius: 10px;
-    background-color: aliceblue;
-}
-#weekday7{
-    position: absolute;
-    left: 87%;
-    top: -3%;
-}
-.weekday{
-    color: #2d2d2d;
-    display: inline;
-}
-.dayLine{
-    margin-top: 33.4px;
-    display: flex;
-}
 
-.dayWord{
-    font-size: 14px;
+.head_month_box{
+    background-color: aliceblue;
+    color: black;
+    height: 40px;
+    width: 14.285%;
+    vertical-align: middle;
 }
-
-.daytimebox{
-    position: absolute;
-    top: 6.7%;
-    float: left;
-    height: 90%;
-    width: 14%;
-    border-radius: 10px;
+.body_month_box{
+    background-color: aliceblue;
+    color: black;
 }
 
 .event_container{
@@ -263,33 +124,8 @@
     height: 87%;
     background-color: aliceblue;
 }
-table{
-    height: 500px;
-    width:95%;
-    margin-left: 2.5%;
-}
 
-tr, td {
-    color: black;
-    background-color: aliceblue;
-    padding: 4px;
-    vertical-align:top;
-    text-align: left;
-    border: 1px solid;
-    border-radius: 10%;
-    height: 15%;
-    width: 14.285%;
-}
-tr, th {
-    
-    background-color: #cfcfcf;
-    text-align:center;
-    vertical-align:middle;
-    border: 1px solid;
-    border-radius: 10%;
-    height: 10%;
-    width: 14.285%;
-}
+
 .MonthBoxFor4{
     vertical-align: top;
     border: 1px solid black;

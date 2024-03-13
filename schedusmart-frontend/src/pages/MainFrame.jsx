@@ -1274,7 +1274,7 @@ export default function MainFrame() {
             <h2 className="detailInfo">{detailInfo}</h2>
             <div>{calendarControlFlowButtonPackage()}</div>
           </div>
-          <div>{Calendar(selectMode)}</div>
+          <div className="main_calnedar_box">{Calendar(selectMode)}</div>
         </div>
       </div>
 

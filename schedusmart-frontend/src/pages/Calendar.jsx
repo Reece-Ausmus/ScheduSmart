@@ -1,7 +1,7 @@
 // This document is used for the components of dashboard
-import React, {  } from "react";
+import React from "react";
 import "./MainFrame.css";
-
+import { DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 function todayseeker(today) {
   let date = today.getDate();
@@ -22,190 +22,27 @@ export default function Calendar(selectMode) {
 
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = todayseeker(today);
+
   return (
-    <div>
-      <div
-        className="calender2"
-        style={{ display: selectMode === 2 ? "block" : "none" }}
-      >
-        <p className="weekday" id="weekday1">
-          Su.
-        </p>
-        <p className="weekday" id="weekday2">
-          Mo.
-        </p>
-        <p className="weekday" id="weekday3">
-          Tu.
-        </p>
-        <p className="weekday" id="weekday4">
-          We.
-        </p>
-        <p className="weekday" id="weekday5">
-          Th.
-        </p>
-        <p className="weekday" id="weekday6">
-          Fr.
-        </p>
-        <p className="weekday" id="weekday7">
-          Sa.
-        </p>
-        <div className="dayBox1">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="dayBox2">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="dayBox3">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="dayBox4">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="dayBox5">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="dayBox6">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="dayBox7">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="daytimebox">
-          <p className="dayWord">1:00</p>
-          <p className="dayWord">3:00</p>
-          <p className="dayWord">5:00</p>
-          <p className="dayWord">7:00</p>
-          <p className="dayWord">9:00</p>
-          <p className="dayWord">11:00</p>
-          <p className="dayWord">13:00</p>
-          <p className="dayWord">15:00</p>
-          <p className="dayWord">17:00</p>
-          <p className="dayWord">19:00</p>
-          <p className="dayWord">21:00</p>
-          <p className="dayWord">23:00</p>
-        </div>
+    <div className="sub_main_calnedar_box">
+      <div style={{ display: selectMode === 1 ? "block" : "none" }}>
+        <DayPilotCalendar {...{viewType: "Day"}} />
       </div>
-      <div
-        className="calender1"
-        style={{ display: selectMode === 1 ? "block" : "none" }}
-      >
-        <div className="dayBox">
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-          <hr className="dayLine" />
-        </div>
-        <div className="daytimebox">
-          <p className="dayWord">1:00</p>
-          <p className="dayWord">3:00</p>
-          <p className="dayWord">5:00</p>
-          <p className="dayWord">7:00</p>
-          <p className="dayWord">9:00</p>
-          <p className="dayWord">11:00</p>
-          <p className="dayWord">13:00</p>
-          <p className="dayWord">15:00</p>
-          <p className="dayWord">17:00</p>
-          <p className="dayWord">19:00</p>
-          <p className="dayWord">21:00</p>
-          <p className="dayWord">23:00</p>
-        </div>
+      <div style={{ display: selectMode === 2 ? "block" : "none" }}>
+        <DayPilotCalendar {...{viewType: "Week"}} />
       </div>
+
       <div style={{ display: selectMode === 3 ? "block" : "none" }}>
         <div>
-          <table>
+          <table className="month_table">
             <tr>
-              <th>Sun</th>
-              <th>Mon</th>
-              <th>Tue</th>
-              <th>Wed</th>
-              <th>Thu</th>
-              <th>Fri</th>
-              <th>Sat</th>
+              <th className="head_month_box">Sun</th>
+              <th className="head_month_box">Mon</th>
+              <th className="head_month_box">Tue</th>
+              <th className="head_month_box">Wed</th>
+              <th className="head_month_box">Thu</th>
+              <th className="head_month_box">Fri</th>
+              <th className="head_month_box">Sat</th>
             </tr>
             <tr>
               <td>{printerForMode3(date, lastDayInt)}</td>
