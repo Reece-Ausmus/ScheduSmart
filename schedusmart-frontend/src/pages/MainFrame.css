@@ -68,7 +68,7 @@
 
 .calender_container_controlbar{
     display: block;
-    height: 13%;
+    height: 10%;
 }
 .sub_main_calnedar_box{
     height: auto;
@@ -96,11 +96,13 @@
 .head_month_box{
     background-color: aliceblue;
     color: black;
-    height: 40px;
+    height: 30px;
     width: 14.285%;
-    vertical-align: middle;
+    text-align: center;
 }
 .body_month_box{
+    vertical-align: top;
+    height: 50px;
     background-color: aliceblue;
     color: black;
 }
@@ -127,10 +129,13 @@
 
 
 .MonthBoxFor4{
+    padding: 5px;
     vertical-align: top;
-    border: 1px solid black;
-    height: 30%;
+    height: 50px;
     width: 25%;
+    margin: 1px;
+    background-color: aliceblue;
+    color: black;
 }
 .add_button{
     background-color: #5a5a5a;

@@ -26,10 +26,10 @@ export default function Calendar(selectMode) {
   return (
     <div className="sub_main_calnedar_box">
       <div style={{ display: selectMode === 1 ? "block" : "none" }}>
-        <DayPilotCalendar {...{viewType: "Day"}} />
+        <DayPilotCalendar {...{ viewType: "Day" }} />
       </div>
       <div style={{ display: selectMode === 2 ? "block" : "none" }}>
-        <DayPilotCalendar {...{viewType: "Week"}} />
+        <DayPilotCalendar {...{ viewType: "Week" }} />
       </div>
 
       <div style={{ display: selectMode === 3 ? "block" : "none" }}>
@@ -45,65 +45,149 @@ export default function Calendar(selectMode) {
               <th className="head_month_box">Sat</th>
             </tr>
             <tr>
-              <td>{printerForMode3(date, lastDayInt)}</td>
-              <td>{printerForMode3(date + 1, lastDayInt)}</td>
-              <td>{printerForMode3(date + 2, lastDayInt)}</td>
-              <td>{printerForMode3(date + 3, lastDayInt)}</td>
-              <td>{printerForMode3(date + 4, lastDayInt)}</td>
-              <td>{printerForMode3(date + 5, lastDayInt)}</td>
-              <td>{printerForMode3(date + 6, lastDayInt)}</td>
+              <td className="body_month_box">
+                {printerForMode3(date, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 1, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 2, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 3, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 4, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 5, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 6, lastDayInt)}
+              </td>
             </tr>
             <tr>
-              <td>{printerForMode3(date + 7, lastDayInt)}</td>
-              <td>{printerForMode3(date + 8, lastDayInt)}</td>
-              <td>{printerForMode3(date + 9, lastDayInt)}</td>
-              <td>{printerForMode3(date + 10, lastDayInt)}</td>
-              <td>{printerForMode3(date + 11, lastDayInt)}</td>
-              <td>{printerForMode3(date + 12, lastDayInt)}</td>
-              <td>{printerForMode3(date + 13, lastDayInt)}</td>
+              <td className="body_month_box">
+                {printerForMode3(date + 7, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 8, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 9, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 10, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 11, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 12, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 13, lastDayInt)}
+              </td>
             </tr>
             <tr>
-              <td>{printerForMode3(date + 14, lastDayInt)}</td>
-              <td>{printerForMode3(date + 15, lastDayInt)}</td>
-              <td>{printerForMode3(date + 16, lastDayInt)}</td>
-              <td>{printerForMode3(date + 17, lastDayInt)}</td>
-              <td>{printerForMode3(date + 18, lastDayInt)}</td>
-              <td>{printerForMode3(date + 19, lastDayInt)}</td>
-              <td>{printerForMode3(date + 20, lastDayInt)}</td>
+              <td className="body_month_box">
+                {printerForMode3(date + 14, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 15, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 16, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 17, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 18, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 19, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 20, lastDayInt)}
+              </td>
             </tr>
             <tr>
-              <td>{printerForMode3(date + 21, lastDayInt)}</td>
-              <td>{printerForMode3(date + 22, lastDayInt)}</td>
-              <td>{printerForMode3(date + 23, lastDayInt)}</td>
-              <td>{printerForMode3(date + 24, lastDayInt)}</td>
-              <td>{printerForMode3(date + 25, lastDayInt)}</td>
-              <td>{printerForMode3(date + 26, lastDayInt)}</td>
-              <td>{printerForMode3(date + 27, lastDayInt)}</td>
+              <td className="body_month_box">
+                {printerForMode3(date + 21, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 22, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 23, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 24, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 25, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 26, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 27, lastDayInt)}
+              </td>
             </tr>
             <tr>
-              <td>{printerForMode3(date + 28, lastDayInt)}</td>
-              <td>{printerForMode3(date + 29, lastDayInt)}</td>
-              <td>{printerForMode3(date + 30, lastDayInt)}</td>
-              <td>{printerForMode3(date + 31, lastDayInt)}</td>
-              <td>{printerForMode3(date + 32, lastDayInt)}</td>
-              <td>{printerForMode3(date + 33, lastDayInt)}</td>
-              <td>{printerForMode3(date + 34, lastDayInt)}</td>
+              <td className="body_month_box">
+                {printerForMode3(date + 28, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 29, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 30, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 31, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 32, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 33, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 34, lastDayInt)}
+              </td>
             </tr>
             <tr>
-              <td>{printerForMode3(date + 35, lastDayInt)}</td>
-              <td>{printerForMode3(date + 36, lastDayInt)}</td>
-              <td>{printerForMode3(date + 37, lastDayInt)}</td>
-              <td>{printerForMode3(date + 38, lastDayInt)}</td>
-              <td>{printerForMode3(date + 39, lastDayInt)}</td>
-              <td>{printerForMode3(date + 40, lastDayInt)}</td>
-              <td>{printerForMode3(date + 41, lastDayInt)}</td>
+              <td className="body_month_box">
+                {printerForMode3(date + 35, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 36, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 37, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 38, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 39, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 40, lastDayInt)}
+              </td>
+              <td className="body_month_box">
+                {printerForMode3(date + 41, lastDayInt)}
+              </td>
             </tr>
           </table>
         </div>
       </div>
 
       <div style={{ display: selectMode === 4 ? "block" : "none" }}>
-        <table>
+        <table className="month_table">
           <tr className="MonthBoxFor4">
             <td className="MonthBoxFor4">January</td>
             <td className="MonthBoxFor4">Febuary</td>
