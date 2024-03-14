@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./TaskManager.css";
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
+import FileUpload from './FileUpload'
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
+
+// user_id to get user info
 const userId = sessionStorage.getItem("user_id");
 
+
+// initial list for new users
 const initialList = [
   {
     id: 0,
@@ -38,6 +43,7 @@ const initialList = [
 ];
 let nextId = initialList.length;
 
+// create new task manager
 export default function TaskManager() {
   const handleInfo = async (event) => {
     const response = await fetch(flaskURL + "/user_data", {
@@ -277,6 +283,7 @@ export default function TaskManager() {
   return (
     <>
       <div>
+        <FileUpload/>
         <h1>Task List</h1>
         <select
           value={selectedFormat}
