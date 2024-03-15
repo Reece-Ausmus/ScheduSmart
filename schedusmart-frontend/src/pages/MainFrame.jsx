@@ -1208,6 +1208,7 @@ export default function MainFrame() {
   );
 
   const [selectMode, setSelectMode] = useState(1);
+  const [selectedCalendar, setSelectedCalendar] = useState();
 
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);

@@ -1,8 +1,10 @@
 // This document is used for the components of dashboard
 import React from "react";
 import "./MainFrame.css";
+import { useState, useRef, useEffect } from "react";
 import { DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 import send_request from "./requester";
+
 
 function todayseeker(today) {
   let date = today.getDate();
@@ -17,6 +19,22 @@ function printerForMode3(date, lastDayInt) {
   return date > 0 && date <= lastDayInt ? date : null;
 }
 
+function dayComparison(day1, day2) {
+  if (typeof(day1) == String) {
+    let parse_day1 = day1.substring(0, 4) + day1.substring(5, 7) + day1.substring(8,);
+    day1 = parseInt(parse_day1);
+  }
+
+  if (typeof(day2) == String) {
+    let parse_day2 = day2.substring(0, 4) + day2.substring(5, 7) + day2.substring(8,);
+    day2 = parseInt(parse_day2);
+  }
+
+  if (day1 < day2) return -1;
+  else if (day1 == day2) return 0;
+  else return 1;
+}
+
 export default function Calendar(selectMode) {
   const today = new Date();
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -24,10 +42,53 @@ export default function Calendar(selectMode) {
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = todayseeker(today);
 
+  const calendarRef = useRef();
+
+  useEffect(() => {
+
+    calendarRef.current.control.update({
+      startDate: "2023-10-02",
+      events: [ 
+        {
+          id: 2,
+          text: "Event 1",
+          start: "2023-10-02T10:30:00",
+          end: "2023-10-02T13:00:00"
+        },
+        {
+          id: 1,
+          text: "Event 2",
+          start: "2023-01-03T09:30:00",
+          end: "2023-01-03T11:30:00",
+          backColor: "#6aa84f"
+        },
+        {
+          id: 3,
+          text: "Event 3",
+          start: "2023-10-03T12:00:00",
+          end: "2023-10-03T15:00:00",
+          backColor: "#f1c232"
+        },
+        {
+          id: 4,
+          text: "Event 4",
+          start: "2023-10-01T11:30:00",
+          end: "2023-10-01T14:30:00",
+          backColor: "#cc4125"
+        },
+      ]
+    });
+  }, []);
+
   return (
     <div className="sub_main_calnedar_box">
+
+      <button onClick={() => {
+        console.log(dayComparison("2024-10-30", 20))
+      }}>test_purpose</button>
+
       <div style={{ display: selectMode === 1 ? "block" : "none" }}>
-        <DayPilotCalendar {...{ viewType: "Day" }} />
+        <DayPilotCalendar {...{ viewType: "Day" }} ref={calendarRef} />
       </div>
       <div style={{ display: selectMode === 2 ? "block" : "none" }}>
         <DayPilotCalendar {...{ viewType: "Week" }} />
