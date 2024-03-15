@@ -305,7 +305,7 @@ def f_get_events(calendar):
         data_event = []
         for data in data_events.each():
             data_event.append(data.val())
-        return data_event
+        return {"data": data_event}
     except Exception as e:
         print(f"fail to retrieve events data: \n{e}")
     return 1

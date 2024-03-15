@@ -68,7 +68,9 @@ def user_data():
         data = get_user(receive_user)
         ret = data['return_status']
         if ret == 1:
-            response = jsonify({'error': 'user not found'})
+            response = jsonify({
+                'error': 'user not found',
+            })
             response.status_code = 202
         elif ret == 0:
             response = jsonify({
@@ -85,8 +87,10 @@ def user_data():
             response.status_code = 201
     except:
         traceback.print_exc()
-        response = jsonify({'error': 'missing information'})
-        response.status_code = 205
+        response = jsonify({
+                'message': 'fail',
+            })
+        response.status_code = 201
     return response
 
 
@@ -135,11 +139,11 @@ def get_events():
     calendar = request.get_json()
     ret = f_get_events(calendar)
     if ret == 1:
-        response = jsonify({"response": "can't retrieve events"})
-        response.status_code = 205
+        response = jsonify({'response': 'fail retrieve events'})
+        response.status_code = 201
     else:
         response = jsonify(ret)
-        response.status_code = 200
+        response.status_code = 201
     return response
 
 
