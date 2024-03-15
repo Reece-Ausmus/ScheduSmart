@@ -11,7 +11,7 @@ const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id"); //"Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2";
 
 export default function AccountInfo(language) {
-  const handleInfo = async (event) => {
+  const handleInfo = async () => {
     const response = await fetch(flaskURL + "/user_data", {
       method: "POST",
       headers: {

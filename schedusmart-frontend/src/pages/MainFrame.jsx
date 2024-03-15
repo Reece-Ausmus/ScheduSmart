@@ -8,6 +8,7 @@ import PopUpForm from "../components/PopupForm";
 import moment from "moment";
 import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
+import send_request from "./requester";
 
 const steps = [
   {
@@ -30,15 +31,6 @@ const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
 
 export default function MainFrame() {
-  function todayseeker() {
-    let date = today.getDate();
-    const day = today.getDay();
-    date = date % 7;
-    date = day - date + 1;
-    date < 0 ? (date += 7) : date;
-    return 1 - date;
-  }
-
   function CalendarList() {
     const [loading, setLoading] = useState(true);
     const [calendars, setCalendars] = useState([
@@ -1281,7 +1273,9 @@ export default function MainFrame() {
       {/* Event container */}
       <div className="event_container">
         <h1 className="Event_title">Assignment List</h1>
-        <div className="ToDoList"></div>
+        <div className="ToDoList">
+
+        </div>
       </div>
     </div>
   );

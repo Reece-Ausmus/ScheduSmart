@@ -4,9 +4,9 @@ import { Navigate } from "react-router-dom";
 import AccountInfo from "./AccountInfo.jsx";
 import languageData from "../components/language.json";
 import "./Settings.css";
+import send_request from "./requester.jsx";
 
 const flaskURL = "http://127.0.0.1:5000";
-
 
 export default function Settings() {
   const userId = sessionStorage.getItem("user_id");
@@ -21,15 +21,15 @@ export default function Settings() {
       }),
       credentials: "include",
     });
-  }
+  };
   const [language, setLanguage] = useState(0);
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
   const [showVirtual, setShowVirsual] = useState(3);
   const [visualOptions] = useState([
-    { id: 1, label: "day" ,value:1},
-    { id: 2, label: "week",value:2},
-    { id: 3, label: "month",value:3},
-    { id: 4, label: "year" ,value:4},
+    { id: 1, label: "day", value: 1 },
+    { id: 2, label: "week", value: 2 },
+    { id: 3, label: "month", value: 3 },
+    { id: 4, label: "year", value: 4 },
   ]);
   const handleVirtualSelectChange = (e) => {
     setShowVirsual(parseInt(e.target.value));
@@ -114,7 +114,7 @@ export default function Settings() {
           alert("Failed to change the calendar mode");
           break;
         default:
-            alert("Unexpected response status: " + response.status);
+          alert("Unexpected response status: " + response.status);
       }
     }
   }
@@ -145,7 +145,13 @@ export default function Settings() {
       >
         {languageData[language][0][0].signout}
       </button>
-      <button onClick={() => {window.location.href = '/reminder'}}>Reminder</button>
+      <button
+        onClick={() => {
+          window.location.href = "/reminder";
+        }}
+      >
+        Reminder
+      </button>
       <div className="reminder-settings">
         <p className="text"> {languageData[language][0][0].cvf}:</p>
         <select value={showVirtual} onChange={handleVirtualSelectChange}>
@@ -159,9 +165,3 @@ export default function Settings() {
     </>
   );
 }
-
-/*
-<LanguageSetting.Provider
-        value={{ language, setLanguage }}
-      ></LanguageSetting.Provider>
-*/
