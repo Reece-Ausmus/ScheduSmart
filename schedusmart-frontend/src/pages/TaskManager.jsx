@@ -284,6 +284,7 @@ export default function TaskManager() {
   return (
     <>
       <div>
+        <FileUpload/>
         <h1>Task List</h1>
         <select
           value={selectedFormat}
