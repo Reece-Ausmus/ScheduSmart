@@ -1,38 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+
 
 export default function FileUpload() {
-    const [file, setFile] = useState()
-
-    function handleFile(event) {
-        setFile(event.target.files[0])
-        console.log(event.target.files[0])
+    const formHandler = (e) => {
+        e.preventDefault();
+        const file = e.target[0].files[0]
+        console.log(file);
     }
 
-    function handleUpload() {
-        const formData = new FormData()
-        formData.append('file', file)
-        fetch(
-            'url',
-            {
-                method: "POST",
-                body: formData
-            }
-        ).then((response) => response.json()).then(
-            (result) => {
-                console.log('success', result)
-            }
-        )
-        .catch(error => {
-            console.error("Error:", error)
-        })
-    }
     return (
-        <div>
-            <h2>File Uploading in React JS</h2>
-            <form onSubmit={handleUpload}>
-                <input type="file" name="file" onChange={handleFile}/>
-                <button>Upload</button>
-            </form>
-        </div>
+        <>
+        <form onSubmit={formHandler}>
+            <input type="file" className="input"/>
+            <button type="submit">Upload</button>
+        </form>
+        </>
     )
 }

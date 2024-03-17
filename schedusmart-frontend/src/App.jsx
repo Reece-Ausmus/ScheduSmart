@@ -13,6 +13,7 @@ import TaskManager from './pages/TaskManager'
 import DragAndDrop from './pages/MainFrameWithDragandDrug'
 import Reminder from './pages/Reminder'
 import Notes from './pages/Notes'
+import FileUpload from './pages/FileUpload'
 
 // to run program 
 // Open new terminal

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./TaskManager.css";
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
-import FileUpload from './FileUpload'
+import FileUpload from "./FileUpload";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -29,7 +29,7 @@ const initialList = [
     date: "2024-09-23",
     desc: "Speak with team coordinator",
     completed: false,
-    completed_time: null,
+    completed_time: null, 
   },
   {
     id: 2,
@@ -94,6 +94,7 @@ export default function TaskManager() {
   const [taskDesc, setTaskDesc] = useState("");
   const [todoList, setTodoList] = useState(initialList);
   const [completedList, setCompletedList] = useState([]);
+  const [file, setFile] = useState();
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -283,7 +284,6 @@ export default function TaskManager() {
   return (
     <>
       <div>
-        <FileUpload/>
         <h1>Task List</h1>
         <select
           value={selectedFormat}
@@ -338,6 +338,12 @@ export default function TaskManager() {
             id="desc"
             value={taskDesc}
             onChange={(e) => setTaskDesc(e.target.value)}
+          />
+          <label htmlFor="file">File:</label>
+          <input 
+            id="file"
+            type="file" 
+            onChange={(e) => setFile(e.target.files[0])}
           />
           <button
             id="closeModal"
@@ -487,6 +493,12 @@ function TodoList({ list, onToggle, option }) {
     sortedList = list;
   }
 
+  const formHandler = (e) => {
+    e.preventDefault();
+    const file = e.target[0].files[0];
+    console.log(file);
+  }
+
   return (
     <div>
       {sortedList.map((task) => (
@@ -495,6 +507,7 @@ function TodoList({ list, onToggle, option }) {
           <p>{task.desc}</p>
           <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
+          <p>File: {task.file}</p>
           <input
             type="checkbox"
             checked={task.completed}

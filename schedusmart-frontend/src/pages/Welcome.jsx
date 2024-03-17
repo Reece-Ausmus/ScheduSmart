@@ -31,7 +31,6 @@ export default function Welcome() {
       >
         Create an account!
       </button>
-
       {/* 
       <button
         onClick={() => {
