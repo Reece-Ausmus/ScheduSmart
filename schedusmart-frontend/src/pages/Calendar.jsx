@@ -29,32 +29,17 @@ function compareDates(date1, date2) {
 }
 
 function addDaysToSpecificDate(date, a) {
-  if (isNaN(date.getTime())) {
-    console.log("error in addDaysToSpecificDate: not defined");
-    return date;
-  }
   const newDate = new Date(date.getTime() + a * 24 * 60 * 60 * 1000);
-
   return newDate;
 }
 
 function addMonthsToSpecificDate(date, a) {
-  if (isNaN(date.getTime())) {
-    console.log("error in addDaysToSpecificDate: not defined");
-    return date;
-  }
-  const newDate = new Date(date.getTime() + a * 24 * 60 * 60 * 1000);
-
+  const newDate = new Date(date.getFullYear(), date.getMonth() + a, date.getDate());
   return newDate;
 }
 
 function addYearsToSpecificDate(date, a) {
-  if (isNaN(date.getTime())) {
-    console.log("error in addDaysToSpecificDate: not defined");
-    return date;
-  }
-  const newDate = new Date(date.getTime() + a * 24 * 60 * 60 * 1000);
-
+  const newDate = new Date(date.getFullYear() + a, date.getMonth(), date.getDate());
   return newDate;
 }
 
@@ -125,6 +110,11 @@ async function events_array_generator(calendar_id, boundary) {
 }
 
 export default function Calendar(selectMode) {
+  const testDate = new Date(2024, 12, 8);
+  console.log(testDate.toISOString());
+  const exeDate = addYearsToSpecificDate(testDate, 1);
+  console.log(exeDate.toISOString());
+
   const today = new Date();
   const localDay = new Date(
     today.getFullYear(),
@@ -148,7 +138,7 @@ export default function Calendar(selectMode) {
   useEffect(() => {
     calendarRef.current.control.update({
       //startDate: todayString,
-      startDate: "2023-10-02",
+      startDate: todayString,
       events: [
         {
           id: 2,
