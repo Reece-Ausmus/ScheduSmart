@@ -73,8 +73,9 @@ async function events_array_generator(calendar_id) {
 
 export default function Calendar(selectMode) {
   const today = new Date();
+  const localDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  const isoToday = today.toISOString();
+  const isoToday = localDay.toISOString();
   const todayString = isoToday.slice(0, 10);
 
   const lastDayInt = Math.floor(lastDay.getDate());
