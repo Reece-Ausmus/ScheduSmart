@@ -36,28 +36,39 @@ function dayComparison(day1, day2) {
   else return 1;
 }
 
-function eventParser(event, id) {
+function addDaysToSpecificDate(dateString, a) {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
   
+  if (isNaN(date.getTime())) {
+    throw new Error('Invalid date format. Please use "XXXX-XX-XX" format.');
+  }
+  
+  const newDate = new Date(date.getTime() + a * 24 * 60 * 60 * 1000);
+  return newDate.toISOString().split('T')[0];
+}
+
+function eventParser(event, id_number) {
+  event_name = event.name;
+  console.log("id: " + String(id_number));
   return {
-    id: 1,
-    text: "Event 2",
-    start: "2023-01-03T09:30:00",
-    end: "2023-01-03T11:30:00",
-    backColor: "#6aa84f",
+    id: 2,
+    text: "Event 1",
+    start: "2023 10-02 10:30:00",
+    end: "2023-10-02 13:00:00",
   }
 }
+
+
 
 async function events_array_generator(calendar_id) {
   let events = await send_request("/get_events", { calendar_id: calendar_id });
   if (events.data == undefined) return;
-
+  console.log("length:" + String(events.data.length));
   const arrayEvents = [];
   for (let i = 0; i < events.data.length; i++) {
-    arrayEvents.push(events.data[i])
+    arrayEvents.push(eventParser(events.data[i], arrayEvents.length));
   }
-  console.log("Result: ");
-  console.log(arrayEvents)
-
 }
 
 export default function Calendar(selectMode) {
@@ -68,7 +79,6 @@ export default function Calendar(selectMode) {
 
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = firstDaySeeker(today);
-  console.log(date);
 
   events_array_generator("15e1c4a5f82eeca0a8a57e19bdea4ea5"); //15e1c4a5f82eeca0a8a57e19bdea4ea5
   const calendarRef = useRef();
