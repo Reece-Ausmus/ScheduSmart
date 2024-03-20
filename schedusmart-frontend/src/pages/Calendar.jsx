@@ -18,98 +18,8 @@ function printerForMode3(date, lastDayInt) {
   return date > 0 && date <= lastDayInt ? date : null;
 }
 
-function compareDates(date1, date2) {
-  if (date1 > date2) {
-    return 1;
-  } else if (date1 < date2) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
-
-function addDaysToSpecificDate(date, a) {
-  const newDate = new Date(date.getTime() + a * 24 * 60 * 60 * 1000);
-  return newDate;
-}
-
-function addMonthsToSpecificDate(date, a) {
-  const newDate = new Date(date.getFullYear(), date.getMonth() + a, date.getDate());
-  return newDate;
-}
-
-function addYearsToSpecificDate(date, a) {
-  const newDate = new Date(date.getFullYear() + a, date.getMonth(), date.getDate());
-  return newDate;
-}
-
-function eventParser(event, id_number, boundary) {
-  const eventArray = [];
-
-  let id = id_number;
-  let event_name = event.name;
-  
-  const [year1, month1, day1] = event.start_date.split("-").map(Number);
-  const [hour1, min1] = event.start_time.split(":").map(Number);
-  const [year2, month2, day2] = event.end_date.split("-").map(Number);
-  const [hour2, min2] = event.end_time.split(":").map(Number);
-
-  let startDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
-  startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
-  let endDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
-  endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset());
-
-  if (event.repetition_type === "daily") {
-    while (compareDates(startDate, boundary) == -1) {
-      eventArray.push({
-        id: id,
-        text: event_name,
-        start: startDate.toISOString().slice(0, 19),
-        end: endDate.toISOString().slice(0, 19),
-      });
-      id++;
-      startDate = addDaysToSpecificDate(startDate, 1);
-      endDate = addDaysToSpecificDate(endDate, 1);
-    }
-  } 
-  else if (event.repetition_type === "weekly") {
-  }
-  else if (event.repetition_type === "monthly") {
-  } 
-  else if (event.repetition_type === "yearly") {
-  } 
-  else if (event.repetition_type === "custom") {
-  } 
-  else {
-    console.log("Error occurs: repetition type not parse correctly");
-  }
-  
-  return eventArray;
-  /*
-  {
-    id: 2,
-    text: "Event 1",
-    start: "2023-10-02 10:30:00",
-    end: "2023-10-02 13:00:00",
-  }
-  */
-}
-
-async function events_array_generator(calendar_id, boundary) {
-  let events = await send_request("/get_events", { calendar_id: calendar_id });
-  if (events.data == undefined) return;
-
-  const eventsArray = [];
-  for (let i = 0; i < events.data.length; i++) {
-    eventsArray.push(
-      ...eventParser(events.data[i], eventsArray.length, boundary)
-    );
-  }
-  
-  return eventsArray;
-}
-
-export default function Calendar(selectMode) {
+export default function Calendar(selectMode, e) {
+  console.log("here", e);
   const today = new Date();
   const localDay = new Date(
     today.getFullYear(),
@@ -124,46 +34,18 @@ export default function Calendar(selectMode) {
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = firstDaySeeker(today);
 
-  const [eventArray, setEventArray] = useState([
-    {id: 0, text: "not Work out", start: "2024-03-19T01:00:00", end: "2024-03-19T03:45:00"},
-    {id: 2, text: "Work out", start: "2024-03-20T01:00:00", end: "2024-03-20T03:45:00"},
-    {id: 3, text: "Work out", start: "2024-03-21T01:00:00", end: "2024-03-21T03:45:00"},
-    {id: 4, text: "Work out", start: "2024-03-22T01:00:00", end: "2024-03-22T03:45:00"},
-    {id: 5, text: "Work out", start: "2024-03-23T01:00:00", end: "2024-03-23T03:45:00"},
-    {id: 6, text: "Work out", start: "2024-03-24T01:00:00", end: "2024-03-24T03:45:00"},
-    {id: 7, text: "Work out", start: "2024-03-25T01:00:00", end: "2024-03-25T03:45:00"},
-    {id: 8, text: "Work out", start: "2024-03-26T01:00:00", end: "2024-03-26T03:45:00"},
-    {id: 9, text: "Work out", start: "2024-03-27T01:00:00", end: "2024-03-27T03:45:00"}]);
 
   let viewType = selectMode == 1 ? "Day":"Week";
-  const [isLoading, setIsLoading] = useState(false);
-
-   //15e1c4a5f82eeca0a8a57e19bdea4ea5
 
   const calendarRef = useRef();
   
   useEffect( () => {
-    const fetchEvent = async () => {
-      setIsLoading(true);
-      const newEventLoad = await events_array_generator(
-        "15e1c4a5f82eeca0a8a57e19bdea4ea5",
-        addDaysToSpecificDate(localDay, 7)
-      )
-      
-      console.log("eventArray type:", Array.isArray(newEventLoad));
-      console.log("eventArray:",newEventLoad);
-      console.log("original eventArray:", eventArray);
-      setEventArray(newEventLoad)
-      setIsLoading(false);
-    }
-
-    fetchEvent().then(newEventLoad => {
-      calendarRef.current.control.update({
-        startDate: todayString,
-        events: newEventLoad,
-      });
+    console.log("this is called");
+    calendarRef.current.control.update({
+      startDate: todayString,
+      events: e,
     });
-  }, []);
+  }, [e]);
 
   return (
     <div className="sub_main_calnedar_box">

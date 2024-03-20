@@ -1208,10 +1208,110 @@ export default function MainFrame() {
 
   const [selectMode, setSelectMode] = useState(1);
   const [selectedCalendar, setSelectedCalendar] = useState();
+  const [eventsArray, setEventsArray] = useState([]);
+
+  function compareDates(date1, date2) {
+    if (date1 > date2) {
+      return 1;
+    } else if (date1 < date2) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+  
+  function addDaysToSpecificDate(date, a) {
+    const newDate = new Date(date.getTime() + a * 24 * 60 * 60 * 1000);
+    return newDate;
+  }
+  
+  function addMonthsToSpecificDate(date, a) {
+    const newDate = new Date(date.getFullYear(), date.getMonth() + a, date.getDate());
+    return newDate;
+  }
+  
+  function addYearsToSpecificDate(date, a) {
+    const newDate = new Date(date.getFullYear() + a, date.getMonth(), date.getDate());
+    return newDate;
+  }
+
+  function eventParser(event, id_number, boundary) {
+    const eventArray = [];
+  
+    let id = id_number;
+    let event_name = event.name;
+    
+    const [year1, month1, day1] = event.start_date.split("-").map(Number);
+    const [hour1, min1] = event.start_time.split(":").map(Number);
+    const [year2, month2, day2] = event.end_date.split("-").map(Number);
+    const [hour2, min2] = event.end_time.split(":").map(Number);
+  
+    let startDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
+    startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
+    let endDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
+    endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset());
+  
+    if (event.repetition_type === "daily") {
+      while (compareDates(startDate, boundary) == -1) {
+        eventArray.push({
+          id: id,
+          text: event_name,
+          start: startDate.toISOString().slice(0, 19),
+          end: endDate.toISOString().slice(0, 19),
+        });
+        id++;
+        startDate = addDaysToSpecificDate(startDate, 1);
+        endDate = addDaysToSpecificDate(endDate, 1);
+      }
+    } 
+    else if (event.repetition_type === "weekly") {
+    }
+    else if (event.repetition_type === "monthly") {
+    } 
+    else if (event.repetition_type === "yearly") {
+    } 
+    else if (event.repetition_type === "custom") {
+    } 
+    else {
+      console.log("Error occurs: repetition type not parse correctly");
+    }
+    
+    return eventArray;
+    /*
+    {
+      id: 2,
+      text: "Event 1",
+      start: "2023-10-02 10:30:00",
+      end: "2023-10-02 13:00:00",
+    }
+    */
+  }
+  useEffect( () => {
+    const fetchEvents = async () => {
+      let events = await send_request("/get_events", { calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5" });
+      if (events.data == undefined) return;
+
+      const eventsArray = [];
+      const today = new Date();
+      const localDay = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+
+      for (let i = 0; i < events.data.length; i++) {
+        eventsArray.push(
+          ...eventParser(events.data[i], eventsArray.length, addDaysToSpecificDate(localDay, 7))
+        );
+      }
+      setEventsArray(eventsArray);
+    }
+    fetchEvents();
+  }, []);
 
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
-
+  
   if (goToDragAndDrop) {
     return (
       <>
@@ -1266,7 +1366,7 @@ export default function MainFrame() {
             <h2 className="detailInfo">{detailInfo}</h2>
             <div>{calendarControlFlowButtonPackage()}</div>
           </div>
-          <div className="main_calnedar_box">{Calendar(selectMode)}</div>
+          <div className="main_calnedar_box">{Calendar(selectMode, eventsArray)}</div>
         </div>
       </div>
 
