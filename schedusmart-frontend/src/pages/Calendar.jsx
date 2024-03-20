@@ -94,7 +94,7 @@ function eventParser(event, id_number, boundary) {
   */
 }
 
-async function events_array_generator(calendar_id, boundary) {
+async function events_array_generator(calendar_id, boundary, calendarRef) {
   let events = await send_request("/get_events", { calendar_id: calendar_id });
   if (events.data == undefined) return;
 
@@ -104,7 +104,12 @@ async function events_array_generator(calendar_id, boundary) {
       ...eventParser(events.data[i], eventsArray.length, boundary)
     );
   }
-
+  useEffect(() => {
+    calendarRef.current.control.update({
+      startDate: todayString,
+      events: eventsArray
+    });
+  }, []);
   return eventsArray;
 }
 
@@ -123,26 +128,16 @@ export default function Calendar(selectMode) {
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = firstDaySeeker(today);
 
-  console.log(events_array_generator(
-    "15e1c4a5f82eeca0a8a57e19bdea4ea5",
-    addDaysToSpecificDate(localDay, 7)
-  ));
 
    //15e1c4a5f82eeca0a8a57e19bdea4ea5
 
   const calendarRef = useRef();
+  events_array_generator(
+    "15e1c4a5f82eeca0a8a57e19bdea4ea5",
+    addDaysToSpecificDate(localDay, 7), calendarRef
+  )
 
-  useEffect(() => {
-    calendarRef.current.control.update({
-      startDate: todayString,
-      events: [{
-        id: 2,
-        text: "Event 1",
-        start: "2024-03-19 10:30:00",
-        end: "2024-03-19 13:00:00",
-      },]
-    });
-  }, []);
+  
 
   return (
     <div className="sub_main_calnedar_box">
