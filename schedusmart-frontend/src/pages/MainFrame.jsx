@@ -1226,12 +1226,12 @@ export default function MainFrame() {
   }
   
   function addMonthsToSpecificDate(date, a) {
-    const newDate = new Date(date.getFullYear(), date.getMonth() + a, date.getDate());
+    const newDate = new Date(date.getFullYear(), date.getMonth() + a, date.getDate() + 1);
     return newDate;
   }
   
   function addYearsToSpecificDate(date, a) {
-    const newDate = new Date(date.getFullYear() + a, date.getMonth(), date.getDate());
+    const newDate = new Date(date.getFullYear() + a, date.getMonth(), date.getDate() + 1);
     return newDate;
   }
 
@@ -1265,10 +1265,43 @@ export default function MainFrame() {
       }
     } 
     else if (event.repetition_type === "weekly") {
+      while (compareDates(startDate, boundary) == -1) {
+        eventArray.push({
+          id: id,
+          text: event_name,
+          start: startDate.toISOString().slice(0, 19),
+          end: endDate.toISOString().slice(0, 19),
+        });
+        id++;
+        startDate = addDaysToSpecificDate(startDate, 7);
+        endDate = addDaysToSpecificDate(endDate, 7);
+      }
     }
     else if (event.repetition_type === "monthly") {
+      while (compareDates(startDate, boundary) == -1) {
+        eventArray.push({
+          id: id,
+          text: event_name,
+          start: startDate.toISOString().slice(0, 19),
+          end: endDate.toISOString().slice(0, 19),
+        });
+        id++;
+        startDate = addMonthsToSpecificDate(startDate, 1);
+        endDate = addMonthsToSpecificDate(endDate, 1);
+      }
     } 
     else if (event.repetition_type === "yearly") {
+      while (compareDates(startDate, boundary) == -1) {
+        eventArray.push({
+          id: id,
+          text: event_name,
+          start: startDate.toISOString().slice(0, 19),
+          end: endDate.toISOString().slice(0, 19),
+        });
+        id++;
+        startDate = addYearsToSpecificDate(startDate, 1);
+        endDate = addYearsToSpecificDate(endDate, 1);
+      }
     } 
     else if (event.repetition_type === "custom") {
     } 
