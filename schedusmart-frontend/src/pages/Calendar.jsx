@@ -2,7 +2,7 @@
 import React from "react";
 import "./MainFrame.css";
 import { useState, useRef, useEffect } from "react";
-import { DayPilotCalendar } from "@daypilot/daypilot-lite-react";
+import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 import send_request from "./requester";
 
 function firstDaySeeker(today) {
@@ -64,8 +64,8 @@ function eventParser(event, id_number, boundary) {
       eventArray.push({
         id: id,
         text: event_name,
-        start: startDate.toISOString(),
-        end: endDate.toISOString(),
+        start: startDate.toISOString().slice(0, 19),
+        end: endDate.toISOString().slice(0, 19),
       });
       id++;
       startDate = addDaysToSpecificDate(startDate, 1);
@@ -83,6 +83,7 @@ function eventParser(event, id_number, boundary) {
   else {
     console.log("Error occurs: repetition type not parse correctly");
   }
+  
   return eventArray;
   /*
   {
@@ -94,7 +95,7 @@ function eventParser(event, id_number, boundary) {
   */
 }
 
-async function events_array_generator(calendar_id, boundary, calendarRef) {
+async function events_array_generator(calendar_id, boundary) {
   let events = await send_request("/get_events", { calendar_id: calendar_id });
   if (events.data == undefined) return;
 
@@ -104,12 +105,7 @@ async function events_array_generator(calendar_id, boundary, calendarRef) {
       ...eventParser(events.data[i], eventsArray.length, boundary)
     );
   }
-  useEffect(() => {
-    calendarRef.current.control.update({
-      startDate: todayString,
-      events: eventsArray
-    });
-  }, []);
+  
   return eventsArray;
 }
 
@@ -128,24 +124,51 @@ export default function Calendar(selectMode) {
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = firstDaySeeker(today);
 
+  const [eventArray, setEventArray] = useState([
+    {id: 0, text: "not Work out", start: "2024-03-19T01:00:00", end: "2024-03-19T03:45:00"},
+    {id: 2, text: "Work out", start: "2024-03-20T01:00:00", end: "2024-03-20T03:45:00"},
+    {id: 3, text: "Work out", start: "2024-03-21T01:00:00", end: "2024-03-21T03:45:00"},
+    {id: 4, text: "Work out", start: "2024-03-22T01:00:00", end: "2024-03-22T03:45:00"},
+    {id: 5, text: "Work out", start: "2024-03-23T01:00:00", end: "2024-03-23T03:45:00"},
+    {id: 6, text: "Work out", start: "2024-03-24T01:00:00", end: "2024-03-24T03:45:00"},
+    {id: 7, text: "Work out", start: "2024-03-25T01:00:00", end: "2024-03-25T03:45:00"},
+    {id: 8, text: "Work out", start: "2024-03-26T01:00:00", end: "2024-03-26T03:45:00"},
+    {id: 9, text: "Work out", start: "2024-03-27T01:00:00", end: "2024-03-27T03:45:00"}]);
+
+  let viewType = selectMode == 1 ? "Day":"Week";
+  const [isLoading, setIsLoading] = useState(false);
 
    //15e1c4a5f82eeca0a8a57e19bdea4ea5
 
   const calendarRef = useRef();
-  events_array_generator(
-    "15e1c4a5f82eeca0a8a57e19bdea4ea5",
-    addDaysToSpecificDate(localDay, 7), calendarRef
-  )
-
   
+  useEffect( () => {
+    const fetchEvent = async () => {
+      setIsLoading(true);
+      const newEventLoad = await events_array_generator(
+        "15e1c4a5f82eeca0a8a57e19bdea4ea5",
+        addDaysToSpecificDate(localDay, 7)
+      )
+      
+      console.log("eventArray type:", Array.isArray(newEventLoad));
+      console.log("eventArray:",newEventLoad);
+      console.log("original eventArray:", eventArray);
+      setEventArray(newEventLoad)
+      setIsLoading(false);
+    }
+
+    fetchEvent().then(newEventLoad => {
+      calendarRef.current.control.update({
+        startDate: todayString,
+        events: newEventLoad,
+      });
+    });
+  }, []);
 
   return (
     <div className="sub_main_calnedar_box">
-      <div style={{ display: selectMode === 1 ? "block" : "none" }}>
-        <DayPilotCalendar {...{ viewType: "Day" }} ref={calendarRef} />
-      </div>
-      <div style={{ display: selectMode === 2 ? "block" : "none" }}>
-        <DayPilotCalendar {...{ viewType: "Week" }} />
+      <div style={{ display: selectMode === 1 || selectMode === 2? "block" : "none" }}>
+        <DayPilotCalendar {...{ viewType: viewType}} ref={calendarRef} />
       </div>
 
       <div style={{ display: selectMode === 3 ? "block" : "none" }}>

@@ -313,7 +313,6 @@ export default function MainFrame() {
 
     useEffect(() => {
       const fetchData = async () => {
-        console.log(userId);
         const response = await fetch(flaskURL + "/user_data", {
           method: "POST",
           headers: {
