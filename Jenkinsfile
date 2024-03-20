@@ -11,7 +11,7 @@ pipeline {
     stage('Test') {
       steps {
         sh 'echo Test'
-        sh 'npm run test'
+        sh 'cd schedusmart-frontend && npm run test'
         //sh 'docker run my-flask-app python -m pytest app/tests/'
       }
     }
