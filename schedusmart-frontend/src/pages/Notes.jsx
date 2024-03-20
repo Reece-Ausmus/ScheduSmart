@@ -1,3 +1,4 @@
+// This is a page to realize taking notes function
 import React, { useState } from "react";
 import "./Notes.css";
 import AddIcon from "@material-ui/icons/Add";
@@ -6,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditIcon from "@material-ui/icons/Edit";
 
-export default function NoteApp() {
+export default function Notes() {
   const [note, setNote] = useState({
     title: "",
     content: ""
@@ -72,6 +73,15 @@ export default function NoteApp() {
     <div className="main">
       <div className="header">
         <h1>Notes</h1>
+      </div>
+      
+      <div>
+        <button
+        onClick={() => {
+          window.location.href = "/dashboard";
+        }}>
+          Dashboard
+        </button>
       </div>
 
       <div>
