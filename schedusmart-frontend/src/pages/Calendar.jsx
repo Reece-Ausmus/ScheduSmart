@@ -19,7 +19,6 @@ function printerForMode3(date, lastDayInt) {
 }
 
 export default function Calendar(selectMode, e) {
-  console.log("here", e);
   const today = new Date();
   const localDay = new Date(
     today.getFullYear(),
@@ -40,7 +39,7 @@ export default function Calendar(selectMode, e) {
   const calendarRef = useRef();
   
   useEffect( () => {
-    console.log("this is called");
+    console.log("this is called", e);
     calendarRef.current.control.update({
       startDate: todayString,
       events: e,

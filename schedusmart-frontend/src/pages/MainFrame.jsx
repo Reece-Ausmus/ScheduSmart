@@ -1246,10 +1246,14 @@ export default function MainFrame() {
     const [year2, month2, day2] = event.end_date.split("-").map(Number);
     const [hour2, min2] = event.end_time.split(":").map(Number);
   
-    let startDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
-    startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
-    let endDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
-    endDate.setMinutes(endDate.getMinutes() - endDate.getTimezoneOffset());
+    let firstStartDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
+    firstStartDate.setMinutes(firstStartDate.getMinutes() - firstStartDate.getTimezoneOffset());
+    let firstEndDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
+    firstEndDate.setMinutes(firstEndDate.getMinutes() - firstEndDate.getTimezoneOffset());
+
+    let startDate = addDaysToSpecificDate(firstStartDate, 0);
+    let endDate = addDaysToSpecificDate(firstEndDate, 0);
+    let counter = 1;  //Default will add 1
   
     if (event.repetition_type === "daily") {
       while (compareDates(startDate, boundary) == -1) {
@@ -1260,11 +1264,13 @@ export default function MainFrame() {
           end: endDate.toISOString().slice(0, 19),
         });
         id++;
-        startDate = addDaysToSpecificDate(startDate, 1);
-        endDate = addDaysToSpecificDate(endDate, 1);
+        startDate = addDaysToSpecificDate(firstStartDate, counter);
+        endDate = addDaysToSpecificDate(firstEndDate, counter);
+        counter++;
       }
     } 
     else if (event.repetition_type === "weekly") {
+      counter = 7;
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
@@ -1273,8 +1279,9 @@ export default function MainFrame() {
           end: endDate.toISOString().slice(0, 19),
         });
         id++;
-        startDate = addDaysToSpecificDate(startDate, 7);
-        endDate = addDaysToSpecificDate(endDate, 7);
+        startDate = addDaysToSpecificDate(firstStartDate, counter);
+        endDate = addDaysToSpecificDate(firstEndDate, counter);
+        counter += 7;
       }
     }
     else if (event.repetition_type === "monthly") {
@@ -1286,8 +1293,9 @@ export default function MainFrame() {
           end: endDate.toISOString().slice(0, 19),
         });
         id++;
-        startDate = addMonthsToSpecificDate(startDate, 1);
-        endDate = addMonthsToSpecificDate(endDate, 1);
+        startDate = addMonthsToSpecificDate(firstStartDate, counter);
+        endDate = addMonthsToSpecificDate(firstEndDate, counter);
+        counter++;
       }
     } 
     else if (event.repetition_type === "yearly") {
@@ -1299,11 +1307,39 @@ export default function MainFrame() {
           end: endDate.toISOString().slice(0, 19),
         });
         id++;
-        startDate = addYearsToSpecificDate(startDate, 1);
-        endDate = addYearsToSpecificDate(endDate, 1);
+        startDate = addYearsToSpecificDate(firstStartDate, counter);
+        endDate = addYearsToSpecificDate(firstEndDate, counter);
+        counter++;
       }
     } 
     else if (event.repetition_type === "custom") {
+      counter = event.repetition_val;
+      while (compareDates(startDate, boundary) == -1) {
+        eventArray.push({
+          id: id,
+          text: event_name,
+          start: startDate.toISOString().slice(0, 19),
+          end: endDate.toISOString().slice(0, 19),
+        });
+        id++;
+        if (event.repetition_unit === "days") {
+          startDate = addDaysToSpecificDate(firstStartDate, counter);
+          endDate = addDaysToSpecificDate(firstEndDate, counter);
+          counter += event.repetition_val;
+        } else if (event.repetition_unit === "weeks") {
+          startDate = addDaysToSpecificDate(firstStartDate, 7 * counter);
+          endDate = addDaysToSpecificDate(firstEndDate, 7 * counter);
+          counter += event.repetition_val;
+        } else if (event.repetition_unit === "months") {
+          startDate = addMonthsToSpecificDate(firstStartDate, counter);
+          endDate = addMonthsToSpecificDate(firstEndDate, counter);
+          counter += event.repetition_val;
+        } else {
+          startDate = addYearsToSpecificDate(firstStartDate, counter);
+          endDate = addYearsToSpecificDate(firstEndDate, counter);
+          counter += event.repetition_val;
+        }
+      }
     } 
     else {
       console.log("Error occurs: repetition type not parse correctly");
