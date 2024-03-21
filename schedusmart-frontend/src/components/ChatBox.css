@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+  }
+  .chat_box_container {
+    width: 450px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.4);
+  }
+  .info {
+    padding: 15px;
+  }
+  .messageBox {
+    flex: 1;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px 30px;
+    overflow: hidden;
+    overflow-y: scroll;
+  }
+  .rec {
+    background-color: rgb(0, 72, 255);
+    padding: 10px;
+    color: white;
+    width: fit-content;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    margin-left: auto;
+  }
+  .sent {
+    background-color: dodgerblue;
+    padding: 10px;
+    color: white;
+    width: fit-content;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+  .footer{
+      display: flex;
+  }
+  
+  .footer_input{
+      flex: 1;
+      height: 40px;
+      border: none;
+      outline: none;
+      padding-left: 5px;
+      font-size: 16px;
+  }
+  
+  .footer_button{
+      width: 100px;
+      font-size: 18px;
+      border: none;
+      outline: none;
+      background-color: dodgerblue;
+      color: white;
+      cursor: pointer;
+  }
+  .footer_button:hover{
+    background-color: blue;
+  }
