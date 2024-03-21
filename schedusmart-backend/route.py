@@ -285,3 +285,8 @@ def set_amount_of_time():
         response.status_code = 201
         return response
     '''
+
+@account.route('/upload', methods=['POST'])
+def upload_file():
+    response = jsonify({'message': 'success', "status" : 0})
+    return response

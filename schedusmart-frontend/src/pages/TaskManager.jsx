@@ -21,6 +21,9 @@ const initialList = [
     desc: "Complete design document and sumbit",
     completed: false,
     completed_time: null,
+    sub_tasks: [{id: 0, name: "Question 1", comp: true}, 
+                {id: 1, name: "Question 2", comp: true}, 
+                {id: 2, name: "Question 3", comp: false},], 
   },
   {
     id: 1,
@@ -30,6 +33,9 @@ const initialList = [
     desc: "Speak with team coordinator",
     completed: false,
     completed_time: null, 
+    sub_tasks: [{id: 0, name: "Backlog", comp: false}, 
+                {id: 1, name: "User Stories", comp: false}, 
+                {id: 2, name: "Acceptable Criteria", comp: false},], 
   },
   {
     id: 2,
@@ -39,6 +45,9 @@ const initialList = [
     desc: "Look at slides lol",
     completed: false,
     completed_time: null,
+    sub_tasks: [{id: 0, name: "Chapter 1", comp: true}, 
+                {id: 1, name: "Chapter 2", comp: false}, 
+                {id: 2, name: "Chapter 3", comp: false},], 
   },
 ];
 let nextId = initialList.length;
@@ -137,6 +146,20 @@ export default function TaskManager() {
         completedList.filter((task) => task.id !== taskID)
       );
     }
+  }
+
+  function handleToggleSubtask(id, sub_id, checked){
+    let mapped = todoList.map((task) => {
+      if (task.id == id) {
+        let sub_mapped = task.sub_tasks.map((sub_task) => {
+          return sub_task.id == sub_id ? {...sub_task, comp: checked} : {...sub_task};
+        })
+        return {...task, sub_tasks: sub_mapped}
+      } else {
+        return {...task};
+      }
+    })
+    setTodoList(mapped)
   }
 
   // search list
@@ -390,6 +413,7 @@ export default function TaskManager() {
             list={todoList}
             onToggle={handleToggleCompleted}
             option={sortOptionTodo}
+            onToggleSubtask={handleToggleSubtask}
           />
         </div>
         <div className="task-column">
@@ -462,7 +486,7 @@ export default function TaskManager() {
   );
 }
 
-function TodoList({ list, onToggle, option }) {
+function TodoList({ list, onToggle, option, onToggleSubtask }) {
   let sortedList = list;
 
   const idAscending = [...list].sort((a, b) => a.id - b.id);
@@ -494,10 +518,20 @@ function TodoList({ list, onToggle, option }) {
     sortedList = list;
   }
 
-  const formHandler = (e) => {
-    e.preventDefault();
-    const file = e.target[0].files[0];
-    console.log(file);
+  const progressValue = (id) => {
+    let progress = 0 
+    let n = 0
+    sortedList.map((task) => {
+      if (task.id == id) {
+        task.sub_tasks.map((sub_task) => {
+          n = n + 1
+          if (sub_task.comp == true) {
+            progress = progress + 1
+          }
+        })
+      }
+    })
+    return progress / n
   }
 
   return (
@@ -505,10 +539,25 @@ function TodoList({ list, onToggle, option }) {
       {sortedList.map((task) => (
         <div className="post" key={task.id}>
           <h3>{task.title}</h3>
+          <progress value={progressValue(task.id)}/>
           <p>{task.desc}</p>
           <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
           <p>File: {task.file}</p>
+          <h4>Task Checklist</h4>
+          {task.sub_tasks.map((sub_task) => (
+              <p key={sub_task.id}>
+                <input
+                  type="checkbox"
+                  checked={sub_task.comp}
+                  onChange={(e) => {
+                    onToggleSubtask(task.id, sub_task.id, e.target.checked)
+                  }}
+                />
+                {sub_task.name} 
+              </p>
+          ))}
+          <h4>Complete?</h4>
           <input
             type="checkbox"
             checked={task.completed}
