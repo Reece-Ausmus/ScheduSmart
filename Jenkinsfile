@@ -32,9 +32,5 @@ pipeline {
         sh 'docker push ${DOCKER_HUB}/${REPO_NAME}:frontend'
       }
     }
-  //post { // ensure docker logout
-  //  always {
-  //    sh 'docker logout'
-  //  }
   }
 }
