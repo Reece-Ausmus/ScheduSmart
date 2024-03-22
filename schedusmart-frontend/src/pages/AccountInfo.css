@@ -1,6 +1,7 @@
 .info_container{
-    background-color:#2d2d2d;
+    background-color:rgb(230, 230, 230);
     border-radius: 10px;
+    font-size:10px
 }
 
 .info{

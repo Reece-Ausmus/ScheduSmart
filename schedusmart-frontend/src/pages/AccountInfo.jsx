@@ -57,52 +57,53 @@ export default function AccountInfo(language) {
   }, []);
 
   return (
-    <div className="info_container">
-      <button onClick={handleInfo}>{languageData[language][0][0].restToDefault}</button>
-      <div>
-        <h1> {languageData[language][0][0].accountInformation} </h1>
-      </div>
-      <div className="info">
-        <label>
-          {languageData[language][0][0].firstName}{" "}
-          <input
-            value={firstname}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </label>
-      </div>
-      <div className="info">
-        <label>
-          {languageData[language][0][0].lastName}{" "}
-          <input
-            value={lastname}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </label>
-      </div>
-      <div className="info">
-        <label>
-          {languageData[language][0][0].userName}{" "}
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
-      </div>
-      <div className="info">
-        <label>
-          {languageData[language][0][0].email}{" "}
-          <input value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
-      </div>
-      <div className="info">
-        <label>
-          {languageData[language][0][0].location}{" "}
-          <input
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </label>
+    <div >
+      <div className="info_container">
+        <div>
+          <h1> {languageData[language][0][0].accountInformation} </h1>
+        </div>
+        <div className="info">
+          <label>
+            {languageData[language][0][0].firstName}{" "}
+            <input
+              value={firstname}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </label>
+        </div>
+        <div className="info">
+          <label>
+            {languageData[language][0][0].lastName}{" "}
+            <input
+              value={lastname}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </label>
+        </div>
+        <div className="info">
+          <label>
+            {languageData[language][0][0].userName}{" "}
+            <input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
+        </div>
+        <div className="info">
+          <label>
+            {languageData[language][0][0].email}{" "}
+            <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          </label>
+        </div>
+        <div className="info">
+          <label>
+            {languageData[language][0][0].location}{" "}
+            <input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+          </label>
+        </div>
       </div>
       <button
         onClick={async () => {
@@ -129,7 +130,7 @@ export default function AccountInfo(language) {
               user_name: username,
               email: email,
               user_id: userId,
-              location: location, 
+              location: location,
             };
             const response = await fetch(flaskURL + "/update_account_info", {
               method: "POST",
@@ -162,6 +163,7 @@ export default function AccountInfo(language) {
       >
         {languageData[language][0][0].Updateaccount}
       </button>
+      <button onClick={handleInfo}>{languageData[language][0][0].restToDefault}</button>
     </div>
   );
 }

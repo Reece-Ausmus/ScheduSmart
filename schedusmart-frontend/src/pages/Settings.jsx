@@ -124,25 +124,13 @@ export default function Settings() {
       <h1>{languageData[language][0][0].setting}</h1>
       {showLanguageSettingUI && <div>{languageSettingUIPackage()}</div>}
       <div>{AccountInfo(language)}</div>
-      <button
-        onClick={() => {
-          switchLanguageUI();
-        }}
-      >
+      <button onClick={() => {switchLanguageUI();}}>
         {languageData[language][0][0].language}
       </button>
-      <button
-        onClick={() => {
-          window.location.href = "/calendar";
-        }}
-      >
+      <button onClick={() => {window.location.href = "/calendar";}}>
         {languageData[language][0][0].calendar}
       </button>
-      <button
-        onClick={() => {
-          window.location.href = "/welcome";
-        }}
-      >
+      <button onClick={() => {window.location.href = "/welcome";}}>
         {languageData[language][0][0].signout}
       </button>
       <button
