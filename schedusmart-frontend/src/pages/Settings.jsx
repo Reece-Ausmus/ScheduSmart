@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import AccountInfo from "./AccountInfo.jsx";
 import languageData from "../components/language.json";
+import Reminder from "./Reminder";
 import "./Settings.css";
 import send_request from "./requester.jsx";
 
@@ -124,23 +125,9 @@ export default function Settings() {
       <h1>{languageData[language][0][0].setting}</h1>
       {showLanguageSettingUI && <div>{languageSettingUIPackage()}</div>}
       <div>{AccountInfo(language)}</div>
-      <button onClick={() => {switchLanguageUI();}}>
-        {languageData[language][0][0].language}
-      </button>
-      <button onClick={() => {window.location.href = "/calendar";}}>
-        {languageData[language][0][0].calendar}
-      </button>
-      <button onClick={() => {window.location.href = "/welcome";}}>
-        {languageData[language][0][0].signout}
-      </button>
-      <button
-        onClick={() => {
-          window.location.href = "/reminder";
-        }}
-      >
-        Reminder
-      </button>
-      <div className="reminder-settings">
+      <div>{Reminder()}</div>
+      <h2>virtualization settings</h2>
+      <div className="virtualization-settings reminder-settings">
         <p className="text"> {languageData[language][0][0].cvf}:</p>
         <select value={showVirtual} onChange={handleVirtualSelectChange}>
           {visualOptions.map((option) => (
@@ -150,6 +137,15 @@ export default function Settings() {
           ))}
         </select>
       </div>
+      <button onClick={() => {switchLanguageUI();}}>
+        {languageData[language][0][0].language}
+      </button>
+      <button onClick={() => {window.location.href = "/calendar";}}>
+        {languageData[language][0][0].calendar}
+      </button>
+      <button onClick={() => {window.location.href = "/welcome";}}>
+        {languageData[language][0][0].signout}
+      </button>
     </>
   );
 }

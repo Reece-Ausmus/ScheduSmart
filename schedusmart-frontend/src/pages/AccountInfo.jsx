@@ -60,7 +60,7 @@ export default function AccountInfo(language) {
     <div >
       <div className="info_container">
         <div>
-          <h1> {languageData[language][0][0].accountInformation} </h1>
+          <h2> {languageData[language][0][0].accountInformation} </h2>
         </div>
         <div className="info">
           <label>

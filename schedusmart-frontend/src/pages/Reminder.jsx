@@ -40,7 +40,7 @@ export default function Reminder() {
 
   return (
     <div>
-      <h2>Reminder Settings</h2>
+      <h2 className="reminder_header">Reminder Settings</h2>
       <div>
         <button onClick={toggleReminders}>
           {remindersOn ? "Turn Off Reminders" : "Turn On Reminders"}
