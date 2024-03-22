@@ -24,7 +24,7 @@ pipeline {
       steps {
         sh 'echo Test'
 
-        dir('schedusmart-backend'){}
+        dir('schedusmart-backend'){
           sh 'docker run -d --rm -p 5000:5000 --name schedusmart-backend-container schedusmart-backend'
         }
 
