@@ -103,7 +103,9 @@ export default function TaskManager() {
   const [taskDesc, setTaskDesc] = useState("");
   const [todoList, setTodoList] = useState(initialList);
   const [completedList, setCompletedList] = useState([]);
-  const [file, setFile] = useState();
+
+  const [subtaskList, setSubtaskList] = useState([]);
+  const [subtaskDesc, setSubtaskDesc] = useState("");
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -325,6 +327,8 @@ export default function TaskManager() {
             setTaskName("New Task");
             setTaskTime(0);
             setTaskDesc("Task Description");
+            setSubtaskDesc("");
+            setSubtaskList([]);
           }}
         >
           Add Task
@@ -363,12 +367,31 @@ export default function TaskManager() {
             value={taskDesc}
             onChange={(e) => setTaskDesc(e.target.value)}
           />
-          <label htmlFor="file">File:</label>
-          <input 
-            id="file"
-            type="file" 
-            onChange={(e) => setFile(e.target.files[0])}
+          <label htmlFor="subtask">Add subtask:</label>
+          <input
+            id="subtask"
+            value={subtaskDesc}
+            onChange={(e) => setSubtaskDesc(e.target.value)}
           />
+          <button onClick={() => {
+            setSubtaskList([
+              ...subtaskList,
+              {
+                id: subtaskList.length,
+                name: subtaskDesc,
+                comp: false,
+              },
+            ]);
+          }}>
+            +
+          </button>
+          <ol>
+          {subtaskList.map((subtask) => (
+            <li key={subtask.id}>
+              {subtask.name}
+            </li>
+          ))}
+          </ol>
           <button
             id="closeModal"
             onClick={() => {
@@ -381,6 +404,7 @@ export default function TaskManager() {
                 date: taskDate,
                 desc: taskDesc,
                 completed: false,
+                sub_tasks: subtaskList,
               },
               ]);
             }}
