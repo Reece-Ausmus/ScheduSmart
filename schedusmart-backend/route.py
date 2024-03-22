@@ -192,7 +192,7 @@ def get_calendar_default_mode():
     #    response.status_code = 206
     #    return
 
-    data = get_default_calendar_type(receive_user['userId'])
+    data = get_default_calendar_type(receive_user['user_id'])
     response = jsonify({'type': data})
     response.status_code = 201
 
