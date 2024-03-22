@@ -136,7 +136,7 @@ export default function Settings() {
       mode: location_mode,
       user_id: userId,
     };
-    const response = await fetch(flaskURL + "/update_location_mode", {
+    const response = await fetch(flaskURL + "/update_location_settings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

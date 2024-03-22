@@ -9,6 +9,7 @@ import moment from "moment";
 import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
 import send_request from "./requester";
+import locationMode from "./Settings.jsx"
 
 const steps = [
   {
@@ -1131,23 +1132,23 @@ export default function MainFrame() {
       togglePopup();
     };
     /*const handleSubmit = async () => {
-      let response = await fetch(flaskURL + "/set_amount_of_time", {
-        method: 'POST',
+          let response = await fetch(flaskURL + "/set_amount_of_time", {
+          method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           'user_id': userId,
-          'time': amountOfTime
+        'time': amountOfTime
         }),
         credentials: "include"
       })
-      let data = await response.json();
-      console.log(data.available);
-      //setSelectMode(data.type);
+        let data = await response.json();
+        console.log(data.available);
+        //setSelectMode(data.type);
 
-      setAmountOfTime("");
-      togglePopup();
+        setAmountOfTime("");
+        togglePopup();
     };*/
 
     return (
@@ -1348,12 +1349,12 @@ export default function MainFrame() {
     return eventArray;
     /*
     {
-      id: 2,
-      text: "Event 1",
-      start: "2023-10-02 10:30:00",
-      end: "2023-10-02 13:00:00",
+          id: 2,
+        text: "Event 1",
+        start: "2023-10-02 10:30:00",
+        end: "2023-10-02 13:00:00",
     }
-    */
+        */
   }
   useEffect(() => {
     const fetchEvents = async () => {
