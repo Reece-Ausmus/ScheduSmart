@@ -199,13 +199,30 @@ def get_calendar_default_mode():
     return response
 
 
-@account.route('/update_format', methods=['POST'])
+@account.route('/update_calendar_format', methods=['POST'])
 def update_calendar_format():
     info = request.get_json()
     try:
         ret = update_format(info)
         if ret == 1:
             response = jsonify({'error': 'calendar format can not be changed'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
+@account.route('/update_location_mode', methods=['POST'])
+def update_location_mode():
+    info = request.get_json()
+    try:
+        ret = update_location_settings(info)
+        if ret == 1:
+            response = jsonify({'error': 'location settings can not be changed'})
             response.status_code = 205
         else:
             response = jsonify({'message': 'Done'})

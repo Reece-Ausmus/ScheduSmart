@@ -386,12 +386,21 @@ def update_format(info):
     mode = info['mode']
     user_id = info['user_id']
     try:
-        db.child("User").child(user_id).child("default_calendar_type").update(mode)
+        db.child("User").child(user_id).child("default_calendar_type").set(mode)
         return 0
     except Exception:
         print("Failed to set the calendar mode")
         return 1
 
+def update_location_settings(info):
+    mode = info['mode']
+    user_id = info['user_id']
+    try:
+        db.child("User").child(user_id).child("default_location_settings").set(mode)
+        return 0
+    except Exception:
+        print("Failed to set the location settings")
+        return 1
 
 # used to test with firebase #######################
 

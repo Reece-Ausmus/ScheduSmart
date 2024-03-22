@@ -1219,17 +1219,17 @@ export default function MainFrame() {
       return 0;
     }
   }
-  
+
   function addDaysToSpecificDate(date, a) {
     const newDate = new Date(date.getTime() + a * 24 * 60 * 60 * 1000);
     return newDate;
   }
-  
+
   function addMonthsToSpecificDate(date, a) {
     const newDate = new Date(date.getFullYear(), date.getMonth() + a, date.getDate() + 1);
     return newDate;
   }
-  
+
   function addYearsToSpecificDate(date, a) {
     const newDate = new Date(date.getFullYear() + a, date.getMonth(), date.getDate() + 1);
     return newDate;
@@ -1237,15 +1237,15 @@ export default function MainFrame() {
 
   function eventParser(event, id_number, boundary) {
     const eventArray = [];
-  
+
     let id = id_number;
     let event_name = event.name;
-    
+
     const [year1, month1, day1] = event.start_date.split("-").map(Number);
     const [hour1, min1] = event.start_time.split(":").map(Number);
     const [year2, month2, day2] = event.end_date.split("-").map(Number);
     const [hour2, min2] = event.end_time.split(":").map(Number);
-  
+
     let firstStartDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
     firstStartDate.setMinutes(firstStartDate.getMinutes() - firstStartDate.getTimezoneOffset());
     let firstEndDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
@@ -1254,7 +1254,7 @@ export default function MainFrame() {
     let startDate = addDaysToSpecificDate(firstStartDate, 0);
     let endDate = addDaysToSpecificDate(firstEndDate, 0);
     let counter = 1;  //Default will add 1
-  
+
     if (event.repetition_type === "daily") {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
@@ -1268,7 +1268,7 @@ export default function MainFrame() {
         endDate = addDaysToSpecificDate(firstEndDate, counter);
         counter++;
       }
-    } 
+    }
     else if (event.repetition_type === "weekly") {
       counter = 7;
       while (compareDates(startDate, boundary) == -1) {
@@ -1297,7 +1297,7 @@ export default function MainFrame() {
         endDate = addMonthsToSpecificDate(firstEndDate, counter);
         counter++;
       }
-    } 
+    }
     else if (event.repetition_type === "yearly") {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
@@ -1311,7 +1311,7 @@ export default function MainFrame() {
         endDate = addYearsToSpecificDate(firstEndDate, counter);
         counter++;
       }
-    } 
+    }
     else if (event.repetition_type === "custom") {
       counter = event.repetition_val;
       while (compareDates(startDate, boundary) == -1) {
@@ -1340,11 +1340,11 @@ export default function MainFrame() {
           counter += event.repetition_val;
         }
       }
-    } 
+    }
     else {
       console.log("Error occurs: repetition type not parse correctly");
     }
-    
+
     return eventArray;
     /*
     {
@@ -1355,7 +1355,7 @@ export default function MainFrame() {
     }
     */
   }
-  useEffect( () => {
+  useEffect(() => {
     const fetchEvents = async () => {
       let events = await send_request("/get_events", { calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5" });
       if (events.data == undefined) return;
@@ -1380,7 +1380,7 @@ export default function MainFrame() {
 
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
-  
+
   if (goToDragAndDrop) {
     return (
       <>

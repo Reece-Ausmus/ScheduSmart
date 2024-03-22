@@ -8,9 +8,9 @@ import "./Settings.css";
 import send_request from "./requester.jsx";
 
 const flaskURL = "http://127.0.0.1:5000";
+const userId = sessionStorage.getItem("user_id");
 
 export default function Settings() {
-  const userId = sessionStorage.getItem("user_id");
   const fetchLanguage = async () => {
     const response = await fetch(flaskURL + "/", {
       method: "POST",
@@ -34,9 +34,16 @@ export default function Settings() {
   ]);
   const handleVirtualSelectChange = (e) => {
     setShowVirsual(parseInt(e.target.value));
-    console.log(parseInt(e.target.value));
     updateFormat(parseInt(e.target.value));
   };
+  const [locationMode, setLocationMode] = useState("text");
+  const toggleLocationMode = () => {
+    const newLocationMode = locationMode === "text" ? "map" : "text";
+    setLocationMode(newLocationMode);
+    console.log(newLocationMode);
+    updateLocationSettings(newLocationMode);
+  };
+  
   function switchLanguageUI() {
     setShowLanguageSettingUI(!showLanguageSettingUI);
   }
@@ -93,7 +100,7 @@ export default function Settings() {
       mode: calendar_mode,
       user_id: userId,
     };
-    const response = await fetch(flaskURL + "/update_format", {
+    const response = await fetch(flaskURL + "/update_calendar_format", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -120,13 +127,49 @@ export default function Settings() {
     }
   }
 
+  async function updateLocationSettings(location_mode) {
+    if (userId === "undefined") {
+      alert("userId disappear, so it will eventually fail");
+      return;
+    }
+    const info = {
+      mode: location_mode,
+      user_id: userId,
+    };
+    const response = await fetch(flaskURL + "/update_location_mode", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(info),
+    });
+    if (!response.ok) {
+      alert("something went wrong, refresh your website");
+    } else {
+      switch (response.status) {
+        case 201:
+          console.log("Change location settings successfully");
+          const responseData = await response.json();
+          const userId = responseData.user_id;
+          sessionStorage.setItem("user_id", userId);
+          break;
+        case 205:
+          alert("Failed to change the location settings");
+          break;
+        default:
+          alert("Unexpected response status: " + response.status);
+      }
+    }
+  }
+
   return (
     <>
       <h1>{languageData[language][0][0].setting}</h1>
       {showLanguageSettingUI && <div>{languageSettingUIPackage()}</div>}
       <div>{AccountInfo(language)}</div>
       <div>{Reminder()}</div>
-      <h2>virtualization settings</h2>
+      <h2>Virtualization settings</h2>
       <div className="virtualization-settings reminder-settings">
         <p className="text"> {languageData[language][0][0].cvf}:</p>
         <select value={showVirtual} onChange={handleVirtualSelectChange}>
@@ -137,6 +180,13 @@ export default function Settings() {
           ))}
         </select>
       </div>
+      <h2>Location settings</h2>
+      <div>
+      <button onClick={toggleLocationMode}>
+                        {locationMode === "text" ? "Choose Location from Map" : "Enter Location as Text"}
+                      </button>
+      </div>
+      <h2>Other settings</h2>
       <button onClick={() => {switchLanguageUI();}}>
         {languageData[language][0][0].language}
       </button>
