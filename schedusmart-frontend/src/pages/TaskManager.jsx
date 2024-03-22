@@ -3,6 +3,9 @@ import "./TaskManager.css";
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 import FileUpload from "./FileUpload";
+import { storage } from "./Firebase"
+import { listAll, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { v4 } from "uuid"
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -24,6 +27,7 @@ const initialList = [
     sub_tasks: [{id: 0, name: "Question 1", comp: true}, 
                 {id: 1, name: "Question 2", comp: true}, 
                 {id: 2, name: "Question 3", comp: false},], 
+    file_url: `files/Sunsert.jpg30913c50-5704-4589-91b0-87664d61bb2c`,
   },
   {
     id: 1,
@@ -36,6 +40,7 @@ const initialList = [
     sub_tasks: [{id: 0, name: "Backlog", comp: false}, 
                 {id: 1, name: "User Stories", comp: false}, 
                 {id: 2, name: "Acceptable Criteria", comp: false},], 
+    file_url: `files/Sunsert.jpg30913c50-5704-4589-91b0-87664d61bb2c`,
   },
   {
     id: 2,
@@ -47,7 +52,8 @@ const initialList = [
     completed_time: null,
     sub_tasks: [{id: 0, name: "Chapter 1", comp: true}, 
                 {id: 1, name: "Chapter 2", comp: false}, 
-                {id: 2, name: "Chapter 3", comp: false},], 
+                {id: 2, name: "Chapter 3", comp: false},],
+    file_url: `files/Sunsert.jpg30913c50-5704-4589-91b0-87664d61bb2c`, 
   },
 ];
 let nextId = initialList.length;
@@ -95,17 +101,19 @@ export default function TaskManager() {
   // select sort option
   const [sortOptionTodo, setSortOptionTodo] = useState(0);
   const [sortOptionCompleted, setSortOptionCompleted] = useState(0);
+  const [todoList, setTodoList] = useState(initialList);
+  const [completedList, setCompletedList] = useState([]);
 
   // used to hold data for tasks
   const [taskName, setTaskName] = useState("");
   const [taskTime, setTaskTime] = useState(0);
   const [taskDate, setTaskDate] = useState();
   const [taskDesc, setTaskDesc] = useState("");
-  const [todoList, setTodoList] = useState(initialList);
-  const [completedList, setCompletedList] = useState([]);
+  const [taskFile, setTaskFile] = useState();
 
   const [subtaskList, setSubtaskList] = useState([]);
   const [subtaskDesc, setSubtaskDesc] = useState("");
+  const [file, setFile] = useState(null)
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -306,10 +314,19 @@ export default function TaskManager() {
     }
   };
 
+  function uploadFile(fileRef, file) {
+      uploadBytes(fileRef, file).then(() => {
+          console.log("File Uploaded")
+      }).then(() => {
+        getDownloadURL(fileRef).then((url) => {
+          console.log(url)
+        })
+      })
+  }
+    
   return (
     <>
       <div>
-        <FileUpload/>
         <h1>Task List</h1>
         <select
           value={selectedFormat}
@@ -367,6 +384,16 @@ export default function TaskManager() {
             value={taskDesc}
             onChange={(e) => setTaskDesc(e.target.value)}
           />
+          <input
+            type="file"
+            onChange={(event) => {
+              setFile(event.target.files[0])
+              let ref_url = `files/${event.target.files[0].name + v4()}`
+              const fileRef = ref(storage, ref_url);
+              uploadFile(fileRef, event.target.files[0])
+              setTaskFile(ref_url)
+            }}
+          />
           <label htmlFor="subtask">Add subtask:</label>
           <input
             id="subtask"
@@ -405,6 +432,7 @@ export default function TaskManager() {
                 desc: taskDesc,
                 completed: false,
                 sub_tasks: subtaskList,
+                file_url: taskFile, 
               },
               ]);
             }}
@@ -558,6 +586,8 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
     return progress / n
   }
 
+  
+
   return (
     <div>
       {sortedList.map((task) => (
@@ -567,7 +597,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
           <p>{task.desc}</p>
           <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
-          <p>File: {task.file}</p>
+          <p><a href={getDownloadURL(ref(storage, task.file_url))}>Download File</a></p>
           <h4>Task Checklist</h4>
           {task.sub_tasks.map((sub_task) => (
               <p key={sub_task.id}>

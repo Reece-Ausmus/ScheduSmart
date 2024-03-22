@@ -37,10 +37,10 @@ export default function FileUpload() {
                 }}
             />
             <button onClick={uploadFile}>Upload File</button>
+            
 
             {fileList.map((url) => {
-                
-                return <img src={url}/>
+                console.log(url)
             })}
         </div>
     );
