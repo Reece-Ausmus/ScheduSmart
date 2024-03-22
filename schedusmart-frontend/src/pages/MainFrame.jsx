@@ -9,6 +9,7 @@ import moment from "moment";
 import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
 import send_request from "./requester";
+import chatBox from "../components/ChatBox";
 import locationMode from "./Settings.jsx"
 
 const steps = [
@@ -1439,7 +1440,7 @@ export default function MainFrame() {
           <div className="main_calnedar_box">{Calendar(selectMode, eventsArray)}</div>
         </div>
       </div>
-
+      <div className="ChatBox">{chatBox()}</div>
       {/* Event container */}
       <div className="event_container">
         <h1 className="Event_title">Assignment List</h1>

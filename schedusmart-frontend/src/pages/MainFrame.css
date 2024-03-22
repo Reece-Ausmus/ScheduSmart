@@ -173,3 +173,14 @@
 .isDates-grey {
     color: rgb(255, 0, 0);
   }
+
+  .ChatBox{
+    border: 5px dodgerblue solid;
+    border-style: inset;
+    height: auto;
+    position: fixed;
+    width: 400px;
+    bottom: 5px;
+    right: 5px;
+    background-color: aliceblue;
+  }
