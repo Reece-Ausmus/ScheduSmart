@@ -5,24 +5,37 @@ pipeline {
     stage('Build') {
       steps {
         sh 'echo Build'
-        //sh 'docker build -t my-flask-app .'
-        //sh 'docker tag my-flask-app $DOCKER_BFLASK_IMAGE'
+        sh 'docker-compose build --no-cache'
       }
     }
     stage('Test') {
       steps {
         sh 'echo Test'
-        //sh 'docker run my-flask-app python -m pytest app/tests/'
+        sh 'docker-compose up -d'
       }
     }
     stage('Deploy') {
       steps {
         sh 'echo Deploy'
+        sh 'docker-compose down'
+
+        // push images to docker repository
+        sh 'docker tag schedusmart-backend ${DOCKER_HUB}/${REPO_NAME}:backend'
+        sh 'docker push ${DOCKER_HUB}/${REPO_NAME}:backend'
+
+        sh 'docker tag schedusmart-frontend ${DOCKER_HUB}/${REPO_NAME}:frontend'
+        sh 'docker push ${DOCKER_HUB}/${REPO_NAME}:frontend'
+
         //withCredentials([usernamePassword(credentialsId: "${DOCKER_REGISTRY_CREDS}", passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
         //  sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
         //  sh 'docker push $DOCKER_BFLASK_IMAGE'
         //}
       }
+    }
+  }
+  post { // ensure docker logout
+    always {
+      sh 'docker logout'
     }
   }
 }
