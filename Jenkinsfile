@@ -19,18 +19,22 @@ pipeline {
         sh 'echo Deploy'
         sh 'docker-compose down'
 
-        // push images to docker repository
-        sh 'docker tag schedusmart-backend ${DOCKER_HUB}/${REPO_NAME}:backend'
-        sh 'docker push ${DOCKER_HUB}/${REPO_NAME}:backend'
-
-        sh 'docker tag schedusmart-frontend ${DOCKER_HUB}/${REPO_NAME}:frontend'
-        sh 'docker push ${DOCKER_HUB}/${REPO_NAME}:frontend'
+        // docker login 
+        withCredentials([usernamePassword(credentialsId: passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+          sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin docker.io"
       }
+
+      // push images to docker repository
+      sh 'docker tag schedusmart-backend ${DOCKER_HUB}/${REPO_NAME}:backend'
+      sh 'docker push ${DOCKER_HUB}/${REPO_NAME}:backend'
+
+      sh 'docker tag schedusmart-frontend ${DOCKER_HUB}/${REPO_NAME}:frontend'
+      sh 'docker push ${DOCKER_HUB}/${REPO_NAME}:frontend'
     }
   }
-  post { // ensure docker logout
-    always {
-      sh 'docker logout'
-    }
+  //post { // ensure docker logout
+  //  always {
+  //    sh 'docker logout'
+  //  }
   }
 }
