@@ -1,3 +1,5 @@
+# docker build -t schedusmart-frontend .
+# docker run -d --rm -p 5173:5173 --name schedusmart-fronend-container schedusmart-frontend
 FROM node:18-alpine
 
 WORKDIR /usr/src/app
