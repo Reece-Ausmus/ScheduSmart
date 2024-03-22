@@ -6,15 +6,18 @@ pipeline {
       steps {
         sh 'echo Build'
         // frontend
-        sh 'cd ./schedusmart-frontend'
-        sh 'pwd'
-        sh 'docker build -t schedusmart-frontend .'
-        sh 'docker run -d --rm -p 5173:5173 --name schedusmart-frontend-container schedusmart-frontend'
+        dir('schedusmart-frontend'){
+          sh 'pwd'
+          sh 'docker build -t schedusmart-frontend .'
+          sh 'docker run -d --rm -p 5173:5173 --name schedusmart-frontend-container schedusmart-frontend'
+        }
+
         // backend
-        sh 'cd ../schedusmart-backend'
-        sh 'pwd'
-        sh 'docker build -t schedusmart-backend .'
-        sh 'docker run -d --rm -p 5000:5000 --name schedusmart-backend-container schedusmart-backend'
+        dir('schedusmart-backend'){
+          sh 'pwd'
+          sh 'docker build -t schedusmart-backend .'
+          sh 'docker run -d --rm -p 5000:5000 --name schedusmart-backend-container schedusmart-backend'
+        }
       }
     }
     stage('Test') {
