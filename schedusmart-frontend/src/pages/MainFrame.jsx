@@ -1212,6 +1212,15 @@ export default function MainFrame() {
   const [selectedCalendar, setSelectedCalendar] = useState();
   const [eventsArray, setEventsArray] = useState([]);
 
+  useEffect(()=>{
+    const fetchDefaultMode = async () => {
+      let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {"user_id": userId});
+      if (dataOfDefaultMode.type == undefined) return;
+      setSelectMode(dataOfDefaultMode.type);
+    }
+    fetchDefaultMode();
+  }, [])
+
   function compareDates(date1, date2) {
     if (date1 > date2) {
       return 1;
@@ -1359,7 +1368,7 @@ export default function MainFrame() {
   }
   useEffect(() => {
     const fetchEvents = async () => {
-      let events = await send_request("/get_events", { calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5" });
+      let events = await send_request("/get_events", { "calendar_id": "15e1c4a5f82eeca0a8a57e19bdea4ea5" });
       if (events.data == undefined) return;
 
       const eventsArray = [];
