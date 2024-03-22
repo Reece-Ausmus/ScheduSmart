@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 # install and cache app dependencies
 COPY . /usr/src/app/
-RUN rm -r /usr/src/app/node_modules
+#RUN rm -r /usr/src/app/node_modules
 
 RUN npm install --force
 
