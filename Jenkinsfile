@@ -23,7 +23,11 @@ pipeline {
     stage('Test') {
       steps {
         sh 'echo Test'
-        //sh 'docker run my-flask-app python -m pytest app/tests/'
+
+        dir('schedusmart-frontend'){
+          // jtest for interactive web tours
+          sh 'npm run test'
+        }
       }
     }
     stage('Deploy') {
