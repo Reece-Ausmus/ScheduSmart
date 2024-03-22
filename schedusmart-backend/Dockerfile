@@ -1,5 +1,5 @@
 # docker build -t schedusmart-backend .
-# docker run -d -p 5000:5000 --name schedusmart-backend-container schedusmart-backend
+# docker run -d --rm -p 5000:5000 --name schedusmart-backend-container schedusmart-backend
 
 FROM python:3.9.2-slim
 

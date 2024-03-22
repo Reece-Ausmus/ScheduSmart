@@ -5,13 +5,21 @@ pipeline {
     stage('Build') {
       steps {
         sh 'echo Build'
-        //sh 'docker build -t my-flask-app .'
+        // frontend
+        sh 'cd ./schedusmart-frontend'
+        sh 'pwd'
+        sh 'docker build -t schedusmart-frontend .'
+        sh 'docker run -d --rm -p 5173:5173 --name schedusmart-frontend-container schedusmart-frontend'
+        // backend
+        sh 'cd ../schedusmart-backend'
+        sh 'pwd'
+        sh 'docker build -t schedusmart-backend .'
+        sh 'docker run -d --rm -p 5000:5000 --name schedusmart-backend-container schedusmart-backend'
       }
     }
     stage('Test') {
       steps {
         sh 'echo Test'
-        sh 'cd schedusmart-frontend && npm run test'
         //sh 'docker run my-flask-app python -m pytest app/tests/'
       }
     }
@@ -23,6 +31,11 @@ pipeline {
         //  sh 'docker push $DOCKER_BFLASK_IMAGE'
         //}
       }
+    }
+  }
+  post { // ensure docker logout
+    always {
+      sh 'docker logout'
     }
   }
 }
