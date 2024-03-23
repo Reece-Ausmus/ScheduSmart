@@ -175,12 +175,14 @@
   }
 
   .ChatBox{
-    border: 5px dodgerblue solid;
+    border-top: 5px blue solid;
+    border-left: 5px blue solid;
+    border-right: 5px blue solid;
     border-style: inset;
     height: auto;
     position: fixed;
     width: 400px;
-    bottom: 5px;
-    right: 5px;
+    bottom: 0px;
+    right: 0px;
     background-color: aliceblue;
   }

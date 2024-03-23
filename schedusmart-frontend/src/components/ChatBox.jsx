@@ -1,25 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef} from "react";
 import "./ChatBox.css";
 
 export default function chatBox() {
   const [isScrollToBottom, setIsScrollToBottom] = useState(false);
+  const [isExpand, setIsExpand] = useState(false);
+  const messageEndRef = useRef(null);
+  const [input, setInput] = useState("");
 
   function scroll_buttom() {
-    var messageBox = document.querySelector(".messageBox");
-    messageBox.scrollTop = messageBox.scrollHeight;
+    messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }
+
+  useEffect(() => {
+    scroll_buttom();
+  });
+
+  const inputRef = useRef("");
 
   return (
     <>
-      <div className="chat_box_container">
+      <button className="expandButton" onClick={ () => {
+        setIsExpand(!isExpand);
+        console.log(isExpand);
+      }}>{isExpand ? "Collapse" : "Expand"}</button>
+      <div className="chat_box_container2" style={{ display: isExpand ? "flex" : "none" }}>
         <div className="info">
           <button
             className="info_button"
             onClick={() => {
-              console.log("I'm");
+
             }}
-          >
-            &lqt;
+          >&lt;
           </button>
           <p>Friends</p>
         </div>
@@ -41,14 +52,16 @@ export default function chatBox() {
           <p className="sent">Hi?</p>
           <p className="sent">Hi?</p>
           <p className="sent">Hi?</p>
+          <div ref={messageEndRef} />
         </div>
         <div className="footer">
-          <input className="footer_input" type="text" name="" />
+          <input className="footer_input" type="text" name="h" ref={inputRef}/>
           <button
             className="footer_button"
             onClick={() => {
-              console.log("clicked");
               scroll_buttom();
+              console.log(inputRef.current.value);
+              inputRef.current.value = "";
             }}
           >
             SEND
