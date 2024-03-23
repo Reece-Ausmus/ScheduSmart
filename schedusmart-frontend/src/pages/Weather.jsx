@@ -48,11 +48,15 @@ export default function Weather() {
   }, []);
 
   const searchPressed = () => {
-    fetch(`${api.base}weather?q=${location}&units=imperial&APPID=${api.key}`)
-      .then((res) => res.json())
-      .then((result) => {
-        setWeather(result);
-      });
+    try {
+      fetch(`${api.base}weather?q=${location}&units=imperial&APPID=${api.key}`)
+        .then((res) => res.json())
+        .then((result) => {
+          setWeather(result);
+        });
+    } catch {
+      console.log("Error! Refresh Page")
+    }
   };
 
   return (
