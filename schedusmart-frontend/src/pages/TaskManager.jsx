@@ -27,7 +27,7 @@ const initialList = [
     sub_tasks: [{id: 0, name: "Question 1", comp: true}, 
                 {id: 1, name: "Question 2", comp: true}, 
                 {id: 2, name: "Question 3", comp: false},], 
-    file_url: `files/Sunsert.jpg30913c50-5704-4589-91b0-87664d61bb2c`,
+    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
   },
   {
     id: 1,
@@ -40,7 +40,7 @@ const initialList = [
     sub_tasks: [{id: 0, name: "Backlog", comp: false}, 
                 {id: 1, name: "User Stories", comp: false}, 
                 {id: 2, name: "Acceptable Criteria", comp: false},], 
-    file_url: `files/Sunsert.jpg30913c50-5704-4589-91b0-87664d61bb2c`,
+    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
   },
   {
     id: 2,
@@ -53,7 +53,7 @@ const initialList = [
     sub_tasks: [{id: 0, name: "Chapter 1", comp: true}, 
                 {id: 1, name: "Chapter 2", comp: false}, 
                 {id: 2, name: "Chapter 3", comp: false},],
-    file_url: `files/Sunsert.jpg30913c50-5704-4589-91b0-87664d61bb2c`, 
+    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`, 
   },
 ];
 let nextId = initialList.length;
@@ -96,6 +96,7 @@ export default function TaskManager() {
 
   useEffect(() => {
     handleInfo();
+    nextId = todoList.length;
   }, []);
 
   // select sort option
@@ -323,6 +324,39 @@ export default function TaskManager() {
         })
       })
   }
+
+  const saveTasks = async () => {
+    const info = {
+      user_id: userId,
+      task_list: todoList 
+    };
+    const response = await fetch(flaskURL + "/update_task", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(info),
+    });
+    if (!response.ok) {
+      alert("something went wrong, refresh your website");
+    } else {
+      switch (response.status) {
+        case 201:
+          console.log("Updated task list!");
+          alert("Task list saved!")
+          break;
+        case 205:
+          console.log("Failed to save task list! Check Connection!");
+          alert("Failed to save task list! Check New Information!");
+          break;
+        case 206:
+          console.log("Saved task list! Missing info!");
+          alert("Failed to save task list!");
+          break;
+      }
+    }
+  }
     
   return (
     <>
@@ -346,6 +380,7 @@ export default function TaskManager() {
             setTaskDesc("Task Description");
             setSubtaskDesc("");
             setSubtaskList([]);
+            setTaskFile("")
           }}
         >
           Add Task
@@ -425,7 +460,7 @@ export default function TaskManager() {
               setTodoList([
                 ...todoList,
                 {
-                id: nextId++,
+                id: todoList.length,
                 title: taskName,
                 time: taskTime,
                 date: taskDate,
@@ -435,11 +470,9 @@ export default function TaskManager() {
                 file_url: taskFile, 
               },
               ]);
-            }}
-          >
-            Add
-          </button>
-      </dialog>
+            }
+          }> Add </button>
+        </dialog>
       <div className="task-columns-container">
         <div className="task-column">
           <h2>To Do</h2>
@@ -498,39 +531,7 @@ export default function TaskManager() {
         </div>
       </div>
       <button
-        onClick={async () => {
-            const info = {
-              user_id: userId,
-              task_list: todoList 
-            };
-            const response = await fetch(flaskURL + "/update_task", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-
-              body: JSON.stringify(info),
-            });
-            if (!response.ok) {
-              alert("something went wrong, refresh your website");
-            } else {
-              switch (response.status) {
-                case 201:
-                  console.log("Updated task list!");
-                  alert("Task list saved!")
-                  break;
-                case 205:
-                  console.log("Failed to save task list! Check Connection!");
-                  alert("Failed to save task list! Check New Information!");
-                  break;
-                case 206:
-                  console.log("Saved task list! Missing info!");
-                  alert("Failed to save task list!");
-                  break;
-              }
-            }
-          }
-        }
+        onClick={saveTasks}
       >
         Save Tasks
       </button>
@@ -540,6 +541,19 @@ export default function TaskManager() {
 
 function TodoList({ list, onToggle, option, onToggleSubtask }) {
   let sortedList = list;
+
+  const [fileList, setFileList] = useState([])
+
+  const fileListRef = ref(storage, "files/")
+  useEffect(() => {
+    listAll(fileListRef).then((response) => {
+        response.items.forEach((item) => {
+            getDownloadURL(item).then((url) => {
+                setFileList((prev) => [...prev, url]);
+            })
+        })
+    })
+  }, [])
 
   const idAscending = [...list].sort((a, b) => a.id - b.id);
   const idDescending = [...list].sort((a, b) => b.id - a.id);
@@ -586,8 +600,6 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
     return progress / n
   }
 
-  
-
   return (
     <div>
       {sortedList.map((task) => (
@@ -597,7 +609,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
           <p>{task.desc}</p>
           <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
-          <p><a href={getDownloadURL(ref(storage, task.file_url))}>Download File</a></p>
+          <p><a href={fileList[task.id]}>Get Attached File!</a></p>
           <h4>Task Checklist</h4>
           {task.sub_tasks.map((sub_task) => (
               <p key={sub_task.id}>
