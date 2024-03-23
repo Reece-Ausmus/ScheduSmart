@@ -153,6 +153,9 @@
 .pop-content {
   text-align: "left";
 }
+.calendar_option{
+  background-color: white;
+}
 .formgroup {
   margin-top: 10px;
   display: flex;
