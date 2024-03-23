@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import GoogleMapReact from "google-map-react";
+import { Icon } from "@iconify/react";
+import locationIcon from "@iconify/icons-mdi/map-marker";
 
 const Map = () => {
     const [location, setLocation] = useState("");
@@ -27,13 +30,24 @@ const Map = () => {
             map.addListener('tilesloaded', () => {
                 autocomplete.addListener('place_changed', onPlaceChanged);
             });
+
+            // Add a marker at the initial map center
+            new window.google.maps.Marker({
+                position: mapCenter,
+                map: map,
+                icon: {
+                    url: locationIcon,
+                    scaledSize: new window.google.maps.Size(30, 30),
+                },
+                title: 'Marker Title',
+            });
         };
         document.body.appendChild(script);
 
         return () => {
             document.body.removeChild(script);
         };
-    }, [mapCenter]); 
+    }, [mapCenter]);
 
     const onPlaceChanged = () => {
         let place = autocomplete.getPlace();
@@ -63,7 +77,8 @@ const Map = () => {
                     onChange={handleInputChange}
                 />
             </div>
-            <div id="map" className="google-map" style={{ height: '200px', width: '200%' }}></div>
+            <div id="map" className="google-map" style={{ height: '200px', width: '200%' }}>
+            </div>
         </div>
     );
 };
