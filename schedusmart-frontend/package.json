@@ -14,6 +14,8 @@
     "@daypilot/daypilot-lite-react": "^3.21.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@iconify/icons-mdi": "^1.2.48",
+    "@iconify/react": "^4.1.1",
     "@material-ui/core": "^5.0.0-beta.5",
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.15.10",
@@ -21,6 +23,7 @@
     "@react-google-maps/api": "^2.19.3",
     "file-saver": "^2.0.5",
     "firebase": "^10.8.0",
+    "google-map-react": "^2.2.1",
     "google-maps-react": "^2.0.6",
     "jspdf": "^2.5.1",
     "luxon": "^3.4.4",
@@ -31,7 +34,8 @@
     "react-dom": "^18.2.0",
     "react-joyride": "^2.7.2",
     "react-router-dom": "^6.22.1",
-    "react-toastify": "^10.0.4"
+    "react-toastify": "^10.0.4",
+    "uuid": "^9.0.1"
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
