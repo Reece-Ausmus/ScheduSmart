@@ -1012,6 +1012,50 @@ export default function MainFrame() {
   }
 
   function calendarControlFlowButtonPackage() {
+    
+    /*const d = moment();
+    const [currentTime, setCurrentTime] = useState(d);
+    
+    // plus
+    useHotkeys('Shift+p', () => {
+      //today.setDate(today.getDate() + 1)
+      //console.log(today.toString())
+      console.log(selectMode)
+
+      //setCurrentTime(moment(currentTime.add(1, "days")));
+      //console.log(currentTime.format('MM/DD'))
+      
+      switch(selectMode) {
+        case 1: case 2:
+          today.setDate(today.getDate() + 1)
+          //setCurrentTime(moment(currentTime.add(1, "days")));
+
+          setDetailInfo(
+            //const temp = currentTime.format('MM/DD')
+            //String(currentTime.format('MM/DD'))
+            String(today.getMonth() + 1) + "/" + String(today.getDate())
+          );
+          console.log(today)
+          break;
+        case 3:
+          today.setDate(today.getMonth() + 1)
+          setDetailInfo(monthArray[todayMonth]);
+          break;
+        case 4:
+          today.setFullYear(today.getFullYear() + 1)
+          break;
+      }
+      
+      setDetailInfo(
+        String(today.getMonth() + 1) + "/" + String(today.getDate())
+      );
+    });
+    // minus
+    useHotkeys('Shift+m', () => {
+      //today.setDate(today.getDate() - 1)
+      console.log(today.toString())
+    });*/
+
     return (
       <div className="buttonGroup">
         <button
@@ -1235,7 +1279,7 @@ export default function MainFrame() {
     "November",
     "December",
   ];
-  const todayYear = today.getFullYear();
+  //const todayYear = today.getFullYear();
 
   const [detailInfo, setDetailInfo] = useState(
     String(today.getMonth() + 1) + "/" + String(today.getDate())
