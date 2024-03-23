@@ -83,11 +83,11 @@ def user_data():
     return response
 
 
-@account.route('/update_location_mode', methods=['POST'])
-def update_location_mode():
+@account.route('/update_location_settings', methods=['POST'])
+def update_location_settings():
     info = request.get_json()
     try:
-        ret = update_location_settings(info)
+        ret = update_default_location_settings(info)
         if ret == 1:
             response = jsonify({'error': 'location settings can not be changed'})
             response.status_code = 205
@@ -98,6 +98,14 @@ def update_location_mode():
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
+    return response
+
+@account.route('/get_location_default_settings', methods=['POST'])
+def get_location_default_settings():
+    receive_user = request.get_json()
+    data = get_default_location_settings(receive_user['user_id'])
+    response = jsonify({'type': data})
+    response.status_code = 201
     return response
 
 

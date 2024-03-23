@@ -382,7 +382,7 @@ def get_default_calendar_type(uid):
     return type.val()
 
 
-def update_format(info):
+def update_default_calendar_type(info):
     mode = info['mode']
     user_id = info['user_id']
     try:
@@ -392,7 +392,11 @@ def update_format(info):
         print("Failed to set the calendar mode")
         return 1
 
-def update_location_settings(info):
+def get_default_location_settings(user_id):
+    mode=db.child("User").child(user_id).child("default_location_settings").get()
+    return mode.val()
+
+def update_default_location_settings(info):
     mode = info['mode']
     user_id = info['user_id']
     try:

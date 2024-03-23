@@ -115,7 +115,7 @@ def get_calendar_default_mode():
 def update_calendar_format():
     info = request.get_json()
     try:
-        ret = update_format(info)
+        ret = update_default_calendar_type(info)
         if ret == 1:
             response = jsonify({'error': 'calendar format can not be changed'})
             response.status_code = 205
