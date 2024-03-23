@@ -10,6 +10,8 @@ import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
 import send_request from "./requester";
 import chatBox from "../components/ChatBox";
+import Map from "./Googlemap";
+// import MapContainer from './Googlemap';
 
 const steps = [
   {
@@ -78,12 +80,12 @@ export default function MainFrame() {
       } else if (LocationSettings === "map") {
         return (
           <div>
-            {/* Render Google Map component here */}
-            <p>Google Map Placeholder</p>
+            <Map/>
           </div>
         );
       }
     };
+
     const toggleEventPopup = () => {
       setShowEventPopup(!showEventPopup);
     };
