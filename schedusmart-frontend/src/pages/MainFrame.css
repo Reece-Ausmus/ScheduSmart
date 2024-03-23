@@ -1,188 +1,183 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 .container {
-    height: 100vh;
-    width: 100%;
-    padding: 0px;
-    background-color: #b1b1b1;
+  width: 100vw;
+  height: 140vh;
+  padding: 50px;
+  padding-top: 25px;
+  background-color: #b1b1b1;
 }
-.title{
-    top: 35px;
-    margin-left: 30px;
-    font-size: 200px;
-    display: inline;
-    color: rgb(52, 52, 52);
-    font-size: 25px;
-    margin-left: 40px;
+.title {
+  font-size: 250px;
+  font-weight: bolder;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  display: inline;
+  color: rgb(52, 52, 52);
+  font-size: 50px;
 }
-.upperBar{
-    background-color: #b1b1b1;
-    height: 100px;
-    width: 100%;
+.upperBar {
+  background-color: #b1b1b1;
+  height: 85px;
+  width: 100%;
 }
-.upperBarButton{
-    background-color: #5a5a5a;
-    color: rgb(223, 118, 43);
-    float: right;
-    top: 35px;
-    margin: 10px;
-}
-
-
-
-.weather_container{
-    float: left;
-    right: 2%;
-    width: 20%;
-    height: 60px;
-    background-color:#2d2d2d;
-    border-radius: 10px;
-    margin-right: 10px;
+.upperBarButton {
+  background-color: #5a5a5a;
+  color: rgb(223, 118, 43);
+  float: right;
+  top: 35px;
+  margin: 10px;
 }
 
-.weather{
-    color: rgb(223, 118, 43);
-    margin-top: 4%;
-    text-align: center;
-    font-size: 14px
+.weather_container {
+  float: left;
+  right: 2%;
+  width: 20%;
+  height: 60px;
+  background-color: #2d2d2d;
+  border-radius: 10px;
+  margin-right: 10px;
 }
 
-.calender_container{
-    position: absolute;
-    width: 60%;
-    height: 680px;
-    background-color: #3c3c3c;
-    border-radius: 10px;
-    padding: 10px;
+.weather {
+  color: rgb(223, 118, 43);
+  margin-top: 4%;
+  text-align: center;
+  font-size: 14px;
 }
 
-.month_table{
-    height: 600px;
-    width: 100%;
+.calender_container {
+  position: absolute;
+  width: 60%;
+  height: 665px;
+  background-color: #3c3c3c;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left;
 }
 
-
-
-.calender_container_controlbar{
-    display: block;
-    height: 10%;
+.month_table {
+  height: 575px;
+  width: 100%;
 }
-.sub_main_calnedar_box{
-    height: auto;
+
+.calender_container_controlbar {
+  display: block;
+  height: 10%;
+}
+.sub_main_calnedar_box {
+  height: auto;
 }
 .buttonGroup {
-    margin-right: 2%;
+  margin-right: 2%;
+  float: right;
 }
 .modeButton {
-    padding: auto;
-    margin-top: 15px;
-    margin-right:5px;
-    background-color: #2d2d2d;
-    border: 2px;
-    border-style: inset;
-    color:rgb(223, 118, 43);
-    float: right;
+  padding: auto;
+  margin-top: 15px;
+  margin-right: 5px;
+  background-color: #2d2d2d;
+  border: 2px;
+  border-style: inset;
+  color: rgb(223, 118, 43);
 }
-.detailInfo{
-    position: absolute;
-    left: 30px;
-    float:left;
-    color: aliceblue;
-}
-
-.head_month_box{
-    background-color: aliceblue;
-    color: black;
-    height: 30px;
-    width: 14.285%;
-    text-align: center;
-}
-.body_month_box{
-    vertical-align: top;
-    height: 50px;
-    background-color: aliceblue;
-    color: black;
+.detailInfo {
+  position: absolute;
+  left: 30px;
+  float: left;
+  color: aliceblue;
 }
 
-.event_container{
-    float: right;
-    right:2%;
-    width: 20%;
-    height: 600px;
-    background-color: #3c3c3c;
-    border-radius: 10px;
+.head_month_box {
+  background-color: aliceblue;
+  color: black;
+  height: 30px;
+  width: 14.285%;
+  text-align: center;
 }
-.Event_title{
-    color: aliceblue;
-    font-size: 25px;
-}
-.ToDoList{
-    margin-left: 5%;
-    border-radius: 10px;
-    width: 90%;
-    height: 87%;
-    background-color: aliceblue;
+.body_month_box {
+  vertical-align: top;
+  background-color: aliceblue;
+  color: black;
 }
 
-
-.MonthBoxFor4{
+.MonthBoxFor4 {
     padding: 5px;
     vertical-align: top;
-    height: 50px;
     width: 25%;
     margin: 1px;
     background-color: aliceblue;
     color: black;
 }
-.add_button{
-    background-color: #5a5a5a;
-    color: rgb(223, 118, 43);
-    float: right;
-    top: 35px;
-    margin: 10px;
+
+.event_container {
+  float: right;
+  right: 2%;
+  width: 30%;
+  height: 665px;
+  background-color: #3c3c3c;
+  border-radius: 10px;
+}
+.Event_title {
+  color: aliceblue;
+  font-size: 25px;
+}
+.ToDoList {
+  margin-left: 5%;
+  border-radius: 10px;
+  width: 90%;
+  height: 87%;
+  background-color: aliceblue;
+}
+
+
+.add_button {
+  background-color: #5a5a5a;
+  color: rgb(223, 118, 43);
+  float: right;
+  top: 35px;
+  margin: 10px;
 }
 .popup {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000; 
-  }
-  .pop-content{
-    text-align: 'left';
-  }
-  .formgroup{
-    margin-top: 10px;
-    display: flex;
-    gap: 20px;
-  }
-  .formbutton{
-    margin-top: 10px;
-  }
-.fb2{
-    margin-left:20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+.pop-content {
+  text-align: "left";
+}
+.formgroup {
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+}
+.formbutton {
+  margin-top: 10px;
+}
+.fb2 {
+  margin-left: 20px;
 }
 
 .isDates-grey {
-    color: rgb(255, 0, 0);
-  }
+  color: rgb(255, 0, 0);
+}
 
-  .ChatBox{
-    border-top: 5px blue solid;
-    border-left: 5px blue solid;
-    border-right: 5px blue solid;
-    border-style: inset;
-    height: auto;
-    position: fixed;
-    width: 400px;
-    bottom: 0px;
-    right: 0px;
-    background-color: aliceblue;
-  }
+.ChatBox {
+  border-top: 5px blue solid;
+  border-left: 5px blue solid;
+  border-right: 5px blue solid;
+  border-style: inset;
+  height: auto;
+  position: fixed;
+  width: 400px;
+  bottom: 0px;
+  right: 0px;
+  background-color: aliceblue;
+}

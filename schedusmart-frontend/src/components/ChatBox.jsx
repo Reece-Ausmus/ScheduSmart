@@ -1,11 +1,24 @@
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import "./ChatBox.css";
 
-export default function chatBox() {
-  const [isScrollToBottom, setIsScrollToBottom] = useState(false);
+const generateHTML = (arr, userId) => {
+  const keys = Object.keys(arr);
+  return keys.map((key) => (
+    <p key={key} className={userId == arr[key].type ? "rec":"sent"}>
+      {arr[key].string}
+    </p>
+  ));
+};
+
+export default function chatBox(friends, message, userId = 1) {
+  const [messageArr, setMessageArr] = useState({
+    1: { "string": "string1", "type": 1 },
+    2: { "string": "string2", "type": 1 },
+    3: { "string": "string3", "type": 2 },
+  });
+
   const [isExpand, setIsExpand] = useState(false);
   const messageEndRef = useRef(null);
-  const [input, setInput] = useState("");
 
   function scroll_buttom() {
     messageEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -19,53 +32,53 @@ export default function chatBox() {
 
   return (
     <>
-      <button className="expandButton" onClick={ () => {
-        setIsExpand(!isExpand);
-        console.log(isExpand);
-      }}>{isExpand ? "Collapse" : "Expand"}</button>
-      <div className="chat_box_container2" style={{ display: isExpand ? "flex" : "none" }}>
-        <div className="info">
-          <button
-            className="info_button"
-            onClick={() => {
+      <button
+        className="expandButton"
+        onClick={() => {
+          setIsExpand(!isExpand);
+          console.log(isExpand);
+        }}
+      >
+        {isExpand ? "Collapse" : "Expand"}
+      </button>
+      <div
+        className="chat_box_container"
+        style={{ display: isExpand ? "flex" : "none" }}
+      >
+        <div className="chat_box_container2">
+          <div className="info">
+            <button className="info_button" onClick={() => {}}>
+              &lt;
+            </button>
+            <p>Friends</p>
+          </div>
 
-            }}
-          >&lt;
-          </button>
-          <p>Friends</p>
-        </div>
-
-        <div className="messageBox">
-          <p className="rec">Hi</p>
-          <p className="sent">Hi</p>
-          <p className="rec">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Architecto
-            culpa sequi praesentium, eos animi iusto, fuga eaque magni repellat
-            eum, assumenda odit! Excepturi dolore veritatis aspernatur vitae
-            sint. Quos, nesciunt?
-          </p>
-          <p className="sent">Hi?</p>
-          <p className="sent">Hi?</p>
-          <p className="sent">Hi?</p>
-          <p className="sent">Hi?</p>
-          <p className="sent">Hi?</p>
-          <p className="sent">Hi?</p>
-          <p className="sent">Hi?</p>
-          <p className="sent">Hi?</p>
-          <div ref={messageEndRef} />
-        </div>
-        <div className="footer">
-          <input className="footer_input" type="text" name="h" ref={inputRef}/>
-          <button
-            className="footer_button"
-            onClick={() => {
-              scroll_buttom();
-              console.log(inputRef.current.value);
-              inputRef.current.value = "";
-            }}
-          >
-            SEND
-          </button>
+          <div className="messageBox">
+            <p className="rec">Hi</p>
+            <div>{generateHTML(messageArr, userId)}</div>
+            <div ref={messageEndRef} />
+          </div>
+          <div className="footer">
+            <input
+              className="footer_input"
+              type="text"
+              name="h"
+              ref={inputRef}
+            />
+            <button
+              className="footer_button"
+              onClick={() => {
+                console.log("length", Object.keys(messageArr).length);
+                if (inputRef.current.value !== "") {
+                  setMessageArr((prevState) => ({ ...prevState, [Object.keys(messageArr).length + 1]: { string: inputRef.current.value, type: 1 } }));
+                }
+                scroll_buttom();
+                inputRef.current.value = "";
+              }}
+            >
+              SEND
+            </button>
+          </div>
         </div>
       </div>
     </>

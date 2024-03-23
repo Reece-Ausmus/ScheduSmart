@@ -11,7 +11,7 @@ import Calendar from "./Calendar";
 import send_request from "./requester";
 import chatBox from "../components/ChatBox";
 import Map from "./Googlemap";
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useHotkeys } from "react-hotkeys-hook";
 // import MapContainer from './Googlemap';
 
 const steps = [
@@ -62,12 +62,15 @@ export default function MainFrame() {
     const [LocationSettings, setLocationSettings] = useState("text");
     useEffect(() => {
       const fetchDefaultsettings = async () => {
-        let dataOfDefaultsettings = await send_request("/get_location_default_settings", { "user_id": userId });
+        let dataOfDefaultsettings = await send_request(
+          "/get_location_default_settings",
+          { user_id: userId }
+        );
         if (dataOfDefaultsettings.type == undefined) return;
         setLocationSettings(dataOfDefaultsettings.type);
-      }
+      };
       fetchDefaultsettings();
-    }, [])
+    }, []);
     const renderLocationInput = () => {
       if (LocationSettings === "text") {
         return (
@@ -81,14 +84,16 @@ export default function MainFrame() {
       } else if (LocationSettings === "map") {
         return (
           <div>
-            <Map/>
+            <Map />
           </div>
         );
       }
     };
 
     // shortcut to control popup event
-    useHotkeys('Shift+a', () => {toggleEventPopup()});
+    useHotkeys("Shift+a", () => {
+      toggleEventPopup();
+    });
 
     const toggleEventPopup = () => {
       setShowEventPopup(!showEventPopup);
@@ -1012,7 +1017,6 @@ export default function MainFrame() {
   }
 
   function calendarControlFlowButtonPackage() {
-    
     /*const d = moment();
     const [currentTime, setCurrentTime] = useState(d);
     
@@ -1060,34 +1064,20 @@ export default function MainFrame() {
       <div className="buttonGroup">
         <button
           className="modeButton"
-          id="4"
+          id="1"
           onClick={() => {
-            setSelectMode(4);
-            document.getElementById("1").style.backgroundColor = "#2d2d2d";
+            setSelectMode(1);
+            document.getElementById("1").style.backgroundColor = "#cfcfcf";
             document.getElementById("2").style.backgroundColor = "#2d2d2d";
             document.getElementById("3").style.backgroundColor = "#2d2d2d";
-            document.getElementById("4").style.backgroundColor = "#cfcfcf";
-            setDetailInfo(todayYear);
-          }}
-        >
-          year
-        </button>
-
-        <button
-          className="modeButton"
-          id="3"
-          onClick={() => {
-            setSelectMode(3);
-            document.getElementById("1").style.backgroundColor = "#2d2d2d";
-            document.getElementById("2").style.backgroundColor = "#2d2d2d";
-            document.getElementById("3").style.backgroundColor = "#cfcfcf";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
-            setDetailInfo(monthArray[todayMonth]);
+            setDetailInfo(
+              String(today.getMonth() + 1) + "/" + String(today.getDate())
+            );
           }}
         >
-          month
+          day
         </button>
-
         <button
           className="modeButton"
           id="2"
@@ -1104,22 +1094,33 @@ export default function MainFrame() {
         >
           week
         </button>
-
         <button
           className="modeButton"
-          id="1"
+          id="3"
           onClick={() => {
-            setSelectMode(1);
-            document.getElementById("1").style.backgroundColor = "#cfcfcf";
+            setSelectMode(3);
+            document.getElementById("1").style.backgroundColor = "#2d2d2d";
             document.getElementById("2").style.backgroundColor = "#2d2d2d";
-            document.getElementById("3").style.backgroundColor = "#2d2d2d";
+            document.getElementById("3").style.backgroundColor = "#cfcfcf";
             document.getElementById("4").style.backgroundColor = "#2d2d2d";
-            setDetailInfo(
-              String(today.getMonth() + 1) + "/" + String(today.getDate())
-            );
+            setDetailInfo(monthArray[todayMonth]);
           }}
         >
-          day
+          month
+        </button>
+        <button
+          className="modeButton"
+          id="4"
+          onClick={() => {
+            setSelectMode(4);
+            document.getElementById("1").style.backgroundColor = "#2d2d2d";
+            document.getElementById("2").style.backgroundColor = "#2d2d2d";
+            document.getElementById("3").style.backgroundColor = "#2d2d2d";
+            document.getElementById("4").style.backgroundColor = "#cfcfcf";
+            setDetailInfo(todayYear);
+          }}
+        >
+          year
         </button>
       </div>
     );
@@ -1291,19 +1292,20 @@ export default function MainFrame() {
 
   useEffect(() => {
     const fetchDefaultMode = async () => {
-      let dataOfDefaultMode = await send_request("/get_calendar_default_mode", { "user_id": userId });
+      let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {
+        user_id: userId,
+      });
       if (dataOfDefaultMode.type == undefined) return;
       setSelectMode(dataOfDefaultMode.type);
-    }
+    };
     fetchDefaultMode();
-  }, [])
+  }, []);
 
   // shortcuts
-  useHotkeys('Shift+d', () => setSelectMode(1));
-  useHotkeys('Shift+w', () => setSelectMode(2));
-  useHotkeys('Shift+m', () => setSelectMode(3));
-  useHotkeys('Shift+y', () => setSelectMode(4));
-
+  useHotkeys("Shift+d", () => setSelectMode(1));
+  useHotkeys("Shift+w", () => setSelectMode(2));
+  useHotkeys("Shift+m", () => setSelectMode(3));
+  useHotkeys("Shift+y", () => setSelectMode(4));
 
   function compareDates(date1, date2) {
     if (date1 > date2) {
@@ -1321,12 +1323,20 @@ export default function MainFrame() {
   }
 
   function addMonthsToSpecificDate(date, a) {
-    const newDate = new Date(date.getFullYear(), date.getMonth() + a, date.getDate() + 1);
+    const newDate = new Date(
+      date.getFullYear(),
+      date.getMonth() + a,
+      date.getDate() + 1
+    );
     return newDate;
   }
 
   function addYearsToSpecificDate(date, a) {
-    const newDate = new Date(date.getFullYear() + a, date.getMonth(), date.getDate() + 1);
+    const newDate = new Date(
+      date.getFullYear() + a,
+      date.getMonth(),
+      date.getDate() + 1
+    );
     return newDate;
   }
 
@@ -1342,13 +1352,17 @@ export default function MainFrame() {
     const [hour2, min2] = event.end_time.split(":").map(Number);
 
     let firstStartDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
-    firstStartDate.setMinutes(firstStartDate.getMinutes() - firstStartDate.getTimezoneOffset());
+    firstStartDate.setMinutes(
+      firstStartDate.getMinutes() - firstStartDate.getTimezoneOffset()
+    );
     let firstEndDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
-    firstEndDate.setMinutes(firstEndDate.getMinutes() - firstEndDate.getTimezoneOffset());
+    firstEndDate.setMinutes(
+      firstEndDate.getMinutes() - firstEndDate.getTimezoneOffset()
+    );
 
     let startDate = addDaysToSpecificDate(firstStartDate, 0);
     let endDate = addDaysToSpecificDate(firstEndDate, 0);
-    let counter = 1;  //Default will add 1
+    let counter = 1; //Default will add 1
 
     if (event.repetition_type === "daily") {
       while (compareDates(startDate, boundary) == -1) {
@@ -1363,8 +1377,7 @@ export default function MainFrame() {
         endDate = addDaysToSpecificDate(firstEndDate, counter);
         counter++;
       }
-    }
-    else if (event.repetition_type === "weekly") {
+    } else if (event.repetition_type === "weekly") {
       counter = 7;
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
@@ -1378,8 +1391,7 @@ export default function MainFrame() {
         endDate = addDaysToSpecificDate(firstEndDate, counter);
         counter += 7;
       }
-    }
-    else if (event.repetition_type === "monthly") {
+    } else if (event.repetition_type === "monthly") {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
@@ -1392,8 +1404,7 @@ export default function MainFrame() {
         endDate = addMonthsToSpecificDate(firstEndDate, counter);
         counter++;
       }
-    }
-    else if (event.repetition_type === "yearly") {
+    } else if (event.repetition_type === "yearly") {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
@@ -1406,8 +1417,7 @@ export default function MainFrame() {
         endDate = addYearsToSpecificDate(firstEndDate, counter);
         counter++;
       }
-    }
-    else if (event.repetition_type === "custom") {
+    } else if (event.repetition_type === "custom") {
       counter = event.repetition_val;
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
@@ -1435,8 +1445,7 @@ export default function MainFrame() {
           counter += event.repetition_val;
         }
       }
-    }
-    else {
+    } else {
       console.log("Error occurs: repetition type not parse correctly");
     }
 
@@ -1452,7 +1461,9 @@ export default function MainFrame() {
   }
   useEffect(() => {
     const fetchEvents = async () => {
-      let events = await send_request("/get_events", { "calendar_id": "15e1c4a5f82eeca0a8a57e19bdea4ea5" });
+      let events = await send_request("/get_events", {
+        calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5",
+      });
       if (events.data == undefined) return;
 
       const eventsArray = [];
@@ -1465,11 +1476,15 @@ export default function MainFrame() {
 
       for (let i = 0; i < events.data.length; i++) {
         eventsArray.push(
-          ...eventParser(events.data[i], eventsArray.length, addDaysToSpecificDate(localDay, 7))
+          ...eventParser(
+            events.data[i],
+            eventsArray.length,
+            addDaysToSpecificDate(localDay, 7)
+          )
         );
       }
       setEventsArray(eventsArray);
-    }
+    };
     fetchEvents();
   }, []);
 
@@ -1530,16 +1545,16 @@ export default function MainFrame() {
             <h2 className="detailInfo">{detailInfo}</h2>
             <div>{calendarControlFlowButtonPackage()}</div>
           </div>
-          <div className="main_calnedar_box">{Calendar(selectMode, eventsArray)}</div>
+          <div className="main_calnedar_box">
+            {Calendar(selectMode, eventsArray)}
+          </div>
         </div>
       </div>
       <div className="ChatBox">{chatBox()}</div>
       {/* Event container */}
       <div className="event_container">
         <h1 className="Event_title">Assignment List</h1>
-        <div className="ToDoList">
-
-        </div>
+        <div className="ToDoList"></div>
       </div>
     </div>
   );
