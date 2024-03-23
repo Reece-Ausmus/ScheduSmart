@@ -76,7 +76,7 @@ export default function chatBox(friends, message, userId = 1) {
                 inputRef.current.value = "";
               }}
             >
-              SEND
+              &lt;
             </button>
           </div>
         </div>
@@ -84,3 +84,4 @@ export default function chatBox(friends, message, userId = 1) {
     </>
   );
 }
+//224 219 211

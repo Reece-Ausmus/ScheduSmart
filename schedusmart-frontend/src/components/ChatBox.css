@@ -13,7 +13,7 @@
   border-bottom: 2px black solid;
 }
 .chat_box_container2 {
-  width: 390px;
+  width: 100%;
   height: 80vh;
   display: flex;
   flex-direction: column;
@@ -23,9 +23,8 @@
 
 .info {
   display: flex;
-  background: linear-gradient(skyblue, lightgreen);
+  background: linear-gradient(rgb(135, 157, 235), rgb(144, 211, 238));
   background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
 .info_button {
@@ -35,15 +34,13 @@
 .messageBox {
   flex: 1;
   color: white;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: white;
   overflow: hidden;
   overflow-y: scroll;
   overflow: auto;
   padding: 0 10px;
 }
-.messageBox ::-webkit-scrollbar-thumb{
-  border-radius: 8px;
-}
+
 
 .rec {
   background-color: rgb(0, 72, 255);
@@ -63,27 +60,34 @@
   margin-bottom: 15px;
 }
 .footer {
+  padding-bottom: 2px;
+  background-color: white;
   display: flex;
 }
 
 .footer_input {
   flex: 1;
   height: 40px;
-  border: none;
+  border: 2px black solid;
+  border-radius: 10px;
   outline: none;
   padding-left: 5px;
   font-size: 16px;
+  margin-left: 20px;
 }
 
 .footer_button {
-  width: 100px;
+  width: 40px;
   font-size: 18px;
+  text-align: center;
+  margin: 1px;
+  margin-right: 10px;
   border: none;
   outline: none;
   background-color: dodgerblue;
   color: white;
   cursor: pointer;
-  border-radius: 0px;
+  border-radius: 50px;
 }
 .footer_button:hover {
   background-color: blue;
