@@ -11,13 +11,10 @@ def create_app():
     CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
     # import route that accept signal from React
-    from route import account
+    from calendar_route import calendar
+    app.register_blueprint(calendar)
+
+    from account_route import account
     app.register_blueprint(account)
-
-    from route import language
-    app.register_blueprint(language)
-
-    from route import events
-    app.register_blueprint(events)
 
     return app
