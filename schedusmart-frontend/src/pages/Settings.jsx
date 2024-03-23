@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import AccountInfo from "./AccountInfo.jsx";
 import languageData from "../components/language.json";
@@ -25,7 +25,10 @@ export default function Settings() {
   };
   const [language, setLanguage] = useState(0);
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
-  const [showVirtual, setShowVirsual] = useState(3);
+  const [showVirtual, setShowVirsual] = useState(() => { return parseInt(localStorage.getItem('showVirtual'))||0; });
+  useEffect(() => {
+    localStorage.setItem('showVirtual', showVirtual.toString());
+  }, [showVirtual]);
   const [visualOptions] = useState([
     { id: 1, label: "day", value: 1 },
     { id: 2, label: "week", value: 2 },
@@ -36,14 +39,20 @@ export default function Settings() {
     setShowVirsual(parseInt(e.target.value));
     updateFormat(parseInt(e.target.value));
   };
-  const [locationMode, setLocationMode] = useState("text");
+
+  const [locationMode, setLocationMode] = useState(() => {
+    return localStorage.getItem('locationMode') || "text";
+  });
+
+  useEffect(() => {localStorage.setItem('locationMode', locationMode);
+  }, [locationMode]);
+
   const toggleLocationMode = () => {
     const newLocationMode = locationMode === "text" ? "map" : "text";
     setLocationMode(newLocationMode);
-    console.log(newLocationMode);
     updateLocationSettings(newLocationMode);
   };
-  
+
   function switchLanguageUI() {
     setShowLanguageSettingUI(!showLanguageSettingUI);
   }
@@ -114,9 +123,10 @@ export default function Settings() {
       switch (response.status) {
         case 201:
           console.log("Change calendar format successfully");
-          const responseData = await response.json();
-          const userId = responseData.user_id;
-          sessionStorage.setItem("user_id", userId);
+          // const responseData = await response.json();
+          // const userId = responseData.user_id;
+          // console.log("User ID:", userId);
+          // sessionStorage.setItem("user_id", userId);
           break;
         case 205:
           alert("Failed to change the calendar mode");
@@ -150,9 +160,6 @@ export default function Settings() {
       switch (response.status) {
         case 201:
           console.log("Change location settings successfully");
-          const responseData = await response.json();
-          const userId = responseData.user_id;
-          sessionStorage.setItem("user_id", userId);
           break;
         case 205:
           alert("Failed to change the location settings");
@@ -162,6 +169,15 @@ export default function Settings() {
       }
     }
   }
+
+  useEffect(() => {
+    const fetchDefaultsettings = async () => {
+      let dataOfDefaultsettings = await send_request("/get_location_default_settings", { "user_id": userId });
+      if (dataOfDefaultsettings.type == undefined) return;
+      setSelectMode(dataOfDefaultsettings.type);
+    }
+    fetchDefaultsettings();
+  }, [])
 
   return (
     <>
@@ -182,18 +198,18 @@ export default function Settings() {
       </div>
       <h2>Location settings</h2>
       <div>
-      <button onClick={toggleLocationMode}>
-                        {locationMode === "text" ? "Choose Location from Map" : "Enter Location as Text"}
-                      </button>
+        <button onClick={toggleLocationMode}>
+          {locationMode === "text" ? "Choose Location from Map" : "Enter Location as Text"}
+        </button>
       </div>
       <h2>Other settings</h2>
-      <button onClick={() => {switchLanguageUI();}}>
+      <button onClick={() => { switchLanguageUI(); }}>
         {languageData[language][0][0].language}
       </button>
-      <button onClick={() => {window.location.href = "/calendar";}}>
+      <button onClick={() => { window.location.href = "/calendar"; }}>
         {languageData[language][0][0].calendar}
       </button>
-      <button onClick={() => {window.location.href = "/welcome";}}>
+      <button onClick={() => { window.location.href = "/welcome"; }}>
         {languageData[language][0][0].signout}
       </button>
     </>
