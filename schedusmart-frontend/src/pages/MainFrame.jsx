@@ -1078,7 +1078,7 @@ export default function MainFrame() {
     return (
       <div className="buttonGroup">
         <button
-          style={{backgroundColor: selectMode == 1 ? "#cfcfcf" :　"#2d2d2d"}}
+          style={{backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d"}}
           className="modeButton"
           id="1"
           onClick={() => {
@@ -1092,14 +1092,10 @@ export default function MainFrame() {
         </button>
         <button
           className="modeButton"
-          style={{backgroundColor: selectMode == 2 ? "#cfcfcf" :　"#2d2d2d"}}
+          style={{backgroundColor: selectMode == 2 ? "#cfcfcf" : "#2d2d2d"}}
           id="2"
           onClick={() => {
             setSelectMode(2);
-            document.getElementById("1").style.backgroundColor = "#2d2d2d";
-            document.getElementById("2").style.backgroundColor = "#cfcfcf";
-            document.getElementById("3").style.backgroundColor = "#2d2d2d";
-            document.getElementById("4").style.backgroundColor = "#2d2d2d";
             setDetailInfo(
               String(today.getMonth() + 1) + "/" + String(today.getDate())
             );
@@ -1109,7 +1105,7 @@ export default function MainFrame() {
         </button>
         <button
           className="modeButton"
-          style={{backgroundColor: selectMode == 3 ? "#cfcfcf" :　"#2d2d2d"}}
+          style={{backgroundColor: selectMode == 3 ? "#cfcfcf" : "#2d2d2d"}}
           id="3"
           onClick={() => {
             setSelectMode(3);
@@ -1120,7 +1116,7 @@ export default function MainFrame() {
         </button>
         <button
           className="modeButton"
-          style={{backgroundColor: selectMode == 4 ? "#cfcfcf" :　"#2d2d2d"}}
+          style={{backgroundColor: selectMode == 4 ? "#cfcfcf" : "#2d2d2d"}}
           id="4"
           onClick={() => {
             setSelectMode(4);
