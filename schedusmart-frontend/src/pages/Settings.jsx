@@ -170,15 +170,6 @@ export default function Settings() {
     }
   }
 
-  useEffect(() => {
-    const fetchDefaultsettings = async () => {
-      let dataOfDefaultsettings = await send_request("/get_location_default_settings", { "user_id": userId });
-      if (dataOfDefaultsettings.type == undefined) return;
-      setSelectMode(dataOfDefaultsettings.type);
-    }
-    fetchDefaultsettings();
-  }, [])
-
   return (
     <>
       <h1>{languageData[language][0][0].setting}</h1>

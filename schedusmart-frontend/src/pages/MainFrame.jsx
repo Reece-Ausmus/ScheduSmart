@@ -10,7 +10,6 @@ import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
 import send_request from "./requester";
 import chatBox from "../components/ChatBox";
-import locationMode from "./Settings.jsx"
 
 const steps = [
   {
@@ -57,7 +56,34 @@ export default function MainFrame() {
       useState(""); // Default custom frequency
     const [eventSelectedDays, setEventSelectedDays] = useState([]); // Array to store selected days
     const [eventCalendar, setEventCalendar] = useState("");
-
+    const [LocationSettings, setLocationSettings] = useState("text");
+    useEffect(() => {
+      const fetchDefaultsettings = async () => {
+        let dataOfDefaultsettings = await send_request("/get_location_default_settings", { "user_id": userId });
+        if (dataOfDefaultsettings.type == undefined) return;
+        setLocationSettings(dataOfDefaultsettings.type);
+      }
+      fetchDefaultsettings();
+    }, [])
+    const renderLocationInput = () => {
+      if (LocationSettings === "text") {
+        return (
+          <input
+            type="text"
+            id="eventLocation"
+            value={eventLocation}
+            onChange={handleEventLocationChange}
+          />
+        );
+      } else if (LocationSettings === "map") {
+        return (
+          <div>
+            {/* Render Google Map component here */}
+            <p>Google Map Placeholder</p>
+          </div>
+        );
+      }
+    };
     const toggleEventPopup = () => {
       setShowEventPopup(!showEventPopup);
     };
@@ -503,12 +529,13 @@ export default function MainFrame() {
                     </div>
                     <div className="formgroup">
                       <label htmlFor="eventLocation">Event Location:</label>
-                      <input
+                      {/* <input
                         type="text"
                         id="eventLocation"
                         value={eventLocation}
                         onChange={handleEventLocationChange}
-                      />
+                      /> */}
+                      {renderLocationInput()}
                     </div>
                     <div className="formgroup">
                       <label htmlFor="eventDescription">
@@ -1212,9 +1239,9 @@ export default function MainFrame() {
   const [selectedCalendar, setSelectedCalendar] = useState();
   const [eventsArray, setEventsArray] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchDefaultMode = async () => {
-      let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {"user_id": userId});
+      let dataOfDefaultMode = await send_request("/get_calendar_default_mode", { "user_id": userId });
       if (dataOfDefaultMode.type == undefined) return;
       setSelectMode(dataOfDefaultMode.type);
     }
