@@ -12,7 +12,6 @@ import send_request from "./requester";
 import chatBox from "../components/ChatBox";
 import Map from "./Googlemap";
 import { useHotkeys } from 'react-hotkeys-hook';
-import Hotkeys from 'react-hot-keys';
 // import MapContainer from './Googlemap';
 
 const steps = [
@@ -87,6 +86,9 @@ export default function MainFrame() {
         );
       }
     };
+
+    // shortcut to control popup event
+    useHotkeys('Shift+a', () => {toggleEventPopup()});
 
     const toggleEventPopup = () => {
       setShowEventPopup(!showEventPopup);
@@ -1253,10 +1255,10 @@ export default function MainFrame() {
   }, [])
 
   // shortcuts
-  useHotkeys('Shift+d', () => setSelectMode(1))
-  useHotkeys('Shift+w', () => setSelectMode(2))
-  useHotkeys('Shift+m', () => setSelectMode(3))
-  useHotkeys('Shift+y', () => setSelectMode(4))
+  useHotkeys('Shift+d', () => setSelectMode(1));
+  useHotkeys('Shift+w', () => setSelectMode(2));
+  useHotkeys('Shift+m', () => setSelectMode(3));
+  useHotkeys('Shift+y', () => setSelectMode(4));
 
 
   function compareDates(date1, date2) {
