@@ -1,0 +1,18 @@
+=== Weekly Team Report (Team 30: ScheduSmart) ===
+
+Week 4	(Srum master: Reece Ausmus)
+
+
+Week 5 	(Plan) (Scrum master: Reece Ausmus)
+[Meetings]
+3/27/24 Discuss needs for the remainder of the sprint. Create quick demo for TA.
+3/30/24 Discuss sprint retrospective and plan for sprint 3.
+3/31/24 Meeting with TA to discuss sprint 2 review and plan for sprint 3.
+
+[Individual Goals]
+Reece Ausmus: 
+Cassie Chang: 
+Stanley Huang:
+Bradley Norris:
+Himanshu Sinha: Finish out Task Manager autoscheduler, work on unit testing, and improve styling.
+Gloria Xu:
