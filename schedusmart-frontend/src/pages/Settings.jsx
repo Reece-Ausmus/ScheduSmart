@@ -37,19 +37,6 @@ export default function Settings() {
   };
   const [language, setLanguage] = useState(0);
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
-  const [locationMode, setLocationMode] = useState(() => {
-    return localStorage.getItem('locationMode') || "text";
-  });
-
-  useEffect(() => {
-    localStorage.setItem('locationMode', locationMode);
-  }, [locationMode]);
-
-  const toggleLocationMode = () => {
-    const newLocationMode = locationMode === "text" ? "map" : "text";
-    setLocationMode(newLocationMode);
-    updateLocationSettings(newLocationMode);
-  };
 
   function switchLanguageUI() {
     setShowLanguageSettingUI(!showLanguageSettingUI);
@@ -98,38 +85,6 @@ export default function Settings() {
     );
   }
 
-  async function updateLocationSettings(location_mode) {
-    if (userId === "undefined") {
-      alert("userId disappear, so it will eventually fail");
-      return;
-    }
-    const info = {
-      mode: location_mode,
-      user_id: userId,
-    };
-    const response = await fetch(flaskURL + "/update_location_settings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify(info),
-    });
-    if (!response.ok) {
-      alert("something went wrong, refresh your website");
-    } else {
-      switch (response.status) {
-        case 201:
-          console.log("Change location settings successfully");
-          break;
-        case 205:
-          alert("Failed to change the location settings");
-          break;
-        default:
-          alert("Unexpected response status: " + response.status);
-      }
-    }
-  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -138,12 +93,6 @@ export default function Settings() {
       <div>{AccountInfo(language)}</div>
       <div>{Calendar_Settings()}</div>
       <div>{Reminder()}</div>
-      <h2>Location settings</h2>
-      <div>
-        <button onClick={toggleLocationMode}>
-          {locationMode === "text" ? "Choose Location from Map" : "Enter Location as Text"}
-        </button>
-      </div>
       <h2>Other settings</h2>
       <button onClick={() => { switchLanguageUI(); }}>
         {languageData[language][0][0].language}
