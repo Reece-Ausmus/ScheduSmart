@@ -36,7 +36,7 @@ const userId = sessionStorage.getItem("user_id");
 
 export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
-  const [selectedCalendar, setSelectedCalendar] = useState();
+  const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [eventsArray, setEventsArray] = useState([]);
 
   useEffect(() => {
@@ -363,7 +363,7 @@ export default function MainFrame() {
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
     const [calendarList, setCalendarList] = useState(calendars);
-    const [selectedCalendars, setSelectedCalendars] = useState([]);
+    //const [selectedCalendars, setSelectedCalendars] = useState([]);
 
     useEffect(() => {
       const fetchData = async () => {
