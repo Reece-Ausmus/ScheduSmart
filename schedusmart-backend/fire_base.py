@@ -93,6 +93,7 @@ def get_user(response):
             "first_name": db.child("User").child(user_id).child('first_name').get().val(),
             "last_name": db.child("User").child(user_id).child('last_name').get().val(),
             "user_name": db.child("User").child(user_id).child('user_name').get().val(),
+            "timezone": db.child("User").child(user_id).child('timezone').get().val(),
             "user_id": user_id,
             "calendars": calendars,
             "language": db.child("User").child(user_id).child('language').get().val(),
@@ -405,6 +406,15 @@ def update_default_location_settings(info):
     except Exception:
         print("Failed to set the location settings")
         return 1
+
+# def get_timezone(user_id):
+#     try:
+#         timezone = db.child("User").child(user_id).child('timezone').get().val()
+#         print("Fetched Timezone:", timezone) # debug print
+#         return timezone
+#     except Exception as e:
+#         print("Failed to get timezone:", e)
+#         return None
 
 # used to test with firebase #######################
 
