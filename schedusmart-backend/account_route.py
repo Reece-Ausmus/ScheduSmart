@@ -71,6 +71,7 @@ def user_data():
                 'last_name': data['last_name'],
                 'calendars': data['calendars'],
                 'location': data['location'],
+                'timezone': data['timezone'],
                 'task_list': data['task_list'],
             })
             response.status_code = 201

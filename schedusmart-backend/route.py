@@ -77,6 +77,7 @@ def user_data():
                 'message': 'Done',
                 'user_id': data['user_id'],
                 'email': data['email'],
+                'timezone': data['timezone'],
                 'user_name': data['user_name'],
                 'first_name': data['first_name'],
                 'last_name': data['last_name'],
