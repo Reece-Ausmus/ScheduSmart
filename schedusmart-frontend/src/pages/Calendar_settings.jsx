@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -169,6 +168,6 @@ export default function Calendar_Settings() {
           <Button variant="contained">Save</Button>
         </CardActions> */}
       </Card>
-    </ThemeProvider >
+    </ThemeProvider>
   );
 }

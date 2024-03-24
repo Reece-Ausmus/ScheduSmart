@@ -5,7 +5,6 @@ import AccountInfo from "./AccountInfo.jsx";
 import languageData from "../components/language.json";
 import Reminder from "./Reminder";
 import Calendar_Settings from "./Calendar_settings";
-// import "./Settings.css";
 import send_request from "./requester.jsx";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { orange } from "@mui/material/colors";
@@ -39,6 +38,7 @@ export default function Settings() {
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
 
   function switchLanguageUI() {
+    console.log("1");
     setShowLanguageSettingUI(!showLanguageSettingUI);
   }
   function languageSettingUIPackage() {
