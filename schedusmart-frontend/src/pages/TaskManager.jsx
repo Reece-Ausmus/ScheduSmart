@@ -622,6 +622,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
         <div className="post" key={task.id}>
           <h3>{task.title}</h3>
           <progress value={progressValue(task.id)}/>
+          <h4>Task Information</h4>
           <p>{task.desc}</p>
           <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
@@ -700,8 +701,8 @@ function CompletedList({ list, onToggle, option }) {
       {sortedList.map((task) => (
         <div className="post" key={task.id}>
           <h3>{task.title}</h3>
+          <h4>Task Information</h4>
           <p>{task.desc}</p>
-          <p>Estimated Workload: {task.time} hour(s)</p>
           <p>Deadline: {task.date}</p>
           <p>Completed: {task.completed_time}</p>
           <input
