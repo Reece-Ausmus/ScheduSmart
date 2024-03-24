@@ -33,13 +33,23 @@ export default function Weather() {
           break;
       }
     }
+
+    try {
+      fetch(`${api.base}weather?q=${location}&units=imperial&APPID=${api.key}`)
+          .then((res) => res.json())
+          .then((result) => {
+            setWeather(result);
+      }).then(console.log("Set Weather!"));
+    } catch {
+      console.log("Error!")
+    }
   };
 
   const [location, setLocation] = React.useState("West Lafayette");
   const [weather, setWeather] = React.useState({});
 
   const api = {
-    key: "32d36a265443fe0bc95c8de0461515f7",
+    key: "b75007c5316302911c5797f40c9c7dc4",
     base: "https://api.openweathermap.org/data/2.5/",
   };
 
@@ -61,7 +71,6 @@ export default function Weather() {
 
   return (
     <>
-      {searchPressed()}
       {typeof weather.main != "undefined" ? (
         <>
           The temperature in {weather.name} is {weather.main.temp} ℉.
