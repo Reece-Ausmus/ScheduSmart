@@ -34,7 +34,7 @@
 .messageBox {
   flex: 1;
   color: white;
-  background-color: white;
+  background-color: rgb(220, 220, 220);
   overflow: hidden;
   overflow-y: scroll;
   overflow: auto;
@@ -91,4 +91,83 @@
 }
 .footer_button:hover {
   background-color: blue;
+}
+* {
+  box-sizing: border-box;
+}
+.chat_box_container1 {
+  font-size: 16px;
+  width: 450px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.4);
+}
+
+.friendSearch {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid;
+}
+
+.friendSearchInput {
+  width: 80%;
+  height: 40px;
+  border: none;
+  outline: none;
+  padding-left: 30px;
+  font-size: 16px;
+}
+
+.friendSearchButton {
+  width: 10%;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.friendList {
+  flex: 1;
+  width: 100%;
+  color: black;
+  background-color: rgb(220, 220, 220);
+  padding: 20px 30px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.friendBar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgb(186, 186, 186);
+  font-size: 25px;
+  display: flex;
+  text-align: start;
+}
+
+.friendBar:hover {
+  background-color: aquamarine;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.friend {
+  width: 90%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.control {
+  color: aliceblue;
+  margin-top: 15px;
+  margin-right: 10px;
+  border-radius: 5px;
+  width: 10%;
+  height: 30px;
+  font-size: 16px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  background-color: gray;
 }
