@@ -4,11 +4,22 @@ import { Navigate } from "react-router-dom";
 import AccountInfo from "./AccountInfo.jsx";
 import languageData from "../components/language.json";
 import Reminder from "./Reminder";
-import "./Settings.css";
+// import "./Settings.css";
 import send_request from "./requester.jsx";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { orange } from "@mui/material/colors";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
+
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+});
 
 export default function Settings() {
   const fetchLanguage = async () => {
@@ -25,7 +36,7 @@ export default function Settings() {
   };
   const [language, setLanguage] = useState(0);
   const [showLanguageSettingUI, setShowLanguageSettingUI] = useState(false);
-  const [showVirtual, setShowVirsual] = useState(() => { return parseInt(localStorage.getItem('showVirtual'))||0; });
+  const [showVirtual, setShowVirsual] = useState(() => { return parseInt(localStorage.getItem('showVirtual')) || 0; });
   useEffect(() => {
     localStorage.setItem('showVirtual', showVirtual.toString());
   }, [showVirtual]);
@@ -44,7 +55,8 @@ export default function Settings() {
     return localStorage.getItem('locationMode') || "text";
   });
 
-  useEffect(() => {localStorage.setItem('locationMode', locationMode);
+  useEffect(() => {
+    localStorage.setItem('locationMode', locationMode);
   }, [locationMode]);
 
   const toggleLocationMode = () => {
@@ -171,7 +183,7 @@ export default function Settings() {
   }
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <h1>{languageData[language][0][0].setting}</h1>
       {showLanguageSettingUI && <div>{languageSettingUIPackage()}</div>}
       <div>{AccountInfo(language)}</div>
@@ -203,6 +215,6 @@ export default function Settings() {
       <button onClick={() => { window.location.href = "/welcome"; }}>
         {languageData[language][0][0].signout}
       </button>
-    </>
+    </ThemeProvider >
   );
 }

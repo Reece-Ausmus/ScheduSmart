@@ -98,7 +98,6 @@
   background-color: aliceblue;
 }
 
-/* Optional: Hover and Focus styles */
 .reminder-settings select:hover,
 .reminder-settings select:focus {
   border-color: #888;
