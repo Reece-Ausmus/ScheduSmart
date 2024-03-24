@@ -13,6 +13,12 @@ const flaskURL = "http://127.0.0.1:5000";
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
 
+// valid file extension list
+const validExtensions = ["txt", "rtf", "docx", "csv", "doc", "wps", "wpd", "msg", 
+                         "jpg", "png", "webp", "gif", "tif", "bmp", "eps", "mp3",
+                         "wma", "snd", "wav", "ra", "au", "aac", "mp4", "3gp", 
+                         "avi", "mpg", "mov", "wmv", "xlsx",];
+
 
 // initial list for new users
 const initialList = [
@@ -422,11 +428,21 @@ export default function TaskManager() {
           <input
             type="file"
             onChange={(event) => {
-              setFile(event.target.files[0])
-              let ref_url = `files/${event.target.files[0].name + v4()}`
-              const fileRef = ref(storage, ref_url);
-              uploadFile(fileRef, event.target.files[0])
-              setTaskFile(ref_url)
+              let file_exen = event.target.files[0].name.split(".").pop()
+              let valid = false
+              validExtensions.map((extension) => {
+                if (file_exen === extension)
+                  valid = true; 
+              })
+              if (valid) {
+                setFile(event.target.files[0])
+                let ref_url = `files/${event.target.files[0].name + v4()}`
+                const fileRef = ref(storage, ref_url);
+                uploadFile(fileRef, event.target.files[0])
+                setTaskFile(ref_url)
+              } else {
+                alert("Invalid File! Only image, text, audio, or video files allowed!")
+              }
             }}
           />
           <label htmlFor="subtask">Add subtask:</label>
