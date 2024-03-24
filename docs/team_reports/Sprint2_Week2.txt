@@ -14,5 +14,5 @@ Reece Ausmus:
 Cassie Chang: 
 Stanley Huang:
 Bradley Norris:
-Himanshu Sinha:
+Himanshu Sinha: Finish out Task Manager autoscheduler, work on unit testing, and improve styling.
 Gloria Xu:
