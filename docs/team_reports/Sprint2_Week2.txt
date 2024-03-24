@@ -1,6 +1,9 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 4	(Srum master: Reece Ausmus)
+3/23/24    6hrs    63263c3     finish map features
+3/23/24    2hrs    a2b2bb4     finish styling of create-account page
+3/24/24    4hrs    ac27fe7     finish styling of settings page
 
 
 Week 5 	(Plan) (Scrum master: Reece Ausmus)
@@ -15,4 +18,4 @@ Cassie Chang:
 Stanley Huang:
 Bradley Norris:
 Himanshu Sinha: Finish out Task Manager autoscheduler, work on unit testing, and improve styling.
-Gloria Xu:
+Gloria Xu: Improving styling of pages and finish implementation of reminders
