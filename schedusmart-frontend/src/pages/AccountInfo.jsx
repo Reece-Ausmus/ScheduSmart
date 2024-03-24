@@ -15,6 +15,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { orange } from "@mui/material/colors";
+import Input from '@mui/material/Input';
 
 //this can be change when flask's ip become static
 //currently it's localhost
@@ -24,17 +25,21 @@ const userId = sessionStorage.getItem("user_id"); //"Sup3XDcQrNUm6CGdIJ3W5FHyPpQ
 
 const theme = createTheme({
   palette: {
-      primary: orange,
-      secondary: {
-          main: "#ab5600",
-      },
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
   },
 });
 
 export default function AccountInfo(language) {
-  const handleInfo = async (event) => {
-    event.preventDefault();
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [location, setLocation] = useState("West Lafayette");
 
+  const handleInfo = async (event) => {
     const response = await fetch(flaskURL + "/user_data", {
       method: "POST",
       headers: {
@@ -69,151 +74,103 @@ export default function AccountInfo(language) {
     }
   };
 
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [location, setLocation] = useState("West Lafayette");
-
   useEffect(() => {
     handleInfo();
   }, []);
 
+  const updateInfo = async (event) =>{
+    event.preventDefault();
+
+    const regex = /[\\"\s\'\\\x00-\x1F\x7F]/g;
+    if (!lastname.localeCompare("") || !firstname.localeCompare("")) {
+      alert("Please fill up your name!");
+    } else if (!username.localeCompare("")) {
+      alert("Please fill up your username!");
+    } else if (!email.localeCompare("")) {
+      alert("Please fill up your email!");
+    } else if (
+      regex.test(firstname) ||
+      regex.test(lastname) ||
+      regex.test(username)
+    ) {
+      alert(
+        "Input contains special characters. Please remove them and try again!"
+      );
+    } else {
+      const info = {
+        first_name: firstname,
+        last_name: lastname,
+        user_name: username,
+        email: email,
+        user_id: userId,
+        location: location,
+      };
+      const response = await fetch(flaskURL + "/update_account_info", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(info),
+      });
+      if (!response.ok) {
+        alert("something went wrong, refresh your website");
+      } else {
+        switch (response.status) {
+          case 201:
+            console.log("Updated account info!");
+            alert("Updated Account Info!")
+            break;
+          case 205:
+            console.log("Failed to update account");
+            alert("Failed to update account! Check New Information!");
+            break;
+          case 206:
+            console.log("Missing info");
+            alert("Failed to update account!");
+            break;
+        }
+      }
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
-          <form onSubmit={handleInfo}>
-      <Card>
-        <CardHeader subheader="Update password" title="Password" />
-        <Divider />
-        <CardContent>
-          <Stack spacing={3} sx={{ maxWidth: 'sm' }}>
-            <FormControl fullWidth>
-              <InputLabel>Password</InputLabel>
-              <OutlinedInput label="Password" name="password" type="password" />
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel>Confirm password</InputLabel>
-              <OutlinedInput label="Confirm password" name="confirmPassword" type="password" />
-            </FormControl>
-          </Stack>
-        </CardContent>
-        <Divider />
-        <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button type="submit" variant="contained">Update</Button>
-        </CardActions>
-      </Card>
-    </form>
+        <Card>
+          <CardHeader subheader="Update account information" title="Profile" />
+          <Divider />
+          <CardContent>
+            <Stack spacing={3} sx={{ maxWidth: 'sm' }}>
+              <div style={{ display: 'flex' }}>
+                <FormControl style={{ marginRight: '20px' }}>
+                  <InputLabel htmlFor="component-outlined">{languageData[language][0][0].firstName}</InputLabel>
+                  <OutlinedInput id="firstname" value={firstname} label="firstName" onChange={(e) => setFirstName(e.target.value)}/>
+                </FormControl>
+                <FormControl>
+                  <InputLabel htmlFor="component-outlined">{languageData[language][0][0].lastName}</InputLabel>
+                  <OutlinedInput id="lastname" value={lastname} label="lastName" onChange={(e) => setLastName(e.target.value)}/>
+                </FormControl>
+              </div>
+              <FormControl>
+                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].userName}</InputLabel>
+                <OutlinedInput id="username" value={username} label="userName" onChange={(e) => setUsername(e.target.value)}/>
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].email}</InputLabel>
+                <OutlinedInput id="email" value={email} label="email" onChange={(e) => setEmail(e.target.value)}/>
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].location}</InputLabel>
+                <OutlinedInput id="location" value={location} label="location"onChange={(e) => setLocation(e.target.value)} />
+              </FormControl>
+            </Stack>
+          </CardContent>
+          <Divider />
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            <Button  variant="contained" onClick={handleInfo}>{languageData[language][0][0].restToDefault}</Button>
+            <Button  variant="contained" onClick={updateInfo}>{languageData[language][0][0].Updateaccount}</Button>
+          </CardActions>
+        </Card>
     </ThemeProvider>
   );
 }
-  // return (
-  //   <div >
-  //     <div className="info_container">
-  //       <div>
-  //         <h2> {languageData[language][0][0].accountInformation} </h2>
-  //       </div>
-  //       <div className="info">
-  //         <label>
-  //           {languageData[language][0][0].firstName}{" "}
-  //           <input
-  //             value={firstname}
-  //             onChange={(e) => setFirstName(e.target.value)}
-  //           />
-  //         </label>
-  //       </div>
-  //       <div className="info">
-  //         <label>
-  //           {languageData[language][0][0].lastName}{" "}
-  //           <input
-  //             value={lastname}
-  //             onChange={(e) => setLastName(e.target.value)}
-  //           />
-  //         </label>
-  //       </div>
-  //       <div className="info">
-  //         <label>
-  //           {languageData[language][0][0].userName}{" "}
-  //           <input
-  //             value={username}
-  //             onChange={(e) => setUsername(e.target.value)}
-  //           />
-  //         </label>
-  //       </div>
-  //       <div className="info">
-  //         <label>
-  //           {languageData[language][0][0].email}{" "}
-  //           <input value={email} onChange={(e) => setEmail(e.target.value)} />
-  //         </label>
-  //       </div>
-  //       <div className="info">
-  //         <label>
-  //           {languageData[language][0][0].location}{" "}
-  //           <input
-  //             value={location}
-  //             onChange={(e) => setLocation(e.target.value)}
-  //           />
-  //         </label>
-  //       </div>
-  //     </div>
-  //     <button
-  //       onClick={async () => {
-  //         const regex = /[\\"\s\'\\\x00-\x1F\x7F]/g;
-
-  //         if (!lastname.localeCompare("") || !firstname.localeCompare("")) {
-  //           alert("Please fill up your name!");
-  //         } else if (!username.localeCompare("")) {
-  //           alert("Please fill up your username!");
-  //         } else if (!email.localeCompare("")) {
-  //           alert("Please fill up your email!");
-  //         } else if (
-  //           regex.test(firstname) ||
-  //           regex.test(lastname) ||
-  //           regex.test(username)
-  //         ) {
-  //           alert(
-  //             "Input contains special characters. Please remove them and try again!"
-  //           );
-  //         } else {
-  //           const info = {
-  //             first_name: firstname,
-  //             last_name: lastname,
-  //             user_name: username,
-  //             email: email,
-  //             user_id: userId,
-  //             location: location,
-  //           };
-  //           const response = await fetch(flaskURL + "/update_account_info", {
-  //             method: "POST",
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //             },
-
-  //             body: JSON.stringify(info),
-  //           });
-  //           if (!response.ok) {
-  //             alert("something went wrong, refresh your website");
-  //           } else {
-  //             switch (response.status) {
-  //               case 201:
-  //                 console.log("Updated account info!");
-  //                 alert("Updated Account Info!")
-  //                 break;
-  //               case 205:
-  //                 console.log("Failed to update account");
-  //                 alert("Failed to update account! Check New Information!");
-  //                 break;
-  //               case 206:
-  //                 console.log("Missing info");
-  //                 alert("Failed to update account!");
-  //                 break;
-  //             }
-  //           }
-  //         }
-  //       }}
-  //     >
-  //       {languageData[language][0][0].Updateaccount}
-  //     </button>
-  //     <button onClick={handleInfo}>{languageData[language][0][0].restToDefault}</button>
-  //   </div>
-  // );
-// }
