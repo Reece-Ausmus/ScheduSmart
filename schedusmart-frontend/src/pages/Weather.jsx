@@ -22,8 +22,15 @@ export default function Weather() {
         case 201:
           const responseData = await response.json();
           const userId = responseData.user_id;
-          if (responseData.location != null) setLocation(responseData.location);
-          console.log(userId);
+          try {
+            fetch(`${api.base}weather?q=${responseData.location}&units=imperial&APPID=${api.key}`)
+                .then((res) => res.json())
+                .then((result) => {
+                  setWeather(result);
+            });
+          } catch {
+            console.log("Error! Set location data in settings!")
+          }
           break;
         case 202:
           alert("User Not Found");
@@ -33,19 +40,8 @@ export default function Weather() {
           break;
       }
     }
-
-    try {
-      fetch(`${api.base}weather?q=${location}&units=imperial&APPID=${api.key}`)
-          .then((res) => res.json())
-          .then((result) => {
-            setWeather(result);
-      }).then(console.log("Set Weather!"));
-    } catch {
-      console.log("Error!")
-    }
   };
 
-  const [location, setLocation] = React.useState("West Lafayette");
   const [weather, setWeather] = React.useState({});
 
   const api = {
@@ -56,18 +52,6 @@ export default function Weather() {
   useEffect(() => {
     handleInfo();
   }, []);
-
-  const searchPressed = () => {
-    try {
-      fetch(`${api.base}weather?q=${location}&units=imperial&APPID=${api.key}`)
-        .then((res) => res.json())
-        .then((result) => {
-          setWeather(result);
-        });
-    } catch {
-      console.log("Error! Refresh Page")
-    }
-  };
 
   return (
     <>
