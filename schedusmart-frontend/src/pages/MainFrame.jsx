@@ -38,6 +38,27 @@ export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [eventsArray, setEventsArray] = useState([]);
+  const today = new Date();
+  const todayMonth = today.getMonth();
+  const monthArray = [
+    "January",
+    "Febuary",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  //const todayYear = today.getFullYear();
+
+  const [detailInfo, setDetailInfo] = useState(
+    String(today.getMonth() + 1) + "/" + String(today.getDate())
+  );
 
   useEffect(() => {
     const fetchDefaultMode = async () => {
@@ -1262,28 +1283,6 @@ export default function MainFrame() {
     );
   }
 
-  const today = new Date();
-  const todayMonth = today.getMonth();
-  const monthArray = [
-    "January",
-    "Febuary",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  //const todayYear = today.getFullYear();
-
-  const [detailInfo, setDetailInfo] = useState(
-    String(today.getMonth() + 1) + "/" + String(today.getDate())
-  );
-
 
   // shortcuts
   useHotkeys("Shift+d", () => setSelectMode(1));
@@ -1434,19 +1433,14 @@ export default function MainFrame() {
     }
 
     return eventArray;
-    /*
-    {
-          id: 2,
-        text: "Event 1",
-        start: "2023-10-02 10:30:00",
-        end: "2023-10-02 13:00:00",
-    }
-        */
   }
   useEffect(() => {
     const fetchEvents = async () => {
+      if (selectedCalendars == undefined) {
+        return;
+      }
       let events = await send_request("/get_events", {
-        calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5",
+        calendar_id: selectedCalendars.calendar_id,
       });
       if (events.data == undefined) return;
 
@@ -1470,7 +1464,7 @@ export default function MainFrame() {
       setEventsArray(eventsArray);
     };
     fetchEvents();
-  }, []);
+  }, [selectedCalendars]);
 
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
