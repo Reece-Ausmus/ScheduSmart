@@ -218,7 +218,7 @@ export default function Createaccount() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            Create
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>

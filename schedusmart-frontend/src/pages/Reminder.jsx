@@ -100,7 +100,6 @@ export default function Reminder() {
   const [reminderOptions] = useState([
     { id: 1, label: "Browser notification", value: 1 },
     { id: 2, label: "Email", value: 2 },
-    { id: 3, label: "Mobile notification", value: 3 },
   ]);
   const [selectReminderOptions, setReminderOptions] = useState(1)
   const handleReminderOptionsChange = (e) => {
@@ -175,9 +174,9 @@ export default function Reminder() {
           </div>
         </CardContent>
         <Divider />
-        <CardActions sx={{ justifyContent: 'flex-end' }}>
+        {/* <CardActions sx={{ justifyContent: 'flex-end' }}>
           <Button variant="contained">Save</Button>
-        </CardActions>
+        </CardActions> */}
       </Card>
     </ThemeProvider>
   );
