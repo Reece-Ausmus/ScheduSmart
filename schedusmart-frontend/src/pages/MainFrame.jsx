@@ -37,7 +37,14 @@ const userId = sessionStorage.getItem("user_id");
 export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
-  const [eventsArray, setEventsArray] = useState([]);
+  /*
+  
+    { calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5", name: "cal_name" },
+    { calendar_id: "1edf8a72d18a382312e04eaa1e8aa8c3", name: "cal_name" },
+    { calendar_id: "80ce85b4eaa97197e2dd929f20646552", name: "cal_name" },
+
+  */
+  const [allEventsArray, setAllEventsArray] = useState([]);
   const today = new Date();
   const todayMonth = today.getMonth();
   const monthArray = [
@@ -1283,7 +1290,6 @@ export default function MainFrame() {
     );
   }
 
-
   // shortcuts
   useHotkeys("Shift+d", () => setSelectMode(1));
   useHotkeys("Shift+w", () => setSelectMode(2));
@@ -1346,6 +1352,8 @@ export default function MainFrame() {
     let startDate = addDaysToSpecificDate(firstStartDate, 0);
     let endDate = addDaysToSpecificDate(firstEndDate, 0);
     let counter = 1; //Default will add 1
+
+    console.log(event.repetition_type)
 
     if (event.repetition_type === "daily") {
       while (compareDates(startDate, boundary) == -1) {
@@ -1434,15 +1442,12 @@ export default function MainFrame() {
 
     return eventArray;
   }
+
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchEvents = () => {
       if (selectedCalendars == undefined) {
         return;
       }
-      let events = await send_request("/get_events", {
-        calendar_id: selectedCalendars.calendar_id,
-      });
-      if (events.data == undefined) return;
 
       const eventsArray = [];
       const today = new Date();
@@ -1452,16 +1457,25 @@ export default function MainFrame() {
         today.getDate()
       );
 
-      for (let i = 0; i < events.data.length; i++) {
-        eventsArray.push(
-          ...eventParser(
-            events.data[i],
-            eventsArray.length,
-            addDaysToSpecificDate(localDay, 7)
-          )
-        );
-      }
-      setEventsArray(eventsArray);
+      selectedCalendars.map(async (calendar) => {
+        let events = await send_request("/get_events", {
+          "calendar_id": calendar.calendar_id,
+        });
+
+        if (events.data != undefined) {
+          for (let i = 0; i < events.data.length; i++) {
+            eventsArray.push(
+              ...eventParser(
+                events.data[i],
+                eventsArray.length,
+                addDaysToSpecificDate(localDay, 7)
+              )
+            );
+          }
+        }
+      });
+      console.log("updates")
+      setAllEventsArray(eventsArray);
     };
     fetchEvents();
   }, [selectedCalendars]);
@@ -1524,7 +1538,7 @@ export default function MainFrame() {
             <div>{calendarControlFlowButtonPackage()}</div>
           </div>
           <div className="main_calnedar_box">
-            {Calendar(selectMode, eventsArray)}
+            {Calendar(selectMode, allEventsArray)}
           </div>
         </div>
       </div>
