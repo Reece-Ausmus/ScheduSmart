@@ -390,7 +390,7 @@ export default function MainFrame() {
 
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
-    const [calendarList, setCalendarList] = useState(calendars);
+    const [calendarList, setCalendarList] = useState([]);
     //const [selectedCalendars, setSelectedCalendars] = useState([]);
 
     useEffect(() => {
@@ -461,8 +461,6 @@ export default function MainFrame() {
         newCalendarName: newCalendarName,
         user_id: userId,
       };
-      console.log(JSON.stringify(new_calendar));
-      console.log("here: " + userId);
       const response = await fetch(flaskURL + "/create_calendar", {
         method: "POST",
         headers: {

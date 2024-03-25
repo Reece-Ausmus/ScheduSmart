@@ -104,6 +104,47 @@ export default function Createaccount() {
                     break;
             }
         }
+
+        // add first calendar
+        const new_calendar = {
+            newCalendarName: "Personal",
+            user_id: userId,
+        };
+        const calResponse = await fetch(flaskURL + "/create_calendar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(new_calendar),
+            credentials: "include",
+        });
+        if (!calResponse.ok) {
+            alert("Something went wrong, refresh your website!");
+            return;
+        } else {
+            switch (calResponse.status) {
+                case 201:
+                console.log("Calendar created successfully");
+                /*const calResponseData = await calResponse.json();
+                setCalendarList([
+                    ...calendarList,
+                    {
+                        calendar_id: calResponseData["calendar_id"],
+                        name: "Personal",
+                    },
+                ]);*/
+                break;
+            case 205:
+                alert("Calendar not created!");
+                break;
+            case 206:
+                alert("Missing information!");
+                break;
+            case 207:
+                alert("Calendar not added to user!");
+                break;
+            }
+        }
     };
 
     return (
