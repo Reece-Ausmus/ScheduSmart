@@ -7,6 +7,7 @@ Week 4	(Srum master: Reece Ausmus)
 3/13/24    4hrs    33f8b1     changing day week with a better UI
 3/20/24    8hrs    cd4eed     putting events on the calendar (day and week)
 3/23/24    7hrs    9d3998     finish chatBox UI
+3/24/24    5hrs    aabdb0     Completed firebase storage of timezone + automatic time update
 
 
 Week 5 	(Plan) (Scrum master: Reece Ausmus)
@@ -19,6 +20,6 @@ Week 5 	(Plan) (Scrum master: Reece Ausmus)
 Reece Ausmus: 
 Cassie Chang: 
 Stanley Huang: Finished up chatBox function and started to put tasks on the event list
-Bradley Norris:
+Bradley Norris: Finished timezone functionality so it will permanently save and automatically update
 Himanshu Sinha: Finish out Task Manager autoscheduler, work on unit testing, and improve styling.
 Gloria Xu: Improving styling of pages and finish implementation of reminders
