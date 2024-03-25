@@ -77,6 +77,17 @@ def delete_account(user):
         return 1
 
 
+def look_for_same_user_name(user_name):
+    users = db.child("User").get()
+    for user in users.each():
+        try:
+            if user_name == user.val()["user_name"]:
+                return True
+        except KeyError as e:
+            pass
+    return False
+
+
 # login_account_with_username_and_password(username, password)
 # the method will return a user object that you will use for argument in this method
 # need to update, will eventually just pull all information using loops, so it is easily reusable 
@@ -129,17 +140,6 @@ def update_language(data):
         return 1
 
 
-# this is used to create an account
-# the argument accept an array with following format:
-# user = {
-#     "email": "<email>",
-#     "password": "<password>",
-#     "firstname": '<firstname>',
-#     "lastname": '<lastname>',
-#     "username": '<username>'
-# }
-# if success, 0 is returned
-# else 1 is returned
 def create_account_by_username_and_password(receive_account):
     try:
         data = {
@@ -149,18 +149,11 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email'],
         }
 
-        # the following code is not working
-        # existing_user = db.child("User").get().val()
-        #
-        # if existing_user:
-        #    for userid, user_data in existing_user.items():
-        #        print(user_data)
-        #        if user_data['user_name'] == data['user_name']:
-        #            print("Username already exists")
-        #            return {
-        #                "error": "Username already exists",
-        #                "response_status": 2
-        #            }
+        if look_for_same_user_name(receive_account['username']):
+            return {
+                "error": "UserName already exist",
+                "response_status": 1
+            }
 
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
         db.child("User").child(user['localId']).set(data)
@@ -393,9 +386,11 @@ def update_default_calendar_type(info):
         print("Failed to set the calendar mode")
         return 1
 
+
 def get_default_location_settings(user_id):
-    mode=db.child("User").child(user_id).child("default_location_settings").get()
+    mode = db.child("User").child(user_id).child("default_location_settings").get()
     return mode.val()
+
 
 def update_default_location_settings(info):
     mode = info['mode']
@@ -406,6 +401,7 @@ def update_default_location_settings(info):
     except Exception:
         print("Failed to set the location settings")
         return 1
+
 
 # def get_timezone(user_id):
 #     try:
