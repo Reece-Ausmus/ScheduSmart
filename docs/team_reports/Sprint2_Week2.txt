@@ -1,9 +1,12 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 4	(Srum master: Reece Ausmus)
-3/23/24    6hrs    63263c3     finish map features
-3/23/24    2hrs    a2b2bb4     finish styling of create-account page
-3/24/24    4hrs    ac27fe7     finish styling of settings page
+3/23/24    6hrs    63263c     finish map features
+3/23/24    2hrs    a2b2bb     finish styling of create-account page
+3/24/24    4hrs    ac27fe     finish styling of settings page
+3/13/24    4hrs    33f8b1     changing day week with a better UI
+3/20/24    8hrs    cd4eed     putting events on the calendar (day and week)
+3/23/24    7hrs    9d3998     finish chatBox UI
 
 
 Week 5 	(Plan) (Scrum master: Reece Ausmus)
@@ -15,7 +18,7 @@ Week 5 	(Plan) (Scrum master: Reece Ausmus)
 [Individual Goals]
 Reece Ausmus: 
 Cassie Chang: 
-Stanley Huang:
+Stanley Huang: Finished up chatBox function and started to put tasks on the event list
 Bradley Norris:
 Himanshu Sinha: Finish out Task Manager autoscheduler, work on unit testing, and improve styling.
 Gloria Xu: Improving styling of pages and finish implementation of reminders
