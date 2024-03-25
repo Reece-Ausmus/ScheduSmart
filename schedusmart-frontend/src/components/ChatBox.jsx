@@ -18,6 +18,7 @@ export default function chatBox(friends, message, userId = 1) {
 
   const [isExpand, setIsExpand] = useState(false);
   const [selectFriend, setSelectFriend] = useState(null);
+  const [friendName, setFriendName] = useState("null");
   const messageEndRef = useRef(null);
 
   const scroll_buttom = () => {
@@ -32,6 +33,7 @@ export default function chatBox(friends, message, userId = 1) {
       <div key={key} className="friendBar" onClick={()=>{
         console.log(friendList[key].room);
         setSelectFriend(friendList[key].room);
+        setFriendName(friendList[key].userName);
       }}>
         <p className="friend">
           {arr[key].userName}
@@ -75,7 +77,9 @@ export default function chatBox(friends, message, userId = 1) {
           className="chat_box_container1"
           style={{ display: selectFriend ? "none" : "flex" }}
         >
-          <div className="info"></div>
+          <div className="info">
+            <p className="infoWord">Chat</p>
+          </div>
           <div className="friendSearch">
             <input
               placeholder="Search"
@@ -103,7 +107,7 @@ export default function chatBox(friends, message, userId = 1) {
             <button className="info_button" onClick={() => {setSelectFriend(null)}}>
               &lt;
             </button>
-            <p>Friends</p>
+            <p style={{fontSize: "20px", fontWeight: "bold", marginTop: "17px"}}>{friendName}</p>
           </div>
 
           <div className="messageBox">
