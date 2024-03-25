@@ -1,6 +1,6 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
-Week 4	(Srum master: Reece Ausmus)
+Week 5	(Srum master: Reece Ausmus)
 3/23/24    6hrs    63263c     finish map features
 3/23/24    2hrs    a2b2bb     finish styling of create-account page
 3/24/24    4hrs    ac27fe     finish styling of settings page
@@ -11,16 +11,17 @@ Week 4	(Srum master: Reece Ausmus)
 3/20/24    7hrs    72f0342    taking notes
 3/22/24    4hrs    90681bd    build up Jenkins pipeline with docker
 3/23/24    2hrs    0ab40b5    shortcut to control calendar format
+3/24/24    2hrs    e81fe10    add course page
 
 
-Week 5 	(Plan) (Scrum master: Reece Ausmus)
+Week 6 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
 3/27/24 Discuss needs for the remainder of the sprint. Create quick demo for TA.
 3/30/24 Discuss sprint retrospective and plan for sprint 3.
 3/31/24 Meeting with TA to discuss sprint 2 review and plan for sprint 3.
 
 [Individual Goals]
-Reece Ausmus: 
+Reece Ausmus: Finish up remaining user stories to add courses and invite users to events.
 Cassie Chang: Finish shortcut function and write some testcase putting into Jenkinsfile
 Stanley Huang: Finished up chatBox function and started to put tasks on the event list
 Bradley Norris: Finished timezone functionality so it will permanently save and automatically update
