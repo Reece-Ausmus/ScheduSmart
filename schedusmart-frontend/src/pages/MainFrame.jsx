@@ -507,8 +507,8 @@ export default function MainFrame() {
     const handleCalendarSelection = (calendar) => {
       // Toggle the selection of the calendar
       setSelectedCalendars((prevSelected) =>
-        prevSelected.includes(calendarId)
-          ? prevSelected.filter((id) => id !== calendarId)
+        prevSelected.some(cal => cal.calendar_id === calendar["calendar_id"])
+          ? prevSelected.filter((cal) => cal.calendar_id !== calendar["calendar_id"])
           : [...prevSelected, calendar]
       );
     };
