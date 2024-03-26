@@ -35,7 +35,7 @@ export default function SetupCourses() {
       user_id: user_id
     };
 
-    const response = await fetch(flaskURL + "/add_course", {
+    /*const response = await fetch(flaskURL + "/add_course", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -58,7 +58,7 @@ export default function SetupCourses() {
           alert("Missing information!");
           break;
       }
-    }
+    }*/
     setCourseName("");
     setCourseNumber("");
     setCourseDescription("");
@@ -66,9 +66,22 @@ export default function SetupCourses() {
     setCourseEndTime("");
     setCourseSelectedDays([]);
     setCourseLocation("");
+    toggleCoursePopup();
   };
 
-  const handleSemesterSelection = () => {
+  const handleCancelCourse = () => {
+    setCourseName("");
+    setCourseNumber("");
+    setCourseDescription("");
+    setCourseStartTime("");
+    setCourseEndTime("");
+    setCourseSelectedDays([]);
+    setCourseLocation("");
+    toggleCoursePopup();
+  };
+
+  const handleSemesterSelection = (e) => {
+    e.preventDefault();
     //TODO: validate inputs
     setShowSemester(!showSemester);
     toggleCoursePopup();
@@ -166,7 +179,7 @@ export default function SetupCourses() {
           courseLocation={courseLocation}
           handleCourseLocationChange={handleCourseLocationChange}
           handleCreateCourse={handleCreateCourse}
-          toggleCoursePopup={toggleCoursePopup}
+          handleCancelCourse={handleCancelCourse}
         />
       )}
       <h2>Added Courses:</h2>

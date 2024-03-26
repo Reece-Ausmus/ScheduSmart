@@ -14,7 +14,7 @@ export default function AddCoursePopup({
   courseLocation,
   handleCourseLocationChange,
   handleCreateCourse,
-  toggleCoursePopup
+  handleCancelCourse
 }) {
   return (
     <div className="popup">
@@ -124,10 +124,10 @@ export default function AddCoursePopup({
               </div>
             </div>
           </div>
-          <button className="formbutton fb1" onClick={handleCreateCourse()}>
+          <button className="formbutton fb1" onClick={handleCreateCourse}>
             Add
           </button>
-          <button className="formbutton fb2" onClick={toggleCoursePopup()}>
+          <button className="formbutton fb2" onClick={handleCancelCourse}>
             Cancel
           </button>
         </div>
