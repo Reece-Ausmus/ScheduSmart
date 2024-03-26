@@ -430,10 +430,3 @@ db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
 
-data = {
-    "user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2",
-    "id": "0",
-    "time": "3/27"
-}
-
-mark_task_as_done(data)
