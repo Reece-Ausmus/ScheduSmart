@@ -267,7 +267,8 @@ def update_task_list(task_list_id, new_task):
 def mark_task_as_done(task):
     try:
         db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).update({"complete_time": task["time"]})
-        db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).update({"completed": "true"})
+        c = db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).get().val()
+        db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).update({"completed": not c["completed"]})
     except KeyError as e:
         print(f"{e}")
 
@@ -428,3 +429,11 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
+
+data = {
+    "user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2",
+    "id": "0",
+    "time": "3/27"
+}
+
+mark_task_as_done(data)
