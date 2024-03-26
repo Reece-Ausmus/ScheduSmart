@@ -20,6 +20,7 @@ import Icon from '@mui/material/Icon';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';;
 import TextField from '@mui/material/TextField';
+import EventParser from "./EventParser"
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -35,6 +36,43 @@ const theme = createTheme({
     },
   },
 });
+
+const handleCreateCalendar = async () => {
+  //const new_calendar = {nextCalendarID, newCalendarName}
+  //nextCalendarID++;
+  const new_calendar = {
+    newCalendarName: "tasks",
+    user_id: userId,
+  };
+  const response = await fetch(flaskURL + "/create_calendar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(new_calendar),
+    credentials: "include",
+  });
+  if (!response.ok) {
+    alert("Something went wrong, refresh your website!");
+    return;
+  } else {
+    switch (response.status) {
+      case 201:
+        console.log("Calendar created successfully");
+        const responseData = await response.json();
+        break;
+      case 205:
+        alert("Calendar not created!");
+        break;
+      case 206:
+        alert("Missing information!");
+        break;
+      case 207:
+        alert("Calendar not added to user!");
+        break;
+    }
+  }
+};
 
 // valid file extension list
 const validExtensions = ["txt", "rtf", "docx", "csv", "doc", "wps", "wpd", "msg",
@@ -57,6 +95,7 @@ const initialList = [
     { id: 1, name: "Question 2", comp: true },
     { id: 2, name: "Question 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
+    scheduled: false, 
   },
   {
     id: 1,
@@ -70,6 +109,7 @@ const initialList = [
     { id: 1, name: "User Stories", comp: false },
     { id: 2, name: "Acceptable Criteria", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
+    scheduled: false,
   },
   {
     id: 2,
@@ -83,6 +123,7 @@ const initialList = [
     { id: 1, name: "Chapter 2", comp: false },
     { id: 2, name: "Chapter 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
+    scheduled: false,
   },
 ];
 let nextId = initialList.length;
@@ -112,6 +153,12 @@ export default function TaskManager() {
             nextId = todoList.length;
           }
           console.log(userId);
+          if (responseData.calendars == null) {
+            handleCreateCalendar()
+          } else if (responseData.calendars["tasks"] == null) {
+            handleCreateCalendar()
+          }
+
           break;
         case 202:
           alert("List Not Found");
@@ -197,6 +244,17 @@ export default function TaskManager() {
         return { ...task, sub_tasks: sub_mapped }
       } else {
         return { ...task };
+      }
+    })
+    setTodoList(mapped)
+  }
+
+  function handleScheduledTask(id) {
+    let mapped = todoList.map((task) => {
+      if (task.id == id) {
+        return {...task, scheduled: true}
+      } else {
+        return {...task}
       }
     })
     setTodoList(mapped)
@@ -564,6 +622,7 @@ export default function TaskManager() {
             onToggle={handleToggleCompleted}
             option={sortOptionTodo}
             onToggleSubtask={handleToggleSubtask}
+            onScheduled={handleScheduledTask}
           />
         </div>
         <div className="task-column">
@@ -604,7 +663,7 @@ export default function TaskManager() {
   );
 }
 
-function TodoList({ list, onToggle, option, onToggleSubtask }) {
+function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
   let sortedList = list;
 
   const [fileList, setFileList] = useState([])
@@ -665,6 +724,49 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
     return progress / n
   }
 
+  const handleCreateEvent = async (task) => {
+    const new_event = {
+      name: task.title,
+      desc: task.desc,
+      start_time: "00:00",
+      end_time: "23:59",
+      start_date: task.date,
+      end_date: task.date,
+      location: "",
+      calendar: "tasks",
+      repetition_type: "none",
+      repetition_unit: "",
+      repetition_val: 1,
+      user_id: userId,
+    };
+    console.log(JSON.stringify(new_event));
+    const response = await fetch(flaskURL + "/create_event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(new_event),
+      credentials: "include",
+    });
+    if (!response.ok) {
+      alert("Something went wrong, refresh your website!");
+      return;
+    } else {
+      switch (response.status) {
+        case 201:
+          console.log("Event created successfully");
+          alert("Event Created Successfully!")
+          break;
+        case 205:
+          alert("Event not created!");
+          break;
+        case 206:
+          alert("Missing information!");
+          break;
+      }
+    }
+  }
+
   return (
     <div>
       {sortedList.map((task) => (
@@ -691,19 +793,12 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
           ))}
           <br />
           <button onClick={() => {
-            let event = {
-              "name": task.title,
-              "desc": task.desc,
-              "start_time": "10:00",
-              "end_time": "11:00",
-              "location": "None",
-              "calendar": "tasks",
-              "repetition_type": "none",
-              "repetition_unit": "",
-              "repetition_val": 1,
-              "user_id": userId,
+            if (task.scheduled == false) {
+              handleCreateEvent(task)
+              onScheduled(task.id)
+            } else {
+              alert("Task already scheduled!")
             }
-            console.log(JSON.stringify(event))
           }}>Schedule Task Time</button>
           <h4>Complete?</h4>
           <input
