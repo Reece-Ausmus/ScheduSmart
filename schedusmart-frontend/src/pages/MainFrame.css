@@ -114,6 +114,8 @@
 }
 
 .task_container {
+  padding-left: 10px;
+  padding-right: 10px;
   float: right;
   right: 2%;
   width: 25%;
@@ -133,14 +135,24 @@
   width: 50%;
 }
 
-
-
 .ToDoList {
-  margin-left: 5%;
-  border-radius: 10px;
-  width: 90%;
-  height: 87%;
+  height: 578px;
+  flex: 1;
+  width: 100%;
+  color: black;
   background-color: aliceblue;
+  padding: 5px 10px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.taskBar {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgb(186, 186, 186);
+  font-size: 20px;
+  display: flex;
+  text-align: start;
 }
 
 

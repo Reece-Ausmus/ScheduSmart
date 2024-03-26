@@ -12,6 +12,7 @@ import send_request from "./requester";
 import chatBox from "../components/ChatBox";
 import Map from "./Googlemap";
 import { useHotkeys } from "react-hotkeys-hook";
+import { CheckBox } from "@material-ui/icons";
 // import MapContainer from './Googlemap';
 
 const steps = [
@@ -1300,6 +1301,9 @@ export default function MainFrame() {
   useHotkeys("Shift+m", () => setSelectMode(3));
   useHotkeys("Shift+y", () => setSelectMode(4));
 
+
+////////////////////////////Calendar Events//////////////////////////
+
   function compareDates(date1, date2) {
     if (date1 > date2) {
       return 1;
@@ -1484,8 +1488,30 @@ export default function MainFrame() {
     fetchEvents();
   }, [selectedCalendars]);
 
+///////////////////Task handle///////////////////////////////////
+  const generateTaskListHTML = (arr) => {
+    if (!arr) {
+      return (
+      <div className="taskBar">
+        <p>All tasks have been completed.</p>
+      </div>)
+    }
+    arr.map((task)=> {
+      console.log("task: ", task.title)
+    })
+    return arr.map((task)=> (
+    <div className="taskBar" onClick={()=>{
+      console.log(task.id)
+    }}>
+      <p>{task.title}</p>
+    </div>)
+    )
+  }
+
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
+
+
 
 
   if (goToDragAndDrop) {
@@ -1557,7 +1583,9 @@ export default function MainFrame() {
                   onClick={() => {setGoToTaskManager(true)}}>
           detail</button>
         </div>
-        <div className="ToDoList"></div>
+        <div className="ToDoList">
+          {generateTaskListHTML(taskList)}
+        </div>
       </div>
     </div>
   );
