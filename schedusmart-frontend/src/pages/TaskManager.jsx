@@ -21,6 +21,10 @@ import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';;
 import TextField from '@mui/material/TextField';
 import EventParser from "./EventParser"
+import PropTypes from 'prop-types';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import { Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -625,6 +629,7 @@ export default function TaskManager() {
             onScheduled={handleScheduledTask}
           />
         </div>
+
         <div className="task-column">
           <h2>Completed</h2>
           <input
@@ -767,50 +772,100 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
     }
   }
 
+  function CircularProgressWithLabel(props) {
+    return (
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress variant="determinate" {...props} />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="caption" component="div" color="text.secondary">
+            {`${Math.round(props.value)}%`}
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
+  
   return (
-    <div>
-      {sortedList.map((task) => (
-        <div className="post" key={task.id}>
-          <h3>{task.title}</h3>
-          <progress value={progressValue(task.id)} />
-          <h4>Task Information</h4>
-          <p>{task.desc}</p>
-          <p>Estimated Workload: {task.time} hour(s)</p>
-          <p>Deadline: {task.date}</p>
-          <p><a href={fileList[task.id]}>Get Attached File!</a></p>
-          <h4>Task Checklist</h4>
-          {task.sub_tasks.map((sub_task) => (
-            <p key={sub_task.id}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Title</TableCell>
+          <TableCell>Progress</TableCell>
+          <TableCell>Task Information</TableCell>
+          <TableCell>Estimated Workload</TableCell>
+          <TableCell>Deadline</TableCell>
+          <TableCell>Attached File</TableCell>
+          <TableCell>Task Checklist</TableCell>
+          <TableCell>Actions</TableCell>
+          <TableCell>Complete?</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {sortedList.map((task) => (
+          <TableRow key={task.id}>
+            <TableCell>{task.title}</TableCell>
+            <TableCell>
+              <CircularProgressWithLabel variant="determinate" value={progressValue(task.id) * 100} />
+            </TableCell>
+            <TableCell>{task.desc}</TableCell>
+            <TableCell>{task.time} hour(s)</TableCell>
+            <TableCell>{task.date}</TableCell>
+            <TableCell><a href={fileList[task.id]}>Get Attached File!</a></TableCell>
+            <TableCell>
+              {task.sub_tasks.map((sub_task) => (
+                <p key={sub_task.id}>
+                  <input
+                    type="checkbox"
+                    checked={sub_task.comp}
+                    onChange={(e) => {
+                      onToggleSubtask(task.id, sub_task.id, e.target.checked)
+                    }}
+                  />
+                  {sub_task.name}
+                </p>
+              ))}
+            </TableCell>
+            <TableCell>
+              <button onClick={() => {
+                let event = {
+                  "name": task.title,
+                  "desc": task.desc,
+                  "start_time": "10:00",
+                  "end_time": "11:00",
+                  "location": "None",
+                  "calendar": "tasks",
+                  "repetition_type": "none",
+                  "repetition_unit": "",
+                  "repetition_val": 1,
+                  "user_id": userId,
+                }
+                console.log(JSON.stringify(event))
+              }}>Schedule Task Time</button>
+            </TableCell>
+            <TableCell>
               <input
                 type="checkbox"
-                checked={sub_task.comp}
+                checked={task.completed}
                 onChange={(e) => {
-                  onToggleSubtask(task.id, sub_task.id, e.target.checked)
+                  onToggle(task.id, e.target.checked);
                 }}
               />
-              {sub_task.name}
-            </p>
-          ))}
-          <br />
-          <button onClick={() => {
-            if (task.scheduled == false) {
-              handleCreateEvent(task)
-              onScheduled(task.id)
-            } else {
-              alert("Task already scheduled!")
-            }
-          }}>Schedule Task Time</button>
-          <h4>Complete?</h4>
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={(e) => {
-              onToggle(task.id, e.target.checked);
-            }}
-          />
-        </div>
-      ))}
-    </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
 
