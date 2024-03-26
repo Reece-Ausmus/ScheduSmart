@@ -6,6 +6,18 @@ import FileUpload from "./FileUpload";
 import { storage } from "./Firebase"
 import { listAll, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { v4 } from "uuid"
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { orange } from "@mui/material/colors";
+import Icon from '@mui/material/Icon';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';;
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -13,11 +25,20 @@ const flaskURL = "http://127.0.0.1:5000";
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
 
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+});
+
 // valid file extension list
-const validExtensions = ["txt", "rtf", "docx", "csv", "doc", "wps", "wpd", "msg", 
-                         "jpg", "png", "webp", "gif", "tif", "bmp", "eps", "mp3",
-                         "wma", "snd", "wav", "ra", "au", "aac", "mp4", "3gp", 
-                         "avi", "mpg", "mov", "wmv", "xlsx",];
+const validExtensions = ["txt", "rtf", "docx", "csv", "doc", "wps", "wpd", "msg",
+  "jpg", "png", "webp", "gif", "tif", "bmp", "eps", "mp3",
+  "wma", "snd", "wav", "ra", "au", "aac", "mp4", "3gp",
+  "avi", "mpg", "mov", "wmv", "xlsx",];
 
 
 // initial list for new users
@@ -30,9 +51,9 @@ const initialList = [
     desc: "Complete design document and sumbit",
     completed: false,
     completed_time: null,
-    sub_tasks: [{id: 0, name: "Question 1", comp: true}, 
-                {id: 1, name: "Question 2", comp: true}, 
-                {id: 2, name: "Question 3", comp: false},], 
+    sub_tasks: [{ id: 0, name: "Question 1", comp: true },
+    { id: 1, name: "Question 2", comp: true },
+    { id: 2, name: "Question 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
   },
   {
@@ -42,10 +63,10 @@ const initialList = [
     date: "2024-09-23",
     desc: "Speak with team coordinator",
     completed: false,
-    completed_time: null, 
-    sub_tasks: [{id: 0, name: "Backlog", comp: false}, 
-                {id: 1, name: "User Stories", comp: false}, 
-                {id: 2, name: "Acceptable Criteria", comp: false},], 
+    completed_time: null,
+    sub_tasks: [{ id: 0, name: "Backlog", comp: false },
+    { id: 1, name: "User Stories", comp: false },
+    { id: 2, name: "Acceptable Criteria", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
   },
   {
@@ -56,10 +77,10 @@ const initialList = [
     desc: "Look at slides lol",
     completed: false,
     completed_time: null,
-    sub_tasks: [{id: 0, name: "Chapter 1", comp: true}, 
-                {id: 1, name: "Chapter 2", comp: false}, 
-                {id: 2, name: "Chapter 3", comp: false},],
-    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`, 
+    sub_tasks: [{ id: 0, name: "Chapter 1", comp: true },
+    { id: 1, name: "Chapter 2", comp: false },
+    { id: 2, name: "Chapter 3", comp: false },],
+    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
   },
 ];
 let nextId = initialList.length;
@@ -87,7 +108,7 @@ export default function TaskManager() {
           if (responseData.task_list !== null && responseData.task_list !== undefined) {
             setTodoList(responseData.task_list)
             nextId = todoList.length;
-          } 
+          }
           console.log(userId);
           break;
         case 202:
@@ -165,15 +186,15 @@ export default function TaskManager() {
     }
   }
 
-  function handleToggleSubtask(id, sub_id, checked){
+  function handleToggleSubtask(id, sub_id, checked) {
     let mapped = todoList.map((task) => {
       if (task.id == id) {
         let sub_mapped = task.sub_tasks.map((sub_task) => {
-          return sub_task.id == sub_id ? {...sub_task, comp: checked} : {...sub_task};
+          return sub_task.id == sub_id ? { ...sub_task, comp: checked } : { ...sub_task };
         })
-        return {...task, sub_tasks: sub_mapped}
+        return { ...task, sub_tasks: sub_mapped }
       } else {
-        return {...task};
+        return { ...task };
       }
     })
     setTodoList(mapped)
@@ -223,7 +244,7 @@ export default function TaskManager() {
 
 
   const [selectedFormat, setSelectedFormat] = useState("pdf");
-  
+
   // export to pdf
   const generatePDF = () => {
     const doc = new jsPDF();
@@ -231,46 +252,46 @@ export default function TaskManager() {
     doc.setFontSize(20);
     doc.text("To-Do List", doc.internal.pageSize.getWidth() / 2, 20, "center");
     doc.setFontSize(12);
-  
+
     // Add to-do list items with spacing
     const yStart = 40; // Starting y-coordinate
     let y = yStart; // Current y-coordinate
     const lineHeight = 10; // Spacing between items
-  
+
     todoList.forEach((task) => {
       // Add task title
       doc.setFont("helvetica", "bold");
       doc.text(task.title, 15, y);
       doc.setFont("helvetica", "normal");
-  
+
       y += lineHeight;
-  
+
       doc.text(task.desc, 15, y);
       y += lineHeight;
       doc.text(`${task.time} hour(s) - ${task.date}`, 15, y);
       y += lineHeight;
-  
+
       // Add separator line
       doc.setLineWidth(0.5);
       doc.line(15, y + 2, doc.internal.pageSize.getWidth() - 15, y + 2);
       y += lineHeight * 2; // Increase spacing after separator
     });
-  
+
     // Add a space between To-Do and Completed sections
     y += lineHeight * 2;
-  
+
     // Add heading for Completed tasks
     doc.setFont("helvetica", "bold");
     doc.text("Completed Tasks", 15, y);
     doc.setFont("helvetica", "normal");
     y += lineHeight;
-  
+
     // Add completed task items with spacing (modify as needed)
     completedList.forEach((task) => {
       doc.text(task.title, 15, y);
       y += lineHeight * 2;  // Adjust spacing as needed
     });
-  
+
     try {
       // Trigger download without opening the document in a new tab
       doc.save("task-list.pdf");
@@ -322,19 +343,19 @@ export default function TaskManager() {
   };
 
   function uploadFile(fileRef, file) {
-      uploadBytes(fileRef, file).then(() => {
-          console.log("File Uploaded")
-      }).then(() => {
-        getDownloadURL(fileRef).then((url) => {
-          console.log(url)
-        })
+    uploadBytes(fileRef, file).then(() => {
+      console.log("File Uploaded")
+    }).then(() => {
+      getDownloadURL(fileRef).then((url) => {
+        console.log(url)
       })
+    })
   }
 
   const saveTasks = async () => {
     const info = {
       user_id: userId,
-      task_list: todoList 
+      task_list: todoList
     };
     const response = await fetch(flaskURL + "/update_task", {
       method: "POST",
@@ -363,22 +384,33 @@ export default function TaskManager() {
       }
     }
   }
-    
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <div>
-        <h1>Task List</h1>
-        <select
-          value={selectedFormat}
-          onChange={(e) => setSelectedFormat(e.target.value)}
-        >
-          <option value="pdf">PDF</option>
-          <option value="csv">CSV</option>
-        </select>
-        <button onClick={handleExport}>
-          Export as {selectedFormat.toUpperCase()}
-        </button>
-        <button
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h1>Task List</h1>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+              <InputLabel id="f_format">Option</InputLabel>
+              <Select
+                labelId="f_forma"
+                id="f_forma"
+                value={selectedFormat}
+                label="f_forma"
+                onChange={(e) => setSelectedFormat(e.target.value)}
+                style={{ minWidth: '120px' }}
+              >
+                <MenuItem value="pdf">PDF</MenuItem>
+                <MenuItem value="csv">CSV</MenuItem>
+              </Select>
+            </FormControl>
+            <Button variant="contained" onClick={handleExport}>Export as {selectedFormat.toUpperCase()}</Button>
+          </div>
+        </div>
+        <IconButton
+          style={{ color: 'orange' }}
+          aria-label="add"
           id="openModal"
           onClick={() => {
             setTaskName("New Task");
@@ -387,95 +419,94 @@ export default function TaskManager() {
             setSubtaskDesc("");
             setSubtaskList([]);
             setTaskFile("")
-          }}
-        >
-          Add Task
-        </button>
-        <button
-        onClick={() => {
-        window.location.href = "/calendar";
-        }}
-        >Calendar</button>
-        </div>
-        <dialog id="modal">
-          <label htmlFor="name">Task Name:</label>
-          <input
-            id="name"
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-          />
-          <label htmlFor="time">Workload:</label>
-          <input
-            type="number"
-            id="time"
-            min="1"
-            value={taskTime}
-            onChange={(e) => setTaskTime(e.target.value)}
-          />
-          <label htmlFor="date">Due Date:</label>
-          <input
-            type="date"
-            id="date"
-            value={taskDate}
-            onChange={(e) => setTaskDate(e.target.value)}
-          />
-          <label htmlFor="desc">Description:</label>
-          <input
-            id="desc"
-            value={taskDesc}
-            onChange={(e) => setTaskDesc(e.target.value)}
-          />
-          <input
-            type="file"
-            onChange={(event) => {
-              let file_exen = event.target.files[0].name.split(".").pop()
-              let valid = false
-              validExtensions.map((extension) => {
-                if (file_exen === extension)
-                  valid = true; 
-              })
-              if (valid) {
-                setFile(event.target.files[0])
-                let ref_url = `files/${event.target.files[0].name + v4()}`
-                const fileRef = ref(storage, ref_url);
-                uploadFile(fileRef, event.target.files[0])
-                setTaskFile(ref_url)
-              } else {
-                alert("Invalid File! Only image, text, audio, or video files allowed!")
-              }
-            }}
-          />
-          <label htmlFor="subtask">Add subtask:</label>
-          <input
-            id="subtask"
-            value={subtaskDesc}
-            onChange={(e) => setSubtaskDesc(e.target.value)}
-          />
-          <button onClick={() => {
-            setSubtaskList([
-              ...subtaskList,
-              {
-                id: subtaskList.length,
-                name: subtaskDesc,
-                comp: false,
-              },
-            ]);
           }}>
-            +
-          </button>
-          <ol>
+          <AddIcon />
+        </IconButton>
+        <button
+          onClick={() => {
+            window.location.href = "/calendar";
+          }}
+        >Calendar</button>
+      </div>
+      <dialog id="modal">
+        <label htmlFor="name">Task Name:</label>
+        <input
+          id="name"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+        />
+        <label htmlFor="time">Workload:</label>
+        <input
+          type="number"
+          id="time"
+          min="1"
+          value={taskTime}
+          onChange={(e) => setTaskTime(e.target.value)}
+        />
+        <label htmlFor="date">Due Date:</label>
+        <input
+          type="date"
+          id="date"
+          value={taskDate}
+          onChange={(e) => setTaskDate(e.target.value)}
+        />
+        <label htmlFor="desc">Description:</label>
+        <input
+          id="desc"
+          value={taskDesc}
+          onChange={(e) => setTaskDesc(e.target.value)}
+        />
+        <input
+          type="file"
+          onChange={(event) => {
+            let file_exen = event.target.files[0].name.split(".").pop()
+            let valid = false
+            validExtensions.map((extension) => {
+              if (file_exen === extension)
+                valid = true;
+            })
+            if (valid) {
+              setFile(event.target.files[0])
+              let ref_url = `files/${event.target.files[0].name + v4()}`
+              const fileRef = ref(storage, ref_url);
+              uploadFile(fileRef, event.target.files[0])
+              setTaskFile(ref_url)
+            } else {
+              alert("Invalid File! Only image, text, audio, or video files allowed!")
+            }
+          }}
+        />
+        <label htmlFor="subtask">Add subtask:</label>
+        <input
+          id="subtask"
+          value={subtaskDesc}
+          onChange={(e) => setSubtaskDesc(e.target.value)}
+        />
+        <button onClick={() => {
+          setSubtaskList([
+            ...subtaskList,
+            {
+              id: subtaskList.length,
+              name: subtaskDesc,
+              comp: false,
+            },
+          ]);
+        }}>
+          +
+        </button>
+        <ol>
           {subtaskList.map((subtask) => (
             <li key={subtask.id}>
               {subtask.name}
             </li>
           ))}
-          </ol>
-          <button
-            id="closeModal"
-            onClick={() => {
-              setTodoList([
-                ...todoList,
-                {
+        </ol>
+        <button
+          id="closeModal"
+          onClick={() => {
+            setTodoList([
+              ...todoList,
+              {
                 id: todoList.length,
                 title: taskName,
                 time: taskTime,
@@ -483,12 +514,24 @@ export default function TaskManager() {
                 desc: taskDesc,
                 completed: false,
                 sub_tasks: subtaskList,
-                file_url: taskFile, 
+                file_url: taskFile,
               },
-              ]);
-            }
+            ]);
+          }
           }> Add </button>
-        </dialog>
+        <button id="closeModal" onClick={() => {
+          // Reset all the form fields or close the dialog
+          setTaskName("New Task");
+          setTaskTime(0);
+          setTaskDesc("Task Description");
+          setSubtaskDesc("");
+          setSubtaskList([]);
+          setTaskFile("");
+          document.getElementById('modal').close();
+        }}>
+          Cancel
+        </button>
+      </dialog>
       <div className="task-columns-container">
         <div className="task-column">
           <h2>To Do</h2>
@@ -551,7 +594,7 @@ export default function TaskManager() {
       >
         Save Tasks
       </button>
-    </>
+    </ThemeProvider >
   );
 }
 
@@ -563,11 +606,11 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
   const fileListRef = ref(storage, "files/")
   useEffect(() => {
     listAll(fileListRef).then((response) => {
-        response.items.forEach((item) => {
-            getDownloadURL(item).then((url) => {
-                setFileList((prev) => [...prev, url]);
-            })
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setFileList((prev) => [...prev, url]);
         })
+      })
     })
   }, [])
 
@@ -601,7 +644,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
   }
 
   const progressValue = (id) => {
-    let progress = 0 
+    let progress = 0
     let n = 0
     sortedList.map((task) => {
       if (task.id == id) {
@@ -621,7 +664,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
       {sortedList.map((task) => (
         <div className="post" key={task.id}>
           <h3>{task.title}</h3>
-          <progress value={progressValue(task.id)}/>
+          <progress value={progressValue(task.id)} />
           <h4>Task Information</h4>
           <p>{task.desc}</p>
           <p>Estimated Workload: {task.time} hour(s)</p>
@@ -629,18 +672,18 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
           <p><a href={fileList[task.id]}>Get Attached File!</a></p>
           <h4>Task Checklist</h4>
           {task.sub_tasks.map((sub_task) => (
-              <p key={sub_task.id}>
-                <input
-                  type="checkbox"
-                  checked={sub_task.comp}
-                  onChange={(e) => {
-                    onToggleSubtask(task.id, sub_task.id, e.target.checked)
-                  }}
-                />
-                {sub_task.name} 
-              </p>
+            <p key={sub_task.id}>
+              <input
+                type="checkbox"
+                checked={sub_task.comp}
+                onChange={(e) => {
+                  onToggleSubtask(task.id, sub_task.id, e.target.checked)
+                }}
+              />
+              {sub_task.name}
+            </p>
           ))}
-          <br/>
+          <br />
           <button onClick={() => {
             let event = {
               "name": task.title,
