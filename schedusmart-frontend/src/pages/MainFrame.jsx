@@ -44,7 +44,9 @@ export default function MainFrame() {
     { calendar_id: "80ce85b4eaa97197e2dd929f20646552", name: "cal_name" },
 
   */
+  const [goToTaskManager, setGoToTaskManager] = useState(false)
   const [allEventsArray, setAllEventsArray] = useState([]);
+  const [taskList, setTaskList] = useState([]);
   const today = new Date();
   const todayMonth = today.getMonth();
   const monthArray = [
@@ -70,11 +72,15 @@ export default function MainFrame() {
   useEffect(() => {
     const fetchDefaultMode = async () => {
       let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {
-        user_id: userId,
+        "user_id": userId,
       });
-      if (dataOfDefaultMode.type == undefined) return;
+      if (dataOfDefaultMode.type == undefined) dataOfDefaultMode.type = 1;
+      let dataOfUser = await send_request("/user_data", {"user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2"})
+      console.log("userData: ", dataOfUser.task_list);
+      setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
     };
+
     fetchDefaultMode();
   }, []);
 
@@ -1481,6 +1487,7 @@ export default function MainFrame() {
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
 
+
   if (goToDragAndDrop) {
     return (
       <>
@@ -1491,6 +1498,7 @@ export default function MainFrame() {
 
   return (
     <div className="container">
+      {goToTaskManager && <Navigate to="/taskmanager" />}
       <Joyride
         steps={steps}
         continuous={true}
@@ -1541,9 +1549,14 @@ export default function MainFrame() {
         </div>
       </div>
       <div className="ChatBox">{chatBox()}</div>
-      {/* Event container */}
-      <div className="event_container">
-        <h1 className="Event_title">Assignment List</h1>
+      {/* task container */}
+      <div className="task_container">
+        <div className="task_upperbar">
+          <h1 className="task_title">Task</h1>
+          <button className="modeButton" 
+                  onClick={() => {setGoToTaskManager(true)}}>
+          detail</button>
+        </div>
         <div className="ToDoList"></div>
       </div>
     </div>

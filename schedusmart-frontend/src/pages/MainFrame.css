@@ -69,17 +69,20 @@
   height: auto;
 }
 .buttonGroup {
+  padding-top: 6px;
   margin-right: 2%;
   float: right;
 }
 .modeButton {
   padding: auto;
-  margin-top: 15px;
   margin-right: 5px;
   background-color: #2d2d2d;
   border: 2px;
   border-style: inset;
   color: rgb(223, 118, 43);
+}
+.modeButton:hover {
+  cursor: pointer;
 }
 .detailInfo {
   position: absolute;
@@ -110,7 +113,7 @@
     color: black;
 }
 
-.event_container {
+.task_container {
   float: right;
   right: 2%;
   width: 25%;
@@ -118,10 +121,20 @@
   background-color: #3c3c3c;
   border-radius: 10px;
 }
-.Event_title {
+.task_upperbar {
+  height: 70px;
+  padding: 10px;
+  display: flex;
+}
+.task_title {
   color: aliceblue;
   font-size: 25px;
+  margin-left: 10%;
+  width: 50%;
 }
+
+
+
 .ToDoList {
   margin-left: 5%;
   border-radius: 10px;
