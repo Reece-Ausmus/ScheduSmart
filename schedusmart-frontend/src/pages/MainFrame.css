@@ -69,17 +69,20 @@
   height: auto;
 }
 .buttonGroup {
+  padding-top: 6px;
   margin-right: 2%;
   float: right;
 }
 .modeButton {
   padding: auto;
-  margin-top: 15px;
   margin-right: 5px;
   background-color: #2d2d2d;
   border: 2px;
   border-style: inset;
   color: rgb(223, 118, 43);
+}
+.modeButton:hover {
+  cursor: pointer;
 }
 .detailInfo {
   position: absolute;
@@ -110,7 +113,9 @@
     color: black;
 }
 
-.event_container {
+.task_container {
+  padding-left: 10px;
+  padding-right: 10px;
   float: right;
   right: 2%;
   width: 25%;
@@ -118,18 +123,46 @@
   background-color: #3c3c3c;
   border-radius: 10px;
 }
-.Event_title {
+.task_upperbar {
+  height: 70px;
+  padding: 10px;
+  display: flex;
+}
+.task_title {
   color: aliceblue;
   font-size: 25px;
-}
-.ToDoList {
-  margin-left: 5%;
-  border-radius: 10px;
-  width: 90%;
-  height: 87%;
-  background-color: aliceblue;
+  margin-left: 10%;
+  width: 50%;
 }
 
+.ToDoList {
+  height: 578px;
+  flex: 1;
+  width: 100%;
+  color: black;
+  background-color: aliceblue;
+  padding: 5px 10px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.taskBar {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgb(186, 186, 186);
+  font-size: 20px;
+  display: flex;
+  text-align: start;
+}
+
+.taskName {
+  margin-left: 15px;
+  width: 90%;
+}
+
+.taskCheckBox {
+  width: 10%;
+}
 
 .add_button {
   background-color: #5a5a5a;

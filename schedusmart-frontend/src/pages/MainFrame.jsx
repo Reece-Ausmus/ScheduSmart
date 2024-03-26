@@ -12,6 +12,7 @@ import send_request from "./requester";
 import chatBox from "../components/ChatBox";
 import Map from "./Googlemap";
 import { useHotkeys } from "react-hotkeys-hook";
+import { CheckBox } from "@material-ui/icons";
 // import MapContainer from './Googlemap';
 
 const steps = [
@@ -44,7 +45,9 @@ export default function MainFrame() {
     { calendar_id: "80ce85b4eaa97197e2dd929f20646552", name: "cal_name" },
 
   */
+  const [goToTaskManager, setGoToTaskManager] = useState(false)
   const [allEventsArray, setAllEventsArray] = useState([]);
+  const [taskList, setTaskList] = useState([]);
   const today = new Date();
   const todayMonth = today.getMonth();
   const monthArray = [
@@ -70,11 +73,15 @@ export default function MainFrame() {
   useEffect(() => {
     const fetchDefaultMode = async () => {
       let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {
-        user_id: userId,
+        "user_id": userId,
       });
-      if (dataOfDefaultMode.type == undefined) return;
+      if (dataOfDefaultMode.type == undefined) dataOfDefaultMode.type = 1;
+      let dataOfUser = await send_request("/user_data", { "user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2" })
+      console.log("userData: ", dataOfUser.task_list);
+      setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
     };
+
     fetchDefaultMode();
   }, []);
 
@@ -1288,6 +1295,9 @@ export default function MainFrame() {
   useHotkeys("Shift+m", () => setSelectMode(3));
   useHotkeys("Shift+y", () => setSelectMode(4));
 
+
+////////////////////////////Calendar Events//////////////////////////
+
   function compareDates(date1, date2) {
     if (date1 > date2) {
       return 1;
@@ -1472,8 +1482,35 @@ export default function MainFrame() {
     fetchEvents();
   }, [selectedCalendars]);
 
+///////////////////Task handle///////////////////////////////////
+  const generateTaskListHTML = (arr) => {
+    if (!arr || arr == undefined) {
+      return (
+      <div className="taskBar">
+        <p>All tasks have been completed.</p>
+      </div>)
+    }
+    arr.map((task)=> {
+      console.log("task: ", task.title)
+    })
+    return arr.map((task) => (
+      !task.completed && (
+      <div className="taskBar" onClick={()=>{}}>
+        <p className="taskName">{task.title}</p>
+        <input 
+          className=".taskCheckBox" 
+          type="checkbox" 
+          defaultChecked={false}
+        />
+      </div>))
+    )
+  }
+
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
+
+
+
 
   if (goToDragAndDrop) {
     return (
@@ -1485,6 +1522,7 @@ export default function MainFrame() {
 
   return (
     <div className="container">
+      {goToTaskManager && <Navigate to="/taskmanager" />}
       <Joyride
         steps={steps}
         continuous={true}
@@ -1535,10 +1573,17 @@ export default function MainFrame() {
         </div>
       </div>
       <div className="ChatBox">{chatBox()}</div>
-      {/* Event container */}
-      <div className="event_container">
-        <h1 className="Event_title">Assignment List</h1>
-        <div className="ToDoList"></div>
+      {/* task container */}
+      <div className="task_container">
+        <div className="task_upperbar">
+          <h1 className="task_title">Task</h1>
+          <button className="modeButton" 
+                  onClick={() => {setGoToTaskManager(true)}}>
+          detail</button>
+        </div>
+        <div className="ToDoList">
+          {generateTaskListHTML(taskList)}
+        </div>
       </div>
     </div>
   );

@@ -18,14 +18,6 @@ export default function Dashboard() {
       );
     }
 
-    if (goToTaskManager) {
-      return(
-          <>
-          <Navigate to="/taskmanager" />
-          </>
-      );
-    }
-
     if (goToSignOut) {
     return (
       <>
@@ -51,9 +43,6 @@ export default function Dashboard() {
         </h1>
         <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
           Settings
-        </button>
-        <button className="upperBarButton" onClick={() => {setGoToTaskManager(true)}}>
-          Tasks
         </button>
         <button className="upperBarButton" onClick={() => {setGoToNotes(true)}}>
           Notes

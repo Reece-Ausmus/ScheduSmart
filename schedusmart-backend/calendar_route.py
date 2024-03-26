@@ -95,6 +95,15 @@ def update_task_list():
     return response
 
 
+@calendar.route('/mark_done', methods=['POST'])
+def mark_task_done():
+    task = request.get_json()
+    mark_task_as_done(task)
+    response = jsonify({'message': 'done'})
+    response.status_code = 200
+    return response
+
+
 # this is to retrieve calendar default mode
 @calendar.route('/get_calendar_default_mode', methods=['POST'])
 def get_calendar_default_mode():
