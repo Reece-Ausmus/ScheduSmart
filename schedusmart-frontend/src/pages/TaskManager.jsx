@@ -20,6 +20,11 @@ import Icon from '@mui/material/Icon';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';;
 import TextField from '@mui/material/TextField';
+import EventParser from "./EventParser"
+import PropTypes from 'prop-types';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import { Table, TableHead, TableBody, TableRow, TableCell, Grid } from '@mui/material';
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -35,6 +40,43 @@ const theme = createTheme({
     },
   },
 });
+
+const handleCreateCalendar = async () => {
+  //const new_calendar = {nextCalendarID, newCalendarName}
+  //nextCalendarID++;
+  const new_calendar = {
+    newCalendarName: "tasks",
+    user_id: userId,
+  };
+  const response = await fetch(flaskURL + "/create_calendar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(new_calendar),
+    credentials: "include",
+  });
+  if (!response.ok) {
+    alert("Something went wrong, refresh your website!");
+    return;
+  } else {
+    switch (response.status) {
+      case 201:
+        console.log("Calendar created successfully");
+        const responseData = await response.json();
+        break;
+      case 205:
+        alert("Calendar not created!");
+        break;
+      case 206:
+        alert("Missing information!");
+        break;
+      case 207:
+        alert("Calendar not added to user!");
+        break;
+    }
+  }
+};
 
 // valid file extension list
 const validExtensions = ["txt", "rtf", "docx", "csv", "doc", "wps", "wpd", "msg",
@@ -57,6 +99,7 @@ const initialList = [
     { id: 1, name: "Question 2", comp: true },
     { id: 2, name: "Question 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
+    scheduled: false,
   },
   {
     id: 1,
@@ -70,6 +113,7 @@ const initialList = [
     { id: 1, name: "User Stories", comp: false },
     { id: 2, name: "Acceptable Criteria", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
+    scheduled: false,
   },
   {
     id: 2,
@@ -83,6 +127,7 @@ const initialList = [
     { id: 1, name: "Chapter 2", comp: false },
     { id: 2, name: "Chapter 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
+    scheduled: false,
   },
 ];
 let nextId = initialList.length;
@@ -112,6 +157,12 @@ export default function TaskManager() {
             nextId = todoList.length;
           }
           console.log(userId);
+          if (responseData.calendars == null) {
+            handleCreateCalendar()
+          } else if (responseData.calendars["tasks"] == null) {
+            handleCreateCalendar()
+          }
+
           break;
         case 202:
           alert("List Not Found");
@@ -197,6 +248,17 @@ export default function TaskManager() {
         return { ...task, sub_tasks: sub_mapped }
       } else {
         return { ...task };
+      }
+    })
+    setTodoList(mapped)
+  }
+
+  function handleScheduledTask(id) {
+    let mapped = todoList.map((task) => {
+      if (task.id == id) {
+        return { ...task, scheduled: true }
+      } else {
+        return { ...task }
       }
     })
     setTodoList(mapped)
@@ -416,19 +478,186 @@ export default function TaskManager() {
 
       <div className="task-columns-container">
         <div className="task-column">
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h2 style={{ margin: 0 }}>To Do</h2>
+                <Fab
+                  aria-label="add"
+                  color="primary"
+                  id="openModal"
+                  onClick={() => {
+                    setTaskName("New Task");
+                    setTaskTime(0);
+                    setTaskDesc("Task Description");
+                    setSubtaskDesc("");
+                    setSubtaskList([]);
+                    setTaskFile("");
+                  }}
+                >
+                  <AddIcon />
+                </Fab>
+              </div>
+            </Grid>
+            <Grid item>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <TextField
+                  type="search"
+                  label="Search"
+                  variant="outlined"
+                  value={searchQueryTodo}
+                  onChange={filterTodo}
+                  style={{ width: '200px' }}
+                  size="small"
+                />
+                <FormControl sx={{ m: 1, width: 200 }} size="small">
+                  <InputLabel id="sorting">Sort</InputLabel>
+                  <Select
+                    labelId="sorting"
+                    id="sorting"
+                    value={sortOptionTodo}
+                    label="sorting"
+                    onChange={(e) => setSortOptionTodo(e.target.value)}
+                  >
+                    <MenuItem value={0}>Sort By</MenuItem>
+                    <MenuItem value={1}>Earliest created</MenuItem>
+                    <MenuItem value={2}>Latest created</MenuItem>
+                    <MenuItem value={3}>Earliest due</MenuItem>
+                    <MenuItem value={4}>Latest due</MenuItem>
+                    <MenuItem value={5}>Largest workload</MenuItem>
+                    <MenuItem value={6}>Smallest workload</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </Grid>
+          </Grid>
+          <dialog id="modal">
+            <label htmlFor="name">Task Name:</label>
+            <input
+              id="name"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+            />
+            <label htmlFor="time">Workload:</label>
+            <input
+              type="number"
+              id="time"
+              min="1"
+              value={taskTime}
+              onChange={(e) => setTaskTime(e.target.value)}
+            />
+            <label htmlFor="date">Due Date:</label>
+            <input
+              type="date"
+              id="date"
+              value={taskDate}
+              onChange={(e) => setTaskDate(e.target.value)}
+            />
+            <label htmlFor="desc">Description:</label>
+            <input
+              id="desc"
+              value={taskDesc}
+              onChange={(e) => setTaskDesc(e.target.value)}
+            />
+            <input
+              type="file"
+              onChange={(event) => {
+                let file_exen = event.target.files[0].name.split(".").pop()
+                let valid = false
+                validExtensions.map((extension) => {
+                  if (file_exen === extension)
+                    valid = true;
+                })
+                if (valid) {
+                  setFile(event.target.files[0])
+                  let ref_url = `files/${event.target.files[0].name + v4()}`
+                  const fileRef = ref(storage, ref_url);
+                  uploadFile(fileRef, event.target.files[0])
+                  setTaskFile(ref_url)
+                } else {
+                  alert("Invalid File! Only image, text, audio, or video files allowed!")
+                }
+              }}
+            />
+            <label htmlFor="subtask">Add subtask:</label>
+            <input
+              id="subtask"
+              value={subtaskDesc}
+              onChange={(e) => setSubtaskDesc(e.target.value)}
+            />
+            <button onClick={() => {
+              setSubtaskList([
+                ...subtaskList,
+                {
+                  id: subtaskList.length,
+                  name: subtaskDesc,
+                  comp: false,
+                },
+              ]);
+            }}>
+              +
+            </button>
+            <ol>
+              {subtaskList.map((subtask) => (
+                <li key={subtask.id}>
+                  {subtask.name}
+                </li>
+              ))}
+            </ol>
+            <button
+              id="closeModal"
+              onClick={() => {
+                setTodoList([
+                  ...todoList,
+                  {
+                    id: todoList.length,
+                    title: taskName,
+                    time: taskTime,
+                    date: taskDate,
+                    desc: taskDesc,
+                    completed: false,
+                    sub_tasks: subtaskList,
+                    file_url: taskFile,
+                  },
+                ]);
+              }
+              }> Add </button>
+            <button id="closeModal" onClick={() => {
+              // Reset all the form fields or close the dialog
+              setTaskName("New Task");
+              setTaskTime(0);
+              setTaskDesc("Task Description");
+              setSubtaskDesc("");
+              setSubtaskList([]);
+              setTaskFile("");
+              document.getElementById('modal').close();
+            }}>
+              Cancel
+            </button>
+          </dialog>
+          <TodoList
+            list={todoList}
+            onToggle={handleToggleCompleted}
+            option={sortOptionTodo}
+            onToggleSubtask={handleToggleSubtask}
+            onScheduled={handleScheduledTask}
+          />
+        </div>
+
+        <div className="task-column">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-            <h2 style={{ marginLeft: 0 }}>To Do</h2>
+            <h2 style={{ marginLeft: 0 }}>Completed</h2>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <TextField type="search" label="Search" variant="outlined" value={searchQueryTodo}
-                onChange={filterTodo} style={{ width: '200px' }} size="small" />
+              <TextField type="search" label="Search" variant="outlined" value={searchQueryCompleted}
+                onChange={filterCompleted} style={{ width: '200px' }} size="small" />
               <FormControl sx={{ m: 1, width: 200 }} size="small">
-                <InputLabel id="sorting">Sort</InputLabel>
+                <InputLabel id="c_sorting">Sort</InputLabel>
                 <Select
-                  labelId="sorting"
-                  id="sorting"
-                  value={sortOptionTodo}
-                  label="sorting"
-                  onChange={(e) => setSortOptionTodo(e.target.value)}
+                  labelId="c_sorting"
+                  id="c_sorting"
+                  value={sortOptionCompleted}
+                  label="c_sorting"
+                  onChange={(e) => setSortOptionCompleted(e.target.value)}
                 >
                   <MenuItem value={0}>Sort By</MenuItem>
                   <MenuItem value={1}>Earliest created</MenuItem>
@@ -439,155 +668,8 @@ export default function TaskManager() {
                   <MenuItem value={6}>Smallest workload</MenuItem>
                 </Select>
               </FormControl>
-              <Fab
-                aria-label="add"
-                id="openModal"
-                color="primary"
-                onClick={() => {
-                  setTaskName("New Task");
-                  setTaskTime(0);
-                  setTaskDesc("Task Description");
-                  setSubtaskDesc("");
-                  setSubtaskList([]);
-                  setTaskFile("")
-                }}>
-                <AddIcon />
-              </Fab>
-              <dialog id="modal">
-                <label htmlFor="name">Task Name:</label>
-                <input
-                  id="name"
-                  value={taskName}
-                  onChange={(e) => setTaskName(e.target.value)}
-                />
-                <label htmlFor="time">Workload:</label>
-                <input
-                  type="number"
-                  id="time"
-                  min="1"
-                  value={taskTime}
-                  onChange={(e) => setTaskTime(e.target.value)}
-                />
-                <label htmlFor="date">Due Date:</label>
-                <input
-                  type="date"
-                  id="date"
-                  value={taskDate}
-                  onChange={(e) => setTaskDate(e.target.value)}
-                />
-                <label htmlFor="desc">Description:</label>
-                <input
-                  id="desc"
-                  value={taskDesc}
-                  onChange={(e) => setTaskDesc(e.target.value)}
-                />
-                <input
-                  type="file"
-                  onChange={(event) => {
-                    let file_exen = event.target.files[0].name.split(".").pop()
-                    let valid = false
-                    validExtensions.map((extension) => {
-                      if (file_exen === extension)
-                        valid = true;
-                    })
-                    if (valid) {
-                      setFile(event.target.files[0])
-                      let ref_url = `files/${event.target.files[0].name + v4()}`
-                      const fileRef = ref(storage, ref_url);
-                      uploadFile(fileRef, event.target.files[0])
-                      setTaskFile(ref_url)
-                    } else {
-                      alert("Invalid File! Only image, text, audio, or video files allowed!")
-                    }
-                  }}
-                />
-                <label htmlFor="subtask">Add subtask:</label>
-                <input
-                  id="subtask"
-                  value={subtaskDesc}
-                  onChange={(e) => setSubtaskDesc(e.target.value)}
-                />
-                <button onClick={() => {
-                  setSubtaskList([
-                    ...subtaskList,
-                    {
-                      id: subtaskList.length,
-                      name: subtaskDesc,
-                      comp: false,
-                    },
-                  ]);
-                }}>
-                  +
-                </button>
-                <ol>
-                  {subtaskList.map((subtask) => (
-                    <li key={subtask.id}>
-                      {subtask.name}
-                    </li>
-                  ))}
-                </ol>
-                <button
-                  id="closeModal"
-                  onClick={() => {
-                    setTodoList([
-                      ...todoList,
-                      {
-                        id: todoList.length,
-                        title: taskName,
-                        time: taskTime,
-                        date: taskDate,
-                        desc: taskDesc,
-                        completed: false,
-                        sub_tasks: subtaskList,
-                        file_url: taskFile,
-                      },
-                    ]);
-                  }
-                  }> Add </button>
-                <button id="closeModal" onClick={() => {
-                  // Reset all the form fields or close the dialog
-                  setTaskName("New Task");
-                  setTaskTime(0);
-                  setTaskDesc("Task Description");
-                  setSubtaskDesc("");
-                  setSubtaskList([]);
-                  setTaskFile("");
-                  document.getElementById('modal').close();
-                }}>
-                  Cancel
-                </button>
-              </dialog>
             </div>
           </div>
-          <TodoList
-            list={todoList}
-            onToggle={handleToggleCompleted}
-            option={sortOptionTodo}
-            onToggleSubtask={handleToggleSubtask}
-          />
-        </div>
-        <div className="task-column">
-          <h2>Completed</h2>
-          <input
-            type="search"
-            value={searchQueryCompleted}
-            onChange={filterCompleted}
-            placeholder="Search"
-          />
-          <select
-            value={sortOptionCompleted}
-            onChange={(e) => setSortOptionCompleted(e.target.value)}
-          >
-            <option value="0">Sort By</option>
-            <option value="1">Earliest created</option>
-            <option value="2">Latest created</option>
-            <option value="3">Earliest due</option>
-            <option value="4">Latest due</option>
-            <option value="5">Largest workload</option>
-            <option value="6">Smallest workload</option>
-            <option value="7">Earliest completed</option>
-            <option value="8">Latest completed</option>
-          </select>
           <CompletedList
             list={completedList}
             onToggle={handleToggleCompleted}
@@ -595,16 +677,12 @@ export default function TaskManager() {
           />
         </div>
       </div>
-      <button
-        onClick={saveTasks}
-      >
-        Save Tasks
-      </button>
+      <Button variant="contained" onClick={saveTasks} style={{ marginTop: '20px' }}> Save Tasks</Button>
     </ThemeProvider >
   );
 }
 
-function TodoList({ list, onToggle, option, onToggleSubtask }) {
+function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
   let sortedList = list;
 
   const [fileList, setFileList] = useState([])
@@ -665,57 +743,136 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
     return progress / n
   }
 
+  const handleCreateEvent = async (task) => {
+    const new_event = {
+      name: task.title,
+      desc: task.desc,
+      start_time: "00:00",
+      end_time: "23:59",
+      start_date: task.date,
+      end_date: task.date,
+      location: "",
+      calendar: "tasks",
+      repetition_type: "none",
+      repetition_unit: "",
+      repetition_val: 1,
+      user_id: userId,
+    };
+    console.log(JSON.stringify(new_event));
+    const response = await fetch(flaskURL + "/create_event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(new_event),
+      credentials: "include",
+    });
+    if (!response.ok) {
+      alert("Something went wrong, refresh your website!");
+      return;
+    } else {
+      switch (response.status) {
+        case 201:
+          console.log("Event created successfully");
+          alert("Event Created Successfully!")
+          break;
+        case 205:
+          alert("Event not created!");
+          break;
+        case 206:
+          alert("Missing information!");
+          break;
+      }
+    }
+  }
+
+  function CircularProgressWithLabel(props) {
+    return (
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress variant="determinate" {...props} />
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="caption" component="div" color="text.secondary">
+            {`${Math.round(props.value)}%`}
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
+
   return (
-    <div>
-      {sortedList.map((task) => (
-        <div className="post" key={task.id}>
-          <h3>{task.title}</h3>
-          <progress value={progressValue(task.id)} />
-          <h4>Task Information</h4>
-          <p>{task.desc}</p>
-          <p>Estimated Workload: {task.time} hour(s)</p>
-          <p>Deadline: {task.date}</p>
-          <p><a href={fileList[task.id]}>Get Attached File!</a></p>
-          <h4>Task Checklist</h4>
-          {task.sub_tasks.map((sub_task) => (
-            <p key={sub_task.id}>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Title</TableCell>
+          <TableCell>Progress</TableCell>
+          <TableCell>Task Information</TableCell>
+          <TableCell>Estimated Workload</TableCell>
+          <TableCell>Deadline</TableCell>
+          <TableCell>Attached File</TableCell>
+          <TableCell>Task Checklist</TableCell>
+          <TableCell>Actions</TableCell>
+          <TableCell>Complete?</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {sortedList.map((task) => (
+          <TableRow key={task.id}>
+            <TableCell>{task.title}</TableCell>
+            <TableCell>
+              <CircularProgressWithLabel variant="determinate" value={progressValue(task.id) * 100} />
+            </TableCell>
+            <TableCell>{task.desc}</TableCell>
+            <TableCell>{task.time} hour(s)</TableCell>
+            <TableCell>{task.date}</TableCell>
+            <TableCell><a href={fileList[task.id]}>Get Attached File!</a></TableCell>
+            <TableCell>
+              {task.sub_tasks.map((sub_task) => (
+                <p key={sub_task.id}>
+                  <input
+                    type="checkbox"
+                    checked={sub_task.comp}
+                    onChange={(e) => {
+                      onToggleSubtask(task.id, sub_task.id, e.target.checked)
+                    }}
+                  />
+                  {sub_task.name}
+                </p>
+              ))}
+            </TableCell>
+            <TableCell>
+              <button onClick={() => {
+                if (task.scheduled == false) {
+                  handleCreateEvent(task)
+                  onScheduled(task.id)
+                } else {
+                  alert("Task already scheduled!")
+                }
+              }}>Schedule Task Time</button>
+            </TableCell>
+            <TableCell>
               <input
                 type="checkbox"
-                checked={sub_task.comp}
+                checked={task.completed}
                 onChange={(e) => {
-                  onToggleSubtask(task.id, sub_task.id, e.target.checked)
+                  onToggle(task.id, e.target.checked);
                 }}
               />
-              {sub_task.name}
-            </p>
-          ))}
-          <br />
-          <button onClick={() => {
-            let event = {
-              "name": task.title,
-              "desc": task.desc,
-              "start_time": "10:00",
-              "end_time": "11:00",
-              "location": "None",
-              "calendar": "tasks",
-              "repetition_type": "none",
-              "repetition_unit": "",
-              "repetition_val": 1,
-              "user_id": userId,
-            }
-            console.log(JSON.stringify(event))
-          }}>Schedule Task Time</button>
-          <h4>Complete?</h4>
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={(e) => {
-              onToggle(task.id, e.target.checked);
-            }}
-          />
-        </div>
-      ))}
-    </div>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
 
@@ -762,23 +919,35 @@ function CompletedList({ list, onToggle, option }) {
   }
 
   return (
-    <div>
-      {sortedList.map((task) => (
-        <div className="post" key={task.id}>
-          <h3>{task.title}</h3>
-          <h4>Task Information</h4>
-          <p>{task.desc}</p>
-          <p>Deadline: {task.date}</p>
-          <p>Completed: {task.completed_time}</p>
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={(e) => {
-              onToggle(task.id, e.target.checked);
-            }}
-          />
-        </div>
-      ))}
-    </div>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Title</TableCell>
+          <TableCell>Task Information</TableCell>
+          <TableCell>Deadline</TableCell>
+          <TableCell>Completed Time</TableCell>
+          <TableCell>Completed</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {sortedList.map((task) => (
+          <TableRow key={task.id}>
+            <TableCell>{task.title}</TableCell>
+            <TableCell>{task.desc}</TableCell>
+            <TableCell>{task.date}</TableCell>
+            <TableCell>{task.completed_time}</TableCell>
+            <TableCell>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={(e) => {
+                  onToggle(task.id, e.target.checked);
+                }}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
