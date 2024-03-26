@@ -339,12 +339,14 @@ def add_new_event(event_info):
         'calendar': event_info['calendar'],
         'repetition_type': event_info['repetition_type'],
         'repetition_unit': event_info['repetition_unit'],
-        'repetition_val': event_info['repetition_val']
+        'repetition_val': event_info['repetition_val'],
+        'selected_days;': event_info['selected_days']
     }
     try:
-        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        calendar_id = caldata['calendar_id']
-        print(calendar_id)
+        #caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        #calendar_id = caldata['calendar_id']
+        #print(calendar_id)
+        calendar_id = data['calendar']
         db.child("Calendars").child(calendar_id).child("Events").child(event_id).set(data)
     except Exception as e:
         print("Failed to create calendar:", e)
