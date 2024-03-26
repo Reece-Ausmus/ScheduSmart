@@ -99,7 +99,7 @@ const initialList = [
     { id: 1, name: "Question 2", comp: true },
     { id: 2, name: "Question 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
-    scheduled: false, 
+    scheduled: false,
   },
   {
     id: 1,
@@ -256,9 +256,9 @@ export default function TaskManager() {
   function handleScheduledTask(id) {
     let mapped = todoList.map((task) => {
       if (task.id == id) {
-        return {...task, scheduled: true}
+        return { ...task, scheduled: true }
       } else {
-        return {...task}
+        return { ...task }
       }
     })
     setTodoList(mapped)
@@ -795,7 +795,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
       </Box>
     );
   }
-  
+
   return (
     <Table>
       <TableHead>
@@ -838,19 +838,12 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
             </TableCell>
             <TableCell>
               <button onClick={() => {
-                let event = {
-                  "name": task.title,
-                  "desc": task.desc,
-                  "start_time": "10:00",
-                  "end_time": "11:00",
-                  "location": "None",
-                  "calendar": "tasks",
-                  "repetition_type": "none",
-                  "repetition_unit": "",
-                  "repetition_val": 1,
-                  "user_id": userId,
+                if (task.scheduled == false) {
+                  handleCreateEvent(task)
+                  onScheduled(task.id)
+                } else {
+                  alert("Task already scheduled!")
                 }
-                console.log(JSON.stringify(event))
               }}>Schedule Task Time</button>
             </TableCell>
             <TableCell>
