@@ -1,4 +1,4 @@
-/* ul {
+ul {
   list-style-type: none;
 }
 
@@ -48,4 +48,4 @@ select {
 .task-column {
   flex: 1;
   margin-right: 20px; 
-} */
+}

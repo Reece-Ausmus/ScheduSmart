@@ -15,9 +15,11 @@ import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { orange } from "@mui/material/colors";
+import Fab from '@mui/material/Fab';
 import Icon from '@mui/material/Icon';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';;
+import TextField from '@mui/material/TextField';
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -390,7 +392,7 @@ export default function TaskManager() {
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h1>Task List</h1>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 10 }}>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <InputLabel id="f_format">Option</InputLabel>
               <Select
@@ -406,153 +408,157 @@ export default function TaskManager() {
               </Select>
             </FormControl>
             <Button variant="contained" onClick={handleExport}>Export as {selectedFormat.toUpperCase()}</Button>
+            <button onClick={() => { window.location.href = "/calendar"; }}>Calendar</button>
           </div>
         </div>
-        <IconButton
-          style={{ color: 'orange' }}
-          aria-label="add"
-          id="openModal"
-          onClick={() => {
-            setTaskName("New Task");
-            setTaskTime(0);
-            setTaskDesc("Task Description");
-            setSubtaskDesc("");
-            setSubtaskList([]);
-            setTaskFile("")
-          }}>
-          <AddIcon />
-        </IconButton>
-        <button
-          onClick={() => {
-            window.location.href = "/calendar";
-          }}
-        >Calendar</button>
       </div>
-      <dialog id="modal">
-        <label htmlFor="name">Task Name:</label>
-        <input
-          id="name"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
-        />
-        <label htmlFor="time">Workload:</label>
-        <input
-          type="number"
-          id="time"
-          min="1"
-          value={taskTime}
-          onChange={(e) => setTaskTime(e.target.value)}
-        />
-        <label htmlFor="date">Due Date:</label>
-        <input
-          type="date"
-          id="date"
-          value={taskDate}
-          onChange={(e) => setTaskDate(e.target.value)}
-        />
-        <label htmlFor="desc">Description:</label>
-        <input
-          id="desc"
-          value={taskDesc}
-          onChange={(e) => setTaskDesc(e.target.value)}
-        />
-        <input
-          type="file"
-          onChange={(event) => {
-            let file_exen = event.target.files[0].name.split(".").pop()
-            let valid = false
-            validExtensions.map((extension) => {
-              if (file_exen === extension)
-                valid = true;
-            })
-            if (valid) {
-              setFile(event.target.files[0])
-              let ref_url = `files/${event.target.files[0].name + v4()}`
-              const fileRef = ref(storage, ref_url);
-              uploadFile(fileRef, event.target.files[0])
-              setTaskFile(ref_url)
-            } else {
-              alert("Invalid File! Only image, text, audio, or video files allowed!")
-            }
-          }}
-        />
-        <label htmlFor="subtask">Add subtask:</label>
-        <input
-          id="subtask"
-          value={subtaskDesc}
-          onChange={(e) => setSubtaskDesc(e.target.value)}
-        />
-        <button onClick={() => {
-          setSubtaskList([
-            ...subtaskList,
-            {
-              id: subtaskList.length,
-              name: subtaskDesc,
-              comp: false,
-            },
-          ]);
-        }}>
-          +
-        </button>
-        <ol>
-          {subtaskList.map((subtask) => (
-            <li key={subtask.id}>
-              {subtask.name}
-            </li>
-          ))}
-        </ol>
-        <button
-          id="closeModal"
-          onClick={() => {
-            setTodoList([
-              ...todoList,
-              {
-                id: todoList.length,
-                title: taskName,
-                time: taskTime,
-                date: taskDate,
-                desc: taskDesc,
-                completed: false,
-                sub_tasks: subtaskList,
-                file_url: taskFile,
-              },
-            ]);
-          }
-          }> Add </button>
-        <button id="closeModal" onClick={() => {
-          // Reset all the form fields or close the dialog
-          setTaskName("New Task");
-          setTaskTime(0);
-          setTaskDesc("Task Description");
-          setSubtaskDesc("");
-          setSubtaskList([]);
-          setTaskFile("");
-          document.getElementById('modal').close();
-        }}>
-          Cancel
-        </button>
-      </dialog>
+
+
       <div className="task-columns-container">
         <div className="task-column">
-          <h2>To Do</h2>
-          <input
-            type="search"
-            value={searchQueryTodo}
-            onChange={filterTodo}
-            placeholder="Search"
-          />
-          <select
-            value={sortOptionTodo}
-            onChange={(e) => setSortOptionTodo(e.target.value)}
-          >
-            <option value="0">Sort By</option>
-            <option value="1">Earliest created</option>
-            <option value="2">Latest created</option>
-            <option value="3">Earliest due</option>
-            <option value="4">Latest due</option>
-            <option value="5">Largest workload</option>
-            <option value="6">Smallest workload</option>
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+            <h2 style={{ marginLeft: 0 }}>To Do</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <TextField type="search" label="Search" variant="outlined" value={searchQueryTodo}
+                onChange={filterTodo} style={{ width: '200px' }} size="small" />
+              <FormControl sx={{ m: 1, width: 200 }} size="small">
+                <InputLabel id="sorting">Sort</InputLabel>
+                <Select
+                  labelId="sorting"
+                  id="sorting"
+                  value={sortOptionTodo}
+                  label="sorting"
+                  onChange={(e) => setSortOptionTodo(e.target.value)}
+                >
+                  <MenuItem value={0}>Sort By</MenuItem>
+                  <MenuItem value={1}>Earliest created</MenuItem>
+                  <MenuItem value={2}>Latest created</MenuItem>
+                  <MenuItem value={3}>Earliest due</MenuItem>
+                  <MenuItem value={4}>Latest due</MenuItem>
+                  <MenuItem value={5}>Largest workload</MenuItem>
+                  <MenuItem value={6}>Smallest workload</MenuItem>
+                </Select>
+              </FormControl>
+              <Fab
+                aria-label="add"
+                id="openModal"
+                color="primary"
+                onClick={() => {
+                  setTaskName("New Task");
+                  setTaskTime(0);
+                  setTaskDesc("Task Description");
+                  setSubtaskDesc("");
+                  setSubtaskList([]);
+                  setTaskFile("")
+                }}>
+                <AddIcon />
+              </Fab>
+              <dialog id="modal">
+                <label htmlFor="name">Task Name:</label>
+                <input
+                  id="name"
+                  value={taskName}
+                  onChange={(e) => setTaskName(e.target.value)}
+                />
+                <label htmlFor="time">Workload:</label>
+                <input
+                  type="number"
+                  id="time"
+                  min="1"
+                  value={taskTime}
+                  onChange={(e) => setTaskTime(e.target.value)}
+                />
+                <label htmlFor="date">Due Date:</label>
+                <input
+                  type="date"
+                  id="date"
+                  value={taskDate}
+                  onChange={(e) => setTaskDate(e.target.value)}
+                />
+                <label htmlFor="desc">Description:</label>
+                <input
+                  id="desc"
+                  value={taskDesc}
+                  onChange={(e) => setTaskDesc(e.target.value)}
+                />
+                <input
+                  type="file"
+                  onChange={(event) => {
+                    let file_exen = event.target.files[0].name.split(".").pop()
+                    let valid = false
+                    validExtensions.map((extension) => {
+                      if (file_exen === extension)
+                        valid = true;
+                    })
+                    if (valid) {
+                      setFile(event.target.files[0])
+                      let ref_url = `files/${event.target.files[0].name + v4()}`
+                      const fileRef = ref(storage, ref_url);
+                      uploadFile(fileRef, event.target.files[0])
+                      setTaskFile(ref_url)
+                    } else {
+                      alert("Invalid File! Only image, text, audio, or video files allowed!")
+                    }
+                  }}
+                />
+                <label htmlFor="subtask">Add subtask:</label>
+                <input
+                  id="subtask"
+                  value={subtaskDesc}
+                  onChange={(e) => setSubtaskDesc(e.target.value)}
+                />
+                <button onClick={() => {
+                  setSubtaskList([
+                    ...subtaskList,
+                    {
+                      id: subtaskList.length,
+                      name: subtaskDesc,
+                      comp: false,
+                    },
+                  ]);
+                }}>
+                  +
+                </button>
+                <ol>
+                  {subtaskList.map((subtask) => (
+                    <li key={subtask.id}>
+                      {subtask.name}
+                    </li>
+                  ))}
+                </ol>
+                <button
+                  id="closeModal"
+                  onClick={() => {
+                    setTodoList([
+                      ...todoList,
+                      {
+                        id: todoList.length,
+                        title: taskName,
+                        time: taskTime,
+                        date: taskDate,
+                        desc: taskDesc,
+                        completed: false,
+                        sub_tasks: subtaskList,
+                        file_url: taskFile,
+                      },
+                    ]);
+                  }
+                  }> Add </button>
+                <button id="closeModal" onClick={() => {
+                  // Reset all the form fields or close the dialog
+                  setTaskName("New Task");
+                  setTaskTime(0);
+                  setTaskDesc("Task Description");
+                  setSubtaskDesc("");
+                  setSubtaskList([]);
+                  setTaskFile("");
+                  document.getElementById('modal').close();
+                }}>
+                  Cancel
+                </button>
+              </dialog>
+            </div>
+          </div>
           <TodoList
             list={todoList}
             onToggle={handleToggleCompleted}
