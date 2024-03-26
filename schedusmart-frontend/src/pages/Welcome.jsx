@@ -87,7 +87,7 @@ export default function Welcome() {
             useFlexGap
             sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
           >
-            <Button variant="contained" onClick={() => { window.location.href = "/createaccount"; }}>Get started</Button>
+            <Button variant="contained" onClick={() => { window.location.href = "/createaccount"; }}>Start now</Button>
             <Button variant="contained" onClick={() => { window.location.href = "/signin"; }}>
               Already have an account?
             </Button>
