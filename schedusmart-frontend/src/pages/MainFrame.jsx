@@ -390,7 +390,7 @@ export default function MainFrame() {
 
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
-    const [calendarList, setCalendarList] = useState(calendars);
+    const [calendarList, setCalendarList] = useState([]);
     //const [selectedCalendars, setSelectedCalendars] = useState([]);
 
     useEffect(() => {
@@ -461,8 +461,6 @@ export default function MainFrame() {
         newCalendarName: newCalendarName,
         user_id: userId,
       };
-      console.log(JSON.stringify(new_calendar));
-      console.log("here: " + userId);
       const response = await fetch(flaskURL + "/create_calendar", {
         method: "POST",
         headers: {
@@ -504,12 +502,12 @@ export default function MainFrame() {
     };
 
     // Function to handle the selection of a calendar
-    const handleCalendarSelection = (calendarId) => {
+    const handleCalendarSelection = (calendar) => {
       // Toggle the selection of the calendar
       setSelectedCalendars((prevSelected) =>
-        prevSelected.includes(calendarId)
-          ? prevSelected.filter((id) => id !== calendarId)
-          : [...prevSelected, calendarId]
+        prevSelected.some(cal => cal.calendar_id === calendar["calendar_id"])
+          ? prevSelected.filter((cal) => cal.calendar_id !== calendar["calendar_id"])
+          : [...prevSelected, calendar]
       );
     };
 
@@ -1039,9 +1037,9 @@ export default function MainFrame() {
               <input
                 type="checkbox"
                 id={calendar["calendar_id"]}
-                checked={selectedCalendars.includes(calendar["calendar_id"])}
+                checked={selectedCalendars.some(cal => cal.calendar_id === calendar["calendar_id"])}
                 onChange={() =>
-                  handleCalendarSelection(calendar["calendar_id"])
+                  handleCalendarSelection(calendar)
                 }
               />
               <label htmlFor={calendar["calendar_id"]}>
