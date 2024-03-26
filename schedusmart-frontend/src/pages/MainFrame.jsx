@@ -76,7 +76,7 @@ export default function MainFrame() {
         "user_id": userId,
       });
       if (dataOfDefaultMode.type == undefined) dataOfDefaultMode.type = 1;
-      let dataOfUser = await send_request("/user_data", {"user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2"})
+      let dataOfUser = await send_request("/user_data", {"user_id": userId})
       console.log("userData: ", dataOfUser.task_list);
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
@@ -1490,7 +1490,7 @@ export default function MainFrame() {
 
 ///////////////////Task handle///////////////////////////////////
   const generateTaskListHTML = (arr) => {
-    if (!arr) {
+    if (!arr || arr == undefined) {
       return (
       <div className="taskBar">
         <p>All tasks have been completed.</p>
