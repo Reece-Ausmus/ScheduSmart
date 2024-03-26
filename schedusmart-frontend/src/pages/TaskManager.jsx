@@ -114,7 +114,7 @@ export default function TaskManager() {
   // used to hold data for tasks
   const [taskName, setTaskName] = useState("");
   const [taskTime, setTaskTime] = useState(0);
-  const [taskDate, setTaskDate] = useState();
+  const [taskDate, setTaskDate] = useState("");
   const [taskDesc, setTaskDesc] = useState("");
   const [taskFile, setTaskFile] = useState();
 
@@ -640,6 +640,22 @@ function TodoList({ list, onToggle, option, onToggleSubtask }) {
                 {sub_task.name} 
               </p>
           ))}
+          <br/>
+          <button onClick={() => {
+            let event = {
+              "name": task.title,
+              "desc": task.desc,
+              "start_time": "10:00",
+              "end_time": "11:00",
+              "location": "None",
+              "calendar": "tasks",
+              "repetition_type": "none",
+              "repetition_unit": "",
+              "repetition_val": 1,
+              "user_id": userId,
+            }
+            console.log(JSON.stringify(event))
+          }}>Schedule Task Time</button>
           <h4>Complete?</h4>
           <input
             type="checkbox"
