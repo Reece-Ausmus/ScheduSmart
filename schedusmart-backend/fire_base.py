@@ -264,6 +264,14 @@ def update_task_list(task_list_id, new_task):
     return 0
 
 
+def mark_task_as_done(task):
+    try:
+        db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).update({"complete_time": task["time"]})
+        db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).update({"completed": "true"})
+    except KeyError as e:
+        print(f"{e}")
+
+
 # end of the task functions ###################
 
 
