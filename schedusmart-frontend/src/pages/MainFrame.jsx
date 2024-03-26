@@ -76,7 +76,7 @@ export default function MainFrame() {
         "user_id": userId,
       });
       if (dataOfDefaultMode.type == undefined) dataOfDefaultMode.type = 1;
-      let dataOfUser = await send_request("/user_data", {"user_id": userId})
+      let dataOfUser = await send_request("/user_data", { "user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2" })
       console.log("userData: ", dataOfUser.task_list);
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
@@ -1499,12 +1499,16 @@ export default function MainFrame() {
     arr.map((task)=> {
       console.log("task: ", task.title)
     })
-    return arr.map((task)=> (
-    <div className="taskBar" onClick={()=>{
-      console.log(task.id)
-    }}>
-      <p>{task.title}</p>
-    </div>)
+    return arr.map((task) => (
+      !task.completed && (
+      <div className="taskBar" onClick={()=>{}}>
+        <p className="taskName">{task.title}</p>
+        <input 
+          className=".taskCheckBox" 
+          type="checkbox" 
+          defaultChecked={false}
+        />
+      </div>))
     )
   }
 
