@@ -80,11 +80,6 @@ export default function MainFrame() {
 
   function CalendarList() {
     const [loading, setLoading] = useState(true);
-    const [calendars, setCalendars] = useState([
-      { calendar_id: 0, name: "Personal" },
-      { calendar_id: 1, name: "School" },
-      { calendar_id: 2, name: "Work" },
-    ]);
 
     // add event consts
     const [showEventPopup, setShowEventPopup] = useState(false);
@@ -96,10 +91,8 @@ export default function MainFrame() {
     const [eventLocation, setEventLocation] = useState("");
     const [eventDescription, setEventDescription] = useState("");
     const [eventRepetitionType, setEventRepetitionType] = useState("none"); // Default to daily
-    const [eventCustomFrequencyValue, setEventCustomFrequencyValue] =
-      useState(1); // Default custom frequency
-    const [eventCustomFrequencyUnit, setEventCustomFrequencyUnit] =
-      useState(""); // Default custom frequency
+    const [eventCustomFrequencyValue, setEventCustomFrequencyValue] = useState(1); // Default custom frequency
+    const [eventCustomFrequencyUnit, setEventCustomFrequencyUnit] = useState(""); // Default custom frequency
     const [eventSelectedDays, setEventSelectedDays] = useState([]); // Array to store selected days
     const [eventCalendar, setEventCalendar] = useState("");
     const [LocationSettings, setLocationSettings] = useState("text");
@@ -209,6 +202,7 @@ export default function MainFrame() {
         repetition_type: eventRepetitionType,
         repetition_unit: eventCustomFrequencyUnit,
         repetition_val: eventCustomFrequencyValue,
+        selected_days: eventSelectedDays,
         user_id: userId,
       };
       console.log(JSON.stringify(new_event));
@@ -605,7 +599,7 @@ export default function MainFrame() {
                       >
                         <option value="">Select Calendar</option>
                         {calendarList.map((cal) => (
-                          <option key={cal.id} value={cal.name}>
+                          <option key={cal.id} value={cal.id}>
                             {cal.name}
                           </option>
                         ))}
