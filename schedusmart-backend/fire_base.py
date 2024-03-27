@@ -372,8 +372,11 @@ def add_new_event(event_info):
         db.child("Events").child(event_id).set(data)
     except Exception as e:
         print("Failed to create calendar:", e)
-        return 1
-    return 0
+        return {'response_status': 1}
+    return {
+        'response_status': 1,
+        'event_id': event_id
+    }
 
 def invite_user_to_event_db(data):
     try:
