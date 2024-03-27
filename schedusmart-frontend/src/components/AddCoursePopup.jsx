@@ -1,3 +1,6 @@
+import React from "react";
+import "./Popup.css";
+
 export default function AddCoursePopup({
   courseName,
   handleCourseNameChange,

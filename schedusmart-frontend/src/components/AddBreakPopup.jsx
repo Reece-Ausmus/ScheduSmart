@@ -1,3 +1,6 @@
+import React from "react";
+import "./Popup.css";
+
 export default function AddBreakPopup({
   breakName,
   handleBreakNameChange,
