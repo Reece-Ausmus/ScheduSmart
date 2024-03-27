@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./MainFrame.css";
 import { flaskURL, user_id } from "../config";
 import Joyride from "react-joyride";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import Weather from "./Weather";
 import Timezone from "./Timezone";
 import PopUpForm from "../components/PopupForm";
@@ -13,7 +13,8 @@ import send_request from "./requester";
 import chatBox from "../components/ChatBox";
 import Map from "./Googlemap";
 import { useHotkeys } from "react-hotkeys-hook";
-import { CheckBox } from "@material-ui/icons";
+import { CheckBox, LaptopWindowsRounded } from "@material-ui/icons";
+import SetupCourses from "./SetupCourses";
 // import MapContainer from './Googlemap';
 
 const steps = [
@@ -42,7 +43,7 @@ export default function MainFrame() {
     { calendar_id: "80ce85b4eaa97197e2dd929f20646552", name: "cal_name" },
 
   */
-  const [goToTaskManager, setGoToTaskManager] = useState(false)
+  const [goToTaskManager, setGoToTaskManager] = useState(false);
   const [allEventsArray, setAllEventsArray] = useState([]);
   const [taskList, setTaskList] = useState([]);
   const today = new Date();
@@ -70,10 +71,12 @@ export default function MainFrame() {
   useEffect(() => {
     const fetchDefaultMode = async () => {
       let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {
-        "user_id": user_id,
+        user_id: user_id,
       });
       if (dataOfDefaultMode.type == undefined) dataOfDefaultMode.type = 1;
-      let dataOfUser = await send_request("/user_data", { "user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2" })
+      let dataOfUser = await send_request("/user_data", {
+        user_id: "1TPDjwwk6xd9IgDFXzcnXwuJXPP2",
+      });
       console.log("userData: ", dataOfUser.task_list);
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
@@ -95,8 +98,10 @@ export default function MainFrame() {
     const [eventLocation, setEventLocation] = useState("");
     const [eventDescription, setEventDescription] = useState("");
     const [eventRepetitionType, setEventRepetitionType] = useState("none"); // Default to daily
-    const [eventCustomFrequencyValue, setEventCustomFrequencyValue] = useState(1); // Default custom frequency
-    const [eventCustomFrequencyUnit, setEventCustomFrequencyUnit] = useState(""); // Default custom frequency
+    const [eventCustomFrequencyValue, setEventCustomFrequencyValue] =
+      useState(1);
+    const [eventCustomFrequencyUnit, setEventCustomFrequencyUnit] =
+      useState("");
     const [eventSelectedDays, setEventSelectedDays] = useState([]); // Array to store selected days
     const [eventCalendar, setEventCalendar] = useState("");
     const [LocationSettings, setLocationSettings] = useState("text");
@@ -389,7 +394,6 @@ export default function MainFrame() {
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
     const [calendarList, setCalendarList] = useState([]);
-    //const [selectedCalendars, setSelectedCalendars] = useState([]);
 
     useEffect(() => {
       const fetchData = async () => {
@@ -503,15 +507,91 @@ export default function MainFrame() {
     const handleCalendarSelection = (calendar) => {
       // Toggle the selection of the calendar
       setSelectedCalendars((prevSelected) =>
-        prevSelected.some(cal => cal.calendar_id === calendar["calendar_id"])
-          ? prevSelected.filter((cal) => cal.calendar_id !== calendar["calendar_id"])
+        prevSelected.some((cal) => cal.calendar_id === calendar["calendar_id"])
+          ? prevSelected.filter(
+              (cal) => cal.calendar_id !== calendar["calendar_id"]
+            )
           : [...prevSelected, calendar]
       );
     };
 
-    if (loading) {
+    /*if (loading) {
       return <div>Loading...</div>;
-    }
+    }*/
+
+    const [semesterName, setSemesterName] = useState("");
+    const [semesterStartDate, setSemesterStartDate] = useState("");
+    const [semesterEndDate, setSemesterEndDate] = useState("");
+    const [showSemesterPopup, setShowSemesterPopup] = useState(false);
+
+    const handleSetupCourses = () => {
+      setShowSemesterPopup(!showSemesterPopup);
+    };
+
+    const handleSemesterSelection = async (e) => {
+      e.preventDefault();
+      //TODO: validate inputs
+      const new_calendar = {
+        newCalendarName: semesterName,
+        user_id: user_id,
+      };
+      const response = await fetch(flaskURL + "/create_calendar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(new_calendar),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      } else {
+        switch (response.status) {
+          case 201:
+            console.log("Calendar created successfully");
+            const responseData = await response.json();
+            setCalendarList([
+              ...calendarList,
+              {
+                calendar_id: responseData["calendar_id"],
+                name: semesterName,
+              },
+            ]);
+            // TODO need to include start and end dates in session storage as well
+            sessionStorage.setItem("semester", {
+              calendar_id: responseData["calendar_id"],
+              name: semesterName,
+              startDate: semesterStartDate,
+              endDate: semesterEndDate,
+            });
+            window.location.href = "./setupcourses";
+            break;
+          case 205:
+            alert("Calendar not created!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+          case 207:
+            alert("Calendar not added to user!");
+            break;
+        }
+      }
+      setShowSemesterPopup(!showSemesterPopup);
+    };
+
+    const handleCancelSemester = () => {
+      setShowSemesterPopup(!showSemesterPopup);
+    };
+
+    const handleSemesterStartDateChange = (e) => {
+      setSemesterStartDate(e.target.value);
+    };
+
+    const handleSemesterEndDateChange = (e) => {
+      setSemesterEndDate(e.target.value);
+    };
 
     return (
       <div className="calendar-list">
@@ -1027,6 +1107,55 @@ export default function MainFrame() {
               </div>
             )}
           </div>
+          {/*SetupCourses*/}
+          {/* TODO: Move semester popup to its own file, add semester id to sessionStorage to access it it /setupcourses */}
+          {showSemesterPopup && (
+            <div className="popup">
+              <div className="popup-content">
+                <div className="formgroup">
+                  <label htmlFor="semesterName">Semester:</label>
+                  <input
+                    type="text"
+                    id="semesterName"
+                    value={semesterName}
+                    onChange={(e) => setSemesterName(e.target.value)}
+                  />
+                </div>
+                <div className="formgroup">
+                  <label htmlFor="semesterStartDate">Start Date:</label>
+                  <input
+                    type="date"
+                    id="semesterStartDate"
+                    value={semesterStartDate}
+                    onChange={handleSemesterStartDateChange}
+                  />
+                  <label htmlFor="semesterEndDate">End Date:</label>
+                  <input
+                    type="date"
+                    id="semesterEndDate"
+                    value={semesterEndDate}
+                    onChange={handleSemesterEndDateChange}
+                  />
+                </div>
+                <button
+                  className="formbutton fb1"
+                  onClick={handleSemesterSelection}
+                >
+                  Add
+                </button>
+                <button
+                  className="formbutton fb2"
+                  onClick={handleCancelSemester}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+          <button onClick={handleSetupCourses}>Setup Courses</button>
+          {/*<Link to="/setupcourses">
+            <button>Setup Courses</button>
+          </Link>*/}
         </div>
         {/* List of existing calendars */}
         <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
@@ -1035,10 +1164,10 @@ export default function MainFrame() {
               <input
                 type="checkbox"
                 id={calendar["calendar_id"]}
-                checked={selectedCalendars.some(cal => cal.calendar_id === calendar["calendar_id"])}
-                onChange={() =>
-                  handleCalendarSelection(calendar)
-                }
+                checked={selectedCalendars.some(
+                  (cal) => cal.calendar_id === calendar["calendar_id"]
+                )}
+                onChange={() => handleCalendarSelection(calendar)}
               />
               <label htmlFor={calendar["calendar_id"]}>
                 {calendar["name"]}
@@ -1292,8 +1421,7 @@ export default function MainFrame() {
   useHotkeys("Shift+m", () => setSelectMode(3));
   useHotkeys("Shift+y", () => setSelectMode(4));
 
-
-////////////////////////////Calendar Events//////////////////////////
+  ////////////////////////////Calendar Events//////////////////////////
 
   function compareDates(date1, date2) {
     if (date1 > date2) {
@@ -1352,7 +1480,7 @@ export default function MainFrame() {
     let endDate = addDaysToSpecificDate(firstEndDate, 0);
     let counter = 1; //Default will add 1
 
-    console.log(event.repetition_type)
+    console.log(event.repetition_type);
 
     if (event.repetition_type === "daily") {
       while (compareDates(startDate, boundary) == -1) {
@@ -1458,7 +1586,7 @@ export default function MainFrame() {
 
       selectedCalendars.map(async (calendar) => {
         let events = await send_request("/get_events", {
-          "calendar_id": calendar.calendar_id,
+          calendar_id: calendar.calendar_id,
         });
 
         if (events.data != undefined) {
@@ -1473,41 +1601,41 @@ export default function MainFrame() {
           }
         }
       });
-      console.log("updates")
+      console.log("updates");
       setAllEventsArray(eventsArray);
     };
     fetchEvents();
   }, [selectedCalendars]);
 
-///////////////////Task handle///////////////////////////////////
+  ///////////////////Task handle///////////////////////////////////
   const generateTaskListHTML = (arr) => {
     if (!arr || arr == undefined) {
       return (
-      <div className="taskBar">
-        <p>All tasks have been completed.</p>
-      </div>)
+        <div className="taskBar">
+          <p>All tasks have been completed.</p>
+        </div>
+      );
     }
-    arr.map((task)=> {
-      console.log("task: ", task.title)
-    })
-    return arr.map((task) => (
-      !task.completed && (
-      <div className="taskBar" onClick={()=>{}}>
-        <p className="taskName">{task.title}</p>
-        <input 
-          className=".taskCheckBox" 
-          type="checkbox" 
-          defaultChecked={false}
-        />
-      </div>))
-    )
-  }
+    arr.map((task) => {
+      console.log("task: ", task.title);
+    });
+    return arr.map(
+      (task) =>
+        !task.completed && (
+          <div className="taskBar" onClick={() => {}}>
+            <p className="taskName">{task.title}</p>
+            <input
+              className=".taskCheckBox"
+              type="checkbox"
+              defaultChecked={false}
+            />
+          </div>
+        )
+    );
+  };
 
   // handle drag & drop
   const [goToDragAndDrop, setGoToDragAndDrop] = React.useState(false);
-
-
-
 
   if (goToDragAndDrop) {
     return (
@@ -1574,13 +1702,16 @@ export default function MainFrame() {
       <div className="task_container">
         <div className="task_upperbar">
           <h1 className="task_title">Task</h1>
-          <button className="modeButton" 
-                  onClick={() => {setGoToTaskManager(true)}}>
-          detail</button>
+          <button
+            className="modeButton"
+            onClick={() => {
+              setGoToTaskManager(true);
+            }}
+          >
+            detail
+          </button>
         </div>
-        <div className="ToDoList">
-          {generateTaskListHTML(taskList)}
-        </div>
+        <div className="ToDoList">{generateTaskListHTML(taskList)}</div>
       </div>
     </div>
   );

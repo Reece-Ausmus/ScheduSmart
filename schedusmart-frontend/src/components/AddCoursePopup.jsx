@@ -4,8 +4,6 @@ import "./Popup.css";
 export default function AddCoursePopup({
   courseName,
   handleCourseNameChange,
-  courseNumber,
-  handleCourseNumberChange,
   courseDescription,
   handleCourseDescriptionChange,
   courseStartTime,
@@ -17,7 +15,7 @@ export default function AddCoursePopup({
   courseLocation,
   handleCourseLocationChange,
   handleCreateCourse,
-  handleCancelCourse
+  handleCancelCourse,
 }) {
   return (
     <div className="popup">
@@ -31,15 +29,6 @@ export default function AddCoursePopup({
               id="courseName"
               value={courseName}
               onChange={handleCourseNameChange}
-            />
-          </div>
-          <div className="formgroup">
-            <label htmlFor="courseNumber">Course Number:</label>
-            <input
-              type="text"
-              id="courseNumber"
-              value={courseNumber}
-              onChange={handleCourseNumberChange}
             />
           </div>
           <div className="formgroup">
