@@ -65,6 +65,9 @@ export default function SetupCourses() {
           console.log("Course created successfully");
           setCourses([...courses, new_course]);
           break;
+        case 204:
+          alert("Network error!");
+          break;
         case 205:
           alert("Course not created!");
           break;
@@ -166,6 +169,9 @@ export default function SetupCourses() {
         case 201:
           console.log("Break created successfully");
           setBreaks([...breaks, new_break]);
+          break;
+        case 204:
+          alert("Network error!");
           break;
         case 205:
           alert("Break not created!");
