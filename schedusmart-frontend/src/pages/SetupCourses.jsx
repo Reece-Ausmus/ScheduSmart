@@ -32,6 +32,11 @@ export default function SetupCourses() {
     setShowBreakPopup(!showBreakPopup);
   };
 
+  const handleDone = () => {
+    sessionStorage.removeItem("semester");
+    window.location.href = "/calendar";
+  };
+
   const handleCreateCourse = async () => {
     const new_course = {
       name: courseName,
@@ -249,6 +254,7 @@ export default function SetupCourses() {
           ))}
         </ul>
       </div>
+      <button onClick={handleDone}>Done</button>
     </div>
   );
 }

@@ -42,6 +42,16 @@
 #       |-  event_id2
 #       ...
 #   ...
+# - Events
+#   |-  event_id1
+#       |-  name
+#       |-  desc
+#       |-  ...
+#   |-  event_id2
+#       |-  name
+#       |-  desc
+#       |-  ...
+#   ...
 # - Task_Lists
 #   |-  task_list_id1
 #       |-  task_id1
@@ -183,6 +193,9 @@ def login_account_with_email_and_password(receive_account):
         # 2FA CODE START ########################################################################################
         email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
 
+        #### TEMPORARY DISABLE EMAIL VERIFICATION ####
+        db.child("User").child(user_id).update({"emailVerified": True})
+
         # Send verification email to certify login
         if not email_verified:
             auth.send_email_verification(user['idToken'])
@@ -303,12 +316,19 @@ def add_new_calendar(calendar_info):
 
 def f_get_events(calendar):
     try:
-        data_events = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
-        data_event_counter = 0
-        data_event = []
-        for data in data_events.each():
-            data_event.append(data.val())
-        return {"data": data_event}
+        #data_events = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
+        #data_event_counter = 0
+        #data_event = []
+        #for data in data_events.each():
+        #    data_event.append(data.val())
+        #return {"data": data_event}
+    
+        data_event_ids = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get().val()
+        events = []
+        for event_id in data_event_ids.each():
+            event = db.child("Events").child(event_id).get().val()
+            events.append(event)
+        return {"data": events}
     except Exception as e:
         print(f"fail to retrieve events data: \n{e}")
     return 1
@@ -327,6 +347,9 @@ def update_task(task_info):
 
 def add_new_event(event_info):
     user_id = event_info['user_id']
+    if user_id is None:
+        raise Exception("User ID is None")
+    
     event_id = secrets.token_hex(16)
     data = {
         'name': event_info['name'],
@@ -343,16 +366,26 @@ def add_new_event(event_info):
         'selected_days;': event_info['selected_days']
     }
     try:
-        #caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        #calendar_id = caldata['calendar_id']
-        #print(calendar_id)
-        calendar_id = data['calendar']
-        db.child("Calendars").child(calendar_id).child("Events").child(event_id).set(data)
+        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        calendar_id = caldata['calendar_id']
+        db.child("Calendars").child(calendar_id).child("Events").set({event_id, 'event_id'})
+        db.child("Events").child(event_id).set(data)
     except Exception as e:
         print("Failed to create calendar:", e)
         return 1
     return 0
 
+def invite_user_to_event_db(data):
+    try:
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        email = data['email']
+        event_id = data['event_id']
+        db.child("Invitations").child(email).child(event_id).set({'status': 'pending'})
+        return 0
+    except Exception as e:
+        print("Failed to invite user to event:", e)
+        return 1
 
 def add_new_availability(availability_info):
     user_id = availability_info['user_id']
