@@ -1,3 +1,6 @@
+import React from "react";
+import "./Popup.css";
+
 export default function AddCoursePopup({
   courseName,
   handleCourseNameChange,
@@ -14,11 +17,10 @@ export default function AddCoursePopup({
   courseLocation,
   handleCourseLocationChange,
   handleCreateCourse,
-  toggleCoursePopup
+  handleCancelCourse
 }) {
   return (
     <div className="popup">
-      <label>test</label>
       <div className="popup-content">
         <h2>Add Course</h2>
         <div>
@@ -124,10 +126,10 @@ export default function AddCoursePopup({
               </div>
             </div>
           </div>
-          <button className="formbutton fb1" onClick={handleCreateCourse()}>
+          <button className="formbutton fb1" onClick={handleCreateCourse}>
             Add
           </button>
-          <button className="formbutton fb2" onClick={toggleCoursePopup()}>
+          <button className="formbutton fb2" onClick={handleCancelCourse}>
             Cancel
           </button>
         </div>

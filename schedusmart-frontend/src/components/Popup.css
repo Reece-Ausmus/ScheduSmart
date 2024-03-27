@@ -1,0 +1,23 @@
+.popup {
+  background-color: white;
+  color: rgb(223, 118, 43);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+.formgroup {
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+}
+.formbutton {
+  margin-top: 10px;
+}
+.fb2 {
+  margin-left: 20px;
+}

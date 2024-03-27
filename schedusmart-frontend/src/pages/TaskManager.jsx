@@ -24,7 +24,7 @@ import EventParser from "./EventParser"
 import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import { Table, TableHead, TableBody, TableRow, TableCell, Grid } from '@mui/material';
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -478,149 +478,163 @@ export default function TaskManager() {
 
       <div className="task-columns-container">
         <div className="task-column">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
-            <h2 style={{ marginLeft: 0 }}>To Do</h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <TextField type="search" label="Search" variant="outlined" value={searchQueryTodo}
-                onChange={filterTodo} style={{ width: '200px' }} size="small" />
-              <FormControl sx={{ m: 1, width: 200 }} size="small">
-                <InputLabel id="sorting">Sort</InputLabel>
-                <Select
-                  labelId="sorting"
-                  id="sorting"
-                  value={sortOptionTodo}
-                  label="sorting"
-                  onChange={(e) => setSortOptionTodo(e.target.value)}
-                >
-                  <MenuItem value={0}>Sort By</MenuItem>
-                  <MenuItem value={1}>Earliest created</MenuItem>
-                  <MenuItem value={2}>Latest created</MenuItem>
-                  <MenuItem value={3}>Earliest due</MenuItem>
-                  <MenuItem value={4}>Latest due</MenuItem>
-                  <MenuItem value={5}>Largest workload</MenuItem>
-                  <MenuItem value={6}>Smallest workload</MenuItem>
-                </Select>
-              </FormControl>
-              <Fab
-                aria-label="add"
-                id="openModal"
-                color="primary"
-                onClick={() => {
-                  setTaskName("New Task");
-                  setTaskTime(0);
-                  setTaskDesc("Task Description");
-                  setSubtaskDesc("");
-                  setSubtaskList([]);
-                  setTaskFile("")
-                }}>
-                <AddIcon />
-              </Fab>
-              <dialog id="modal">
-                <label htmlFor="name">Task Name:</label>
-                <input
-                  id="name"
-                  value={taskName}
-                  onChange={(e) => setTaskName(e.target.value)}
-                />
-                <label htmlFor="time">Workload:</label>
-                <input
-                  type="number"
-                  id="time"
-                  min="1"
-                  value={taskTime}
-                  onChange={(e) => setTaskTime(e.target.value)}
-                />
-                <label htmlFor="date">Due Date:</label>
-                <input
-                  type="date"
-                  id="date"
-                  value={taskDate}
-                  onChange={(e) => setTaskDate(e.target.value)}
-                />
-                <label htmlFor="desc">Description:</label>
-                <input
-                  id="desc"
-                  value={taskDesc}
-                  onChange={(e) => setTaskDesc(e.target.value)}
-                />
-                <input
-                  type="file"
-                  onChange={(event) => {
-                    let file_exen = event.target.files[0].name.split(".").pop()
-                    let valid = false
-                    validExtensions.map((extension) => {
-                      if (file_exen === extension)
-                        valid = true;
-                    })
-                    if (valid) {
-                      setFile(event.target.files[0])
-                      let ref_url = `files/${event.target.files[0].name + v4()}`
-                      const fileRef = ref(storage, ref_url);
-                      uploadFile(fileRef, event.target.files[0])
-                      setTaskFile(ref_url)
-                    } else {
-                      alert("Invalid File! Only image, text, audio, or video files allowed!")
-                    }
-                  }}
-                />
-                <label htmlFor="subtask">Add subtask:</label>
-                <input
-                  id="subtask"
-                  value={subtaskDesc}
-                  onChange={(e) => setSubtaskDesc(e.target.value)}
-                />
-                <button onClick={() => {
-                  setSubtaskList([
-                    ...subtaskList,
-                    {
-                      id: subtaskList.length,
-                      name: subtaskDesc,
-                      comp: false,
-                    },
-                  ]);
-                }}>
-                  +
-                </button>
-                <ol>
-                  {subtaskList.map((subtask) => (
-                    <li key={subtask.id}>
-                      {subtask.name}
-                    </li>
-                  ))}
-                </ol>
-                <button
-                  id="closeModal"
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h2 style={{ margin: 0 }}>To Do</h2>
+                <Fab
+                  aria-label="add"
+                  color="primary"
+                  id="openModal"
                   onClick={() => {
-                    setTodoList([
-                      ...todoList,
-                      {
-                        id: todoList.length,
-                        title: taskName,
-                        time: taskTime,
-                        date: taskDate,
-                        desc: taskDesc,
-                        completed: false,
-                        sub_tasks: subtaskList,
-                        file_url: taskFile,
-                      },
-                    ]);
-                  }
-                  }> Add </button>
-                <button id="closeModal" onClick={() => {
-                  // Reset all the form fields or close the dialog
-                  setTaskName("New Task");
-                  setTaskTime(0);
-                  setTaskDesc("Task Description");
-                  setSubtaskDesc("");
-                  setSubtaskList([]);
-                  setTaskFile("");
-                  document.getElementById('modal').close();
-                }}>
-                  Cancel
-                </button>
-              </dialog>
-            </div>
-          </div>
+                    setTaskName("New Task");
+                    setTaskTime(0);
+                    setTaskDesc("Task Description");
+                    setSubtaskDesc("");
+                    setSubtaskList([]);
+                    setTaskFile("");
+                  }}
+                >
+                  <AddIcon />
+                </Fab>
+              </div>
+            </Grid>
+            <Grid item>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <TextField
+                  type="search"
+                  label="Search"
+                  variant="outlined"
+                  value={searchQueryTodo}
+                  onChange={filterTodo}
+                  style={{ width: '200px' }}
+                  size="small"
+                />
+                <FormControl sx={{ m: 1, width: 200 }} size="small">
+                  <InputLabel id="sorting">Sort</InputLabel>
+                  <Select
+                    labelId="sorting"
+                    id="sorting"
+                    value={sortOptionTodo}
+                    label="sorting"
+                    onChange={(e) => setSortOptionTodo(e.target.value)}
+                  >
+                    <MenuItem value={0}>Sort By</MenuItem>
+                    <MenuItem value={1}>Earliest created</MenuItem>
+                    <MenuItem value={2}>Latest created</MenuItem>
+                    <MenuItem value={3}>Earliest due</MenuItem>
+                    <MenuItem value={4}>Latest due</MenuItem>
+                    <MenuItem value={5}>Largest workload</MenuItem>
+                    <MenuItem value={6}>Smallest workload</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </Grid>
+          </Grid>
+          <dialog id="modal">
+            <label htmlFor="name">Task Name:</label>
+            <input
+              id="name"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+            />
+            <label htmlFor="time">Workload:</label>
+            <input
+              type="number"
+              id="time"
+              min="1"
+              value={taskTime}
+              onChange={(e) => setTaskTime(e.target.value)}
+            />
+            <label htmlFor="date">Due Date:</label>
+            <input
+              type="date"
+              id="date"
+              value={taskDate}
+              onChange={(e) => setTaskDate(e.target.value)}
+            />
+            <label htmlFor="desc">Description:</label>
+            <input
+              id="desc"
+              value={taskDesc}
+              onChange={(e) => setTaskDesc(e.target.value)}
+            />
+            <input
+              type="file"
+              onChange={(event) => {
+                let file_exen = event.target.files[0].name.split(".").pop()
+                let valid = false
+                validExtensions.map((extension) => {
+                  if (file_exen === extension)
+                    valid = true;
+                })
+                if (valid) {
+                  setFile(event.target.files[0])
+                  let ref_url = `files/${event.target.files[0].name + v4()}`
+                  const fileRef = ref(storage, ref_url);
+                  uploadFile(fileRef, event.target.files[0])
+                  setTaskFile(ref_url)
+                } else {
+                  alert("Invalid File! Only image, text, audio, or video files allowed!")
+                }
+              }}
+            />
+            <label htmlFor="subtask">Add subtask:</label>
+            <input
+              id="subtask"
+              value={subtaskDesc}
+              onChange={(e) => setSubtaskDesc(e.target.value)}
+            />
+            <button onClick={() => {
+              setSubtaskList([
+                ...subtaskList,
+                {
+                  id: subtaskList.length,
+                  name: subtaskDesc,
+                  comp: false,
+                },
+              ]);
+            }}>
+              +
+            </button>
+            <ol>
+              {subtaskList.map((subtask) => (
+                <li key={subtask.id}>
+                  {subtask.name}
+                </li>
+              ))}
+            </ol>
+            <button
+              id="closeModal"
+              onClick={() => {
+                setTodoList([
+                  ...todoList,
+                  {
+                    id: todoList.length,
+                    title: taskName,
+                    time: taskTime,
+                    date: taskDate,
+                    desc: taskDesc,
+                    completed: false,
+                    sub_tasks: subtaskList,
+                    file_url: taskFile,
+                  },
+                ]);
+              }
+              }> Add </button>
+            <button id="closeModal" onClick={() => {
+              // Reset all the form fields or close the dialog
+              setTaskName("New Task");
+              setTaskTime(0);
+              setTaskDesc("Task Description");
+              setSubtaskDesc("");
+              setSubtaskList([]);
+              setTaskFile("");
+              document.getElementById('modal').close();
+            }}>
+              Cancel
+            </button>
+          </dialog>
           <TodoList
             list={todoList}
             onToggle={handleToggleCompleted}
@@ -631,27 +645,31 @@ export default function TaskManager() {
         </div>
 
         <div className="task-column">
-          <h2>Completed</h2>
-          <input
-            type="search"
-            value={searchQueryCompleted}
-            onChange={filterCompleted}
-            placeholder="Search"
-          />
-          <select
-            value={sortOptionCompleted}
-            onChange={(e) => setSortOptionCompleted(e.target.value)}
-          >
-            <option value="0">Sort By</option>
-            <option value="1">Earliest created</option>
-            <option value="2">Latest created</option>
-            <option value="3">Earliest due</option>
-            <option value="4">Latest due</option>
-            <option value="5">Largest workload</option>
-            <option value="6">Smallest workload</option>
-            <option value="7">Earliest completed</option>
-            <option value="8">Latest completed</option>
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+            <h2 style={{ marginLeft: 0 }}>Completed</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <TextField type="search" label="Search" variant="outlined" value={searchQueryCompleted}
+                onChange={filterCompleted} style={{ width: '200px' }} size="small" />
+              <FormControl sx={{ m: 1, width: 200 }} size="small">
+                <InputLabel id="c_sorting">Sort</InputLabel>
+                <Select
+                  labelId="c_sorting"
+                  id="c_sorting"
+                  value={sortOptionCompleted}
+                  label="c_sorting"
+                  onChange={(e) => setSortOptionCompleted(e.target.value)}
+                >
+                  <MenuItem value={0}>Sort By</MenuItem>
+                  <MenuItem value={1}>Earliest created</MenuItem>
+                  <MenuItem value={2}>Latest created</MenuItem>
+                  <MenuItem value={3}>Earliest due</MenuItem>
+                  <MenuItem value={4}>Latest due</MenuItem>
+                  <MenuItem value={5}>Largest workload</MenuItem>
+                  <MenuItem value={6}>Smallest workload</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          </div>
           <CompletedList
             list={completedList}
             onToggle={handleToggleCompleted}
@@ -659,11 +677,7 @@ export default function TaskManager() {
           />
         </div>
       </div>
-      <button
-        onClick={saveTasks}
-      >
-        Save Tasks
-      </button>
+      <Button variant="contained" onClick={saveTasks} style={{ marginTop: '20px' }}> Save Tasks</Button>
     </ThemeProvider >
   );
 }
@@ -906,23 +920,35 @@ function CompletedList({ list, onToggle, option }) {
   }
 
   return (
-    <div>
-      {sortedList.map((task) => (
-        <div className="post" key={task.id}>
-          <h3>{task.title}</h3>
-          <h4>Task Information</h4>
-          <p>{task.desc}</p>
-          <p>Deadline: {task.date}</p>
-          <p>Completed: {task.completed_time}</p>
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={(e) => {
-              onToggle(task.id, e.target.checked);
-            }}
-          />
-        </div>
-      ))}
-    </div>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Title</TableCell>
+          <TableCell>Task Information</TableCell>
+          <TableCell>Deadline</TableCell>
+          <TableCell>Completed Time</TableCell>
+          <TableCell>Completed</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {sortedList.map((task) => (
+          <TableRow key={task.id}>
+            <TableCell>{task.title}</TableCell>
+            <TableCell>{task.desc}</TableCell>
+            <TableCell>{task.date}</TableCell>
+            <TableCell>{task.completed_time}</TableCell>
+            <TableCell>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={(e) => {
+                  onToggle(task.id, e.target.checked);
+                }}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
