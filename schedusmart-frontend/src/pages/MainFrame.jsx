@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./MainFrame.css";
+import { flaskURL, user_id } from "../config";
 import Joyride from "react-joyride";
 import { Navigate } from "react-router-dom";
 import Weather from "./Weather";
@@ -30,10 +31,6 @@ const steps = [
     content: "The current weather. Location can be changed in settings.",
   },
 ];
-
-const flaskURL = "http://127.0.0.1:5000";
-
-const userId = sessionStorage.getItem("user_id");
 
 export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
@@ -73,7 +70,7 @@ export default function MainFrame() {
   useEffect(() => {
     const fetchDefaultMode = async () => {
       let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {
-        "user_id": userId,
+        "user_id": user_id,
       });
       if (dataOfDefaultMode.type == undefined) dataOfDefaultMode.type = 1;
       let dataOfUser = await send_request("/user_data", { "user_id": "1TPDjwwk6xd9IgDFXzcnXwuJXPP2" })
@@ -107,7 +104,7 @@ export default function MainFrame() {
       const fetchDefaultsettings = async () => {
         let dataOfDefaultsettings = await send_request(
           "/get_location_default_settings",
-          { user_id: userId }
+          { user_id: user_id }
         );
         if (dataOfDefaultsettings.type == undefined) return;
         setLocationSettings(dataOfDefaultsettings.type);
@@ -210,7 +207,7 @@ export default function MainFrame() {
         repetition_unit: eventCustomFrequencyUnit,
         repetition_val: eventCustomFrequencyValue,
         selected_days: eventSelectedDays,
-        user_id: userId,
+        user_id: user_id,
       };
       console.log(JSON.stringify(new_event));
       const response = await fetch(flaskURL + "/create_event", {
@@ -347,7 +344,7 @@ export default function MainFrame() {
         repetition_type: availabilityRepetitionType,
         repetition_unit: availabilityCustomFrequencyUnit,
         repetition_val: availabilityCustomFrequencyValue,
-        user_id: userId,
+        user_id: user_id,
       };
       console.log(JSON.stringify(new_availability));
       const response = await fetch(flaskURL + "/create_availability", {
@@ -402,7 +399,7 @@ export default function MainFrame() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            user_id: userId,
+            user_id: user_id,
           }),
           credentials: "include",
         });
@@ -460,7 +457,7 @@ export default function MainFrame() {
       //nextCalendarID++;
       const new_calendar = {
         newCalendarName: newCalendarName,
-        user_id: userId,
+        user_id: user_id,
       };
       const response = await fetch(flaskURL + "/create_calendar", {
         method: "POST",
@@ -1242,7 +1239,7 @@ export default function MainFrame() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          'user_id': userId,
+          'user_id': user_id,
         'time': amountOfTime
         }),
         credentials: "include"
