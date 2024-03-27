@@ -18,7 +18,6 @@ export default function AddCoursePopup({
 }) {
   return (
     <div className="popup">
-      <label>test</label>
       <div className="popup-content">
         <h2>Add Course</h2>
         <div>

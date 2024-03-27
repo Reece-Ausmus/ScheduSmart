@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { flaskURL, user_id } from "../config";
 import AddCoursePopup from "../components/AddCoursePopup";
+import AddBreakPopup from "../components/AddBreakPopup";
 
 export default function SetupCourses() {
   const [courses, setCourses] = useState([]);
@@ -11,11 +12,38 @@ export default function SetupCourses() {
   const [courseEndTime, setCourseEndTime] = useState("");
   const [courseSelectedDays, setCourseSelectedDays] = useState([]);
   const [courseLocation, setCourseLocation] = useState("");
+  const [breaks, setBreaks] = useState([]);
+  const [breakName, setBreakName] = useState("");
+  const [breakStartDate, setBreakStartDate] = useState("");
+  const [breakEndDate, setBreakEndDate] = useState("");
   const [semester, setSemester] = useState("");
   const [semesterStartDate, setSemesterStartDate] = useState("");
   const [semesterEndDate, setSemesterEndDate] = useState("");
-  const [showSemester, setShowSemester] = useState(true);
+  const [showSemesterForm, setShowSemesterForm] = useState(true);
   const [showCoursePopup, setShowCoursePopup] = useState(false);
+  const [showBreakPopup, setShowBreakPopup] = useState(false);
+
+  const handleSemesterSelection = (e) => {
+    e.preventDefault();
+    //TODO: validate inputs
+    setShowSemesterForm(!showSemesterForm);
+  };
+
+  const toggleCoursePopup = () => {
+    setShowCoursePopup(!showCoursePopup);
+  };
+
+  const toggleBreakPopup = () => {
+    setShowBreakPopup(!showBreakPopup);
+  };
+
+  const handleSemesterStartDateChange = (e) => {
+    setSemesterStartDate(e.target.value);
+  };
+
+  const handleSemesterEndDateChange = (e) => {
+    setSemesterEndDate(e.target.value);
+  };
 
   const handleCreateCourse = async () => {
     const new_course = {
@@ -59,6 +87,7 @@ export default function SetupCourses() {
           break;
       }
     }*/
+    setCourses([...courses, new_course]);
     setCourseName("");
     setCourseNumber("");
     setCourseDescription("");
@@ -78,25 +107,6 @@ export default function SetupCourses() {
     setCourseSelectedDays([]);
     setCourseLocation("");
     toggleCoursePopup();
-  };
-
-  const handleSemesterSelection = (e) => {
-    e.preventDefault();
-    //TODO: validate inputs
-    setShowSemester(!showSemester);
-    toggleCoursePopup();
-  };
-
-  const toggleCoursePopup = () => {
-    setShowCoursePopup(!showCoursePopup);
-  };
-
-  const handleSemesterStartDateChange = (e) => {
-    setSemesterStartDate(e.target.value);
-  };
-
-  const handleSemesterEndDateChange = (e) => {
-    setSemesterEndDate(e.target.value);
   };
 
   const handleCourseNameChange = (e) => {
@@ -132,10 +142,68 @@ export default function SetupCourses() {
     setCourseLocation(e.target.value);
   };
 
+  const handleBreakNameChange = (e) => {
+    setBreakName(e.target.value);
+  };
+
+  const handleBreakStartDateChange = (e) => {
+    setBreakStartDate(e.target.value);
+  };
+
+  const handleBreakEndDateChange = (e) => {
+    setBreakEndDate(e.target.value);
+  };
+
+  const handleCreateBreak = () => {
+    const new_break = {
+      name: breakName,
+      start_date: breakStartDate,
+      end_date: breakEndDate,
+      user_id: user_id
+    };
+
+    /*const response = await fetch(flaskURL + "/add_break", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(new_break)
+    });
+    if (!response.ok) {
+      alert("Something went wrong, refresh your website!");
+      return;
+    } else {
+      switch (response.status) {
+        case 201:
+          console.log("Break created successfully");
+          setBreaks([...breaks, new_break]);
+          break;
+        case 205:
+          alert("Break not created!");
+          break;
+        case 206:
+          alert("Missing information!");
+          break;
+      }
+    }*/
+    setBreaks([...breaks, new_break])
+    setBreakName("");
+    setBreakStartDate("");
+    setBreakEndDate("");
+    toggleBreakPopup();
+  };
+
+  const handleCancelBreak = () => {
+    setBreakName("");
+    setBreakStartDate("");
+    setBreakEndDate("");
+    toggleBreakPopup();
+  };
+
   return (
     <div>
       <h1>Setup Courses</h1>
-      {showSemester && (
+      {showSemesterForm && (
         <form onSubmit={handleSemesterSelection}>
           <label>
             Semester:
@@ -162,34 +230,61 @@ export default function SetupCourses() {
           <button type="submit">Submit</button>
         </form>
       )}
-      {showCoursePopup && (
-        <AddCoursePopup
-          courseName={courseName}
-          handleCourseNameChange={handleCourseNameChange}
-          courseNumber={courseNumber}
-          handleCourseNumberChange={handleCourseNumberChange}
-          courseDescription={courseDescription}
-          handleCourseDescriptionChange={handleCourseDescriptionChange}
-          courseStartTime={courseStartTime}
-          handleCourseStartTimeChange={handleCourseStartTimeChange}
-          courseEndTime={courseEndTime}
-          handleCourseEndTimeChange={handleCourseEndTimeChange}
-          courseSelectedDays={courseSelectedDays}
-          handleCourseDayToggle={handleEventDayToggle}
-          courseLocation={courseLocation}
-          handleCourseLocationChange={handleCourseLocationChange}
-          handleCreateCourse={handleCreateCourse}
-          handleCancelCourse={handleCancelCourse}
-        />
+      {!showSemesterForm && (
+        <div>
+          <h2>Semester: {semester}</h2>
+          <button onClick={toggleBreakPopup}>Add Break</button>
+          <button onClick={toggleCoursePopup}>Add Course</button>
+          {showCoursePopup && (
+            <AddCoursePopup
+              courseName={courseName}
+              handleCourseNameChange={handleCourseNameChange}
+              courseNumber={courseNumber}
+              handleCourseNumberChange={handleCourseNumberChange}
+              courseDescription={courseDescription}
+              handleCourseDescriptionChange={handleCourseDescriptionChange}
+              courseStartTime={courseStartTime}
+              handleCourseStartTimeChange={handleCourseStartTimeChange}
+              courseEndTime={courseEndTime}
+              handleCourseEndTimeChange={handleCourseEndTimeChange}
+              courseSelectedDays={courseSelectedDays}
+              handleCourseDayToggle={handleEventDayToggle}
+              courseLocation={courseLocation}
+              handleCourseLocationChange={handleCourseLocationChange}
+              handleCreateCourse={handleCreateCourse}
+              handleCancelCourse={handleCancelCourse}
+            />
+          )}
+          {showBreakPopup && (
+            <AddBreakPopup
+              breakName={breakName}
+              handleBreakNameChange={handleBreakNameChange}
+              breakStartDate={breakStartDate}
+              handleBreakStartDateChange={handleBreakStartDateChange}
+              breakEndDate={breakEndDate}
+              handleBreakEndDateChange={handleBreakEndDateChange}
+              handleCreateBreak={handleCreateBreak}
+              handleCancelBreak={handleCancelBreak}
+            />
+          )}
+          <h2>Breaks:</h2>
+          <ul>
+            {breaks.map((b, index) => (
+              <li key={index}>
+                Name: {b.name} | Start: {b.start_date} | End: {b.end_date}
+              </li>
+            ))}
+          </ul>
+          <h2>Courses:</h2>
+          <ul>
+            {courses.map((course, index) => (
+              <li key={index}>
+                Name: {course.name} | Number: {course.number}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
-      <h2>Added Courses:</h2>
-      <ul>
-        {courses.map((course, index) => (
-          <li key={index}>
-            {course.courseName} - {course.courseNumber} - {course.location} -{" "}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
