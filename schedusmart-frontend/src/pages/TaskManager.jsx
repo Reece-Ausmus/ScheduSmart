@@ -742,6 +742,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
       repetition_type: "none",
       repetition_unit: "",
       repetition_val: 1,
+      selected_days: "",
       user_id: userId,
     };
     console.log(JSON.stringify(new_event));
