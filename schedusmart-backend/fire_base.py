@@ -368,9 +368,10 @@ def add_new_event(event_info):
     try:
         caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
         calendar_id = caldata['calendar_id']
-        db.child("Calendars").child(calendar_id).child("Events").set({event_id, 'event_id'})
+        db.child("Calendars").child(calendar_id).child("Events").set({event_id: 'event_id'})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
+        traceback.print_exc()
         print("Failed to create calendar:", e)
         return {'response_status': 1}
     return {
@@ -382,9 +383,10 @@ def invite_user_to_event_db(data):
     try:
         if data['user_id'] is None:
             raise Exception("User ID is None")
-        email = data['email']
+        emails = data['email']
         event_id = data['event_id']
-        db.child("Invitations").child(email).child(event_id).set({'status': 'pending'})
+        for email in emails:
+            db.child("Invitations").child(email).child(event_id).set({'status': 'pending'})
         return 0
     except Exception as e:
         print("Failed to invite user to event:", e)

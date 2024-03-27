@@ -89,6 +89,7 @@ export default function MainFrame() {
     const [loading, setLoading] = useState(true);
 
     // add event consts
+    const [events, setEvents] = useState([]);
     const [showEventPopup, setShowEventPopup] = useState(false);
     const [eventName, setEventName] = useState("");
     const [eventStartDate, setEventStartDate] = useState("");
@@ -97,6 +98,7 @@ export default function MainFrame() {
     const [eventEndTime, setEventEndTime] = useState("");
     const [eventLocation, setEventLocation] = useState("");
     const [eventDescription, setEventDescription] = useState("");
+    const [eventEmailInvitations, setEventEmailInvitations] = useState([]);
     const [eventRepetitionType, setEventRepetitionType] = useState("none"); // Default to daily
     const [eventCustomFrequencyValue, setEventCustomFrequencyValue] =
       useState(1);
@@ -172,6 +174,12 @@ export default function MainFrame() {
       setEventDescription(e.target.value);
     };
 
+    const handleEventEmailInvitationsChange = (e) => {
+      setEventEmailInvitations(
+        e.target.value.split(",").map((email) => email.trim())
+      );
+    };
+
     const handleEventRepetitionChange = (type) => {
       setEventRepetitionType(type);
     };
@@ -230,6 +238,9 @@ export default function MainFrame() {
         switch (response.status) {
           case 201:
             console.log("Event created successfully");
+            const data = await response.json();
+            new_event["event_id"] = data["event_id"];
+            setEvents([...events, new_event]);
             break;
           case 205:
             alert("Event not created!");
@@ -240,6 +251,37 @@ export default function MainFrame() {
         }
       }
 
+      if (eventEmailInvitations.length > 0) {
+        const response = await fetch(flaskURL + "/invite_user_to_event", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            event_id: new_event["event_id"],
+            emails: eventEmailInvitations,
+            user_id: user_id,
+          }),
+          credentials: "include",
+        });
+        if (!response.ok) {
+          alert("Something went wrong, refresh your website!");
+          return;
+        } else {
+          switch (response.status) {
+            case 201:
+              console.log("Invitations added successfully");
+              break;
+            case 205:
+              alert("Email invitations not sent!");
+              break;
+            case 206:
+              alert("Missing information!");
+              break;
+          }
+        }
+      }
+
       setEventName("");
       setEventStartDate("");
       setEventEndDate("");
@@ -247,6 +289,7 @@ export default function MainFrame() {
       setEventEndTime("");
       setEventLocation("");
       setEventDescription("");
+      setEventEmailInvitations([]);
       setEventRepetitionType("none");
       setEventCustomFrequencyUnit("");
       setEventCustomFrequencyValue(1);
@@ -671,6 +714,17 @@ export default function MainFrame() {
                         onChange={handleEventDescriptionChange}
                         rows="4"
                         cols="50"
+                      />
+                    </div>
+                    <div className="formgroup">
+                      <label htmlFor="eventEmailInvitations">
+                        Invite Emails: (Separate emails with commas)
+                      </label>
+                      <input
+                        type="text"
+                        id="eventEmailInvitations"
+                        value={eventEmailInvitations}
+                        onChange={handleEventEmailInvitationsChange}
                       />
                     </div>
                     <div className="formgroup">
