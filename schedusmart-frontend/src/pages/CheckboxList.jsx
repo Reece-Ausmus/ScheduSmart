@@ -50,6 +50,19 @@ const CheckboxList = ({ columns, habits }) => {
     setTotalValues(totals);
   };
 
+  const getUnitForColumn = (column) => {
+    // return context-dependent units for each selected variable
+    const units = {
+      calories: "kcal",
+      carbs: "g",
+      fat: "g",
+      protein: "g",
+      sodium: "mg",
+      sugar: "g",
+    };
+    return units[column] || "";
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <div style={{ width: "75%", marginRight: "20px" }}>
@@ -75,7 +88,7 @@ const CheckboxList = ({ columns, habits }) => {
         <div>
           {selectedColumns.map((column) => (
             <h3 key={column}>
-              Total {column}: {totalValues[column]}
+              Total {column}: {totalValues[column]} {'(' + getUnitForColumn(column) + ')'}
             </h3>
           ))}
         </div>

@@ -255,6 +255,7 @@ export default function Habits() {
           <DialogTitle>Edit Item</DialogTitle>
           <DialogContent>
             <TextField
+              required
               autoFocus
               margin="dense"
               label="Item Name"
@@ -265,11 +266,20 @@ export default function Habits() {
               }
             />
             <TextField
+              required
               margin="dense"
               label="Calories (kcal)"
               type="number"
               fullWidth
               value={editedItem.calories || ""}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) =>
                 setEditedItem({ ...editedItem, calories: e.target.value })
               }
@@ -280,6 +290,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={editedItem.carbs || ""}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) =>
                 setEditedItem({ ...editedItem, carbs: e.target.value })
               }
@@ -290,6 +308,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={editedItem.fat || ""}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) =>
                 setEditedItem({ ...editedItem, fat: e.target.value })
               }
@@ -300,6 +326,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={editedItem.protein || ""}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) =>
                 setEditedItem({ ...editedItem, protein: e.target.value })
               }
@@ -310,6 +344,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={editedItem.sodium || ""}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) =>
                 setEditedItem({ ...editedItem, sodium: e.target.value })
               }
@@ -320,6 +362,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={editedItem.sugar || ""}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) =>
                 setEditedItem({ ...editedItem, sugar: e.target.value })
               }
@@ -335,6 +385,7 @@ export default function Habits() {
           <DialogTitle>Add New Item</DialogTitle>
           <DialogContent>
             <TextField
+              required
               autoFocus
               margin="dense"
               label="Item Name"
@@ -343,11 +394,20 @@ export default function Habits() {
               onChange={(e) => setItemName(e.target.value)}
             />
             <TextField
+              required
               margin="dense"
               label="Calories (kcal)"
               type="number"
               fullWidth
               value={calories}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) => setCalories(e.target.value)}
             />
             <TextField
@@ -356,6 +416,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={carbs}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) => setCarbs(e.target.value)}
             />
             <TextField
@@ -364,6 +432,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={fat}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) => setFat(e.target.value)}
             />
             <TextField
@@ -372,6 +448,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={protein}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) => setProtein(e.target.value)}
             />
             <TextField
@@ -380,6 +464,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={sodium}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) => setSodium(e.target.value)}
             />
             <TextField
@@ -388,6 +480,14 @@ export default function Habits() {
               type="number"
               fullWidth
               value={sugar}
+              InputProps={{
+                inputProps: { min: 0 }
+              }}
+              onKeyPress={(event) => {
+                if (event?.key === '-' || event?.key === '+') {
+                  event.preventDefault();
+                }
+              }}
               onChange={(e) => setSugar(e.target.value)}
             />
           </DialogContent>
