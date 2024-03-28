@@ -45,7 +45,7 @@ const theme = createTheme({
   },
 });
 
-const handleCreateCalendar = async () => {
+const handleCreateTaskCalendar = async () => {
   const new_calendar = {
     newCalendarName: "tasks",
     user_id: userId,
@@ -160,9 +160,9 @@ export default function TaskManager() {
           }
           console.log(userId);
           if (responseData.calendars == null) {
-            handleCreateCalendar()
+            handleCreateTaskCalendar()
           } else if (responseData.calendars["tasks"] == null) {
-            handleCreateCalendar()
+            handleCreateTaskCalendar()
           } else {
             setCalendars(responseData.calendars);
           }
@@ -425,14 +425,13 @@ export default function TaskManager() {
   const saveTasks = async () => {
     const info = {
       user_id: userId,
-      task_list: todoList
+      task_list: todoList,
     };
     const response = await fetch(flaskURL + "/update_task", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-
       body: JSON.stringify(info),
     });
     if (!response.ok) {
