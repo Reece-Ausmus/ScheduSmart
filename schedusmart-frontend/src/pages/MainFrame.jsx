@@ -221,6 +221,7 @@ export default function MainFrame() {
         selected_days: eventSelectedDays,
         user_id: user_id,
         emails: eventEmailInvitations,
+        type: "event",
       };
       const response = await fetch(flaskURL + "/create_event", {
         method: "POST",
@@ -1706,10 +1707,11 @@ export default function MainFrame() {
     });
 
     console.log(statusOfTask);
-    task = { ...task, 
-      "completed_time": currentTime, 
-      "completed": statusOfTask, 
-      "user_id": user_id
+    task = {
+      ...task,
+      completed_time: currentTime,
+      completed: statusOfTask,
+      user_id: user_id,
     };
 
     console.log(task);

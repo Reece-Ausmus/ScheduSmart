@@ -53,6 +53,7 @@ export default function SetupCourses() {
       selected_days: courseSelectedDays,
       user_id: user_id,
       emails: [],
+      type: "course",
     };
 
     const response = await fetch(flaskURL + "/create_event", {
@@ -159,6 +160,7 @@ export default function SetupCourses() {
       selected_days: [],
       user_id: user_id,
       emails: [],
+      type: "break",
     };
 
     const response = await fetch(flaskURL + "/create_event", {

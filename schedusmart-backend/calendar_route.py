@@ -31,12 +31,8 @@ def create_calendar():
 @calendar.route('/create_event', methods=['POST'])
 def create_event():
     receive_event = request.get_json()
-    emails = receive_event['emails']
     try:
-        if emails.__len__() == 0:
-            ret = add_new_event(receive_event)
-        else:
-            ret = add_new_event_with_invites(receive_event)
+        ret = add_new_event(receive_event)
         if ret == 1:
             response = jsonify({'error': 'event not created'})
             response.status_code = 205
@@ -48,24 +44,6 @@ def create_event():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
-
-#@calendar.route('/create_event_with_invites', methods=['POST'])
-#def create_event_with_invites():
-#    receive_event = request.get_json()
-#    try:
-#        ret = add_new_event_with_invites(receive_event)
-#        status = ret['response_status']
-#        if status == 1:
-#            response = jsonify({'error': 'event not created'})
-#            response.status_code = 205
-#        else:
-#            response = jsonify({'event_id': ret['event_id']})
-#            response.status_code = 201
-#    except:
-#        traceback.print_exc()
-#        response = jsonify({'error': 'missing information'})
-#        response.status_code = 206
-#    return response
 
 @calendar.route('/invite_users_to_event', methods=['POST'])
 def invite_users_to_event():

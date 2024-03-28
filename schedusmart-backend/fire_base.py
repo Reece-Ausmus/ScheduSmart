@@ -351,7 +351,6 @@ def update_task(task_info):
         return 1
     return 0
 
-
 def add_new_event(event_info):
     user_id = event_info['user_id']
     if user_id is None:
@@ -370,52 +369,15 @@ def add_new_event(event_info):
         'repetition_type': event_info['repetition_type'],
         'repetition_unit': event_info['repetition_unit'],
         'repetition_val': event_info['repetition_val'],
-        'selected_days;': event_info['selected_days']
-    }
-    try:
-        #caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        #calendar_id = caldata['calendar_id']
-        calendar_id = data['calendar']
-        db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
-        db.child("Events").child(event_id).set(data)
-    except Exception as e:
-        traceback.print_exc()
-        print("Failed to create calendar:", e)
-        return {'response_status': 1}
-    return {
-        'response_status': 1,
-        'event_id': event_id
-    }
-
-def add_new_event_with_invites(event_info):
-    user_id = event_info['user_id']
-    if user_id is None:
-        raise Exception("User ID is None")
-    
-    event_id = secrets.token_hex(16)
-    data = {
-        'name': event_info['name'],
-        'desc': event_info['desc'],
-        'start_time': event_info['start_time'],
-        'end_time': event_info['end_time'],
-        'start_date': event_info['start_date'],
-        'end_date': event_info['end_date'],
-        'location': event_info['location'],
-        'calendar': event_info['calendar'],
-        'repetition_type': event_info['repetition_type'],
-        'repetition_unit': event_info['repetition_unit'],
-        'repetition_val': event_info['repetition_val'],
         'selected_days;': event_info['selected_days'],
-        'emails': event_info['emails']
+        'emails': event_info['emails'],
+        'type': event_info['type']
     }
     try:
         emails = data['emails']
         for email in emails:
             safe_email = email.replace(".", ",").replace("@", "_")
             db.child("Invitations").child(safe_email).child(event_id).set({'status': 'pending'})
-        #caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        #if caldata is None:
-        #    raise Exception(f"No calendar data found for user {user_id} and calendar {data['calendar']}")
         calendar_id = data['calendar']
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         db.child("Events").child(event_id).set(data)
