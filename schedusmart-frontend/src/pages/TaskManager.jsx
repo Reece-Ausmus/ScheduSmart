@@ -297,7 +297,8 @@ export default function TaskManager() {
   // search list
   const [searchQueryTodo, setSearchQueryTodo] = useState("");
   const [searchQueryCompleted, setSearchQueryCompleted] = useState("");
-  const [foundList, setFoundList] = useState(todoList);
+  const [foundToDoList, setFoundToDoList] = useState(todoList);
+  const [foundCompList, setFoundCompList] = useState(completedList);
 
   // filter list
   const filterTodo = (e) => {
@@ -310,9 +311,9 @@ export default function TaskManager() {
           task.desc.toLowerCase().includes(keyword.toLowerCase())
         );
       });
-      setFoundList(results);
+      setFoundToDoList(results);
     } else {
-      setFoundList(todoList);
+      setFoundToDoList(todoList);
     }
 
     setSearchQueryTodo(keyword);
@@ -328,9 +329,9 @@ export default function TaskManager() {
           task.desc.toLowerCase().includes(keyword.toLowerCase())
         );
       });
-      setFoundList(results);
+      setFoundCompList(results);
     } else {
-      setFoundList(completedList);
+      setFoundCompList(completedList);
     }
 
     setSearchQueryTodo(keyword);
@@ -673,7 +674,6 @@ export default function TaskManager() {
               Cancel
             </button>
           </dialog>
-
           <TodoList
             list={todoList}
             onToggle={handleToggleCompleted}
@@ -726,7 +726,6 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
 
   const [fileList, setFileList] = useState([])
   const [eventList, setEventList] = useState([])
-  const [timeAllo, setTimeAllo] = useState(0)
 
   const fileListRef = ref(storage, "files/")
   useEffect(() => {
@@ -818,9 +817,10 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
       repetition_val: 1,
       selected_days: "",
       user_id: userId,
+      emails: [], 
+      type: "",
     }
     console.log(JSON.stringify(new_event))
-    setTimeAllo(days_diff)
     const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
@@ -831,7 +831,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
     });
     if (!response.ok) {
       alert("Something went wrong, refresh your website!");
-      return days_diff;
+      return days_diff; 
     } else {
       switch (response.status) {
         case 201:
@@ -840,10 +840,10 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
           return days_diff;
         case 205:
           alert("Event not created!");
-          return days_diff;
+          return days_diff
         case 206:
           alert("Missing information!");
-          return days_diff;
+          return days_diff
       }
     }
   }
@@ -928,9 +928,11 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
                   if (dueDate <= (new Date())) {
                     alert("Unable to schedule time for tasks past due!")
                   } else if (task.scheduled === false) {
-                    handleCreateEvent(task)
-                    onScheduled(task.id)
-                    task.scheduled = true
+                    handleCreateEvent(task).then((response) => {
+                      onScheduled(task.id, response)
+                      task.scheduled = true
+                      task.time_allo = response
+                    })
                   } else {
                     alert("Task already scheduled!")
                   }
