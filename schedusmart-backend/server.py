@@ -17,4 +17,8 @@ def create_app():
     from account_route import account
     app.register_blueprint(account)
 
+    from route import language, events
+    app.register_blueprint(language)
+    app.register_blueprint(events)
+
     return app

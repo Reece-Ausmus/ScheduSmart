@@ -220,8 +220,8 @@ export default function MainFrame() {
         repetition_val: eventCustomFrequencyValue,
         selected_days: eventSelectedDays,
         user_id: user_id,
+        emails: eventEmailInvitations,
       };
-      console.log(JSON.stringify(new_event));
       const response = await fetch(flaskURL + "/create_event", {
         method: "POST",
         headers: {
@@ -250,37 +250,6 @@ export default function MainFrame() {
         }
       }
 
-      if (eventEmailInvitations.length > 0) {
-        const response = await fetch(flaskURL + "/invite_user_to_event", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            event_id: new_event["event_id"],
-            emails: eventEmailInvitations,
-            user_id: user_id,
-          }),
-          credentials: "include",
-        });
-        if (!response.ok) {
-          alert("Something went wrong, refresh your website!");
-          return;
-        } else {
-          switch (response.status) {
-            case 201:
-              console.log("Invitations added successfully");
-              break;
-            case 205:
-              alert("Email invitations not sent!");
-              break;
-            case 206:
-              alert("Missing information!");
-              break;
-          }
-        }
-      }
-
       setEventName("");
       setEventStartDate("");
       setEventEndDate("");
@@ -294,6 +263,32 @@ export default function MainFrame() {
       setEventCustomFrequencyValue(1);
       setEventCalendar("");
       toggleEventPopup();
+    };
+
+    const addInvites = async (eid) => {
+      const new_invite = {
+        event_id: eid,
+        emails: eventEmailInvitations,
+        user_id: user_id,
+      };
+      console.log(new_invite);
+      const response = await send_request("/invite_users_to_event", new_invite);
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      } else {
+        switch (response.status) {
+          case 201:
+            console.log("Invitations added successfully");
+            break;
+          case 205:
+            alert("Email invitations not sent!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+        }
+      }
     };
 
     // add availability consts
