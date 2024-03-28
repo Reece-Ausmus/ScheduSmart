@@ -165,11 +165,11 @@
 }
 
 .add_button {
-  background-color: #5a5a5a;
+  background-color: #b1b1b1;
   color: rgb(223, 118, 43);
   float: right;
   top: 35px;
-  margin: 10px;
+  margin: 5px;
 }
 .popup {
   background-color: white;

@@ -332,6 +332,12 @@ export default function MainFrame() {
       }
     };
 
+    const [showSeeInvitationsPopup, setShowSeeInvitationsPopup] =
+      useState(false);
+    const handleSeeInvitations = () => {
+      setShowSeeInvitationsPopup(!showSeeInvitationsPopup);
+    };
+
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
     const [calendarList, setCalendarList] = useState([]);
@@ -548,9 +554,11 @@ export default function MainFrame() {
             placeholder="Enter new calendar name"
             style={{ width: "calc(100% - 100px)", marginRight: "10px" }}
           />
-          <button onClick={handleCreateCalendar} style={{ width: "100px" }}>
-            Create Calendar
-          </button>
+          <div className="add_button">
+            <button onClick={handleCreateCalendar} style={{ width: "100px" }}>
+              Create Calendar
+            </button>
+          </div>
 
           {/* Add Event */}
           <div className="add_button">
@@ -795,6 +803,9 @@ export default function MainFrame() {
           )}
 
           {/*SetupCourses*/}
+          <div className="add_button">
+            <button onClick={handleSetupCourses}>Setup Courses</button>
+          </div>
           {showSemesterPopup && (
             <div className="popup">
               <div className="popup-content">
@@ -838,10 +849,18 @@ export default function MainFrame() {
               </div>
             </div>
           )}
-          <button onClick={handleSetupCourses}>Setup Courses</button>
-          {/*<Link to="/setupcourses">
-            <button>Setup Courses</button>
-          </Link>*/}
+
+          {/* See Invitations */}
+          <div className="add_button">
+            <button onClick={handleSeeInvitations}>See Invitations</button>
+          </div>
+          {showSeeInvitationsPopup && (
+            <div className="popup">
+              <div className="popup-content">
+                <h2>Invitations</h2>
+              </div>
+            </div>
+          )}
         </div>
         {/* List of existing calendars */}
         <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
