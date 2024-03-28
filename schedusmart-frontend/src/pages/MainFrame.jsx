@@ -75,9 +75,8 @@ export default function MainFrame() {
       });
       if (dataOfDefaultMode.type == undefined) dataOfDefaultMode.type = 1;
       let dataOfUser = await send_request("/user_data", {
-        user_id: "1TPDjwwk6xd9IgDFXzcnXwuJXPP2",
+        user_id: user_id,
       });
-      console.log("userData: ", dataOfUser.task_list);
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
     };
