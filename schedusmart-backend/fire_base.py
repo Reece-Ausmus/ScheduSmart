@@ -381,18 +381,57 @@ def add_new_event(event_info):
         'event_id': event_id
     }
 
-def invite_user_to_event_db(data):
+def add_new_event_with_invites(event_info):
+    user_id = event_info['user_id']
+    if user_id is None:
+        raise Exception("User ID is None")
+    
+    event_id = secrets.token_hex(16)
+    data = {
+        'name': event_info['name'],
+        'desc': event_info['desc'],
+        'start_time': event_info['start_time'],
+        'end_time': event_info['end_time'],
+        'start_date': event_info['start_date'],
+        'end_date': event_info['end_date'],
+        'location': event_info['location'],
+        'calendar': event_info['calendar'],
+        'repetition_type': event_info['repetition_type'],
+        'repetition_unit': event_info['repetition_unit'],
+        'repetition_val': event_info['repetition_val'],
+        'selected_days;': event_info['selected_days'],
+        'emails': event_info['emails']
+    }
+    try:
+        emails = data['emails']
+        for email in emails:
+            safe_email = email.replace(".", ",").replace("@", "_")
+            db.child("Invitations").child(safe_email).child(event_id).set({'status': 'pending'})
+        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        calendar_id = caldata['calendar_id']
+        db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
+        db.child("Events").child(event_id).set(data)
+    except Exception as e:
+        traceback.print_exc()
+        print("Failed to create calendar:", e)
+        return {'response_status': 1}
+    return {
+        'response_status': 1,
+        'event_id': event_id
+    }
+
+def invite_users_to_event_db(data):
     try:
         if data['user_id'] is None:
             raise Exception("User ID is None")
-        emails = data['email']
+        emails = data['emails']
         event_id = data['event_id']
         for email in emails:
             db.child("Invitations").child(email).child(event_id).set({'status': 'pending'})
-        return 0
+        return {'response_status': 0}
     except Exception as e:
         print("Failed to invite user to event:", e)
-        return 1
+        return {'response_status': 1}
 
 def add_new_availability(availability_info):
     user_id = availability_info['user_id']

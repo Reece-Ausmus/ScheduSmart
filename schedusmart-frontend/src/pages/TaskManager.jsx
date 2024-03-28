@@ -238,7 +238,6 @@ export default function TaskManager() {
       hour: "2-digit",
       minute: "2-digit",
     });
-    console.log("currentTime: ", currentTime);
     const updatedTask = {
       ...taskToUpdate,
       completed: completedStatus,
@@ -709,6 +708,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
   let sortedList = list;
 
   const [fileList, setFileList] = useState([])
+  const [eventList, setEventList] = useState([])
 
   const fileListRef = ref(storage, "files/")
   useEffect(() => {
@@ -718,6 +718,9 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
           setFileList((prev) => [...prev, url]);
         })
       })
+    })
+    get_events().then((response) => {
+      setEventList(response)
     })
   }, [])
 
@@ -770,16 +773,22 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
     return progress / n
   }
 
+  const get_events = async () => {
+    return await send_request("/get_events", { calendar_id: calendarId })
+  }   
+
   const handleCreateEvent = async (task) => {
     const [year, month, day] = task.date.split("-").map(Number);
-    let date = new Date(year, month - 1, day)
+    const last_workday = new Date(year, month - 1, day - 1)
+    const today = new Date()
+    let daysDiff = Math.ceil(((last_workday) - (today)) / (60 * 60 * 24 * 1000) % 365)
     const new_event = {
       name: task.title,
       desc: task.desc,
       start_time: "00:00",
       end_time: "23:59",
-      start_date: task.date,
-      end_date: task.date,
+      start_date: today,
+      end_date: last_workday,
       location: "",
       calendar: "tasks",
       repetition_type: "none",
@@ -787,8 +796,8 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
       repetition_val: 1,
       selected_days: "",
       user_id: userId,
-    };
-    console.log(JSON.stringify(new_event));
+    }
+    console.log(JSON.stringify(new_event))
     const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
@@ -882,20 +891,24 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
             </TableCell>
             <TableCell>
               <button onClick={() => {
-                if (task.scheduled == false) {
+                const [year, month, day] = task.date.split("-").map(Number);
+                const dueDate = new Date(year, month - 1, day)
+                if (dueDate <= (new Date())) {
+                  alert("Unable to schedule time for tasks past due!")
+                } else if (task.scheduled == false) {
                   handleCreateEvent(task)
                   onScheduled(task.id)
+                  task.scheduled = true
                 } else {
                   alert("Task already scheduled!")
                 }
               }}>Schedule Task Time</button>
             </TableCell>
             <TableCell>
-              <button onClick={async () => {
-                let events = await send_request("/get_events", {
-                  calendar_id: calendarId
-                })
-                console.log(events)
+              <button onClick={() => {
+                const [year, month, day] = task.date.split("-").map(Number);
+                let daysDiff = Math.ceil(((new Date(year, month - 1, day)) - (new Date())) / (60 * 60 * 24 * 1000) % 365)
+                console.log(daysDiff)
               }}>Print</button>
             </TableCell>
             <TableCell>

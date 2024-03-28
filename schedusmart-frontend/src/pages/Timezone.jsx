@@ -41,7 +41,6 @@ export default function TimezoneConverter() {
       // Check if timezone field is populated
       const userTimezone = userData.timezone || "No timezone set";
 
-
       setSelectedTimezone(userTimezone);
       setCurrentTime(getCurrentTime(userTimezone));
     } catch (error) {
@@ -96,7 +95,7 @@ export default function TimezoneConverter() {
     try {
       if (!timezone) {
         // If timezone is not provided, default to UTC
-        const dt = DateTime.now().setZone('UTC');
+        const dt = DateTime.now().setZone("UTC");
         return dt.toLocaleString(DateTime.TIME_SIMPLE);
       }
 
