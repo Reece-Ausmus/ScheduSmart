@@ -63,34 +63,34 @@ def invite_users_to_event():
         response.status_code = 206
     return response
 
+@calendar.route('/get_invitations', methods=['POST'])
+def get_invitations():
+    receive_user = request.get_json()
+    try:
+        ret = get_invitations_db(receive_user)
+        status = ret['response_status']
+        if status == 1:
+            response = jsonify({'error': 'invitation not retrieved'})
+            response.status_code = 205
+        else:
+            response = jsonify(ret)
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
 @calendar.route('/get_events', methods=['POST'])
 def get_events():
     calendar = request.get_json()
     ret = f_get_events(calendar)
     if ret == 1:
         response = jsonify({'response': 'fail retrieve events'})
-        response.status_code = 201
+        response.status_code = 205
     else:
         response = jsonify(ret)
         response.status_code = 201
-    return response
-
-
-@calendar.route('/create_availability', methods=['POST'])
-def create_availability():
-    receive_availability = request.get_json()
-    try:
-        ret = add_new_availability(receive_availability)
-        if ret == 1:
-            response = jsonify({'error': 'availability not created'})
-            response.status_code = 205
-        else:
-            response = jsonify({'message': 'Done'})
-            response.status_code = 201
-    except:
-        traceback.print_exc()
-        response = jsonify({'error': 'missing information'})
-        response.status_code = 206
     return response
 
 

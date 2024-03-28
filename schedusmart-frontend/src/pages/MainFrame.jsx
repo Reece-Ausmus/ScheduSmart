@@ -86,6 +86,8 @@ export default function MainFrame() {
 
   function CalendarList() {
     const [loading, setLoading] = useState(true);
+    const [invitations, setInvitations] = useState([]);
+    const [invitationsWithInfo, setInvitationsWithInfo] = useState([]);
 
     // add event consts
     const [events, setEvents] = useState([]);
@@ -334,8 +336,62 @@ export default function MainFrame() {
 
     const [showSeeInvitationsPopup, setShowSeeInvitationsPopup] =
       useState(false);
-    const handleSeeInvitations = () => {
+
+    const handleSeeInvitationsOpen = () => {
+      get_invitations();
+      toggleSeeInvitationsPopup();
+    };
+
+    const handleSeeInvitationsClose = () => {
+      toggleSeeInvitationsPopup();
+    };
+
+    const toggleSeeInvitationsPopup = () => {
       setShowSeeInvitationsPopup(!showSeeInvitationsPopup);
+    };
+
+    const get_invitations = async () => {
+      const response = await fetch(flaskURL + "/get_invitations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: user_id }),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      } else {
+        switch (response.status) {
+          case 201:
+            console.log("Invitations retrieved successfully");
+            const responseData = await response.json();
+            const new_invitations = responseData["invitations"];
+            const updatedInvitations = Object.entries(new_invitations).map(
+              ([event_id, { status, event_info }]) => ({
+                event_id,
+                status,
+                ...event_info,
+              })
+            );
+            const uniqueInvitations = updatedInvitations.filter(
+              (invitation) =>
+                !invitations.some((inv) => inv.event_id === invitation.event_id)
+            );
+            setInvitations((prevInvitations) => [
+              ...prevInvitations,
+              ...uniqueInvitations,
+            ]);
+            break;
+          case 205:
+            alert("Invitations not retrieved!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+        }
+      }
     };
 
     // Define new states
@@ -852,16 +908,49 @@ export default function MainFrame() {
 
           {/* See Invitations */}
           <div className="add_button">
-            <button onClick={handleSeeInvitations}>See Invitations</button>
+            <button onClick={handleSeeInvitationsOpen}>See Invitations</button>
           </div>
           {showSeeInvitationsPopup && (
             <div className="popup">
               <div className="popup-content">
                 <h2>Invitations</h2>
+                <div className="formgroup">
+                  {invitations.map((invitation) => (
+                    <div key={invitation.id}>
+                      <h3>{invitation.name}</h3>
+                      <p>{invitation.description}</p>
+                      <p>Start Date: {invitation.startDate}</p>
+                      <p>End Date: {invitation.endDate}</p>
+                      <p>Start Time: {invitation.startTime}</p>
+                      <p>End Time: {invitation.endTime}</p>
+                      <button
+                        className="formbutton fb1"
+                        onClick={() => handleAcceptInvitation(invitation)}
+                      >
+                        Accept
+                      </button>
+                      <button
+                        className="formbutton fb1"
+                        onClick={() => handleDeclineInvitation(invitation)}
+                      >
+                        Decline
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="formgroup">
+                  <button
+                    className="formbutton fb1"
+                    onClick={handleSeeInvitationsClose}
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           )}
         </div>
+
         {/* List of existing calendars */}
         <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
           {calendarList.map((calendar) => (

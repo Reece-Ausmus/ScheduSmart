@@ -357,7 +357,6 @@ def add_new_event(event_info):
         raise Exception("User ID is None")
     
     event_id = secrets.token_hex(16)
-    print(event_info)
     data = {
         'name': event_info['name'],
         'desc': event_info['desc'],
@@ -391,6 +390,17 @@ def add_new_event(event_info):
         'event_id': event_id
     }
 
+def get_event_with_id_db(data):
+    try:
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        event_id = data['event_id']
+        event = db.child("Events").child(event_id).get().val()
+        return {'response_status': 0, 'event': event}
+    except Exception as e:
+        print("Failed to get event with ID:", e)
+        return {'response_status': 1}
+
 def invite_users_to_event_db(data):
     try:
         if data['user_id'] is None:
@@ -402,6 +412,23 @@ def invite_users_to_event_db(data):
         return {'response_status': 0}
     except Exception as e:
         print("Failed to invite user to event:", e)
+        return {'response_status': 1}
+    
+def get_invitations_db(data):
+    try:
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        user_id = data['user_id']
+        email = db.child("User").child(user_id).child('email').get().val()
+        safe_email = email.replace(".", ",").replace("@", "_")
+        invitations = db.child("Invitations").child(safe_email).get().val()
+        event_ids = list(invitations.keys())
+        for event_id in event_ids:
+            event_info = get_event_with_id_db({'user_id': user_id, 'event_id': event_id})
+            invitations[event_id]['event_info'] = event_info['event']
+        return {'response_status': 0, 'invitations': invitations}
+    except Exception as e:
+        print("Failed to get invitations:", e)
         return {'response_status': 1}
 
 def add_new_availability(availability_info):
