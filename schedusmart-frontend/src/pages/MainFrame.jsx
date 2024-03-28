@@ -1535,7 +1535,15 @@ export default function MainFrame() {
 
     console.log(event.repetition_type);
 
-    if (event.repetition_type === "daily") {
+    if (event.repetition_type === "none") {
+      eventArray.push({
+        id: id,
+        text: event_name,
+        start: startDate.toISOString().slice(0, 19),
+        end: endDate.toISOString().slice(0, 19),
+      });
+      id++;
+    } else if (event.repetition_type === "daily") {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
