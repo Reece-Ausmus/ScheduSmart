@@ -473,9 +473,3 @@ auth = firebase.auth()
 storage = firebase.storage()
 
 
-data = {
-    "calendar_id": "029c95fe3b7abdac888025b55c2164c5"
-}
-
-f_get_events(data)
-
