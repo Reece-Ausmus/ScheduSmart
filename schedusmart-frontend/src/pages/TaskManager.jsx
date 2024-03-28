@@ -27,6 +27,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Table, TableHead, TableBody, TableRow, TableCell, Grid } from '@mui/material';
 import send_request from "./requester";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -40,11 +48,13 @@ const theme = createTheme({
     secondary: {
       main: "#ab5600",
     },
-    background: {
-      default: "#e4f0e2",
-    },
+    // background: {
+    //   default: "#fff8e1",
+    // },
   },
 });
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 const handleCreateTaskCalendar = async () => {
   const new_calendar = {
@@ -134,7 +144,7 @@ const initialList = [
   },
 ];
 let nextId = initialList.length;
-let calendarId = 0; 
+let calendarId = 0;
 
 
 // create new task manager
@@ -161,7 +171,7 @@ export default function TaskManager() {
             let temporaryToDoList = [];
             let temporaryCompleteList = [];
             responseData.task_list.map((task) => {
-              task.completed? temporaryCompleteList.push(task) : temporaryToDoList.push(task);
+              task.completed ? temporaryCompleteList.push(task) : temporaryToDoList.push(task);
             });
             console.log("TodoList", temporaryToDoList);
             console.log("CompleteList", temporaryCompleteList);
@@ -467,7 +477,7 @@ export default function TaskManager() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline/>
+      <CssBaseline />
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h1>Task List</h1>
@@ -480,14 +490,14 @@ export default function TaskManager() {
                 value={selectedFormat}
                 label="f_forma"
                 onChange={(e) => setSelectedFormat(e.target.value)}
-                style={{ minWidth: '120px'}}
+                style={{ minWidth: '120px' }}
               >
                 <MenuItem value="pdf">PDF</MenuItem>
                 <MenuItem value="csv">CSV</MenuItem>
               </Select>
             </FormControl>
             <Button variant="contained" onClick={handleExport}>Export as {selectedFormat.toUpperCase()}</Button>
-            <button onClick={() => { window.location.href = "/calendar"; }}>Calendar</button>
+            <Button variant="contained" onClick={() => { window.location.href = "/dashboard"; }}>Dashboard</Button>
           </div>
         </div>
       </div>
@@ -524,7 +534,7 @@ export default function TaskManager() {
                   variant="outlined"
                   value={searchQueryTodo}
                   onChange={filterTodo}
-                  style={{ width: '200px'}}
+                  style={{ width: '200px' }}
                   size="small"
                 />
                 <FormControl sx={{ m: 1, width: 200 }} size="small">
@@ -636,7 +646,7 @@ export default function TaskManager() {
                       completed: false,
                       sub_tasks: subtaskList,
                       file_url: taskFile,
-                      scheduled: false, 
+                      scheduled: false,
                     },
                   ]);
                 } else {
@@ -657,6 +667,7 @@ export default function TaskManager() {
               Cancel
             </button>
           </dialog>
+
           <TodoList
             list={todoList}
             onToggle={handleToggleCompleted}
@@ -775,7 +786,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
 
   const get_events = async () => {
     return await send_request("/get_events", { calendar_id: calendarId })
-  }   
+  }
 
   const handleCreateEvent = async (task) => {
     const [year, month, day] = task.date.split("-").map(Number);
@@ -878,47 +889,49 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
             <TableCell>
               {task.sub_tasks && (task.sub_tasks.map((sub_task) => (
                 <p key={sub_task.id}>
-                  <input
-                    type="checkbox"
+                  <FormControlLabel control={<Checkbox
                     checked={sub_task.comp}
                     onChange={(e) => {
                       onToggleSubtask(task.id, sub_task.id, e.target.checked)
-                    }}
-                  />
-                  {sub_task.name}
+                    }} />} label={sub_task.name} />
                 </p>
               )))}
             </TableCell>
             <TableCell>
-              <button onClick={() => {
-                const [year, month, day] = task.date.split("-").map(Number);
-                const dueDate = new Date(year, month - 1, day)
-                if (dueDate <= (new Date())) {
-                  alert("Unable to schedule time for tasks past due!")
-                } else if (task.scheduled == false) {
-                  handleCreateEvent(task)
-                  onScheduled(task.id)
-                  task.scheduled = true
-                } else {
-                  alert("Task already scheduled!")
-                }
-              }}>Schedule Task Time</button>
-            </TableCell>
-            <TableCell>
-              <button onClick={() => {
-                const [year, month, day] = task.date.split("-").map(Number);
-                let daysDiff = Math.ceil(((new Date(year, month - 1, day)) - (new Date())) / (60 * 60 * 24 * 1000) % 365)
-                console.log(daysDiff)
-              }}>Print</button>
-            </TableCell>
-            <TableCell>
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={(e) => {
-                  onToggle(task.id, e.target.checked);
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => {
+                  const [year, month, day] = task.date.split("-").map(Number);
+                  const dueDate = new Date(year, month - 1, day)
+                  if (dueDate <= (new Date())) {
+                    alert("Unable to schedule time for tasks past due!")
+                  } else if (task.scheduled === false) {
+                    handleCreateEvent(task)
+                    onScheduled(task.id)
+                    task.scheduled = true
+                  } else {
+                    alert("Task already scheduled!")
+                  }
                 }}
-              />
+              >
+                Schedule Task Time</Button>
+              {/* <Button
+                variant="contained"
+                size="small"
+                onClick={() => {
+                  const [year, month, day] = task.date.split("-").map(Number);
+                  let daysDiff = Math.ceil(((new Date(year, month - 1, day)) - (new Date())) / (60 * 60 * 24 * 1000) % 365)
+                  console.log(daysDiff)
+                }}
+              >
+                Print</Button> */}
+            </TableCell>
+            <TableCell>
+              <Checkbox
+                {...label}
+                checked={task.completed}
+                onChange={(e) => { onToggle(task.id, e.target.checked); }} />
             </TableCell>
           </TableRow>
         ))}
@@ -988,13 +1001,10 @@ function CompletedList({ list, onToggle, option }) {
             <TableCell>{task.date}</TableCell>
             <TableCell>{task.completed_time}</TableCell>
             <TableCell>
-              <input
-                type="checkbox"
+              <Checkbox
+                {...label}
                 checked={task.completed}
-                onChange={(e) => {
-                  onToggle(task.id, e.target.checked);
-                }}
-              />
+                onChange={(e) => { onToggle(task.id, e.target.checked); }} />
             </TableCell>
           </TableRow>
         ))}
