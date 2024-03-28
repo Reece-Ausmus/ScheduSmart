@@ -78,15 +78,6 @@ export default function Notes() {
       </div>
       
       <div>
-        <button
-        onClick={() => {
-          window.location.href = "/dashboard";
-        }}>
-          Dashboard
-        </button>
-      </div>
-
-      <div>
         <form className="create-note" action="">
           <input
             name="title"
