@@ -368,7 +368,7 @@ def add_new_event(event_info):
     try:
         caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
         calendar_id = caldata['calendar_id']
-        db.child("Calendars").child(calendar_id).child("Events").set({event_id: 'event_id'})
+        db.child("Calendars").child(calendar_id).child("Events").push({event_id: 'event_id'})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
         traceback.print_exc()
