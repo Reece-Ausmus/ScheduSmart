@@ -333,8 +333,7 @@ export default function TaskManager() {
     } else {
       setFoundCompList(completedList);
     }
-
-    setSearchQueryTodo(keyword);
+    setSearchQueryCompleted(keyword);
   };
 
 
@@ -680,6 +679,7 @@ export default function TaskManager() {
             option={sortOptionTodo}
             onToggleSubtask={handleToggleSubtask}
             onScheduled={handleScheduledTask}
+            keyword={searchQueryTodo}
           />
         </div>
 
@@ -713,6 +713,7 @@ export default function TaskManager() {
             list={completedList}
             onToggle={handleToggleCompleted}
             option={sortOptionCompleted}
+            keyword={searchQueryCompleted}
           />
         </div>
       </div>
@@ -721,8 +722,20 @@ export default function TaskManager() {
   );
 }
 
-function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
-  let sortedList = list;
+function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keyword }) {
+  let defaultList = list; 
+  let sortedList = defaultList;
+  if (keyword !== "") {
+    const results = list.filter((task) => {
+      return (
+        task.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        task.desc.toLowerCase().includes(keyword.toLowerCase())
+      );
+    });
+    list = results;
+  } else {
+    list = defaultList;
+  }
 
   const [fileList, setFileList] = useState([])
   const [eventList, setEventList] = useState([])
@@ -937,8 +950,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
                     alert("Task already scheduled!")
                   }
                 }}
-              >
-                Schedule Task Time</Button>
+              >Schedule Task Time</Button>
               {/* <Button
                 variant="contained"
                 size="small"
@@ -961,8 +973,20 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
   );
 }
 
-function CompletedList({ list, onToggle, option }) {
-  let sortedList = list;
+function CompletedList({ list, onToggle, option, keyword }) {
+  let defaultList = list; 
+  let sortedList = defaultList;
+  if (keyword !== "") {
+    const results = list.filter((task) => {
+      return (
+        task.title.toLowerCase().includes(keyword.toLowerCase()) ||
+        task.desc.toLowerCase().includes(keyword.toLowerCase())
+      );
+    });
+    list = results;
+  } else {
+    list = defaultList;
+  }
 
   const idAscending = [...list].sort((a, b) => a.id - b.id);
   const idDescending = [...list].sort((a, b) => b.id - a.id);

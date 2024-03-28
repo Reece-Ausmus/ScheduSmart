@@ -2,6 +2,8 @@
   "dependencies": {
     "@iconify/icons-mdi": "^1.2.48",
     "@iconify/react": "^4.1.1",
+    "@mui/x-charts": "^7.1.0",
+    "@mui/x-data-grid": "^7.1.0",
     "file-server": "^2.2.1",
     "firebase": "^10.9.0",
     "google-map-react": "^2.2.1",
