@@ -158,7 +158,15 @@ export default function TaskManager() {
           const responseData = await response.json();
           const userId = responseData.user_id;
           if (responseData.task_list !== null && responseData.task_list !== undefined) {
-            setTodoList(responseData.task_list)
+            let temporaryToDoList = [];
+            let temporaryCompleteList = [];
+            responseData.task_list.map((task) => {
+              task.completed? temporaryCompleteList.push(task) : temporaryToDoList.push(task);
+            });
+            console.log("TodoList", temporaryToDoList);
+            console.log("CompleteList", temporaryCompleteList);
+            setTodoList(temporaryToDoList)
+            setCompletedList(temporaryCompleteList);
             nextId = todoList.length;
           }
           console.log(userId);
@@ -230,6 +238,7 @@ export default function TaskManager() {
       hour: "2-digit",
       minute: "2-digit",
     });
+    console.log("currentTime: ", currentTime);
     const updatedTask = {
       ...taskToUpdate,
       completed: completedStatus,
@@ -424,9 +433,11 @@ export default function TaskManager() {
   }
 
   const saveTasks = async () => {
+    let saveList = [...todoList, ...completedList]
+    console.log(saveList);
     const info = {
       user_id: userId,
-      task_list: todoList,
+      task_list: saveList,
     };
     const response = await fetch(flaskURL + "/update_task", {
       method: "POST",
@@ -866,7 +877,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
             <TableCell>{task.date}</TableCell>
             <TableCell><a href={fileList[task.id]}>Get Attached File!</a></TableCell>
             <TableCell>
-              {task.sub_tasks.map((sub_task) => (
+              {task.sub_tasks && (task.sub_tasks.map((sub_task) => (
                 <p key={sub_task.id}>
                   <input
                     type="checkbox"
@@ -877,7 +888,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
                   />
                   {sub_task.name}
                 </p>
-              ))}
+              )))}
             </TableCell>
             <TableCell>
               <button onClick={() => {
