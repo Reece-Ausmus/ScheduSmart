@@ -26,6 +26,7 @@ import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Table, TableHead, TableBody, TableRow, TableCell, Grid } from '@mui/material';
+import send_request from "./requester";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -133,6 +134,8 @@ const initialList = [
   },
 ];
 let nextId = initialList.length;
+let calendarId = 0; 
+
 
 // create new task manager
 export default function TaskManager() {
@@ -164,7 +167,7 @@ export default function TaskManager() {
           } else if (responseData.calendars["tasks"] == null) {
             handleCreateTaskCalendar()
           } else {
-            setCalendars(responseData.calendars);
+            calendarId = responseData.calendars["tasks"].calendar_id;
           }
           break;
         case 202:
@@ -187,8 +190,6 @@ export default function TaskManager() {
   const [sortOptionCompleted, setSortOptionCompleted] = useState(0);
   const [todoList, setTodoList] = useState([]);
   const [completedList, setCompletedList] = useState([]);
-  const [calendars, setCalendars] = useState({});
-  const [calendarIdList, setCalendarIdList] = useState([]);
   const [eventList, setEventList] = useState({});
 
   // used to hold data for tasks
@@ -743,18 +744,24 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
     let n = 0
     sortedList.map((task) => {
       if (task.id == id) {
-        task.sub_tasks.map((sub_task) => {
-          n = n + 1
-          if (sub_task.comp == true) {
-            progress = progress + 1
-          }
-        })
+        if (task.sub_tasks == null) {
+          n = 1
+        } else {
+          task.sub_tasks.map((sub_task) => {
+            n = n + 1
+            if (sub_task.comp == true) {
+              progress = progress + 1
+            }
+          })
+        }
       }
     })
     return progress / n
   }
 
   const handleCreateEvent = async (task) => {
+    const [year, month, day] = task.date.split("-").map(Number);
+    let date = new Date(year, month - 1, day)
     const new_event = {
       name: task.title,
       desc: task.desc,
@@ -871,6 +878,14 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
                   alert("Task already scheduled!")
                 }
               }}>Schedule Task Time</button>
+            </TableCell>
+            <TableCell>
+              <button onClick={async () => {
+                let events = await send_request("/get_events", {
+                  calendar_id: calendarId
+                })
+                console.log(events)
+              }}>Print</button>
             </TableCell>
             <TableCell>
               <input
