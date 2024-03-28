@@ -10,7 +10,7 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -18,10 +18,7 @@ import { AppBar, IconButton, Menu, Toolbar } from "@mui/material";
 import { orange } from "@mui/material/colors";
 
 // To install the dependencies, run the following command in the terminal:
-// npm install @mui/material @emotion/react
-// npm install @material-ui/core@next
-// npm install @mui/icons-material
-// npm install @material-ui/icons
+// npm install --force inside of the frontend directory.
 
 const flaskURL = "http://127.0.0.1:5000";
 
@@ -75,7 +72,7 @@ export default function SignIn() {
           break;
         case 206:
           alert(
-            "To login, please click on the verification link in the email we sent you!"
+            "To login, please click on the verification link in the email we sent you!",
           );
           break;
       }
@@ -109,7 +106,7 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOpenOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">

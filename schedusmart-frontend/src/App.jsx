@@ -15,6 +15,7 @@ import Reminder from './pages/Reminder'
 import Notes from './pages/Notes'
 import FileUpload from './pages/FileUpload'
 import SetupCourses from './pages/SetupCourses'
+import Habits from './pages/Habits'
 
 // to run program 
 // Open new terminal
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/taskmanager" element={<TaskManager/>}/>
           <Route path="/draganddrop" element={<DragAndDrop/>}/>
           <Route path="/notes" element={<Notes/>}/>
+          <Route path="/Habits" element={<Habits/>}/>
           <Route path="/setupcourses" element={<SetupCourses/>}/>
           <Route path="*" element={<NoPage/>} />
           <Route path="/reminder" element={<Reminder/>} />

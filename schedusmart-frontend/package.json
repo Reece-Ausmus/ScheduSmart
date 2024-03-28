@@ -20,6 +20,8 @@
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.10",
+    "@mui/x-charts": "^7.0.0",
+    "@mui/x-data-grid": "^7.0.0",
     "@react-google-maps/api": "^2.19.3",
     "file-saver": "^2.0.5",
     "firebase": "^10.8.0",
