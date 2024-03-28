@@ -185,7 +185,7 @@ export default function TaskManager() {
   // select sort option
   const [sortOptionTodo, setSortOptionTodo] = useState(0);
   const [sortOptionCompleted, setSortOptionCompleted] = useState(0);
-  const [todoList, setTodoList] = useState(initialList);
+  const [todoList, setTodoList] = useState([]);
   const [completedList, setCompletedList] = useState([]);
   const [calendars, setCalendars] = useState({});
   const [calendarIdList, setCalendarIdList] = useState([]);
@@ -613,7 +613,7 @@ export default function TaskManager() {
             <button
               id="closeModal"
               onClick={() => {
-                if (subtaskList != []) {
+                if (subtaskList != [] && taskDate != "") {
                   setTodoList([
                     ...todoList,
                     {
