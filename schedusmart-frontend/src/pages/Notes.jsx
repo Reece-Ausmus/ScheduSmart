@@ -6,6 +6,7 @@ import NoteCard from "../components/NoteCard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditIcon from "@material-ui/icons/Edit";
+import Dashboard from "./Dashboard";
 
 export default function Notes() {
   const [note, setNote] = useState({
@@ -71,19 +72,11 @@ export default function Notes() {
 
   return (
     <div className="main">
+      <div>{Dashboard()}</div>
       <div className="header">
         <h1>Notes</h1>
       </div>
       
-      <div>
-        <button
-        onClick={() => {
-          window.location.href = "/dashboard";
-        }}>
-          Dashboard
-        </button>
-      </div>
-
       <div>
         <form className="create-note" action="">
           <input
