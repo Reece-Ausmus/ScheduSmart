@@ -323,11 +323,13 @@ def f_get_events(calendar):
         #    data_event.append(data.val())
         #return {"data": data_event}
     
-        data_event_ids = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get().val()
+        data_event_ids = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
         events = []
         for event_id in data_event_ids.each():
-            event = db.child("Events").child(event_id).get().val()
-            events.append(event)
+            event = event_id.val()
+            print(event["event_id"])
+            events.append(db.child("Events").child(event["event_id"]).get().val())
+        print(events)
         return {"data": events}
     except Exception as e:
         print(f"fail to retrieve events data: \n{e}")
@@ -368,7 +370,7 @@ def add_new_event(event_info):
     try:
         caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
         calendar_id = caldata['calendar_id']
-        db.child("Calendars").child(calendar_id).child("Events").push({event_id: 'event_id'})
+        db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
         traceback.print_exc()
@@ -469,4 +471,11 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
+
+
+data = {
+    "calendar_id": "029c95fe3b7abdac888025b55c2164c5"
+}
+
+f_get_events(data)
 
