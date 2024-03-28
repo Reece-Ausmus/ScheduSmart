@@ -1345,8 +1345,38 @@ export default function MainFrame() {
     return newDate;
   }
 
+  function checkEventOverlap(event1, event2) {
+    const [year1, month1, day1] = event1.start_date.split("-").map(Number);
+    const [hour1, min1] = event1.start_time.split(":").map(Number);
+    const [year2, month2, day2] = event1.end_date.split("-").map(Number);
+    const [hour2, min2] = event1.end_time.split(":").map(Number);
+
+    const [year3, month3, day3] = event2.start_date.split("-").map(Number);
+    const [hour3, min3] = event2.start_time.split(":").map(Number);
+    const [year4, month4, day4] = event2.end_date.split("-").map(Number);
+    const [hour4, min4] = event2.end_time.split(":").map(Number);
+
+    const startDate1 = new Date(year1, month1 - 1, day1, hour1, min1, 0);
+    const endDate1 = new Date(year2, month2 - 1, day2, hour2, min2, 0);
+    const startDate2 = new Date(year3, month3 - 1, day3, hour3, min3, 0);
+    const endDate2 = new Date(year4, month4 - 1, day4, hour4, min4, 0);
+
+    return startDate1 < endDate2 && startDate2 < endDate1;
+  }
+
   function eventParser(event, id_number, boundary) {
     const eventArray = [];
+    const breaks = [];
+    if (event.type === "break") {
+      breaks.push(event);
+    }
+    if (event.type === "course") {
+      for (let b of breaks) {
+        if (checkEventOverlap(event, b)) {
+          return eventArray;
+        }
+      }
+    }
 
     let id = id_number;
     let event_name = event.name;
@@ -1487,6 +1517,18 @@ export default function MainFrame() {
         });
 
         if (events.data != undefined) {
+          // have to do all the breaks first
+          // to make sure courses are properly checked for overlap
+          events.data.sort((a, b) => {
+            if (a.type === "break" && b.type !== "break") {
+              return -1;
+            } else if (a.type !== "break" && b.type === "break") {
+              return 1;
+            } else {
+              return 0;
+            }
+          });
+
           for (let i = 0; i < events.data.length; i++) {
             eventsArray.push(
               ...eventParser(
