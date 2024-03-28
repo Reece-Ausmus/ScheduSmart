@@ -27,6 +27,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Table, TableHead, TableBody, TableRow, TableCell, Grid } from '@mui/material';
 import send_request from "./requester";
+import { FreeBreakfastOutlined } from "@material-ui/icons";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -103,6 +104,7 @@ const initialList = [
     { id: 2, name: "Question 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
+    time_allo: 0, 
   },
   {
     id: 1,
@@ -117,6 +119,7 @@ const initialList = [
     { id: 2, name: "Acceptable Criteria", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
+    time_allo: 0,
   },
   {
     id: 2,
@@ -131,6 +134,7 @@ const initialList = [
     { id: 2, name: "Chapter 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
+    time_allo: 0, 
   },
 ];
 let nextId = initialList.length;
@@ -269,10 +273,10 @@ export default function TaskManager() {
     setTodoList(mapped)
   }
 
-  function handleScheduledTask(id) {
+  function handleScheduledTask(id, time) {
     let mapped = todoList.map((task) => {
       if (task.id == id) {
-        return { ...task, scheduled: true }
+        return { ...task, scheduled: true, time_allo: time }
       } else {
         return { ...task }
       }
@@ -638,6 +642,7 @@ export default function TaskManager() {
                       sub_tasks: subtaskList,
                       file_url: taskFile,
                       scheduled: false, 
+                      time_allo: 0, 
                     },
                   ]);
                 } else {
@@ -710,6 +715,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
 
   const [fileList, setFileList] = useState([])
   const [eventList, setEventList] = useState([])
+  const [timeAllo, setTimeAllo] = useState(0)
 
   const fileListRef = ref(storage, "files/")
   useEffect(() => {
@@ -780,25 +786,30 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
 
   const handleCreateEvent = async (task) => {
     const [year, month, day] = task.date.split("-").map(Number);
-    const last_workday = new Date(year, month - 1, day - 1)
+    let last_workday = new Date(year, month - 1, day - 1)
     const today = new Date()
-    let daysDiff = Math.ceil(((last_workday) - (today)) / (60 * 60 * 24 * 1000) % 365)
+    let days_diff = Math.ceil(((last_workday) - (today)) / (60 * 60 * 24 * 1000) % 365)
+    if (days_diff > task.time) {
+      last_workday = new Date(year, month - 1, day - 1 - (days_diff - task.time))
+      days_diff = task.time;
+    }
     const new_event = {
       name: task.title,
       desc: task.desc,
-      start_time: "00:00",
-      end_time: "23:59",
+      start_time: "17:00",
+      end_time: "18:00",
       start_date: today,
       end_date: last_workday,
       location: "",
       calendar: "tasks",
-      repetition_type: "none",
+      repetition_type: "daily",
       repetition_unit: "",
       repetition_val: 1,
       selected_days: "",
       user_id: userId,
     }
     console.log(JSON.stringify(new_event))
+    setTimeAllo(days_diff)
     const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
@@ -809,19 +820,19 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
     });
     if (!response.ok) {
       alert("Something went wrong, refresh your website!");
-      return;
+      return days_diff;
     } else {
       switch (response.status) {
         case 201:
           console.log("Event created successfully");
-          alert("Event Created Successfully!")
-          break;
+          alert("Event Created Successfully!");
+          return days_diff;
         case 205:
           alert("Event not created!");
-          break;
+          return days_diff;
         case 206:
           alert("Missing information!");
-          break;
+          return days_diff;
       }
     }
   }
@@ -871,6 +882,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
             <TableCell>{task.title}</TableCell>
             <TableCell>
               <CircularProgressWithLabel variant="determinate" value={progressValue(task.id) * 100} />
+              <p style={{align: "center"}}><small>Worktime: {task.time_allo} hour(s)</small></p>
             </TableCell>
             <TableCell>{task.desc}</TableCell>
             <TableCell>{task.time} hour(s)</TableCell>
@@ -897,9 +909,11 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
                 if (dueDate <= (new Date())) {
                   alert("Unable to schedule time for tasks past due!")
                 } else if (task.scheduled == false) {
-                  handleCreateEvent(task)
-                  onScheduled(task.id)
-                  task.scheduled = true
+                  handleCreateEvent(task).then((response) => {
+                    onScheduled(task.id, response)
+                    task.scheduled = true
+                    task.time_allo = response
+                  })
                 } else {
                   alert("Task already scheduled!")
                 }
@@ -907,9 +921,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
             </TableCell>
             <TableCell>
               <button onClick={() => {
-                const [year, month, day] = task.date.split("-").map(Number);
-                let daysDiff = Math.ceil(((new Date(year, month - 1, day)) - (new Date())) / (60 * 60 * 24 * 1000) % 365)
-                console.log(daysDiff)
+                console.log(task.time_allo)
               }}>Print</button>
             </TableCell>
             <TableCell>
