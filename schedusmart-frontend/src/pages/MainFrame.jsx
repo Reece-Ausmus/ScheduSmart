@@ -1547,6 +1547,9 @@ export default function MainFrame() {
   }, [selectedCalendars]);
 
   ///////////////////Task handle///////////////////////////////////
+  const taskSortFunction = (a, b) => {
+    return a.date.localeCompare(b.date)
+  }
   const generateTaskListHTML = (arr) => {
     if (!arr || arr == undefined) {
       return (
@@ -1555,6 +1558,7 @@ export default function MainFrame() {
         </div>
       );
     }
+    arr.sort(taskSortFunction);
     arr.map((task) => {
       console.log("task: ", task.title);
     });
@@ -1562,6 +1566,7 @@ export default function MainFrame() {
       (task) =>
         !task.completed && (
           <div className="taskBar" onClick={() => {}}>
+            <p className="taskName">{task.date.slice(5, 10)}</p>
             <p className="taskName">{task.title}</p>
             <input
               className=".taskCheckBox"
@@ -1575,6 +1580,7 @@ export default function MainFrame() {
         )
     );
   };
+
 
   const changeStatusOfTask = async (task, statusOfTask) => {
     const currentTime = new Date().toLocaleString(undefined, {
