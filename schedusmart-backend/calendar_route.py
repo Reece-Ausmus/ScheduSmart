@@ -81,6 +81,42 @@ def get_invitations():
         response.status_code = 206
     return response
 
+@calendar.route('/accept_invitation', methods=['POST'])
+def accept_invitation():
+    receive_user = request.get_json()
+    try:
+        ret = accept_invitation_db(receive_user)
+        status = ret['response_status']
+        if status == 1:
+            response = jsonify({'error': 'invitation not accepted'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
+@calendar.route('/decline_invitation', methods=['POST'])
+def decline_invitation():
+    receive_user = request.get_json()
+    try:
+        ret = decline_invitation_db(receive_user)
+        status = ret['response_status']
+        if status == 1:
+            response = jsonify({'error': 'invitation not declined'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
 @calendar.route('/get_events', methods=['POST'])
 def get_events():
     calendar = request.get_json()

@@ -118,6 +118,10 @@ export default function Createaccount() {
         newCalendarName: "Availability",
         user_id: user_id,
       },
+      {
+        newCalendarName: "Invitations",
+        user_id: user_id,
+      },
     ];
 
     const createCalendar = async (new_calendar) => {

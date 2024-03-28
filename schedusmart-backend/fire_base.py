@@ -193,9 +193,6 @@ def login_account_with_email_and_password(receive_account):
         # 2FA CODE START ########################################################################################
         email_verified = db.child("User").child(user_id).child("emailVerified").get().val()
 
-        #### TEMPORARY DISABLE EMAIL VERIFICATION ####
-        db.child("User").child(user_id).update({"emailVerified": True})
-
         # Send verification email to certify login
         if not email_verified:
             auth.send_email_verification(user['idToken'])
@@ -212,6 +209,9 @@ def login_account_with_email_and_password(receive_account):
 
         # Set 'emailVerified' to False so that user will have to re-verify on next sign-in
         db.child("User").child(user_id).update({"emailVerified": False})
+
+        #### TEMPORARY DISABLE EMAIL VERIFICATION ####
+        db.child("User").child(user_id).update({"emailVerified": True})
 
         # 2FA CODE END ##########################################################################################
 
@@ -429,6 +429,36 @@ def get_invitations_db(data):
         return {'response_status': 0, 'invitations': invitations}
     except Exception as e:
         print("Failed to get invitations:", e)
+        return {'response_status': 1}
+    
+def accept_invitation_db(data):
+    try:
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        user_id = data['user_id']
+        event_id = data['event_id']
+        email = db.child("User").child(user_id).child('email').get().val()
+        safe_email = email.replace(".", ",").replace("@", "_")
+        db.child("Invitations").child(safe_email).child(event_id).update({"status": "accepted"})
+        calendar_id = db.child("User").child(user_id).child("calendars").child("Invitations").get().val()['calendar_id']
+        db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
+        return {'response_status': 0}
+    except Exception as e:
+        #print("Failed to accept invitation:", e)
+        return {'response_status': 1}
+    
+def decline_invitation_db(data):
+    try:
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        user_id = data['user_id']
+        event_id = data['event_id']
+        email = db.child("User").child(user_id).child('email').get().val()
+        safe_email = email.replace(".", ",").replace("@", "_")
+        db.child("Invitations").child(safe_email).child(event_id).remove()
+        return {'response_status': 0}
+    except Exception as e:
+        print("Failed to decline invitation:", e)
         return {'response_status': 1}
 
 def add_new_availability(availability_info):

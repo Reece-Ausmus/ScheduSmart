@@ -337,6 +337,80 @@ export default function MainFrame() {
     const [showSeeInvitationsPopup, setShowSeeInvitationsPopup] =
       useState(false);
 
+    const [invitationFilter, setInvitationFilter] = useState("all");
+
+    const handleAcceptInvitation = async (invitation) => {
+      const response = await fetch(flaskURL + "/accept_invitation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: user_id,
+          event_id: invitation.event_id,
+        }),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      } else {
+        switch (response.status) {
+          case 201:
+            console.log("Invitation accepted successfully");
+            setInvitations((prevInvitations) =>
+              prevInvitations.map((inv) =>
+                inv.event_id === invitation.event_id
+                  ? { ...inv, status: "accepted" }
+                  : inv
+              )
+            );
+            break;
+          case 205:
+            alert("Invitation not accepted!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+        }
+      }
+    };
+
+    const handleDeclineInvitation = async (invitation) => {
+      const response = await fetch(flaskURL + "/decline_invitation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: user_id,
+          event_id: invitation.event_id,
+        }),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      } else {
+        switch (response.status) {
+          case 201:
+            console.log("Invitation declined successfully");
+            setInvitations((prevInvitations) =>
+              prevInvitations.filter(
+                (inv) => inv.event_id !== invitation.event_id
+              )
+            );
+            break;
+          case 205:
+            alert("Invitation not declined!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+        }
+      }
+    };
+
     const handleSeeInvitationsOpen = () => {
       get_invitations();
       toggleSeeInvitationsPopup();
@@ -460,8 +534,6 @@ export default function MainFrame() {
         setNewCalendarName("");
         return;
       }
-      //const new_calendar = {nextCalendarID, newCalendarName}
-      //nextCalendarID++;
       const new_calendar = {
         newCalendarName: newCalendarName,
         user_id: user_id,
@@ -915,28 +987,51 @@ export default function MainFrame() {
               <div className="popup-content">
                 <h2>Invitations</h2>
                 <div className="formgroup">
-                  {invitations.map((invitation) => (
-                    <div key={invitation.id}>
-                      <h3>{invitation.name}</h3>
-                      <p>{invitation.description}</p>
-                      <p>Start Date: {invitation.startDate}</p>
-                      <p>End Date: {invitation.endDate}</p>
-                      <p>Start Time: {invitation.startTime}</p>
-                      <p>End Time: {invitation.endTime}</p>
-                      <button
-                        className="formbutton fb1"
-                        onClick={() => handleAcceptInvitation(invitation)}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="formbutton fb1"
-                        onClick={() => handleDeclineInvitation(invitation)}
-                      >
-                        Decline
-                      </button>
-                    </div>
-                  ))}
+                  <label htmlFor="invitationFilter">Filter:</label>
+                  <select
+                    id="invitationFilter"
+                    value={invitationFilter}
+                    onChange={(e) => setInvitationFilter(e.target.value)}
+                  >
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="accepted">Accepted</option>
+                  </select>
+                </div>
+                <div className="formgroup">
+                  {invitations
+                    .filter((invitation) => {
+                      if (invitationFilter === "all") {
+                        return true;
+                      } else if (invitationFilter === "pending") {
+                        return invitation.status === "pending";
+                      } else if (invitationFilter === "accepted") {
+                        return invitation.status === "accepted";
+                      }
+                    })
+                    .map((invitation) => (
+                      <div key={invitation.id}>
+                        <h3>{invitation.name}</h3>
+                        <p>{invitation.description}</p>
+                        <p>Start Date: {invitation.startDate}</p>
+                        <p>End Date: {invitation.endDate}</p>
+                        <p>Start Time: {invitation.startTime}</p>
+                        <p>End Time: {invitation.endTime}</p>
+                        <p>Status: {invitation.status}</p>
+                        <button
+                          className="formbutton fb1"
+                          onClick={() => handleAcceptInvitation(invitation)}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="formbutton fb1"
+                          onClick={() => handleDeclineInvitation(invitation)}
+                        >
+                          Decline
+                        </button>
+                      </div>
+                    ))}
                 </div>
                 <div className="formgroup">
                   <button
@@ -1495,7 +1590,7 @@ export default function MainFrame() {
         // user can skip the tours
         showSkipButton={true}
       />
-      
+
       <div>{Dashboard()}</div>
       <div className="weather_container">
         <div className="weather">
