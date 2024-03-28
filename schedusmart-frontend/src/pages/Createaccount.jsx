@@ -115,7 +115,7 @@ export default function Createaccount() {
         user_id: user_id,
       },
       {
-        newCalendarName: "Work",
+        newCalendarName: "Availability",
         user_id: user_id,
       },
     ];

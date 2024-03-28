@@ -357,6 +357,7 @@ def add_new_event(event_info):
         raise Exception("User ID is None")
     
     event_id = secrets.token_hex(16)
+    print(event_info)
     data = {
         'name': event_info['name'],
         'desc': event_info['desc'],
