@@ -377,7 +377,7 @@ export default function Habits() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleEditDialogClose}>Cancel</Button>
-            <Button onClick={saveEditedHabit}>Save</Button>
+            <Button variant="contained" onClick={saveEditedHabit}>Save</Button>
           </DialogActions>
         </Dialog>
 
@@ -493,7 +493,7 @@ export default function Habits() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleDialogClose}>Cancel</Button>
-            <Button onClick={addHabit}>Add</Button>
+            <Button variant="contained" onClick={addHabit}>Add</Button>
           </DialogActions>
         </Dialog>
       </Container>
