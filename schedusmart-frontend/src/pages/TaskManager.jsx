@@ -605,7 +605,7 @@ export default function TaskManager() {
                   let ref_url = `files/${event.target.files[0].name + v4()}`
                   const fileRef = ref(storage, ref_url);
                   uploadFile(fileRef, event.target.files[0])
-                  setTaskFile(ref_url)
+                  setTaskFile(fileRef.name)
                 } else {
                   alert("Invalid File! Only image, text, audio, or video files allowed!")
                 }
@@ -733,7 +733,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
     listAll(fileListRef).then((response) => {
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-          setFileList((prev) => [...prev, url]);
+          setFileList((prev) => [...prev, {name: item.name, url: url}]);
         })
       })
     })
@@ -872,6 +872,14 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
     );
   }
 
+  const get_link = (name) => {
+    let link = ""
+    fileList.map((file) => {
+      if (file.name == name) link = file.url;
+    })
+    return link; 
+  }
+
   return (
     <Table>
       <TableHead>
@@ -898,7 +906,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
             <TableCell>{task.desc}</TableCell>
             <TableCell>{task.time} hour(s)</TableCell>
             <TableCell>{task.date}</TableCell>
-            <TableCell><a href={fileList[task.id]}>Get Attached File!</a></TableCell>
+            <TableCell><a href={get_link(task.file_url)}>Get Attached File!</a></TableCell>
             <TableCell>
               {task.sub_tasks && (task.sub_tasks.map((sub_task) => (
                 <p key={sub_task.id}>
@@ -933,12 +941,10 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled }) {
                 variant="contained"
                 size="small"
                 onClick={() => {
-                  const [year, month, day] = task.date.split("-").map(Number);
-                  let daysDiff = Math.ceil(((new Date(year, month - 1, day)) - (new Date())) / (60 * 60 * 24 * 1000) % 365)
-                  console.log(daysDiff)
+                  console.log(fileList)
                 }}
               >
-                Print</Button> */}
+              Print</Button>*/}
             </TableCell>
             <TableCell>
               <Checkbox
