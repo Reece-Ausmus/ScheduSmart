@@ -1687,10 +1687,34 @@ export default function MainFrame() {
               className=".taskCheckBox"
               type="checkbox"
               defaultChecked={false}
+              onChange={(e) => {
+                changeStatusOfTask(task, e.target.checked);
+              }}
             />
           </div>
         )
     );
+  };
+
+  const changeStatusOfTask = async (task, statusOfTask) => {
+    const currentTime = new Date().toLocaleString(undefined, {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    console.log(statusOfTask);
+    task = { ...task, 
+      "completed_time": currentTime, 
+      "completed": statusOfTask, 
+      "user_id": user_id
+    };
+
+    console.log(task);
+    let res = await send_request("/mark_done", task);
+    console.log(res.message);
   };
 
   // handle drag & drop

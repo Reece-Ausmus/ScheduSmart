@@ -238,7 +238,6 @@ export default function TaskManager() {
       hour: "2-digit",
       minute: "2-digit",
     });
-    console.log("currentTime: ", currentTime);
     const updatedTask = {
       ...taskToUpdate,
       completed: completedStatus,
