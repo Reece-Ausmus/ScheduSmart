@@ -78,7 +78,7 @@ export default function Welcome() {
             Schedusmart is a cutting-edge platform designed to streamline your life.
             Our innovative tool combines assignment tracking, a fully functional calendar,
             and an AI-powered scheduler to help you manage your tasks efficiently and effectively.
-            With Schedusmart, you can say goodbye to the complexities of scheduling and hello to a more organized, productive life
+            With Schedusmart, you can say goodbye to the complexities of scheduling and hello to a more organized, productive life.
           </Typography>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}

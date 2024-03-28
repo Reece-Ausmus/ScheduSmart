@@ -98,7 +98,8 @@ export default function MainFrame() {
     const [eventLocation, setEventLocation] = useState("");
     const [eventDescription, setEventDescription] = useState("");
     const [eventEmailInvitations, setEventEmailInvitations] = useState([]);
-    const [eventRepetitionType, setEventRepetitionType] = useState("none"); // Default to daily
+    const [eventType, setEventType] = useState("");
+    const [eventRepetitionType, setEventRepetitionType] = useState("none");
     const [eventCustomFrequencyValue, setEventCustomFrequencyValue] =
       useState(1);
     const [eventCustomFrequencyUnit, setEventCustomFrequencyUnit] =
@@ -106,6 +107,7 @@ export default function MainFrame() {
     const [eventSelectedDays, setEventSelectedDays] = useState([]); // Array to store selected days
     const [eventCalendar, setEventCalendar] = useState("");
     const [LocationSettings, setLocationSettings] = useState("text");
+
     useEffect(() => {
       const fetchDefaultsettings = async () => {
         let dataOfDefaultsettings = await send_request(
@@ -205,6 +207,44 @@ export default function MainFrame() {
       );
     };
 
+    const handleCreateEventButton = () => {
+      setEventName("");
+      setEventStartDate("");
+      setEventEndDate("");
+      setEventStartTime("");
+      setEventEndTime("");
+      setEventLocation("");
+      setEventDescription("");
+      setEventEmailInvitations([]);
+      setEventType("event");
+      setEventRepetitionType("none");
+      setEventCustomFrequencyValue(1);
+      setEventCustomFrequencyUnit("");
+      setEventSelectedDays([]);
+      setEventCalendar("");
+      toggleEventPopup();
+    };
+
+    const handleCreateAvailabilityButton = () => {
+      setEventName("");
+      setEventStartDate("");
+      setEventEndDate("");
+      setEventStartTime("");
+      setEventEndTime("");
+      setEventLocation("");
+      setEventDescription("");
+      setEventEmailInvitations([]);
+      setEventType("availability");
+      setEventRepetitionType("none");
+      setEventCustomFrequencyValue(1);
+      setEventCustomFrequencyUnit("");
+      setEventSelectedDays([]);
+      setEventCalendar(
+        calendarList.find((cal) => cal.name === "Availability")?.calendar_id
+      );
+      toggleEventPopup();
+    };
+
     const handleCreateEvent = async () => {
       const new_event = {
         name: eventName,
@@ -220,8 +260,9 @@ export default function MainFrame() {
         repetition_val: eventCustomFrequencyValue,
         selected_days: eventSelectedDays,
         user_id: user_id,
+        emails: eventEmailInvitations,
+        type: eventType,
       };
-      console.log(JSON.stringify(new_event));
       const response = await fetch(flaskURL + "/create_event", {
         method: "POST",
         headers: {
@@ -250,37 +291,6 @@ export default function MainFrame() {
         }
       }
 
-      if (eventEmailInvitations.length > 0) {
-        const response = await fetch(flaskURL + "/invite_user_to_event", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            event_id: new_event["event_id"],
-            emails: eventEmailInvitations,
-            user_id: user_id,
-          }),
-          credentials: "include",
-        });
-        if (!response.ok) {
-          alert("Something went wrong, refresh your website!");
-          return;
-        } else {
-          switch (response.status) {
-            case 201:
-              console.log("Invitations added successfully");
-              break;
-            case 205:
-              alert("Email invitations not sent!");
-              break;
-            case 206:
-              alert("Missing information!");
-              break;
-          }
-        }
-      }
-
       setEventName("");
       setEventStartDate("");
       setEventEndDate("");
@@ -289,6 +299,7 @@ export default function MainFrame() {
       setEventLocation("");
       setEventDescription("");
       setEventEmailInvitations([]);
+      setEventType("");
       setEventRepetitionType("none");
       setEventCustomFrequencyUnit("");
       setEventCustomFrequencyValue(1);
@@ -296,141 +307,35 @@ export default function MainFrame() {
       toggleEventPopup();
     };
 
-    // add availability consts
-    const [showAvailabilityPopup, setShowAvailabilityPopup] = useState(false);
-    const [availabilityName, setAvailabilityName] = useState("");
-    const [availabilityStartDate, setAvailabilityStartDate] = useState("");
-    const [availabilityEndDate, setAvailabilityEndDate] = useState("");
-    const [availabilityStartTime, setAvailabilityStartTime] = useState("");
-    const [availabilityEndTime, setAvailabilityEndTime] = useState("");
-    const [availabilityLocation, setAvailabilityLocation] = useState("");
-    const [availabilityDescription, setAvailabilityDescription] = useState("");
-    const [availabilityRepetitionType, setAvailabilityRepetitionType] =
-      useState("none"); // Default to daily
-    const [
-      availabilityCustomFrequencyValue,
-      setAvailabilityCustomFrequencyValue,
-    ] = useState(1); // Default custom frequency
-    const [
-      availabilityCustomFrequencyUnit,
-      setAvailabilityCustomFrequencyUnit,
-    ] = useState(""); // Default custom frequency
-    const [availabilitySelectedDays, setAvailabilitySelectedDays] = useState(
-      []
-    ); // Array to store selected days
-    const [availabilityCalendar, setAvailabilityCalendar] = useState("");
-
-    const toggleAvailabilityPopup = () => {
-      setShowAvailabilityPopup(!showAvailabilityPopup);
-    };
-
-    const handleAvailabilityNameChange = (e) => {
-      setAvailabilityName(e.target.value);
-    };
-
-    const handleAvailabilityStartDateChange = (e) => {
-      setAvailabilityStartDate(e.target.value);
-    };
-
-    const handleAvailabilityEndDateChange = (e) => {
-      setAvailabilityEndDate(e.target.value);
-    };
-
-    const handleAvailabilityStartTimeChange = (e) => {
-      setAvailabilityStartTime(e.target.value);
-    };
-
-    const handleAvailabilityEndTimeChange = (e) => {
-      setAvailabilityEndTime(e.target.value);
-    };
-
-    const handleAvailabilityLocationChange = (e) => {
-      setAvailabilityLocation(e.target.value);
-    };
-
-    const handleAvailabilityDescriptionChange = (e) => {
-      setAvailabilityDescription(e.target.value);
-    };
-
-    const handleAvailabilityRepetitionChange = (type) => {
-      setAvailabilityRepetitionType(type);
-    };
-
-    const handleAvailabilityCustomFrequencyValueChange = (intVal) => {
-      const value = parseInt(intVal.target.value, 10);
-      setAvailabilityCustomFrequencyValue(value);
-    };
-
-    const handleAvailabilityCustomFrequencyUnitChange = (e) => {
-      setAvailabilityCustomFrequencyUnit(e.target.value);
-    };
-
-    const handleAvailabilityCalendarChange = (e) => {
-      setAvailabilityCalendar(e.target.value);
-    };
-
-    const handleAvailabilityDayToggle = (day) => {
-      // Toggle the selected day
-      setAvailabilitySelectedDays((prevDays) =>
-        prevDays.includes(day)
-          ? prevDays.filter((d) => d !== day)
-          : [...prevDays, day]
-      );
-    };
-
-    const handleCreateAvailability = async () => {
-      const new_availability = {
-        name: availabilityName,
-        desc: availabilityDescription,
-        start_time: availabilityStartTime,
-        end_time: availabilityEndTime,
-        start_date: availabilityStartDate,
-        end_date: availabilityEndDate,
-        location: availabilityLocation,
-        calendar: availabilityCalendar,
-        repetition_type: availabilityRepetitionType,
-        repetition_unit: availabilityCustomFrequencyUnit,
-        repetition_val: availabilityCustomFrequencyValue,
+    const addInvites = async (eid) => {
+      const new_invite = {
+        event_id: eid,
+        emails: eventEmailInvitations,
         user_id: user_id,
       };
-      console.log(JSON.stringify(new_availability));
-      const response = await fetch(flaskURL + "/create_availability", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(new_availability),
-        credentials: "include",
-      });
+      const response = await send_request("/invite_users_to_event", new_invite);
       if (!response.ok) {
         alert("Something went wrong, refresh your website!");
         return;
       } else {
         switch (response.status) {
           case 201:
-            console.log("Availability created successfully");
+            console.log("Invitations added successfully");
             break;
           case 205:
-            alert("Availability not created!");
+            alert("Email invitations not sent!");
             break;
           case 206:
             alert("Missing information!");
             break;
         }
       }
+    };
 
-      setAvailabilityName("");
-      setAvailabilityStartDate("");
-      setAvailabilityEndDate("");
-      setAvailabilityStartTime("");
-      setAvailabilityEndTime("");
-      setAvailabilityLocation("");
-      setAvailabilityDescription("");
-      setAvailabilityRepetitionType("none");
-      setAvailabilityCustomFrequencyUnit("");
-      setAvailabilityCustomFrequencyValue(1);
-      setAvailabilityCalendar("");
-      toggleAvailabilityPopup();
+    const [showSeeInvitationsPopup, setShowSeeInvitationsPopup] =
+      useState(false);
+    const handleSeeInvitations = () => {
+      setShowSeeInvitationsPopup(!showSeeInvitationsPopup);
     };
 
     // Define new states
@@ -601,12 +506,15 @@ export default function MainFrame() {
               },
             ]);
             // TODO need to include start and end dates in session storage as well
-            sessionStorage.setItem("semester", {
-              calendar_id: responseData["calendar_id"],
-              name: semesterName,
-              startDate: semesterStartDate,
-              endDate: semesterEndDate,
-            });
+            sessionStorage.setItem(
+              "semester",
+              JSON.stringify({
+                calendar_id: responseData["calendar_id"],
+                name: semesterName,
+                start_date: semesterStartDate,
+                end_date: semesterEndDate,
+              })
+            );
             window.location.href = "./setupcourses";
             break;
           case 205:
@@ -646,522 +554,258 @@ export default function MainFrame() {
             placeholder="Enter new calendar name"
             style={{ width: "calc(100% - 100px)", marginRight: "10px" }}
           />
-          <button onClick={handleCreateCalendar} style={{ width: "100px" }}>
-            Create Calendar
-          </button>
+          <div className="add_button">
+            <button onClick={handleCreateCalendar} style={{ width: "100px" }}>
+              Create Calendar
+            </button>
+          </div>
 
           {/* Add Event */}
           <div className="add_button">
-            <button onClick={toggleEventPopup}>Create Event</button>
-            {showEventPopup && (
-              <div className="popup">
-                <div className="popup-content">
-                  <h2>Add Event</h2>
-                  <div>
-                    <div className="formgroup">
-                      <label htmlFor="eventName">Event Name:</label>
-                      <input
-                        type="text"
-                        id="eventName"
-                        value={eventName}
-                        onChange={handleEventNameChange}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="eventStartDate">Start Date:</label>
-                      <input
-                        type="date"
-                        id="eventStartDate"
-                        value={eventStartDate}
-                        onChange={handleEventStartDateChange}
-                      />
-                      <label htmlFor="eventEndDate">End Date:</label>
-                      <input
-                        type="date"
-                        id="eventEndDate"
-                        value={eventEndDate}
-                        onChange={handleEventEndDateChange}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="eventStartTime">Start Time:</label>
-                      <input
-                        type="time"
-                        id="eventStartTime"
-                        value={eventStartTime}
-                        onChange={handleEventStartTimeChange}
-                      />
-                      <label htmlFor="eventEndTime">End Time:</label>
-                      <input
-                        type="time"
-                        id="eventEndTime"
-                        value={eventEndTime}
-                        onChange={handleEventEndTimeChange}
-                      />
-                    </div>
+            <button onClick={handleCreateEventButton}>Create Event</button>
+          </div>
+          <div className="add_button">
+            <button onClick={handleCreateAvailabilityButton}>
+              Create Availability
+            </button>
+          </div>
+          {showEventPopup && (
+            <div className="popup">
+              <div className="popup-content">
+                <h2>Add {eventType}</h2>
+                <div>
+                  <div className="formgroup">
+                    <label htmlFor="eventName">Event Name:</label>
+                    <input
+                      type="text"
+                      id="eventName"
+                      value={eventName}
+                      onChange={handleEventNameChange}
+                    />
+                  </div>
+                  <div className="formgroup">
+                    <label htmlFor="eventStartDate">Start Date:</label>
+                    <input
+                      type="date"
+                      id="eventStartDate"
+                      value={eventStartDate}
+                      onChange={handleEventStartDateChange}
+                    />
+                    <label htmlFor="eventEndDate">End Date:</label>
+                    <input
+                      type="date"
+                      id="eventEndDate"
+                      value={eventEndDate}
+                      onChange={handleEventEndDateChange}
+                    />
+                  </div>
+                  <div className="formgroup">
+                    <label htmlFor="eventStartTime">Start Time:</label>
+                    <input
+                      type="time"
+                      id="eventStartTime"
+                      value={eventStartTime}
+                      onChange={handleEventStartTimeChange}
+                    />
+                    <label htmlFor="eventEndTime">End Time:</label>
+                    <input
+                      type="time"
+                      id="eventEndTime"
+                      value={eventEndTime}
+                      onChange={handleEventEndTimeChange}
+                    />
+                  </div>
+                  {eventType === "event" && (
                     <div className="formgroup">
                       <label htmlFor="eventLocation">Event Location:</label>
                       {renderLocationInput()}
                     </div>
-                    <div className="formgroup">
-                      <label htmlFor="eventDescription">
-                        Event Description:
-                      </label>
-                      <textarea
-                        id="eventDescription"
-                        value={eventDescription}
-                        onChange={handleEventDescriptionChange}
-                        rows="4"
-                        cols="50"
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="eventEmailInvitations">
-                        Invite Emails: (Separate emails with commas)
-                      </label>
-                      <input
-                        type="text"
-                        id="eventEmailInvitations"
-                        value={eventEmailInvitations}
-                        onChange={handleEventEmailInvitationsChange}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="eventCalendar">Calendar:</label>
-                      <select
-                        id="eventCalendar"
-                        value={eventCalendar}
-                        onChange={handleEventCalendarChange}
-                        className="calendar_option"
-                      >
-                        <option value="">Select Calendar</option>
-                        {calendarList.map((cal) => (
-                          <option key={cal.id} value={cal.id}>
-                            {cal.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="event-repetition-form">
-                      <h2>Event Repetition</h2>
-                      <div className="repetition-options">
-                        <button
-                          type="button"
-                          onClick={() => handleEventRepetitionChange("none")}
-                        >
-                          None
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleEventRepetitionChange("daily")}
-                        >
-                          Daily
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleEventRepetitionChange("weekly")}
-                        >
-                          Weekly
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleEventRepetitionChange("monthly")}
-                        >
-                          Monthly
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleEventRepetitionChange("yearly")}
-                        >
-                          Yearly
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleEventRepetitionChange("custom")}
-                        >
-                          Custom
-                        </button>
-                      </div>
-                      {eventRepetitionType === "custom" && (
-                        <div className="custom-repetition">
-                          <label htmlFor="customFrequency">Repeat every</label>
-                          <input
-                            type="number"
-                            id="eventCustomFrequencyValue"
-                            value={eventCustomFrequencyValue}
-                            onChange={handleEventCustomFrequencyValueChange}
-                            min={1}
-                          />
-                          <select
-                            id="eventCustomFrequencyUnit"
-                            value={eventCustomFrequencyUnit}
-                            onChange={handleEventCustomFrequencyUnitChange}
-                          >
-                            <option value="days">days</option>
-                            <option value="weeks">weeks</option>
-                            <option value="months">months</option>
-                            <option value="years">years</option>
-                          </select>
-                          {eventCustomFrequencyUnit === "weeks" && (
-                            <div className="day-selector">
-                              <p>Select specific days:</p>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={eventSelectedDays.includes("sun")}
-                                  onChange={() => handleEventDayToggle("sun")}
-                                />
-                                Sunday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={eventSelectedDays.includes("mon")}
-                                  onChange={() => handleEventDayToggle("mon")}
-                                />
-                                Monday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={eventSelectedDays.includes("tues")}
-                                  onChange={() => handleEventDayToggle("tues")}
-                                />
-                                Tuesday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={eventSelectedDays.includes("wed")}
-                                  onChange={() => handleEventDayToggle("wed")}
-                                />
-                                Wednesday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={eventSelectedDays.includes("thur")}
-                                  onChange={() => handleEventDayToggle("thur")}
-                                />
-                                Thursday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={eventSelectedDays.includes("fri")}
-                                  onChange={() => handleEventDayToggle("fri")}
-                                />
-                                Friday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={eventSelectedDays.includes("sat")}
-                                  onChange={() => handleEventDayToggle("sat")}
-                                />
-                                Saturday
-                              </label>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      className="formbutton fb1"
-                      onClick={handleCreateEvent}
-                    >
-                      Add
-                    </button>
-                    <button
-                      className="formbutton fb2"
-                      onClick={toggleEventPopup}
-                    >
-                      Cancel
-                    </button>
+                  )}
+                  <div className="formgroup">
+                    <label htmlFor="eventDescription">Event Description:</label>
+                    <textarea
+                      id="eventDescription"
+                      value={eventDescription}
+                      onChange={handleEventDescriptionChange}
+                      rows="4"
+                      cols="50"
+                    />
                   </div>
-                </div>
-              </div>
-            )}
-          </div>
 
-          {/* Add Availability */}
-          <div className="add_button">
-            <button onClick={toggleAvailabilityPopup}>
-              Create Availability
-            </button>
-            {showAvailabilityPopup && (
-              <div className="popup">
-                <div className="popup-content">
-                  <h2>Add Availability</h2>
-                  <div>
-                    <div className="formgroup">
-                      <label htmlFor="availabilityName">
-                        Availability Name:
-                      </label>
-                      <input
-                        type="text"
-                        id="availabilityName"
-                        value={availabilityName}
-                        onChange={handleAvailabilityNameChange}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="availabilityStartDate">Start Date:</label>
-                      <input
-                        type="date"
-                        id="availabilityStartDate"
-                        value={availabilityStartDate}
-                        onChange={handleAvailabilityStartDateChange}
-                      />
-                      <label htmlFor="availabilityEndDate">End Date:</label>
-                      <input
-                        type="date"
-                        id="availabilityEndDate"
-                        value={availabilityEndDate}
-                        onChange={handleAvailabilityEndDateChange}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="availabilityStartTime">Start Time:</label>
-                      <input
-                        type="time"
-                        id="availabilityStartTime"
-                        value={availabilityStartTime}
-                        onChange={handleAvailabilityStartTimeChange}
-                      />
-                      <label htmlFor="availabilityEndTime">End Time:</label>
-                      <input
-                        type="time"
-                        id="availabilityEndTime"
-                        value={availabilityEndTime}
-                        onChange={handleAvailabilityEndTimeChange}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="availabilityLocation">
-                        Availability Location:
-                      </label>
-                      <input
-                        type="text"
-                        id="availabilityLocation"
-                        value={availabilityLocation}
-                        onChange={handleAvailabilityLocationChange}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="availabilityDescription">
-                        Availability Description:
-                      </label>
-                      <textarea
-                        id="availabilityDescription"
-                        value={availabilityDescription}
-                        onChange={handleAvailabilityDescriptionChange}
-                        rows="4"
-                        cols="50"
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="availabilityCalendar">Calendar:</label>
-                      <select
-                        id="availabilityCalendar"
-                        value={availabilityCalendar}
-                        onChange={handleAvailabilityCalendarChange}
-                      >
-                        <option value="">Select Calendar</option>
-                        {calendarList.map((cal) => (
-                          <option key={cal.id} value={cal.name}>
-                            {cal.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="availability-repetition-form">
-                      <h2>Availability Repetition</h2>
-                      <div className="repetition-options">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAvailabilityRepetitionChange("none")
-                          }
-                        >
-                          None
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAvailabilityRepetitionChange("daily")
-                          }
-                        >
-                          Daily
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAvailabilityRepetitionChange("weekly")
-                          }
-                        >
-                          Weekly
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAvailabilityRepetitionChange("monthly")
-                          }
-                        >
-                          Monthly
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAvailabilityRepetitionChange("yearly")
-                          }
-                        >
-                          Yearly
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleAvailabilityRepetitionChange("custom")
-                          }
-                        >
-                          Custom
-                        </button>
+                  {eventType === "event" && (
+                    <div>
+                      <div className="formgroup">
+                        <label htmlFor="eventEmailInvitations">
+                          Invite Emails: (Separate emails with commas)
+                        </label>
+                        <input
+                          type="text"
+                          id="eventEmailInvitations"
+                          value={eventEmailInvitations}
+                          onChange={handleEventEmailInvitationsChange}
+                        />
                       </div>
-                      {availabilityRepetitionType === "custom" && (
-                        <div className="custom-repetition">
-                          <label htmlFor="customFrequency">Repeat every</label>
-                          <input
-                            type="number"
-                            id="availabilityCustomFrequencyValue"
-                            value={availabilityCustomFrequencyValue}
-                            onChange={
-                              handleAvailabilityCustomFrequencyValueChange
-                            }
-                            min={1}
-                          />
-                          <select
-                            id="availabilityCustomFrequencyUnit"
-                            value={availabilityCustomFrequencyUnit}
-                            onChange={
-                              handleAvailabilityCustomFrequencyUnitChange
-                            }
-                          >
-                            <option value="days">days</option>
-                            <option value="weeks">weeks</option>
-                            <option value="months">months</option>
-                            <option value="years">years</option>
-                          </select>
-                          {availabilityCustomFrequencyUnit === "weeks" && (
-                            <div className="day-selector">
-                              <p>Select specific days:</p>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={availabilitySelectedDays.includes(
-                                    "sun"
-                                  )}
-                                  onChange={() =>
-                                    handleAvailabilityDayToggle("sun")
-                                  }
-                                />
-                                Sunday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={availabilitySelectedDays.includes(
-                                    "mon"
-                                  )}
-                                  onChange={() =>
-                                    handleAvailabilityDayToggle("mon")
-                                  }
-                                />
-                                Monday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={availabilitySelectedDays.includes(
-                                    "tues"
-                                  )}
-                                  onChange={() =>
-                                    handleAvailabilityDayToggle("tues")
-                                  }
-                                />
-                                Tuesday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={availabilitySelectedDays.includes(
-                                    "wed"
-                                  )}
-                                  onChange={() =>
-                                    handleAvailabilityDayToggle("wed")
-                                  }
-                                />
-                                Wednesday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={availabilitySelectedDays.includes(
-                                    "thur"
-                                  )}
-                                  onChange={() =>
-                                    handleAvailabilityDayToggle("thur")
-                                  }
-                                />
-                                Thursday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={availabilitySelectedDays.includes(
-                                    "fri"
-                                  )}
-                                  onChange={() =>
-                                    handleAvailabilityDayToggle("fri")
-                                  }
-                                />
-                                Friday
-                              </label>
-                              <label>
-                                <input
-                                  type="checkbox"
-                                  checked={availabilitySelectedDays.includes(
-                                    "sat"
-                                  )}
-                                  onChange={() =>
-                                    handleAvailabilityDayToggle("sat")
-                                  }
-                                />
-                                Saturday
-                              </label>
-                            </div>
-                          )}
-                        </div>
-                      )}
+
+                      <div className="formgroup">
+                        <label htmlFor="eventCalendar">Calendar:</label>
+                        <select
+                          id="eventCalendar"
+                          value={eventCalendar}
+                          onChange={handleEventCalendarChange}
+                          className="calendar_option"
+                        >
+                          <option value="">Select Calendar</option>
+                          {calendarList.map((cal) => (
+                            <option key={cal.id} value={cal.id}>
+                              {cal.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                    <button
-                      className="formbutton fb1"
-                      onClick={handleCreateAvailability}
-                    >
-                      Add
-                    </button>
-                    <button
-                      className="formbutton fb2"
-                      onClick={toggleAvailabilityPopup}
-                    >
-                      Cancel
-                    </button>
+                  )}
+                  <div className="event-repetition-form">
+                    <h2>Event Repetition</h2>
+                    <div className="repetition-options">
+                      <button
+                        type="button"
+                        onClick={() => handleEventRepetitionChange("none")}
+                      >
+                        None
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEventRepetitionChange("daily")}
+                      >
+                        Daily
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEventRepetitionChange("weekly")}
+                      >
+                        Weekly
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEventRepetitionChange("monthly")}
+                      >
+                        Monthly
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEventRepetitionChange("yearly")}
+                      >
+                        Yearly
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEventRepetitionChange("custom")}
+                      >
+                        Custom
+                      </button>
+                    </div>
+                    {eventRepetitionType === "custom" && (
+                      <div className="custom-repetition">
+                        <label htmlFor="customFrequency">Repeat every</label>
+                        <input
+                          type="number"
+                          id="eventCustomFrequencyValue"
+                          value={eventCustomFrequencyValue}
+                          onChange={handleEventCustomFrequencyValueChange}
+                          min={1}
+                        />
+                        <select
+                          id="eventCustomFrequencyUnit"
+                          value={eventCustomFrequencyUnit}
+                          onChange={handleEventCustomFrequencyUnitChange}
+                        >
+                          <option value="days">days</option>
+                          <option value="weeks">weeks</option>
+                          <option value="months">months</option>
+                          <option value="years">years</option>
+                        </select>
+                        {eventCustomFrequencyUnit === "weeks" && (
+                          <div className="day-selector">
+                            <p>Select specific days:</p>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={eventSelectedDays.includes("sun")}
+                                onChange={() => handleEventDayToggle("sun")}
+                              />
+                              Sunday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={eventSelectedDays.includes("mon")}
+                                onChange={() => handleEventDayToggle("mon")}
+                              />
+                              Monday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={eventSelectedDays.includes("tues")}
+                                onChange={() => handleEventDayToggle("tues")}
+                              />
+                              Tuesday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={eventSelectedDays.includes("wed")}
+                                onChange={() => handleEventDayToggle("wed")}
+                              />
+                              Wednesday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={eventSelectedDays.includes("thur")}
+                                onChange={() => handleEventDayToggle("thur")}
+                              />
+                              Thursday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={eventSelectedDays.includes("fri")}
+                                onChange={() => handleEventDayToggle("fri")}
+                              />
+                              Friday
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={eventSelectedDays.includes("sat")}
+                                onChange={() => handleEventDayToggle("sat")}
+                              />
+                              Saturday
+                            </label>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
+                  <button
+                    className="formbutton fb1"
+                    onClick={handleCreateEvent}
+                  >
+                    Add
+                  </button>
+                  <button className="formbutton fb2" onClick={toggleEventPopup}>
+                    Cancel
+                  </button>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
           {/*SetupCourses*/}
-          {/* TODO: Move semester popup to its own file, add semester id to sessionStorage to access it it /setupcourses */}
+          <div className="add_button">
+            <button onClick={handleSetupCourses}>Setup Courses</button>
+          </div>
           {showSemesterPopup && (
             <div className="popup">
               <div className="popup-content">
@@ -1205,10 +849,18 @@ export default function MainFrame() {
               </div>
             </div>
           )}
-          <button onClick={handleSetupCourses}>Setup Courses</button>
-          {/*<Link to="/setupcourses">
-            <button>Setup Courses</button>
-          </Link>*/}
+
+          {/* See Invitations */}
+          <div className="add_button">
+            <button onClick={handleSeeInvitations}>See Invitations</button>
+          </div>
+          {showSeeInvitationsPopup && (
+            <div className="popup">
+              <div className="popup-content">
+                <h2>Invitations</h2>
+              </div>
+            </div>
+          )}
         </div>
         {/* List of existing calendars */}
         <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
@@ -1662,7 +1314,7 @@ export default function MainFrame() {
           }
         }
       });
-      console.log("updates");
+      //console.log("updates");
       setAllEventsArray(eventsArray);
     };
     fetchEvents();
@@ -1689,10 +1341,35 @@ export default function MainFrame() {
               className=".taskCheckBox"
               type="checkbox"
               defaultChecked={false}
+              onChange={(e) => {
+                changeStatusOfTask(task, e.target.checked);
+              }}
             />
           </div>
         )
     );
+  };
+
+  const changeStatusOfTask = async (task, statusOfTask) => {
+    const currentTime = new Date().toLocaleString(undefined, {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    console.log(statusOfTask);
+    task = {
+      ...task,
+      completed_time: currentTime,
+      completed: statusOfTask,
+      user_id: user_id,
+    };
+
+    console.log(task);
+    let res = await send_request("/mark_done", task);
+    console.log(res.message);
   };
 
   // handle drag & drop
@@ -1729,7 +1406,7 @@ export default function MainFrame() {
         // user can skip the tours
         showSkipButton={true}
       />
-      <div>{PopUpForm()}</div>
+      
       <div>{Dashboard()}</div>
       <div className="weather_container">
         <div className="weather">
@@ -1739,7 +1416,7 @@ export default function MainFrame() {
       <div className="timezone">
         <Timezone />
       </div>
-
+      <div>{PopUpForm()}</div>
       {/* Parent container for CalendarList and calendar_container */}
       <div className="main-calendar-content">
         {/* CalendarList component */}

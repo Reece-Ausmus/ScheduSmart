@@ -136,23 +136,6 @@ def create_event():
     return response
 
 
-@account.route('/invite_user_to_event', methods=['POST'])
-def invite_user_to_event():
-    data = request.get_json()
-    try:
-        ret = invite_user_to_event_db(data)
-        if ret == 1:
-            response = jsonify({'error': 'user not invited'})
-            response.status_code = 205
-        else:
-            response = jsonify({'message': 'Done'})
-            response.status_code = 201
-    except:
-        traceback.print_exc()
-        response = jsonify({'error': 'missing information'})
-        response.status_code = 206
-    return response
-
 @events.route('/get_events', methods=['POST'])
 def get_events():
     calendar = request.get_json()

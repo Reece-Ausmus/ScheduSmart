@@ -4,10 +4,11 @@
 
 .container {
   height: 140vh;
-  padding: 50px;
-  padding-top: 25px;
+  /* padding: 50px; */
+  /* padding-top: 25px; */
   background-color: #b1b1b1;
 }
+
 .title {
   font-size: 250px;
   font-weight: bolder;
@@ -105,12 +106,12 @@
 }
 
 .MonthBoxFor4 {
-    padding: 5px;
-    vertical-align: top;
-    width: 25%;
-    margin: 1px;
-    background-color: aliceblue;
-    color: black;
+  padding: 5px;
+  vertical-align: top;
+  width: 25%;
+  margin: 1px;
+  background-color: aliceblue;
+  color: black;
 }
 
 .task_container {
@@ -165,11 +166,11 @@
 }
 
 .add_button {
-  background-color: #5a5a5a;
+  background-color: #b1b1b1;
   color: rgb(223, 118, 43);
   float: right;
   top: 35px;
-  margin: 10px;
+  margin: 5px;
 }
 .popup {
   background-color: white;
@@ -185,8 +186,9 @@
 .pop-content {
   text-align: "left";
 }
-.calendar_option{
-  background-color: aliceblue;
+.calendar_option {
+  background-color: rgb(52, 52, 52);
+  color: rgb(223, 118, 43);
 }
 .formgroup {
   margin-top: 10px;

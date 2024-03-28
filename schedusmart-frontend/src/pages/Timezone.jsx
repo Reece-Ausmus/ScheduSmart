@@ -35,12 +35,11 @@ export default function TimezoneConverter() {
       const userData = await response.json();
 
       // Log user data to the console
-      console.log(userData);
-      console.log("Timezone:", userData.timezoneTest);
+      //console.log(userData);
+      //console.log("Timezone:", userData.timezoneTest);
 
       // Check if timezone field is populated
       const userTimezone = userData.timezone || "No timezone set";
-
 
       setSelectedTimezone(userTimezone);
       setCurrentTime(getCurrentTime(userTimezone));
@@ -58,7 +57,7 @@ export default function TimezoneConverter() {
     setSelectedTimezone(newTimezone);
     setCurrentTime(getCurrentTime(newTimezone));
 
-    // Send the updated timezone to the backend
+    // Send updated timezone to the backend
     try {
       const response = await fetch(flaskURL + "/update_account_info", {
         method: "POST",
@@ -76,7 +75,7 @@ export default function TimezoneConverter() {
           case 500:
             alert("Failed to update timezone in the database");
             break;
-          // Handle other error status codes
+          // Any invalid input attempts
           default:
             alert("An error occurred while updating timezone");
             break;
@@ -84,7 +83,7 @@ export default function TimezoneConverter() {
         return;
       }
 
-      // Handle successful response if needed
+      // Succesfull response message, will comment out in final production
       const responseData = await response.json();
       alert("Timezone updated successfully: " + responseData.message);
     } catch (error) {
@@ -96,7 +95,7 @@ export default function TimezoneConverter() {
     try {
       if (!timezone) {
         // If timezone is not provided, default to UTC
-        const dt = DateTime.now().setZone('UTC');
+        const dt = DateTime.now().setZone("UTC");
         return dt.toLocaleString(DateTime.TIME_SIMPLE);
       }
 

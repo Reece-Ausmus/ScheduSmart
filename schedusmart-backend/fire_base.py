@@ -279,9 +279,14 @@ def update_task_list(task_list_id, new_task):
 
 def mark_task_as_done(task):
     try:
-        db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).update({"completed_time": task["time"]})
-        c = db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).get().val()
-        db.child("User").child(task["user_id"]).child("task_list").child(task["id"]).update({"completed": not c["completed"]})
+        # look for id
+        tasks = db.child("User").child(task["user_id"]).child("task_list").get()
+        id_path = None
+        for each_task in tasks:
+            if each_task.val()["id"] == task["id"]:
+                id_path = each_task.key()
+        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update({"completed_time": task["completed_time"]})
+        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update({"completed": task["completed"]})
     except KeyError as e:
         print(f"{e}")
 
@@ -346,13 +351,13 @@ def update_task(task_info):
         return 1
     return 0
 
-
 def add_new_event(event_info):
     user_id = event_info['user_id']
     if user_id is None:
         raise Exception("User ID is None")
     
     event_id = secrets.token_hex(16)
+    print(event_info)
     data = {
         'name': event_info['name'],
         'desc': event_info['desc'],
@@ -365,11 +370,16 @@ def add_new_event(event_info):
         'repetition_type': event_info['repetition_type'],
         'repetition_unit': event_info['repetition_unit'],
         'repetition_val': event_info['repetition_val'],
-        'selected_days;': event_info['selected_days']
+        'selected_days;': event_info['selected_days'],
+        'emails': event_info['emails'],
+        'type': event_info['type']
     }
     try:
-        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        calendar_id = caldata['calendar_id']
+        emails = data['emails']
+        for email in emails:
+            safe_email = email.replace(".", ",").replace("@", "_")
+            db.child("Invitations").child(safe_email).child(event_id).set({'status': 'pending'})
+        calendar_id = data['calendar']
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
@@ -381,18 +391,18 @@ def add_new_event(event_info):
         'event_id': event_id
     }
 
-def invite_user_to_event_db(data):
+def invite_users_to_event_db(data):
     try:
         if data['user_id'] is None:
             raise Exception("User ID is None")
-        emails = data['email']
+        emails = data['emails']
         event_id = data['event_id']
         for email in emails:
             db.child("Invitations").child(email).child(event_id).set({'status': 'pending'})
-        return 0
+        return {'response_status': 0}
     except Exception as e:
         print("Failed to invite user to event:", e)
-        return 1
+        return {'response_status': 1}
 
 def add_new_availability(availability_info):
     user_id = availability_info['user_id']
@@ -471,5 +481,4 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-
 
