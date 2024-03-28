@@ -105,12 +105,12 @@
 }
 
 .MonthBoxFor4 {
-    padding: 5px;
-    vertical-align: top;
-    width: 25%;
-    margin: 1px;
-    background-color: aliceblue;
-    color: black;
+  padding: 5px;
+  vertical-align: top;
+  width: 25%;
+  margin: 1px;
+  background-color: aliceblue;
+  color: black;
 }
 
 .task_container {
@@ -185,8 +185,9 @@
 .pop-content {
   text-align: "left";
 }
-.calendar_option{
-  background-color: aliceblue;
+.calendar_option {
+  background-color: rgb(52, 52, 52);
+  color: rgb(223, 118, 43);
 }
 .formgroup {
   margin-top: 10px;

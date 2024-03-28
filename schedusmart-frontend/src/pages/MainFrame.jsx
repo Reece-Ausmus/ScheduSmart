@@ -596,12 +596,15 @@ export default function MainFrame() {
               },
             ]);
             // TODO need to include start and end dates in session storage as well
-            sessionStorage.setItem("semester", {
-              calendar_id: responseData["calendar_id"],
-              name: semesterName,
-              startDate: semesterStartDate,
-              endDate: semesterEndDate,
-            });
+            sessionStorage.setItem(
+              "semester",
+              JSON.stringify({
+                calendar_id: responseData["calendar_id"],
+                name: semesterName,
+                start_date: semesterStartDate,
+                end_date: semesterEndDate,
+              })
+            );
             window.location.href = "./setupcourses";
             break;
           case 205:

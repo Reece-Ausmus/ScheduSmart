@@ -33,7 +33,7 @@ def create_event():
     receive_event = request.get_json()
     emails = receive_event['emails']
     try:
-        if emails is None:
+        if emails.__len__() == 0:
             ret = add_new_event(receive_event)
         else:
             ret = add_new_event_with_invites(receive_event)

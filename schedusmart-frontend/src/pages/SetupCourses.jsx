@@ -18,7 +18,7 @@ export default function SetupCourses() {
   const [showCoursePopup, setShowCoursePopup] = useState(false);
   const [showBreakPopup, setShowBreakPopup] = useState(false);
 
-  const semester = sessionStorage.getItem("semester");
+  const semester = JSON.parse(sessionStorage.getItem("semester"));
   if (!semester) {
     alert("Please select a semester first!");
     window.location.href = "/calendar";
@@ -43,8 +43,8 @@ export default function SetupCourses() {
       desc: courseDescription,
       start_time: courseStartTime,
       end_time: courseEndTime,
-      start_date: semester.startDate,
-      end_date: semester.endDate,
+      start_date: semester.start_date,
+      end_date: semester.end_date,
       location: courseLocation,
       calendar: semester.calendar_id,
       repetition_type: "custom",
@@ -52,9 +52,10 @@ export default function SetupCourses() {
       repetition_val: 1,
       selected_days: courseSelectedDays,
       user_id: user_id,
+      emails: [],
     };
 
-    const response = await fetch(flaskURL + "/add_event", {
+    const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -157,9 +158,10 @@ export default function SetupCourses() {
       repetition_val: 0,
       selected_days: [],
       user_id: user_id,
+      emails: [],
     };
 
-    const response = await fetch(flaskURL + "/add_event", {
+    const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

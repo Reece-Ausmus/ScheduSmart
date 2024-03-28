@@ -368,8 +368,9 @@ def add_new_event(event_info):
         'selected_days;': event_info['selected_days']
     }
     try:
-        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        calendar_id = caldata['calendar_id']
+        #caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        #calendar_id = caldata['calendar_id']
+        calendar_id = data['calendar']
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
@@ -407,8 +408,10 @@ def add_new_event_with_invites(event_info):
         for email in emails:
             safe_email = email.replace(".", ",").replace("@", "_")
             db.child("Invitations").child(safe_email).child(event_id).set({'status': 'pending'})
-        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        calendar_id = caldata['calendar_id']
+        #caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
+        #if caldata is None:
+        #    raise Exception(f"No calendar data found for user {user_id} and calendar {data['calendar']}")
+        calendar_id = data['calendar']
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
