@@ -34,6 +34,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Dashboard from "./Dashboard";
 
 
 // Define the Flask API URL
@@ -477,6 +478,7 @@ export default function TaskManager() {
 
   return (
     <ThemeProvider theme={theme}>
+      <div>{Dashboard()}</div>
       <CssBaseline />
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

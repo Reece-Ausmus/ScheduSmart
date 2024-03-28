@@ -1406,7 +1406,7 @@ export default function MainFrame() {
         // user can skip the tours
         showSkipButton={true}
       />
-      <div>{PopUpForm()}</div>
+      
       <div>{Dashboard()}</div>
       <div className="weather_container">
         <div className="weather">
@@ -1416,7 +1416,7 @@ export default function MainFrame() {
       <div className="timezone">
         <Timezone />
       </div>
-
+      <div>{PopUpForm()}</div>
       {/* Parent container for CalendarList and calendar_container */}
       <div className="main-calendar-content">
         {/* CalendarList component */}

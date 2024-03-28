@@ -22,6 +22,7 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import CheckboxList from "./CheckboxList";
+import Dashboard from "./Dashboard";
 
 const theme = createTheme({
   palette: {
@@ -173,7 +174,7 @@ export default function Habits() {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" color="primary">
+      {/* <AppBar position="static" color="primary">
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Button variant="contained" href="./calendar">
             <CalendarMonthIcon sx={{ marginRight: 1 }} />
@@ -195,7 +196,8 @@ export default function Habits() {
             </Button>
           </div>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
+      <div>{Dashboard()}</div>
       <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
         <div className="habits-container">
           <Typography

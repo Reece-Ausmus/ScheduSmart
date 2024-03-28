@@ -16,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
+import Dashboard from "./Dashboard";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
@@ -54,6 +55,7 @@ export default function Settings() {
 
   return (
     <ThemeProvider theme={theme}>
+      <div>{Dashboard()}</div>
       <h1>{languageData[language][0][0].setting}</h1>
       <div>{AccountInfo(language)}</div>
       <div>{Calendar_Settings()}</div>
@@ -87,13 +89,6 @@ export default function Settings() {
         </CardContent>
         <Divider />
       </Card>
-      <h2>Other settings</h2>
-      <button onClick={() => { window.location.href = "/calendar"; }}>
-        {languageData[language][0][0].calendar}
-      </button>
-      <button onClick={() => { window.location.href = "/welcome"; }}>
-        {languageData[language][0][0].signout}
-      </button>
     </ThemeProvider >
   );
 }

@@ -2,67 +2,68 @@ import Header from '../components/Header'
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 import './MainFrame.css'
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { AppBar, Toolbar } from "@mui/material";
+import { orange, yellow } from "@mui/material/colors";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import Typography from "@mui/material/Typography";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: orange[500],
+    },
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+  components: {
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "gray",
+        },
+      },
+    },
+  },
+});
 
 export default function Dashboard() {
-    // handle redirects
-    const [goToSettings, setGoToSettings] = React.useState(false)
-    const [goToSignOut, setGoToSignOut] = React.useState(false);
-    const [goToTaskManager, setGoToTaskManager] = React.useState(false)
-    const [goToNotes, setGoToNotes] = React.useState(false)
-    const [goToHabits, setGoToHabits] = React.useState(false)
+  // handle redirects
 
-    if (goToSettings) {
-      return(
-          <>
-          <Navigate to="/settings" />
-          </>
-      );
-    }
+  return (
+    <ThemeProvider theme={theme}>
+      <AppBar position="static" color="primary">
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Button variant="contained" href="./calendar">
+            <CalendarMonthIcon sx={{ marginRight: 1 }} />
+            <Typography variant="body1">ScheduSmart</Typography>
+          </Button>
+          <div>
+            <Button color="inherit" href="./settings">
+              Settings
+            </Button>
+            {/* <Button variant="inherit" href="./calendar">
+              <CalendarMonthIcon sx={{ marginRight: 1 }} />
+            </Button> */}
+            {/* <Button color="secondary">Habits</Button> */}
+            <Button color="inherit" href="./habits">
+              Habits
+            </Button>
+            <Button color="inherit" href="./notes">
+              Notes
+            </Button>
+            <Button color="inherit" href="./signout">
+              Sign Out
+            </Button>
+            <Button color="inherit" href="./taskmanager">
+              Task manager
+            </Button>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </ThemeProvider>
 
-    if (goToSignOut) {
-    return (
-      <>
-        <Navigate to="/signout" />
-      </>
-    );
-    }
-
-    if (goToNotes) {
-      return (
-        <>
-          <Navigate to="/notes" />
-        </>
-      );
-    }
-
-    if (goToHabits) {
-      return (
-        <>
-          <Navigate to="/Habits" />
-        </>
-      );
-    }
-
-
-    return (
-      <>
-      <div className="upperBar">
-        <h1 className="title"> 
-        Welcome to ScheduSmart!
-        </h1>
-        <button className="upperBarButton" onClick={() => {setGoToSettings(true)}}>
-          Settings
-        </button>
-        <button className="upperBarButton" onClick={() => {setGoToHabits(true)}}>
-          Habits
-        </button>
-        <button className="upperBarButton" onClick={() => {setGoToNotes(true)}}>
-          Notes
-        </button>
-        <button className="upperBarButton" onClick={() => {setGoToSignOut(true)}}>
-          Signout
-        </button>
-      </div>
-      </>
-    );
+  );
 }
