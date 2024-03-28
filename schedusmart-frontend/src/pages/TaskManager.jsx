@@ -5,6 +5,7 @@ import { saveAs } from "file-saver";
 import FileUpload from "./FileUpload";
 import { storage } from "./Firebase"
 import { listAll, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import CssBaseline from "@mui/material/CssBaseline";
 import { v4 } from "uuid"
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -14,7 +15,7 @@ import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { orange } from "@mui/material/colors";
+import { orange, grey } from "@mui/material/colors";
 import Fab from '@mui/material/Fab';
 import Icon from '@mui/material/Icon';
 import IconButton from '@mui/material/IconButton';
@@ -38,12 +39,13 @@ const theme = createTheme({
     secondary: {
       main: "#ab5600",
     },
+    background: {
+      default: "#e4f0e2",
+    },
   },
 });
 
 const handleCreateCalendar = async () => {
-  //const new_calendar = {nextCalendarID, newCalendarName}
-  //nextCalendarID++;
   const new_calendar = {
     newCalendarName: "tasks",
     user_id: userId,
@@ -82,7 +84,7 @@ const handleCreateCalendar = async () => {
 const validExtensions = ["txt", "rtf", "docx", "csv", "doc", "wps", "wpd", "msg",
   "jpg", "png", "webp", "gif", "tif", "bmp", "eps", "mp3",
   "wma", "snd", "wav", "ra", "au", "aac", "mp4", "3gp",
-  "avi", "mpg", "mov", "wmv", "xlsx",];
+  "avi", "mpg", "mov", "wmv", "xlsx", "pdf"];
 
 
 // initial list for new users
@@ -161,8 +163,9 @@ export default function TaskManager() {
             handleCreateCalendar()
           } else if (responseData.calendars["tasks"] == null) {
             handleCreateCalendar()
+          } else {
+            setCalendars(responseData.calendars);
           }
-
           break;
         case 202:
           alert("List Not Found");
@@ -184,6 +187,9 @@ export default function TaskManager() {
   const [sortOptionCompleted, setSortOptionCompleted] = useState(0);
   const [todoList, setTodoList] = useState(initialList);
   const [completedList, setCompletedList] = useState([]);
+  const [calendars, setCalendars] = useState({});
+  const [calendarIdList, setCalendarIdList] = useState([]);
+  const [eventList, setEventList] = useState({});
 
   // used to hold data for tasks
   const [taskName, setTaskName] = useState("");
@@ -451,6 +457,7 @@ export default function TaskManager() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h1>Task List</h1>
@@ -463,7 +470,7 @@ export default function TaskManager() {
                 value={selectedFormat}
                 label="f_forma"
                 onChange={(e) => setSelectedFormat(e.target.value)}
-                style={{ minWidth: '120px' }}
+                style={{ minWidth: '120px'}}
               >
                 <MenuItem value="pdf">PDF</MenuItem>
                 <MenuItem value="csv">CSV</MenuItem>
@@ -507,7 +514,7 @@ export default function TaskManager() {
                   variant="outlined"
                   value={searchQueryTodo}
                   onChange={filterTodo}
-                  style={{ width: '200px' }}
+                  style={{ width: '200px'}}
                   size="small"
                 />
                 <FormControl sx={{ m: 1, width: 200 }} size="small">
@@ -618,6 +625,7 @@ export default function TaskManager() {
                     completed: false,
                     sub_tasks: subtaskList,
                     file_url: taskFile,
+                    scheduled: false, 
                   },
                 ]);
               }
