@@ -613,20 +613,24 @@ export default function TaskManager() {
             <button
               id="closeModal"
               onClick={() => {
-                setTodoList([
-                  ...todoList,
-                  {
-                    id: todoList.length,
-                    title: taskName,
-                    time: taskTime,
-                    date: taskDate,
-                    desc: taskDesc,
-                    completed: false,
-                    sub_tasks: subtaskList,
-                    file_url: taskFile,
-                    scheduled: false, 
-                  },
-                ]);
+                if (subtaskList != []) {
+                  setTodoList([
+                    ...todoList,
+                    {
+                      id: todoList.length,
+                      title: taskName,
+                      time: taskTime,
+                      date: taskDate,
+                      desc: taskDesc,
+                      completed: false,
+                      sub_tasks: subtaskList,
+                      file_url: taskFile,
+                      scheduled: false, 
+                    },
+                  ]);
+                } else {
+                  alert("Error! Missing Information! Please try again!")
+                }
               }
               }> Add </button>
             <button id="closeModal" onClick={() => {
