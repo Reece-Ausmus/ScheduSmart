@@ -29,17 +29,15 @@ export default function Calendar(selectMode, e) {
   const isoToday = localDay.toISOString();
   const todayString = isoToday.slice(0, 10);
 
-
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = firstDaySeeker(today);
 
-
-  let viewType = selectMode == 1 ? "Day":"Week";
+  let viewType = selectMode == 1 ? "Day" : "Week";
 
   const calendarRef = useRef();
-  
-  useEffect( () => {
-    console.log("this is called", e);
+
+  useEffect(() => {
+    //console.log("this is called", e);
     calendarRef.current.control.update({
       startDate: todayString,
       events: e,
@@ -48,8 +46,12 @@ export default function Calendar(selectMode, e) {
 
   return (
     <div className="sub_main_calnedar_box">
-      <div style={{ display: selectMode === 1 || selectMode === 2? "block" : "none" }}>
-        <DayPilotCalendar {...{ viewType: viewType}} ref={calendarRef} />
+      <div
+        style={{
+          display: selectMode === 1 || selectMode === 2 ? "block" : "none",
+        }}
+      >
+        <DayPilotCalendar {...{ viewType: viewType }} ref={calendarRef} />
       </div>
 
       <div style={{ display: selectMode === 3 ? "block" : "none" }}>

@@ -313,7 +313,6 @@ export default function MainFrame() {
         emails: eventEmailInvitations,
         user_id: user_id,
       };
-      console.log(new_invite);
       const response = await send_request("/invite_users_to_event", new_invite);
       if (!response.ok) {
         alert("Something went wrong, refresh your website!");
@@ -1296,7 +1295,7 @@ export default function MainFrame() {
           }
         }
       });
-      console.log("updates");
+      //console.log("updates");
       setAllEventsArray(eventsArray);
     };
     fetchEvents();

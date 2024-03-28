@@ -35,8 +35,8 @@ export default function TimezoneConverter() {
       const userData = await response.json();
 
       // Log user data to the console
-      console.log(userData);
-      console.log("Timezone:", userData.timezoneTest);
+      //console.log(userData);
+      //console.log("Timezone:", userData.timezoneTest);
 
       // Check if timezone field is populated
       const userTimezone = userData.timezone || "No timezone set";
