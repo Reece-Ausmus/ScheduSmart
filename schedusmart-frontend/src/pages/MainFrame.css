@@ -4,10 +4,11 @@
 
 .container {
   height: 140vh;
-  padding: 50px;
-  padding-top: 25px;
+  /* padding: 50px; */
+  /* padding-top: 25px; */
   background-color: #b1b1b1;
 }
+
 .title {
   font-size: 250px;
   font-weight: bolder;

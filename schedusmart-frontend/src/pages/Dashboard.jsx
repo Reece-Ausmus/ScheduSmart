@@ -1,5 +1,5 @@
 import Header from '../components/Header'
-import React from 'react'
+import React, { useState, useEffect } from "react";
 import { Navigate } from 'react-router-dom'
 import './MainFrame.css'
 import Button from '@mui/material/Button';
@@ -30,7 +30,22 @@ const theme = createTheme({
 });
 
 export default function Dashboard() {
-  // handle redirects
+  const [goToWelcome, setGoToWelcome] = React.useState(false);
+
+  if (goToWelcome) {
+    return (
+      <>
+        <Navigate to="/welcome" />
+      </>
+    );
+  }
+  const handleConfirmClick = () => {
+    if (window.confirm("Are you sure you want to sign out?")) {
+      //Yes
+      sessionStorage.clear();
+      setGoToWelcome(true);
+    } 
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,22 +56,22 @@ export default function Dashboard() {
             <Typography variant="body1">ScheduSmart</Typography>
           </Button>
           <div>
+            <Button variant="inherit" href="./calendar">
+              <CalendarMonthIcon sx={{ marginRight: 1 }} />
+            </Button>
+            <Button color="inherit" href="./habits">
+              Habits
+            </Button>
             <Button color="inherit" href="./settings">
               Settings
             </Button>
-            {/* <Button variant="inherit" href="./calendar">
-              <CalendarMonthIcon sx={{ marginRight: 1 }} />
-            </Button> */}
-            {/* <Button color="secondary">Habits</Button> */}
-            <Button color="inherit" href="./habits">
-              Habits
+            <Button color="inherit" onClick={handleConfirmClick}>
+              Sign Out
             </Button>
             <Button color="inherit" href="./notes">
               Notes
             </Button>
-            <Button color="inherit" href="./signout">
-              Sign Out
-            </Button>
+
             <Button color="inherit" href="./taskmanager">
               Task manager
             </Button>
@@ -64,6 +79,6 @@ export default function Dashboard() {
         </Toolbar>
       </AppBar>
     </ThemeProvider>
-
   );
 }
+

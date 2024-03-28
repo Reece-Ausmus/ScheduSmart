@@ -499,7 +499,6 @@ export default function TaskManager() {
               </Select>
             </FormControl>
             <Button variant="contained" onClick={handleExport}>Export as {selectedFormat.toUpperCase()}</Button>
-            <Button variant="contained" onClick={() => { window.location.href = "/dashboard"; }}>Dashboard</Button>
           </div>
         </div>
       </div>
