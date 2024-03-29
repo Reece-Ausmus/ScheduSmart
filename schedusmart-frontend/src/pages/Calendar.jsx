@@ -44,6 +44,16 @@ export default function Calendar(selectMode, e) {
     });
   }, [e]);
 
+  const handleOnEventClick = async (args) => {
+    console.log(args);
+    /*const event = args.e.data;
+    const event_id = event.id;
+    const response = await send_request("/get_event", "POST", {
+      event_id: event_id,
+    });
+    console.log(response);*/
+  };
+
   return (
     <div className="sub_main_calnedar_box">
       <div
@@ -51,7 +61,11 @@ export default function Calendar(selectMode, e) {
           display: selectMode === 1 || selectMode === 2 ? "block" : "none",
         }}
       >
-        <DayPilotCalendar {...{ viewType: viewType }} ref={calendarRef} />
+        <DayPilotCalendar
+          {...{ viewType: viewType }}
+          ref={calendarRef}
+          onEventClick={handleOnEventClick}
+        />
       </div>
 
       <div style={{ display: selectMode === 3 ? "block" : "none" }}>
