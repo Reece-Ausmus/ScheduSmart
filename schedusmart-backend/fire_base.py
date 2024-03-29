@@ -541,15 +541,28 @@ def update_default_location_settings(info):
         print("Failed to set the location settings")
         return 1
 
+# This function is used to create a new Habits list for the logged in user
+def add_new_habit(data):
+    user_id = data['user_id']
+    habit_data = {
+        "id": data['id'],
+        "calories": data['calories'],
+        "carbs": data['carbs'],
+        "fat": data['fat'],
+        "protein": data['protein'],
+        "sodium": data['sodium'],
+        "sugar": data['sugar']
+    }
+    # Construct the Firebase structure
+    habit_path = f"/Habits/{user_id}/{data['itemName']}"
 
-# def get_timezone(user_id):
-#     try:
-#         timezone = db.child("User").child(user_id).child('timezone').get().val()
-#         print("Fetched Timezone:", timezone) # debug print
-#         return timezone
-#     except Exception as e:
-#         print("Failed to get timezone:", e)
-#         return None
+    # Push the habit data to the Firebase database
+    try:
+        db.child(habit_path).set(habit_data)
+        return 0
+    except Exception as e:
+        print("Failed to create habit:", e)
+        return 1
 
 # used to test with firebase #######################
 
