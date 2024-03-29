@@ -333,7 +333,9 @@ def f_get_events(calendar):
         for event_id in data_event_ids.each():
             event = event_id.val()
             print(event["event_id"])
-            events.append(db.child("Events").child(event["event_id"]).get().val())
+            e = db.child("Events").child(event["event_id"]).get().val()
+            e["event_id"] = event["event_id"]
+            events.append(e)
         print(events)
         return {"data": events}
     except Exception as e:
@@ -403,12 +405,10 @@ def update_event_db(event_info):
         'start_date': event_info['start_date'],
         'end_date': event_info['end_date'],
         'location': event_info['location'],
-        'calendar': event_info['calendar'],
         'repetition_type': event_info['repetition_type'],
         'repetition_unit': event_info['repetition_unit'],
         'repetition_val': event_info['repetition_val'],
         'selected_days;': event_info['selected_days'],
-        'emails': event_info['emails'],
         'type': event_info['type']
     }
     try:

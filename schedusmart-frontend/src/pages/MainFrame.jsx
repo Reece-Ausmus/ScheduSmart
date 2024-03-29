@@ -1444,6 +1444,7 @@ export default function MainFrame() {
 
     let id = id_number;
     let event_name = event.name;
+    let fb_event_id = event.event_id;
 
     const [year1, month1, day1] = event.start_date.split("-").map(Number);
     const [hour1, min1] = event.start_time.split(":").map(Number);
@@ -1468,6 +1469,7 @@ export default function MainFrame() {
     if (event.repetition_type === "none") {
       eventArray.push({
         id: id,
+        fb_event_id: fb_event_id,
         text: event_name,
         start: startDate.toISOString().slice(0, 19),
         end: endDate.toISOString().slice(0, 19),
@@ -1477,6 +1479,7 @@ export default function MainFrame() {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
+          fb_event_id: fb_event_id,
           text: event_name,
           start: startDate.toISOString().slice(0, 19),
           end: endDate.toISOString().slice(0, 19),
@@ -1491,6 +1494,7 @@ export default function MainFrame() {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
+          fb_event_id: fb_event_id,
           text: event_name,
           start: startDate.toISOString().slice(0, 19),
           end: endDate.toISOString().slice(0, 19),
@@ -1504,6 +1508,7 @@ export default function MainFrame() {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
+          fb_event_id: fb_event_id,
           text: event_name,
           start: startDate.toISOString().slice(0, 19),
           end: endDate.toISOString().slice(0, 19),
@@ -1517,6 +1522,7 @@ export default function MainFrame() {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
+          fb_event_id: fb_event_id,
           text: event_name,
           start: startDate.toISOString().slice(0, 19),
           end: endDate.toISOString().slice(0, 19),
@@ -1531,6 +1537,7 @@ export default function MainFrame() {
       while (compareDates(startDate, boundary) == -1) {
         eventArray.push({
           id: id,
+          fb_event_id: fb_event_id,
           text: event_name,
           start: startDate.toISOString().slice(0, 19),
           end: endDate.toISOString().slice(0, 19),

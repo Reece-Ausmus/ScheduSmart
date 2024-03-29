@@ -163,6 +163,19 @@ def get_events():
         response.status_code = 201
     return response
 
+@calendar.route('/get_event', methods=['POST'])
+def get_event():
+    event = request.get_json()
+    ret = get_event_with_id_db(event)
+    status = ret['response_status']
+    if status == 1:
+        response = jsonify({'response': 'fail retrieve event'})
+        response.status_code = 205
+    else:
+        response = jsonify(ret)
+        response.status_code = 201
+    return response
+
 
 @calendar.route('/update_task', methods=['POST'])
 def update_task_list():
