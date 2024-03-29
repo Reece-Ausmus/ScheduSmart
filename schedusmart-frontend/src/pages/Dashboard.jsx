@@ -62,15 +62,14 @@ export default function Dashboard() {
             <Button color="inherit" href="./habits">
               Habits
             </Button>
-            <Button color="inherit" href="./settings">
-              Settings
-            </Button>
             <Button color="inherit" href="./notes">
               Notes
             </Button>
-
             <Button color="inherit" href="./taskmanager">
               Task manager
+            </Button>
+            <Button color="inherit" href="./settings">
+              Settings
             </Button>
             <Button color="inherit" onClick={handleConfirmClick}>
               Sign Out

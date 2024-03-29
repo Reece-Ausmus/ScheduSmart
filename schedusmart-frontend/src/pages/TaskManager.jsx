@@ -115,7 +115,7 @@ const initialList = [
     { id: 2, name: "Question 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
-    time_allo: 0, 
+    time_allo: 0,
   },
   {
     id: 1,
@@ -145,7 +145,7 @@ const initialList = [
     { id: 2, name: "Chapter 3", comp: false },],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
-    time_allo: 0, 
+    time_allo: 0,
   },
 ];
 let nextId = initialList.length;
@@ -480,6 +480,17 @@ export default function TaskManager() {
     }
   }
 
+  //handle dialog
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
@@ -563,116 +574,168 @@ export default function TaskManager() {
               </div>
             </Grid>
           </Grid>
+
           <dialog id="modal">
-            <label htmlFor="name">Task Name:</label>
-            <input
-              id="name"
-              value={taskName}
-              onChange={(e) => setTaskName(e.target.value)}
-            />
-            <label htmlFor="time">Workload:</label>
-            <input
-              type="number"
-              id="time"
-              min="1"
-              value={taskTime}
-              onChange={(e) => setTaskTime(e.target.value)}
-            />
-            <label htmlFor="date">Due Date:</label>
-            <input
-              type="date"
-              id="date"
-              value={taskDate}
-              onChange={(e) => setTaskDate(e.target.value)}
-            />
-            <label htmlFor="desc">Description:</label>
-            <input
-              id="desc"
-              value={taskDesc}
-              onChange={(e) => setTaskDesc(e.target.value)}
-            />
-            <input
-              type="file"
-              onChange={(event) => {
-                let file_exen = event.target.files[0].name.split(".").pop()
-                let valid = false
-                validExtensions.map((extension) => {
-                  if (file_exen === extension)
-                    valid = true;
-                })
-                if (valid) {
-                  setFile(event.target.files[0])
-                  let ref_url = `files/${event.target.files[0].name + v4()}`
-                  const fileRef = ref(storage, ref_url);
-                  uploadFile(fileRef, event.target.files[0])
-                  setTaskFile(fileRef.name)
-                } else {
-                  alert("Invalid File! Only image, text, audio, or video files allowed!")
+            <DialogTitle>Add tasks:</DialogTitle>
+            <DialogContent>
+              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }} >
+                <Grid item>
+                  <DialogContentText>Task Name:</DialogContentText>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="name"
+                    value={taskName}
+                    size="small"
+                    onChange={(e) => setTaskName(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+                <Grid item>
+                  <DialogContentText>Workload:</DialogContentText>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="time"
+                    value={taskTime}
+                    min="1"
+                    size="small"
+                    onChange={(e) => setTaskTime(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+                <Grid item>
+                  <DialogContentText>Due Date:</DialogContentText>
+                </Grid>
+                <Grid item>
+                  <input
+                    type="date"
+                    id="date"
+                    value={taskDate}
+                    onChange={(e) => setTaskDate(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+                <Grid item>
+                  <DialogContentText>Description:</DialogContentText>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="desc"
+                    value={taskDesc}
+                    size="small"
+                    onChange={(e) => setTaskDesc(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+                <Grid item>
+                  <DialogContentText>Attachment:</DialogContentText>
+                </Grid>
+                <Grid item>
+                  <input
+                    type="file"
+                    onChange={(event) => {
+                      let file_exen = event.target.files[0].name.split(".").pop()
+                      let valid = false
+                      validExtensions.map((extension) => {
+                        if (file_exen === extension)
+                          valid = true;
+                      })
+                      if (valid) {
+                        setFile(event.target.files[0])
+                        let ref_url = `files/${event.target.files[0].name + v4()}`
+                        const fileRef = ref(storage, ref_url);
+                        uploadFile(fileRef, event.target.files[0])
+                        setTaskFile(fileRef.name)
+                      } else {
+                        alert("Invalid File! Only image, text, audio, or video files allowed!")
+                      }
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+                <Grid item>
+                  <DialogContentText>Add subtask:</DialogContentText>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="subtask"
+                    value={subtaskDesc}
+                    size="small"
+                    onChange={(e) => setSubtaskDesc(e.target.value)}
+                    style={{ marginRight: '10px' }}
+                  />
+                  <Fab
+                    aria-label="add"
+                    color="primary"
+                    size="small"
+                    onClick={() => {
+                      setSubtaskList([
+                        ...subtaskList,
+                        {
+                          id: subtaskList.length,
+                          name: subtaskDesc,
+                          comp: false,
+                        },
+                      ]);
+                    }}>
+                    <AddIcon />
+                  </Fab>
+                </Grid>
+              </Grid>
+              <ol>
+                {subtaskList.map((subtask) => (
+                  <li key={subtask.id}>
+                    {subtask.name}
+                  </li>
+                ))}
+              </ol>
+
+              <button
+                id="closeModal"
+                style={{ marginRight: '10px' }}
+                onClick={() => {
+                  if (subtaskList != [] && taskDate != "") {
+                    setTodoList([
+                      ...todoList,
+                      {
+                        id: todoList.length,
+                        title: taskName,
+                        time: taskTime,
+                        date: taskDate,
+                        desc: taskDesc,
+                        completed: false,
+                        sub_tasks: subtaskList,
+                        file_url: taskFile,
+                        scheduled: false,
+                        time_allo: 0,
+                      },
+                    ]);
+                  } else {
+                    alert("Error! Missing Information! Please try again!")
+                  }
                 }
-              }}
-            />
-            <label htmlFor="subtask">Add subtask:</label>
-            <input
-              id="subtask"
-              value={subtaskDesc}
-              onChange={(e) => setSubtaskDesc(e.target.value)}
-            />
-            <button onClick={() => {
-              setSubtaskList([
-                ...subtaskList,
-                {
-                  id: subtaskList.length,
-                  name: subtaskDesc,
-                  comp: false,
-                },
-              ]);
-            }}>
-              +
-            </button>
-            <ol>
-              {subtaskList.map((subtask) => (
-                <li key={subtask.id}>
-                  {subtask.name}
-                </li>
-              ))}
-            </ol>
-            <button
-              id="closeModal"
-              onClick={() => {
-                if (subtaskList != [] && taskDate != "") {
-                  setTodoList([
-                    ...todoList,
-                    {
-                      id: todoList.length,
-                      title: taskName,
-                      time: taskTime,
-                      date: taskDate,
-                      desc: taskDesc,
-                      completed: false,
-                      sub_tasks: subtaskList,
-                      file_url: taskFile,
-                      scheduled: false,
-                      time_allo: 0, 
-                    },
-                  ]);
-                } else {
-                  alert("Error! Missing Information! Please try again!")
-                }
-              }
-              }> Add </button>
-            <button id="closeModal" onClick={() => {
-              // Reset all the form fields or close the dialog
-              setTaskName("New Task");
-              setTaskTime(0);
-              setTaskDesc("Task Description");
-              setSubtaskDesc("");
-              setSubtaskList([]);
-              setTaskFile("");
-              document.getElementById('modal').close();
-            }}>
-              Cancel
-            </button>
+                }> Add </button>
+              <button id="closeModal" onClick={() => {
+                // Reset all the form fields or close the dialog
+                setTaskName("New Task");
+                setTaskTime(0);
+                setTaskDesc("Task Description");
+                setSubtaskDesc("");
+                setSubtaskList([]);
+                setTaskFile("");
+                document.getElementById('modal').close();
+              }}>
+                Cancel
+              </button>
+            </DialogContent>
           </dialog>
+
           <TodoList
             list={todoList}
             onToggle={handleToggleCompleted}
@@ -723,7 +786,7 @@ export default function TaskManager() {
 }
 
 function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keyword }) {
-  let defaultList = list; 
+  let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
     const results = list.filter((task) => {
@@ -745,7 +808,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
     listAll(fileListRef).then((response) => {
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
-          setFileList((prev) => [...prev, {name: item.name, url: url}]);
+          setFileList((prev) => [...prev, { name: item.name, url: url }]);
         })
       })
     })
@@ -830,7 +893,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
       repetition_val: 1,
       selected_days: "",
       user_id: userId,
-      emails: [], 
+      emails: [],
       type: "",
     }
     console.log(JSON.stringify(new_event))
@@ -844,7 +907,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
     });
     if (!response.ok) {
       alert("Something went wrong, refresh your website!");
-      return days_diff; 
+      return days_diff;
     } else {
       switch (response.status) {
         case 201:
@@ -890,7 +953,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
     fileList.map((file) => {
       if (file.name == name) link = file.url;
     })
-    return link; 
+    return link;
   }
 
   return (
@@ -914,7 +977,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
             <TableCell>{task.title}</TableCell>
             <TableCell>
               <CircularProgressWithLabel variant="determinate" value={progressValue(task.id) * 100} />
-              <p style={{align: "center"}}><small>Worktime: {task.time_allo} hour(s)</small></p>
+              <p style={{ align: "center" }}><small>Worktime: {task.time_allo} hour(s)</small></p>
             </TableCell>
             <TableCell>{task.desc}</TableCell>
             <TableCell>{task.time} hour(s)</TableCell>
@@ -974,7 +1037,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
 }
 
 function CompletedList({ list, onToggle, option, keyword }) {
-  let defaultList = list; 
+  let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
     const results = list.filter((task) => {
