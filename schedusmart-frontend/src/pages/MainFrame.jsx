@@ -15,7 +15,24 @@ import Map from "./Googlemap";
 import { useHotkeys } from "react-hotkeys-hook";
 import { CheckBox, LaptopWindowsRounded } from "@material-ui/icons";
 import SetupCourses from "./SetupCourses";
+import TextField from "@mui/material/TextField";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { orange, grey } from "@mui/material/colors";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
 // import MapContainer from './Googlemap';
+
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+});
 
 const steps = [
   {
@@ -673,399 +690,416 @@ export default function MainFrame() {
     };
 
     return (
-      <div className="calendar-list">
-        {/* Create Calendar button and input */}
-        <div style={{ display: "flex", marginBottom: "10px" }}>
-          <input
-            type="text"
-            value={newCalendarName}
-            onChange={(e) => setNewCalendarName(e.target.value)}
-            placeholder="Enter new calendar name"
-            style={{ width: "calc(100% - 100px)", marginRight: "10px" }}
-          />
-          <div className="add_button">
-            <button onClick={handleCreateCalendar} style={{ width: "100px" }}>
-              Create Calendar
-            </button>
-          </div>
-
-          {/* Add Event */}
-          <div className="add_button">
-            <button onClick={handleCreateEventButton}>Create Event</button>
-          </div>
-          <div className="add_button">
-            <button onClick={handleCreateAvailabilityButton}>
-              Create Availability
-            </button>
-          </div>
-          {showEventPopup && (
-            <div className="popup">
-              <div className="popup-content">
-                <h2>Add {eventType}</h2>
-                <div>
-                  <div className="formgroup">
-                    <label htmlFor="eventName">Event Name:</label>
-                    <input
-                      type="text"
-                      id="eventName"
-                      value={eventName}
-                      onChange={handleEventNameChange}
-                    />
-                  </div>
-                  <div className="formgroup">
-                    <label htmlFor="eventStartDate">Start Date:</label>
-                    <input
-                      type="date"
-                      id="eventStartDate"
-                      value={eventStartDate}
-                      onChange={handleEventStartDateChange}
-                    />
-                    <label htmlFor="eventEndDate">End Date:</label>
-                    <input
-                      type="date"
-                      id="eventEndDate"
-                      value={eventEndDate}
-                      onChange={handleEventEndDateChange}
-                    />
-                  </div>
-                  <div className="formgroup">
-                    <label htmlFor="eventStartTime">Start Time:</label>
-                    <input
-                      type="time"
-                      id="eventStartTime"
-                      value={eventStartTime}
-                      onChange={handleEventStartTimeChange}
-                    />
-                    <label htmlFor="eventEndTime">End Time:</label>
-                    <input
-                      type="time"
-                      id="eventEndTime"
-                      value={eventEndTime}
-                      onChange={handleEventEndTimeChange}
-                    />
-                  </div>
-                  {eventType === "event" && (
+      <ThemeProvider theme={theme}>
+        <div className="calendar-list">
+          {/* Create Calendar button and input */}
+          <div style={{ display: "flex", marginBottom: "10px" }}>
+            <TextField
+              type="text"
+              label="create_calendar"
+              variant="outlined"
+              value={newCalendarName}
+              placeholder="Enter new calendar name"
+              onChange={(e) => setNewCalendarName(e.target.value)}
+              style={{ width: "200px" }}
+              size="small"
+            />
+            <div className="add_button">
+              <Button variant="contained" onClick={handleCreateCalendar}>
+                Create Calendar
+              </Button>
+            </div>
+            <div className="add_button">
+              <Button variant="contained" onClick={handleCreateEventButton}>
+                Create Event
+              </Button>
+            </div>
+            <div className="add_button">
+              <Button
+                variant="contained"
+                onClick={handleCreateAvailabilityButton}
+              >
+                Create Availability
+              </Button>
+            </div>
+            {showEventPopup && (
+              <div className="popup">
+                <div className="popup-content">
+                  <h2>Add {eventType}</h2>
+                  <div>
                     <div className="formgroup">
-                      <label htmlFor="eventLocation">Event Location:</label>
-                      {renderLocationInput()}
+                      <label htmlFor="eventName">Event Name:</label>
+                      <input
+                        type="text"
+                        id="eventName"
+                        value={eventName}
+                        onChange={handleEventNameChange}
+                      />
                     </div>
-                  )}
-                  <div className="formgroup">
-                    <label htmlFor="eventDescription">Event Description:</label>
-                    <textarea
-                      id="eventDescription"
-                      value={eventDescription}
-                      onChange={handleEventDescriptionChange}
-                      rows="4"
-                      cols="50"
-                    />
-                  </div>
-
-                  {eventType === "event" && (
-                    <div>
+                    <div className="formgroup">
+                      <label htmlFor="eventStartDate">Start Date:</label>
+                      <input
+                        type="date"
+                        id="eventStartDate"
+                        value={eventStartDate}
+                        onChange={handleEventStartDateChange}
+                      />
+                      <label htmlFor="eventEndDate">End Date:</label>
+                      <input
+                        type="date"
+                        id="eventEndDate"
+                        value={eventEndDate}
+                        onChange={handleEventEndDateChange}
+                      />
+                    </div>
+                    <div className="formgroup">
+                      <label htmlFor="eventStartTime">Start Time:</label>
+                      <input
+                        type="time"
+                        id="eventStartTime"
+                        value={eventStartTime}
+                        onChange={handleEventStartTimeChange}
+                      />
+                      <label htmlFor="eventEndTime">End Time:</label>
+                      <input
+                        type="time"
+                        id="eventEndTime"
+                        value={eventEndTime}
+                        onChange={handleEventEndTimeChange}
+                      />
+                    </div>
+                    {eventType === "event" && (
                       <div className="formgroup">
-                        <label htmlFor="eventEmailInvitations">
-                          Invite Emails: (Separate emails with commas)
-                        </label>
-                        <input
-                          type="text"
-                          id="eventEmailInvitations"
-                          value={eventEmailInvitations}
-                          onChange={handleEventEmailInvitationsChange}
-                        />
-                      </div>
-
-                      <div className="formgroup">
-                        <label htmlFor="eventCalendar">Calendar:</label>
-                        <select
-                          id="eventCalendar"
-                          value={eventCalendar}
-                          onChange={handleEventCalendarChange}
-                          className="calendar_option"
-                        >
-                          <option value="">Select Calendar</option>
-                          {calendarList.map((cal) => (
-                            <option key={cal.id} value={cal.id}>
-                              {cal.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  )}
-                  <div className="event-repetition-form">
-                    <h2>Event Repetition</h2>
-                    <div className="repetition-options">
-                      <button
-                        type="button"
-                        onClick={() => handleEventRepetitionChange("none")}
-                      >
-                        None
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleEventRepetitionChange("daily")}
-                      >
-                        Daily
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleEventRepetitionChange("weekly")}
-                      >
-                        Weekly
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleEventRepetitionChange("monthly")}
-                      >
-                        Monthly
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleEventRepetitionChange("yearly")}
-                      >
-                        Yearly
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleEventRepetitionChange("custom")}
-                      >
-                        Custom
-                      </button>
-                    </div>
-                    {eventRepetitionType === "custom" && (
-                      <div className="custom-repetition">
-                        <label htmlFor="customFrequency">Repeat every</label>
-                        <input
-                          type="number"
-                          id="eventCustomFrequencyValue"
-                          value={eventCustomFrequencyValue}
-                          onChange={handleEventCustomFrequencyValueChange}
-                          min={1}
-                        />
-                        <select
-                          id="eventCustomFrequencyUnit"
-                          value={eventCustomFrequencyUnit}
-                          onChange={handleEventCustomFrequencyUnitChange}
-                        >
-                          <option value="days">days</option>
-                          <option value="weeks">weeks</option>
-                          <option value="months">months</option>
-                          <option value="years">years</option>
-                        </select>
-                        {eventCustomFrequencyUnit === "weeks" && (
-                          <div className="day-selector">
-                            <p>Select specific days:</p>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={eventSelectedDays.includes("sun")}
-                                onChange={() => handleEventDayToggle("sun")}
-                              />
-                              Sunday
-                            </label>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={eventSelectedDays.includes("mon")}
-                                onChange={() => handleEventDayToggle("mon")}
-                              />
-                              Monday
-                            </label>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={eventSelectedDays.includes("tues")}
-                                onChange={() => handleEventDayToggle("tues")}
-                              />
-                              Tuesday
-                            </label>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={eventSelectedDays.includes("wed")}
-                                onChange={() => handleEventDayToggle("wed")}
-                              />
-                              Wednesday
-                            </label>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={eventSelectedDays.includes("thur")}
-                                onChange={() => handleEventDayToggle("thur")}
-                              />
-                              Thursday
-                            </label>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={eventSelectedDays.includes("fri")}
-                                onChange={() => handleEventDayToggle("fri")}
-                              />
-                              Friday
-                            </label>
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={eventSelectedDays.includes("sat")}
-                                onChange={() => handleEventDayToggle("sat")}
-                              />
-                              Saturday
-                            </label>
-                          </div>
-                        )}
+                        <label htmlFor="eventLocation">Event Location:</label>
+                        {renderLocationInput()}
                       </div>
                     )}
+                    <div className="formgroup">
+                      <label htmlFor="eventDescription">
+                        Event Description:
+                      </label>
+                      <textarea
+                        id="eventDescription"
+                        value={eventDescription}
+                        onChange={handleEventDescriptionChange}
+                        rows="4"
+                        cols="50"
+                      />
+                    </div>
+
+                    {eventType === "event" && (
+                      <div>
+                        <div className="formgroup">
+                          <label htmlFor="eventEmailInvitations">
+                            Invite Emails: (Separate emails with commas)
+                          </label>
+                          <input
+                            type="text"
+                            id="eventEmailInvitations"
+                            value={eventEmailInvitations}
+                            onChange={handleEventEmailInvitationsChange}
+                          />
+                        </div>
+
+                        <div className="formgroup">
+                          <label htmlFor="eventCalendar">Calendar:</label>
+                          <select
+                            id="eventCalendar"
+                            value={eventCalendar}
+                            onChange={handleEventCalendarChange}
+                            className="calendar_option"
+                          >
+                            <option value="">Select Calendar</option>
+                            {calendarList.map((cal) => (
+                              <option key={cal.id} value={cal.id}>
+                                {cal.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    )}
+                    <div className="event-repetition-form">
+                      <h2>Event Repetition</h2>
+                      <div className="repetition-options">
+                        <button
+                          type="button"
+                          onClick={() => handleEventRepetitionChange("none")}
+                        >
+                          None
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleEventRepetitionChange("daily")}
+                        >
+                          Daily
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleEventRepetitionChange("weekly")}
+                        >
+                          Weekly
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleEventRepetitionChange("monthly")}
+                        >
+                          Monthly
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleEventRepetitionChange("yearly")}
+                        >
+                          Yearly
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleEventRepetitionChange("custom")}
+                        >
+                          Custom
+                        </button>
+                      </div>
+                      {eventRepetitionType === "custom" && (
+                        <div className="custom-repetition">
+                          <label htmlFor="customFrequency">Repeat every</label>
+                          <input
+                            type="number"
+                            id="eventCustomFrequencyValue"
+                            value={eventCustomFrequencyValue}
+                            onChange={handleEventCustomFrequencyValueChange}
+                            min={1}
+                          />
+                          <select
+                            id="eventCustomFrequencyUnit"
+                            value={eventCustomFrequencyUnit}
+                            onChange={handleEventCustomFrequencyUnitChange}
+                          >
+                            <option value="days">days</option>
+                            <option value="weeks">weeks</option>
+                            <option value="months">months</option>
+                            <option value="years">years</option>
+                          </select>
+                          {eventCustomFrequencyUnit === "weeks" && (
+                            <div className="day-selector">
+                              <p>Select specific days:</p>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={eventSelectedDays.includes("sun")}
+                                  onChange={() => handleEventDayToggle("sun")}
+                                />
+                                Sunday
+                              </label>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={eventSelectedDays.includes("mon")}
+                                  onChange={() => handleEventDayToggle("mon")}
+                                />
+                                Monday
+                              </label>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={eventSelectedDays.includes("tues")}
+                                  onChange={() => handleEventDayToggle("tues")}
+                                />
+                                Tuesday
+                              </label>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={eventSelectedDays.includes("wed")}
+                                  onChange={() => handleEventDayToggle("wed")}
+                                />
+                                Wednesday
+                              </label>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={eventSelectedDays.includes("thur")}
+                                  onChange={() => handleEventDayToggle("thur")}
+                                />
+                                Thursday
+                              </label>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={eventSelectedDays.includes("fri")}
+                                  onChange={() => handleEventDayToggle("fri")}
+                                />
+                                Friday
+                              </label>
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={eventSelectedDays.includes("sat")}
+                                  onChange={() => handleEventDayToggle("sat")}
+                                />
+                                Saturday
+                              </label>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      className="formbutton fb1"
+                      onClick={handleCreateEvent}
+                    >
+                      Add
+                    </button>
+                    <button
+                      className="formbutton fb2"
+                      onClick={toggleEventPopup}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/*SetupCourses*/}
+            <div className="add_button">
+              <Button variant="contained" onClick={handleSetupCourses}>
+                Setup Courses
+              </Button>
+            </div>
+            {showSemesterPopup && (
+              <div className="popup">
+                <div className="popup-content">
+                  <div className="formgroup">
+                    <label htmlFor="semesterName">Semester:</label>
+                    <input
+                      type="text"
+                      id="semesterName"
+                      value={semesterName}
+                      onChange={(e) => setSemesterName(e.target.value)}
+                    />
+                  </div>
+                  <div className="formgroup">
+                    <label htmlFor="semesterStartDate">Start Date:</label>
+                    <input
+                      type="date"
+                      id="semesterStartDate"
+                      value={semesterStartDate}
+                      onChange={handleSemesterStartDateChange}
+                    />
+                    <label htmlFor="semesterEndDate">End Date:</label>
+                    <input
+                      type="date"
+                      id="semesterEndDate"
+                      value={semesterEndDate}
+                      onChange={handleSemesterEndDateChange}
+                    />
                   </div>
                   <button
                     className="formbutton fb1"
-                    onClick={handleCreateEvent}
+                    onClick={handleSemesterSelection}
                   >
                     Add
                   </button>
-                  <button className="formbutton fb2" onClick={toggleEventPopup}>
+                  <button
+                    className="formbutton fb2"
+                    onClick={handleCancelSemester}
+                  >
                     Cancel
                   </button>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/*SetupCourses*/}
-          <div className="add_button">
-            <button onClick={handleSetupCourses}>Setup Courses</button>
-          </div>
-          {showSemesterPopup && (
-            <div className="popup">
-              <div className="popup-content">
-                <div className="formgroup">
-                  <label htmlFor="semesterName">Semester:</label>
-                  <input
-                    type="text"
-                    id="semesterName"
-                    value={semesterName}
-                    onChange={(e) => setSemesterName(e.target.value)}
-                  />
-                </div>
-                <div className="formgroup">
-                  <label htmlFor="semesterStartDate">Start Date:</label>
-                  <input
-                    type="date"
-                    id="semesterStartDate"
-                    value={semesterStartDate}
-                    onChange={handleSemesterStartDateChange}
-                  />
-                  <label htmlFor="semesterEndDate">End Date:</label>
-                  <input
-                    type="date"
-                    id="semesterEndDate"
-                    value={semesterEndDate}
-                    onChange={handleSemesterEndDateChange}
-                  />
-                </div>
-                <button
-                  className="formbutton fb1"
-                  onClick={handleSemesterSelection}
-                >
-                  Add
-                </button>
-                <button
-                  className="formbutton fb2"
-                  onClick={handleCancelSemester}
-                >
-                  Cancel
-                </button>
-              </div>
+            {/* See Invitations */}
+            <div className="add_button">
+              <Button variant="contained" onClick={handleSeeInvitationsOpen}>
+                See Invitations
+              </Button>
             </div>
-          )}
-
-          {/* See Invitations */}
-          <div className="add_button">
-            <button onClick={handleSeeInvitationsOpen}>See Invitations</button>
-          </div>
-          {showSeeInvitationsPopup && (
-            <div className="popup">
-              <div className="popup-content">
-                <h2>Invitations</h2>
-                <div className="formgroup">
-                  <label htmlFor="invitationFilter">Filter:</label>
-                  <select
-                    id="invitationFilter"
-                    value={invitationFilter}
-                    onChange={(e) => setInvitationFilter(e.target.value)}
-                  >
-                    <option value="all">All</option>
-                    <option value="pending">Pending</option>
-                    <option value="accepted">Accepted</option>
-                  </select>
-                </div>
-                <div className="formgroup">
-                  {invitations
-                    .filter((invitation) => {
-                      if (invitationFilter === "all") {
-                        return true;
-                      } else if (invitationFilter === "pending") {
-                        return invitation.status === "pending";
-                      } else if (invitationFilter === "accepted") {
-                        return invitation.status === "accepted";
-                      }
-                    })
-                    .map((invitation) => (
-                      <div key={invitation.id}>
-                        <h3>{invitation.name}</h3>
-                        <p>{invitation.description}</p>
-                        <p>Start Date: {invitation.startDate}</p>
-                        <p>End Date: {invitation.endDate}</p>
-                        <p>Start Time: {invitation.startTime}</p>
-                        <p>End Time: {invitation.endTime}</p>
-                        <p>Status: {invitation.status}</p>
-                        <button
-                          className="formbutton fb1"
-                          onClick={() => handleAcceptInvitation(invitation)}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="formbutton fb1"
-                          onClick={() => handleDeclineInvitation(invitation)}
-                        >
-                          Decline
-                        </button>
-                      </div>
-                    ))}
-                </div>
-                <div className="formgroup">
-                  <button
-                    className="formbutton fb1"
-                    onClick={handleSeeInvitationsClose}
-                  >
-                    Close
-                  </button>
+            {showSeeInvitationsPopup && (
+              <div className="popup">
+                <div className="popup-content">
+                  <h2>Invitations</h2>
+                  <div className="formgroup">
+                    <label htmlFor="invitationFilter">Filter:</label>
+                    <select
+                      id="invitationFilter"
+                      value={invitationFilter}
+                      onChange={(e) => setInvitationFilter(e.target.value)}
+                    >
+                      <option value="all">All</option>
+                      <option value="pending">Pending</option>
+                      <option value="accepted">Accepted</option>
+                    </select>
+                  </div>
+                  <div className="formgroup">
+                    {invitations
+                      .filter((invitation) => {
+                        if (invitationFilter === "all") {
+                          return true;
+                        } else if (invitationFilter === "pending") {
+                          return invitation.status === "pending";
+                        } else if (invitationFilter === "accepted") {
+                          return invitation.status === "accepted";
+                        }
+                      })
+                      .map((invitation) => (
+                        <div key={invitation.id}>
+                          <h3>{invitation.name}</h3>
+                          <p>{invitation.description}</p>
+                          <p>Start Date: {invitation.startDate}</p>
+                          <p>End Date: {invitation.endDate}</p>
+                          <p>Start Time: {invitation.startTime}</p>
+                          <p>End Time: {invitation.endTime}</p>
+                          <p>Status: {invitation.status}</p>
+                          <button
+                            className="formbutton fb1"
+                            onClick={() => handleAcceptInvitation(invitation)}
+                          >
+                            Accept
+                          </button>
+                          <button
+                            className="formbutton fb1"
+                            onClick={() => handleDeclineInvitation(invitation)}
+                          >
+                            Decline
+                          </button>
+                        </div>
+                      ))}
+                  </div>
+                  <div className="formgroup">
+                    <button
+                      className="formbutton fb1"
+                      onClick={handleSeeInvitationsClose}
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+
+          {/* List of existing calendars */}
+          <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
+            {calendarList.map((calendar) => (
+              <li key={calendar["calendar_id"]}>
+                <input
+                  type="checkbox"
+                  id={calendar["calendar_id"]}
+                  checked={selectedCalendars.some(
+                    (cal) => cal.calendar_id === calendar["calendar_id"]
+                  )}
+                  onChange={() => handleCalendarSelection(calendar)}
+                />
+                <label htmlFor={calendar["calendar_id"]}>
+                  {calendar["name"]}
+                </label>
+              </li>
+            ))}
+          </ul>
         </div>
-
-        {/* List of existing calendars */}
-        <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
-          {calendarList.map((calendar) => (
-            <li key={calendar["calendar_id"]}>
-              <input
-                type="checkbox"
-                id={calendar["calendar_id"]}
-                checked={selectedCalendars.some(
-                  (cal) => cal.calendar_id === calendar["calendar_id"]
-                )}
-                onChange={() => handleCalendarSelection(calendar)}
-              />
-              <label htmlFor={calendar["calendar_id"]}>
-                {calendar["name"]}
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
+      </ThemeProvider>
     );
   }
 
@@ -1271,38 +1305,37 @@ export default function MainFrame() {
         togglePopup();
     };*/
 
-    return (
-      <div className="add_button">
-        <button onClick={togglePopup}>Closest Available Time</button>
-        {showPopup && (
-          <div className="popup">
-            <div className="popup-content">
-              <h2>Time (min)</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="formgroup">
-                  <label htmlFor="aomuntOfTime">
-                    Enter the amount of time:
-                  </label>
-                  <input
-                    type="text"
-                    id="amountOfTime"
-                    value={amountOfTime}
-                    onChange={handleAmountOFTimeChange}
-                  />
-                </div>
-                <button className="formbutton fb1" type="submit">
-                  Search
-                </button>
-                <button className="formbutton fb2" onClick={togglePopup}>
-                  Cancel
-                </button>
-                {/*<button onClick={addEvent}>Add Event</button>TODO*/}
-              </form>
-            </div>
-          </div>
-        )}
-      </div>
-    );
+    return true;
+    // <div className="add_button">
+    //   <button onClick={togglePopup}>Closest Available Time</button>
+    //   {showPopup && (
+    //     <div className="popup">
+    //       <div className="popup-content">
+    //         <h2>Time (min)</h2>
+    //         <form onSubmit={handleSubmit}>
+    //           <div className="formgroup">
+    //             <label htmlFor="aomuntOfTime">
+    //               Enter the amount of time:
+    //             </label>
+    //             <input
+    //               type="text"
+    //               id="amountOfTime"
+    //               value={amountOfTime}
+    //               onChange={handleAmountOFTimeChange}
+    //             />
+    //           </div>
+    //           <button className="formbutton fb1" type="submit">
+    //             Search
+    //           </button>
+    //           <button className="formbutton fb2" onClick={togglePopup}>
+    //             Cancel
+    //           </button>
+    //           {/*<button onClick={addEvent}>Add Event</button>TODO*/}
+    //         </form>
+    //       </div>
+    //     </div>
+    //   )}
+    // </div>
   }
 
   // shortcuts
@@ -1549,7 +1582,11 @@ export default function MainFrame() {
 
   ///////////////////Task handle///////////////////////////////////
   const taskSortFunction = (a, b) => {
-    return a.date.localeCompare(b.date);
+    try {
+      return a.date.localeCompare(b.date);
+    } catch (e) {
+      return 0;
+    }
   };
   const generateTaskListHTML = (arr) => {
     if (!arr || arr == undefined) {
@@ -1616,73 +1653,75 @@ export default function MainFrame() {
   }
 
   return (
-    <div className="container">
-      {goToTaskManager && <Navigate to="/taskmanager" />}
-      <Joyride
-        steps={steps}
-        continuous={true}
-        styles={{
-          options: {
-            arrowColor: "#2d2d2d",
-            backgroundColor: "#2d2d2d",
-            overlayColor: "rgba(45, 45, 45, .3)",
-            primaryColor: "#2d2d2d",
-            textColor: "#ffffff",
-          },
-          spotlight: {
-            backgroundColor: "transparent",
-          },
-        }}
-        // show the progress
-        showProgress={true}
-        // user can skip the tours
-        showSkipButton={true}
-      />
+    <ThemeProvider theme={theme}>
+      <div className="container">
+        {goToTaskManager && <Navigate to="/taskmanager" />}
+        <Joyride
+          steps={steps}
+          continuous={true}
+          styles={{
+            options: {
+              arrowColor: "#2d2d2d",
+              backgroundColor: "#2d2d2d",
+              overlayColor: "rgba(45, 45, 45, .3)",
+              primaryColor: "#2d2d2d",
+              textColor: "#ffffff",
+            },
+            spotlight: {
+              backgroundColor: "transparent",
+            },
+          }}
+          // show the progress
+          showProgress={true}
+          // user can skip the tours
+          showSkipButton={true}
+        />
 
-      <div>{Dashboard()}</div>
-      <div className="weather_container">
-        <div className="weather">
+        <div>{Dashboard()}</div>
+        {/* <Card variant="outlined" style={{ height: '100px' }}>
+          <CardContent> */}
+        <Box display="flex" justifyContent="space-between">
           <Weather />
-        </div>
-      </div>
-      <div className="timezone">
-        <Timezone />
-      </div>
-      <div>{PopUpForm()}</div>
-      {/* Parent container for CalendarList and calendar_container */}
-      <div className="main-calendar-content">
-        {/* CalendarList component */}
-        <div className="calendar-list-container">
-          <CalendarList />
-        </div>
+          <Timezone />
+        </Box>
+        {/* </CardContent>
+        </Card> */}
+        <div>{PopUpForm()}</div>
+        {/* Parent container for CalendarList and calendar_container */}
+        <div className="main-calendar-content">
+          {/* CalendarList component */}
+          <div className="calendar-list-container">
+            <CalendarList />
+          </div>
 
-        {/* calendar_container */}
-        <div className="calender_container">
-          <div className="calender_container_controlbar">
-            <h2 className="detailInfo">{detailInfo}</h2>
-            <div>{calendarControlFlowButtonPackage()}</div>
-          </div>
-          <div className="main_calnedar_box">
-            {Calendar(selectMode, allEventsArray)}
+          {/* calendar_container */}
+          <div className="calender_container">
+            <div className="calender_container_controlbar">
+              <h2 className="detailInfo">{detailInfo}</h2>
+              <div>{calendarControlFlowButtonPackage()}</div>
+            </div>
+            <div className="main_calnedar_box">
+              {Calendar(selectMode, allEventsArray)}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="ChatBox">{chatBox()}</div>
-      {/* task container */}
-      <div className="task_container">
-        <div className="task_upperbar">
-          <h1 className="task_title">Task</h1>
-          <button
-            className="modeButton"
-            onClick={() => {
-              setGoToTaskManager(true);
-            }}
-          >
-            detail
-          </button>
+        <div className="ChatBox">{chatBox()}</div>
+        {/* task container */}
+        <div className="task_container">
+          <div className="task_upperbar">
+            <h1 className="task_title">Task</h1>
+            <button
+              className="modeButton"
+              onClick={() => {
+                setGoToTaskManager(true);
+              }}
+            >
+              detail
+            </button>
+          </div>
+          <div className="ToDoList">{generateTaskListHTML(taskList)}</div>
         </div>
-        <div className="ToDoList">{generateTaskListHTML(taskList)}</div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
