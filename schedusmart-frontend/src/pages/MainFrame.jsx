@@ -256,7 +256,8 @@ export default function MainFrame() {
         start_date: eventStartDate,
         end_date: eventEndDate,
         location: eventLocation,
-        calendar: eventCalendar,
+        calendar: calendarList.find((cal) => cal.name === eventCalendar)
+          ?.calendar_id,
         repetition_type: eventRepetitionType,
         repetition_unit: eventCustomFrequencyUnit,
         repetition_val: eventCustomFrequencyValue,
@@ -1548,8 +1549,8 @@ export default function MainFrame() {
 
   ///////////////////Task handle///////////////////////////////////
   const taskSortFunction = (a, b) => {
-    return a.date.localeCompare(b.date)
-  }
+    return a.date.localeCompare(b.date);
+  };
   const generateTaskListHTML = (arr) => {
     if (!arr || arr == undefined) {
       return (
@@ -1580,7 +1581,6 @@ export default function MainFrame() {
         )
     );
   };
-
 
   const changeStatusOfTask = async (task, statusOfTask) => {
     const currentTime = new Date().toLocaleString(undefined, {

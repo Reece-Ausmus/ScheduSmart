@@ -390,6 +390,53 @@ def add_new_event(event_info):
         'event_id': event_id
     }
 
+def update_event_db(event_info):
+    user_id = event_info['user_id']
+    if user_id is None:
+        raise Exception("User ID is None")
+    event_id = event_info['event_id']
+    data = {
+        'name': event_info['name'],
+        'desc': event_info['desc'],
+        'start_time': event_info['start_time'],
+        'end_time': event_info['end_time'],
+        'start_date': event_info['start_date'],
+        'end_date': event_info['end_date'],
+        'location': event_info['location'],
+        'calendar': event_info['calendar'],
+        'repetition_type': event_info['repetition_type'],
+        'repetition_unit': event_info['repetition_unit'],
+        'repetition_val': event_info['repetition_val'],
+        'selected_days;': event_info['selected_days'],
+        'emails': event_info['emails'],
+        'type': event_info['type']
+    }
+    try:
+        db.child("Events").child(event_id).update(data)
+    except Exception as e:
+        print("Failed to update event:", e)
+        return {'response_status': 1}
+    return {'response_status': 0}
+
+def delete_event_db(event_info):
+    user_id = event_info['user_id']
+    if user_id is None:
+        raise Exception("User ID is None")
+    try:
+        event_id = event_info['event_id']
+        event = db.child("Events").child(event_id).get().val()
+        calendar_id = event['calendar']
+        emails = event['emails']
+        for email in emails:
+            safe_email = email.replace(".", ",").replace("@", "_")
+            db.child("Invitations").child(safe_email).child(event_id).set({'status': 'deleted'})
+        db.child("Calendars").child(calendar_id).child("Events").get().val().remove({"event_id": event_id})
+        db.child("Events").child(event_id).remove()
+    except Exception as e:
+        print("Failed to delete event:", e)
+        return {'response_status': 1}
+    return {'response_status': 0}
+
 def get_event_with_id_db(data):
     try:
         if data['user_id'] is None:
@@ -460,32 +507,6 @@ def decline_invitation_db(data):
     except Exception as e:
         print("Failed to decline invitation:", e)
         return {'response_status': 1}
-
-def add_new_availability(availability_info):
-    user_id = availability_info['user_id']
-    availability_id = secrets.token_hex(16)
-    data = {
-        'name': availability_info['name'],
-        'desc': availability_info['desc'],
-        'start_time': availability_info['start_time'],
-        'end_time': availability_info['end_time'],
-        'start_date': availability_info['start_date'],
-        'end_date': availability_info['end_date'],
-        'location': availability_info['location'],
-        'calendar': availability_info['calendar'],
-        'repetition_type': availability_info['repetition_type'],
-        'repetition_unit': availability_info['repetition_unit'],
-        'repetition_val': availability_info['repetition_val']
-    }
-    try:
-        caldata = db.child("User").child(user_id).child("calendars").child(data['calendar']).get().val()
-        calendar_id = caldata['calendar_id']
-        print(calendar_id)
-        db.child("Calendars").child(calendar_id).child("Availability").child(availability_id).set(data)
-    except Exception as e:
-        print("Failed to create calendar:", e)
-        return 1
-    return 0
 
 
 # this func is to get the default calendar type

@@ -45,6 +45,40 @@ def create_event():
         response.status_code = 206
     return response
 
+@calendar.route('/update_event', methods=['POST'])
+def update_event():
+    receive_event = request.get_json()
+    try:
+        ret = update_event_db(receive_event)
+        if ret == 1:
+            response = jsonify({'error': 'event not updated'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
+@calendar.route('/delete_event', methods=['POST'])
+def delete_event():
+    receive_event = request.get_json()
+    try:
+        ret = delete_event_db(receive_event)
+        if ret == 1:
+            response = jsonify({'error': 'event not deleted'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
 @calendar.route('/invite_users_to_event', methods=['POST'])
 def invite_users_to_event():
     receive_event = request.get_json()
