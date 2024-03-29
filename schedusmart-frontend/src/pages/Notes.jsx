@@ -95,7 +95,7 @@ export default function Notes() {
             type="text"
           />
 
-          <button onClick={handleSubmit}>
+          <button data-testid="test1" onClick={handleSubmit}>
             {editIndex === -1 ? <AddIcon /> : <EditIcon />}
           </button>
         </form>
