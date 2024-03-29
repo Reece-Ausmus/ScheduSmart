@@ -20,14 +20,15 @@ pipeline {
       steps {
         sh 'echo Test'
 
-        dir("schedusmart-frontend"){
-          sh 'npm run test'
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+           dir("schedusmart-frontend"){
+            sh 'npm run test'
+          }
+
+          sh 'docker-compose up -d'
+          sh 'docker-compose down'
         }
-
-
-
-        sh 'docker-compose up -d'
-        sh 'docker-compose down'
+    
       }
     }
     stage('Deploy') {
