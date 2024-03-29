@@ -148,25 +148,6 @@ def get_events():
         response.status_code = 201
     return response
 
-
-@account.route('/create_availability', methods=['POST'])
-def create_availability():
-    receive_availability = request.get_json()
-    try:
-        ret = add_new_availability(receive_availability)
-        if ret == 1:
-            response = jsonify({'error': 'availability not created'})
-            response.status_code = 205
-        else:
-            response = jsonify({'message': 'Done'})
-            response.status_code = 201
-    except:
-        traceback.print_exc()
-        response = jsonify({'error': 'missing information'})
-        response.status_code = 206
-    return response
-
-
 @account.route('/update_task', methods=['POST'])
 def update_task_list():
     receive_event = request.get_json()
