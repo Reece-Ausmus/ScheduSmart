@@ -4,6 +4,8 @@
     "@iconify/react": "^4.1.1",
     "@mui/x-charts": "^7.1.0",
     "@mui/x-data-grid": "^7.1.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.2",
     "file-server": "^2.2.1",
     "firebase": "^10.9.0",
     "google-map-react": "^2.2.1",
