@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { DateTime } from "luxon";
+import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
 const userId = sessionStorage.getItem("user_id");
@@ -109,20 +115,26 @@ export default function TimezoneConverter() {
 
   return (
     <div>
-      <div
-        style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}
-      >
-        <select value={selectedTimezone} onChange={handleTimezoneChange}>
-          <option value="" disabled>
-            Select Timezone
-          </option>
-          {timezoneOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <p style={{ marginLeft: "10px" }}>Current Time: {currentTime}</p>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+        <Typography variant="body1" style={{ marginLeft: "10px" }}>Current Time:{currentTime}</Typography>
+        <Typography variant="body1" style={{ marginLeft: "10px" }}>Time zone:</Typography>
+        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+          <Select
+            labelId="timezone-select-label"
+            id="timezone-select"
+            value={selectedTimezone}
+            onChange={handleTimezoneChange}
+          >
+            <MenuItem value="" disabled>
+              Select Timezone
+            </MenuItem>
+            {timezoneOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
     </div>
   );

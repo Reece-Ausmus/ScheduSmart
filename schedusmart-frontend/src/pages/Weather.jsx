@@ -1,4 +1,7 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
@@ -24,10 +27,10 @@ export default function Weather() {
           const userId = responseData.user_id;
           try {
             fetch(`${api.base}weather?q=${responseData.location}&units=imperial&APPID=${api.key}`)
-                .then((res) => res.json())
-                .then((result) => {
-                  setWeather(result);
-            });
+              .then((res) => res.json())
+              .then((result) => {
+                setWeather(result);
+              });
           } catch {
             console.log("Error! Set location data in settings!")
           }
@@ -55,13 +58,21 @@ export default function Weather() {
 
   return (
     <>
-      {typeof weather.main != "undefined" ? (
-        <>
-          The temperature in {weather.name} is {weather.main.temp} ℉.
-        </>
-      ) : (
-        "Please set location in settings to recieve weather information"
-      )}
+      {/* <Card variant="outlined" style={{ height: '60px' }}>
+        <CardContent> */}
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+          {typeof weather.main !== "undefined" ? (
+            <Typography variant="body1">
+              The temperature in {weather.name} is {weather.main.temp} ℉.
+            </Typography>
+          ) : (
+            <Typography variant="body1">
+              Please set location in settings to receive weather information
+            </Typography>
+          )}
+          </div>
+        {/* </CardContent>
+      </Card> */}
     </>
   );
 }
