@@ -7,18 +7,32 @@ pipeline {
       steps {
         sh 'echo Build'
         sh 'docker-compose build --no-cache'
+
+        dir("schedusmart-frontend"){
+          sh 'npm install --force'
+        }
+        //dir("schedusmart-backend"){
+        //  sh 'pip install -r requirements.txt'
+        //}
       }
     }
     stage('Test') {
       steps {
         sh 'echo Test'
+
+        dir("schedusmart-frontend"){
+          sh 'npm run test'
+        }
+
+
+
         sh 'docker-compose up -d'
+        sh 'docker-compose down'
       }
     }
     stage('Deploy') {
       steps {
         sh 'echo Deploy'
-        sh 'docker-compose down'
 
         // docker login 
         //withCredentials([usernamePassword(credentialsId: passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
