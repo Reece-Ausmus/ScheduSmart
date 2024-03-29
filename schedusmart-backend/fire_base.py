@@ -426,13 +426,26 @@ def delete_event_db(event_info):
         event_id = event_info['event_id']
         event = db.child("Events").child(event_id).get().val()
         calendar_id = event['calendar']
-        emails = event['emails']
-        for email in emails:
-            safe_email = email.replace(".", ",").replace("@", "_")
-            db.child("Invitations").child(safe_email).child(event_id).set({'status': 'deleted'})
-        db.child("Calendars").child(calendar_id).child("Events").get().val().remove({"event_id": event_id})
+        try:
+            emails = event['emails']
+            for email in emails:
+                safe_email = email.replace(".", ",").replace("@", "_")
+                db.child("Invitations").child(safe_email).child(event_id).set({'status': 'deleted'})
+        except Exception as e:
+            print("no emails")
+        event_list = db.child("Calendars").child(calendar_id).child("Events").get().val()
+        matching_event_id = None
+        for key, value in event_list.items():
+            if value['event_id'] == event_id:
+                matching_event_id = key
+                break
+        if matching_event_id is not None:
+            db.child("Calendars").child(calendar_id).child("Events").child(matching_event_id).remove()
+        else:
+            print("Event_id not found")
         db.child("Events").child(event_id).remove()
     except Exception as e:
+        traceback.print_exc()
         print("Failed to delete event:", e)
         return {'response_status': 1}
     return {'response_status': 0}

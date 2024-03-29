@@ -27,8 +27,6 @@
   margin: 10px;
 }
 
-
-
 .calender_container {
   position: absolute;
   width: 60%;
@@ -147,7 +145,6 @@
   width: 10%;
 }
 
-
 .popup {
   background-color: white;
   padding: 20px;
@@ -176,6 +173,12 @@
 }
 .fb2 {
   margin-left: 20px;
+}
+
+.formbuttondelete {
+  color: red;
+  margin-left: 20px;
+  margin-top: 10px;
 }
 
 .isDates-grey {

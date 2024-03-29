@@ -67,7 +67,8 @@ def delete_event():
     receive_event = request.get_json()
     try:
         ret = delete_event_db(receive_event)
-        if ret == 1:
+        status = ret['response_status']
+        if status == 1:
             response = jsonify({'error': 'event not deleted'})
             response.status_code = 205
         else:

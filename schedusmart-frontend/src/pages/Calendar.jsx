@@ -168,6 +168,50 @@ export default function Calendar(selectMode, e, d) {
     toggleShowUpdateEventPopup();
   };
 
+  const handleDeleteEvent = async () => {
+    const new_event = {
+      user_id: user_id,
+      event_id: eventId,
+    };
+    const response = await fetch(flaskURL + "/delete_event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(new_event),
+      credentials: "include",
+    });
+    if (!response.ok) {
+      alert("Something went wrong, refresh your website!");
+      return;
+    } else {
+      switch (response.status) {
+        case 201:
+          console.log("Event deleted successfully");
+          break;
+        case 205:
+          alert("Event not deleted!");
+          break;
+        case 206:
+          alert("Missing information!");
+          break;
+      }
+    }
+
+    setEventName("");
+    setEventStartDate("");
+    setEventEndDate("");
+    setEventStartTime("");
+    setEventEndTime("");
+    setEventLocation("");
+    setEventDescription("");
+    setEventType("");
+    setEventRepetitionType("none");
+    setEventCustomFrequencyUnit("");
+    setEventCustomFrequencyValue(1);
+    toggleShowUpdateEventPopup();
+  };
+
   // END UPDATE EVENT STUFF
 
   console.log(d.format("MM/DD"));
@@ -510,6 +554,9 @@ export default function Calendar(selectMode, e, d) {
                 onClick={toggleShowUpdateEventPopup}
               >
                 Cancel
+              </button>
+              <button className="formbuttondelete" onClick={handleDeleteEvent}>
+                DELETE
               </button>
             </div>
           </div>
