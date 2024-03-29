@@ -1103,100 +1103,107 @@ export default function MainFrame() {
     );
   }
 
+  const d = moment();
+  const [currentTime, setCurrentTime] = useState(d);
+
+
   function calendarControlFlowButtonPackage() {
-    /*const d = moment();
-    const [currentTime, setCurrentTime] = useState(d);
+    //const d = moment();
+    //const [currentTime, setCurrentTime] = useState(d);
     
-    // plus
-    useHotkeys('Shift+p', () => {
-      //today.setDate(today.getDate() + 1)
-      //console.log(today.toString())
-      console.log(selectMode)
+    // next
+    useHotkeys('Shift+n', () => {
+      /*console.log(today.toString())
+      console.log(String(today.getFullYear()))
+      console.log(String(today.getMonth))
+      console.log(String(today.getDate))
+      console.log(selectMode)*/
+     //console.log(d.format('MM/DD'));
+           
+      //console.log(d.format('MM/DD'));
+      setCurrentTime(moment(currentTime.add(1, 'days')))
+      updateToday(1)
+      //console.log(today.toDateString())
+      //setCurrentTime(today => {
+      //  today.setDate(today.getDate() + 1);
 
-      //setCurrentTime(moment(currentTime.add(1, "days")));
+      //});
+
       //console.log(currentTime.format('MM/DD'))
-      
-      switch(selectMode) {
-        case 1: case 2:
-          today.setDate(today.getDate() + 1)
-          //setCurrentTime(moment(currentTime.add(1, "days")));
 
-          setDetailInfo(
-            //const temp = currentTime.format('MM/DD')
-            //String(currentTime.format('MM/DD'))
-            String(today.getMonth() + 1) + "/" + String(today.getDate())
-          );
-          console.log(today)
-          break;
-        case 3:
-          today.setDate(today.getMonth() + 1)
-          setDetailInfo(monthArray[todayMonth]);
-          break;
-        case 4:
-          today.setFullYear(today.getFullYear() + 1)
-          break;
-      }
-      
-      setDetailInfo(
-        String(today.getMonth() + 1) + "/" + String(today.getDate())
-      );
+     
     });
-    // minus
-    useHotkeys('Shift+m', () => {
-      //today.setDate(today.getDate() - 1)
-      console.log(today.toString())
-    });*/
+
+    // prev
+    useHotkeys('Shift+p', () => {
+      setCurrentTime(moment(currentTime.subtract(1, 'days')))
+      updateToday(-1)
+      //console.log(today.toDateString)
+      //setCurrentTime(today => {
+      //  today.setDate(today.getDate() + 1);
+
+      //});
+
+      //console.log(currentTime.format('MM/DD'))
+
+     
+    });
 
     return (
-      <div className="buttonGroup">
-        <button
-          style={{ backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d" }}
-          className="modeButton"
-          id="1"
-          onClick={() => {
-            setSelectMode(1);
-            setDetailInfo(
-              String(today.getMonth() + 1) + "/" + String(today.getDate())
-            );
-          }}
-        >
-          day
-        </button>
-        <button
-          className="modeButton"
-          style={{ backgroundColor: selectMode == 2 ? "#cfcfcf" : "#2d2d2d" }}
-          id="2"
-          onClick={() => {
-            setSelectMode(2);
-            setDetailInfo(
-              String(today.getMonth() + 1) + "/" + String(today.getDate())
-            );
-          }}
-        >
-          week
-        </button>
-        <button
-          className="modeButton"
-          style={{ backgroundColor: selectMode == 3 ? "#cfcfcf" : "#2d2d2d" }}
-          id="3"
-          onClick={() => {
-            setSelectMode(3);
-            setDetailInfo(monthArray[todayMonth]);
-          }}
-        >
-          month
-        </button>
-        <button
-          className="modeButton"
-          style={{ backgroundColor: selectMode == 4 ? "#cfcfcf" : "#2d2d2d" }}
-          id="4"
-          onClick={() => {
-            setSelectMode(4);
-            setDetailInfo(todayYear);
-          }}
-        >
-          year
-        </button>
+      <div>
+        <h2 className="detailInfo">{currentTime.format('YYYY/MM/DD')}</h2>
+        <div>
+          <div className="buttonGroup">
+            <button
+              style={{ backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d" }}
+              className="modeButton"
+              id="1"
+              onClick={() => {
+                setSelectMode(1);
+                //setDetailInfo(
+                //</div>  String(today.getMonth() + 1) + "/" + String(today.getDate())
+                //);
+              }}
+            >
+              day
+            </button>
+            <button
+              className="modeButton"
+              style={{ backgroundColor: selectMode == 2 ? "#cfcfcf" : "#2d2d2d" }}
+              id="2"
+              onClick={() => {
+                setSelectMode(2);
+                //setDetailInfo(
+                //</div>  String(today.getMonth() + 1) + "/" + String(today.getDate())
+                //);
+              }}
+            >
+              week
+            </button>
+            <button
+              className="modeButton"
+              style={{ backgroundColor: selectMode == 3 ? "#cfcfcf" : "#2d2d2d" }}
+              id="3"
+              onClick={() => {
+                setSelectMode(3);
+                //setDetailInfo(monthArray[todayMonth]);
+              }}
+            >
+              month
+            </button>
+            <button
+              className="modeButton"
+              style={{ backgroundColor: selectMode == 4 ? "#cfcfcf" : "#2d2d2d" }}
+              id="4"
+              onClick={() => {
+                setSelectMode(4);
+                //setDetailInfo(todayYear);
+              }}
+            >
+              year
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -1538,6 +1545,7 @@ export default function MainFrame() {
       }
 
       const eventsArray = [];
+      //const today = new Date();
       const today = new Date();
       const localDay = new Date(
         today.getFullYear(),
@@ -1694,11 +1702,11 @@ export default function MainFrame() {
           {/* calendar_container */}
           <div className="calender_container">
             <div className="calender_container_controlbar">
-              <h2 className="detailInfo">{detailInfo}</h2>
+              {/*<div>{changeDate()}</div>*/}
               <div>{calendarControlFlowButtonPackage()}</div>
             </div>
             <div className="main_calnedar_box">
-              {Calendar(selectMode, allEventsArray)}
+              {Calendar(selectMode, allEventsArray, currentTime)}
             </div>
           </div>
         </div>

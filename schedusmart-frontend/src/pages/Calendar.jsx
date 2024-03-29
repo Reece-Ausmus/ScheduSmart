@@ -4,6 +4,7 @@ import "./MainFrame.css";
 import { useState, useRef, useEffect } from "react";
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 import send_request from "./requester";
+import moment from "moment";
 
 function firstDaySeeker(today) {
   let date = today.getDate();
@@ -18,8 +19,9 @@ function printerForMode3(date, lastDayInt) {
   return date > 0 && date <= lastDayInt ? date : null;
 }
 
-export default function Calendar(selectMode, e) {
-  const today = new Date();
+export default function Calendar(selectMode, e, d) {
+  console.log(d.format('MM/DD'))
+  const today = new Date(d);
   const localDay = new Date(
     today.getFullYear(),
     today.getMonth(),
@@ -28,6 +30,8 @@ export default function Calendar(selectMode, e) {
   const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
   const isoToday = localDay.toISOString();
   const todayString = isoToday.slice(0, 10);
+
+  console.log(todayString)
 
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = firstDaySeeker(today);
@@ -42,7 +46,7 @@ export default function Calendar(selectMode, e) {
       startDate: todayString,
       events: e,
     });
-  }, [e]);
+  }, [e, d]);
 
   return (
     <div className="sub_main_calnedar_box">
