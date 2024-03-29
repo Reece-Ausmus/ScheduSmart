@@ -10,14 +10,14 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppBar, Toolbar } from "@mui/material";
-import { orange, yellow } from "@mui/material/colors";
+import { orange } from "@mui/material/colors";
 import { DataGrid } from "@mui/x-data-grid";
 import "./Habits.css";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridRowModes } from "@mui/x-data-grid";
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart } from "@mui/x-charts/LineChart";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
@@ -65,6 +65,8 @@ export default function Habits() {
   const [sodium, setSodium] = useState("");
   const [sugar, setSugar] = useState("");
 
+  const [selectedColumns, setSelectedColumns] = useState([]);
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editedItemId, setEditedItemId] = useState("");
   const [editedItem, setEditedItem] = useState({});
@@ -82,7 +84,14 @@ export default function Habits() {
     setEditDialogOpen(false);
   };
 
+  const resetSelectedColumns = () => {
+    setSelectedColumns([]);
+  };
+
   const handleDeleteClick = (id) => {
+    // Clear selected columns when a habit is deleted
+    resetSelectedColumns();
+
     const updatedHabits = habits.filter((habit) => habit.id.toString() !== id);
     setHabits(updatedHabits);
   };
@@ -251,7 +260,12 @@ export default function Habits() {
               Export as CSV
             </Button>
           </div>
-          <CheckboxList columns={columns} habits={habits} />
+          <CheckboxList
+            columns={columns}
+            habits={habits}
+            selectedColumns={selectedColumns}
+            setSelectedColumns={setSelectedColumns}
+          />
         </div>
         <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
           <DialogTitle>Edit Item</DialogTitle>
@@ -275,10 +289,10 @@ export default function Habits() {
               fullWidth
               value={editedItem.calories || ""}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -293,10 +307,10 @@ export default function Habits() {
               fullWidth
               value={editedItem.carbs || ""}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -311,10 +325,10 @@ export default function Habits() {
               fullWidth
               value={editedItem.fat || ""}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -329,10 +343,10 @@ export default function Habits() {
               fullWidth
               value={editedItem.protein || ""}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -347,10 +361,10 @@ export default function Habits() {
               fullWidth
               value={editedItem.sodium || ""}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -365,10 +379,10 @@ export default function Habits() {
               fullWidth
               value={editedItem.sugar || ""}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -379,7 +393,9 @@ export default function Habits() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleEditDialogClose}>Cancel</Button>
-            <Button variant="contained" onClick={saveEditedHabit}>Save</Button>
+            <Button variant="contained" onClick={saveEditedHabit}>
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
 
@@ -403,10 +419,10 @@ export default function Habits() {
               fullWidth
               value={calories}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -419,10 +435,10 @@ export default function Habits() {
               fullWidth
               value={carbs}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -435,10 +451,10 @@ export default function Habits() {
               fullWidth
               value={fat}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -451,10 +467,10 @@ export default function Habits() {
               fullWidth
               value={protein}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -467,10 +483,10 @@ export default function Habits() {
               fullWidth
               value={sodium}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -483,10 +499,10 @@ export default function Habits() {
               fullWidth
               value={sugar}
               InputProps={{
-                inputProps: { min: 0 }
+                inputProps: { min: 0 },
               }}
               onKeyPress={(event) => {
-                if (event?.key === '-' || event?.key === '+') {
+                if (event?.key === "-" || event?.key === "+") {
                   event.preventDefault();
                 }
               }}
@@ -495,7 +511,9 @@ export default function Habits() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleDialogClose}>Cancel</Button>
-            <Button variant="contained" onClick={addHabit}>Add</Button>
+            <Button variant="contained" onClick={addHabit}>
+              Add
+            </Button>
           </DialogActions>
         </Dialog>
       </Container>

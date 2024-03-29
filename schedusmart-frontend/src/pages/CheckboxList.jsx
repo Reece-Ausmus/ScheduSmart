@@ -4,8 +4,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import { LineChart } from "@mui/x-charts/LineChart";
 
-const CheckboxList = ({ columns, habits }) => {
-  const [selectedColumns, setSelectedColumns] = useState([]);
+const CheckboxList = ({
+  columns,
+  habits,
+  selectedColumns,
+  setSelectedColumns,
+}) => {
   const [chartData, setChartData] = useState([]);
   const [totalValues, setTotalValues] = useState({});
 
@@ -61,7 +65,7 @@ const CheckboxList = ({ columns, habits }) => {
       sugar: "g",
     };
     return units[column] || "";
-  }
+  };
 
   return (
     <div style={{ display: "flex" }}>
@@ -88,7 +92,7 @@ const CheckboxList = ({ columns, habits }) => {
         <div>
           {selectedColumns.map((column) => (
             <h3 key={column}>
-              Total {column}: {totalValues[column]} {'(' + getUnitForColumn(column) + ')'}
+              Total {column}: {totalValues[column]} {getUnitForColumn(column)}
             </h3>
           ))}
         </div>
