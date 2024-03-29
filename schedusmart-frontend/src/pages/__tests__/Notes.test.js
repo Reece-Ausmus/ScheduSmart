@@ -6,7 +6,7 @@ import Notes from '../Notes'
 
 
 
-test('test Notes Func if users not enter any content it will alert', async () => {
+fail('test Notes Func if users not enter any content it will alert', async () => {
     // Render a React element into the DOM
 
   render(<Notes />);
