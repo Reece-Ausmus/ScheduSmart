@@ -125,3 +125,108 @@ def update_account_info():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
+# This route is for adding habits
+@account.route('/add_habit', methods=['POST'])
+def add_habit():
+    data = request.get_json()
+    try:
+        result = add_new_habit(data)
+        if result == 0:
+            response = jsonify({'message': 'Habit added successfully'})
+            response.status_code = 201
+        else:
+            response = jsonify({'error': 'Failed to add habit'})
+            response.status_code = 400
+    except Exception as e:
+        response = jsonify({'error': 'An error occured'})
+        response.status_code = 500
+    return response
+
+# This route is for updating habits
+@account.route('/update_habit', methods=['POST'])
+def update_habit():
+    data = request.get_json()
+    user_id = data['user_id']
+    edited_item = data['editedItem']
+    old_item_name = data['old_item_name']  # Previous itemName
+    new_item_name = edited_item['itemName']  # New itemName
+
+    # Construct the Firebase path for the habit to be updated
+    habit_path = f"/Habits/{user_id}/{old_item_name}"
+
+    # Update the habit data in Firebase
+    try:
+        # If the itemName has changed, delete the old folder and create a new one
+        if old_item_name != new_item_name:
+            # Read the data from the old path
+            old_habit_data = db.child(habit_path).get().val()
+
+            # Delete the old folder
+            db.child(habit_path).remove()
+
+            # Construct the Firebase path for the new habit location
+            new_habit_path = f"/Habits/{user_id}/{new_item_name}"
+
+            # Write the data to the new folder
+            db.child(new_habit_path).set(old_habit_data)
+        else:
+            # If itemName remains the same, update the existing folder without the itemName field
+            db.child(habit_path).update({k: v for k, v in edited_item.items() if k != 'itemName'})
+
+        return jsonify({'message': 'Habit updated successfully'}), 200
+    except Exception as e:
+        print("Failed to update habit:", e)
+        return jsonify({'error': 'Failed to update habit'}), 500
+
+# This route is for deleting habits
+@account.route('/delete_habit', methods=['POST'])
+def delete_habit():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    item_name = data.get('item_name')
+    
+    if not user_id or not item_name:
+        return jsonify({'error': 'User ID and habit ID are required parameters'}), 400
+
+    # Construct the Firebase path to the habit
+    habit_path = f"/Habits/{user_id}/{item_name}"
+
+    # Delete the habit from the Firebase database
+    try:
+        db.child(habit_path).remove()
+        return jsonify({'message': 'Habit deleted successfully'}), 200
+    except Exception as e:
+        print("Failed to delete habit:", e)
+        return jsonify({'error': 'Failed to delete habit'}), 500
+    
+# This route is for getting all habits for a user
+@account.route('/get_habits', methods=['POST'])
+def get_habits():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's habits
+    user_habits_path = f"/Habits/{user_id}"
+
+    try:
+        # Get all habits for the user from the Firebase database
+        user_habits = db.child(user_habits_path).get()
+        
+        # If the user has no habits, return an empty list
+        if not user_habits.val():
+            return jsonify({'habits': []}), 200
+        
+        # Convert Firebase response to list of habits
+        habits_list = []
+        for habit_name, habit_data in user_habits.val().items():
+            habit_data['itemName'] = habit_name
+            habits_list.append(habit_data)
+        
+        return jsonify({'habits': habits_list}), 200
+    except Exception as e:
+        print("Failed to get habits:", e)
+        return jsonify({'error': 'Failed to get habits'}), 500

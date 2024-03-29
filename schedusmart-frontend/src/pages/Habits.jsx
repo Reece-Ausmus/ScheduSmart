@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { saveAs } from "file-saver";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -23,6 +23,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import CheckboxList from "./CheckboxList";
 import Dashboard from "./Dashboard";
+
+const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
+const userId = sessionStorage.getItem("user_id");
 
 const theme = createTheme({
   palette: {
@@ -70,6 +73,35 @@ export default function Habits() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editedItemId, setEditedItemId] = useState("");
   const [editedItem, setEditedItem] = useState({});
+  const [oldItemName, setOldItemName] = useState(""); // Storing previous name
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${flaskURL}/get_habits`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+          }),
+        });
+        if (response.ok) {
+          const responseData = await response.json();
+          setHabits(responseData.habits);
+        } else {
+          console.error("Error fetching habits: ", response.statusText);
+          alert("Failed to fetch habits. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error fetching habits: ", error);
+        alert("An error occurred while fetching habits.");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleEditClick = (id) => {
     const itemToEdit = habits.find((habit) => habit.id.toString() === id);
@@ -77,6 +109,7 @@ export default function Habits() {
       setEditedItem(itemToEdit);
       setEditedItemId(id);
       setEditDialogOpen(true);
+      setOldItemName(itemToEdit.itemName);
     }
   };
 
@@ -88,13 +121,51 @@ export default function Habits() {
     setSelectedColumns([]);
   };
 
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = async (id) => {
     // Clear selected columns when a habit is deleted
     resetSelectedColumns();
+  
+    try {
+      // Find the habit based on the id
+      const habitToDelete = habits.find((habit) => habit.id.toString() === id);
+      if (!habitToDelete) {
+        console.error("Error deleting habit: Habit not found");
+        alert("Failed to delete habit. Habit not found.");
+        return;
+      }
 
-    const updatedHabits = habits.filter((habit) => habit.id.toString() !== id);
-    setHabits(updatedHabits);
-  };
+      const response = await fetch(flaskURL + "/delete_habit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          item_name: habitToDelete.itemName, // Pass the itemName from the habit to be deleted
+        }),
+      });
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData.message); // Log success message
+        
+        // Remove the habit from the state
+        const updatedHabits = habits.filter(
+          (habit) => habit.id.toString() !== id
+        );
+        setHabits(updatedHabits);
+      } else {
+        const errorData = await response.json();
+        console.error("Error deleting habit: ", errorData.error);
+        alert("Failed to delete habit. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting habit: ", error);
+      alert("An error occurred while deleting the habit.");
+    }
+};
+
+  
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
@@ -104,31 +175,58 @@ export default function Habits() {
     setOpenDialog(false);
   };
 
-  const saveEditedHabit = () => {
-    const updatedHabits = habits.map((habit) => {
-      if (habit.id.toString() === editedItemId) {
-        return {
-          ...habit,
-          itemName: editedItem.itemName,
-          calories: editedItem.calories,
-          carbs: editedItem.carbs,
-          fat: editedItem.fat,
-          protein: editedItem.protein,
-          sodium: editedItem.sodium,
-          sugar: editedItem.sugar,
-        };
+  const saveEditedHabit = async () => {
+    try {
+      const response = await fetch(flaskURL + "/update_habit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          editedItem,
+          old_item_name: oldItemName,
+        }),
+      });
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log(responseData.message); // Log success message
+        
+        // Update habits state or perform any necessary actions
+        const updatedHabits = habits.map((habit) =>
+          habit.id.toString() === editedItemId ? editedItem : habit
+        );
+        setHabits(updatedHabits);
+  
+        // Set the edited data in the table
+        const editedRowIndex = habits.findIndex(
+          (habit) => habit.id.toString() === editedItemId
+        );
+        if (editedRowIndex !== -1) {
+          const updatedRows = [...habits];
+          updatedRows[editedRowIndex] = editedItem;
+          setHabits(updatedRows);
+        }
+        
+        handleEditDialogClose();
+      } else {
+        const errorData = await response.json();
+        console.error("Error updating habit: ", errorData.error);
+        alert("Failed to update habit. Please try again.");
       }
-      return habit;
-    });
-    setHabits(updatedHabits);
-    handleEditDialogClose();
+    } catch (error) {
+      console.error("Error updating habit: ", error);
+      alert("An error occurred while updating the habit.");
+    }
   };
+  
 
-  const addHabit = () => {
+  const addHabit = async () => {
     if (itemName.trim() !== "" && calories.trim() !== "") {
       const newHabit = {
-        id: habits.length + 1,
         itemName: itemName.trim(),
+        id: habits.length + 1,
         calories: parseFloat(calories),
         carbs: parseFloat(carbs) || 0,
         fat: parseFloat(fat) || 0,
@@ -136,19 +234,48 @@ export default function Habits() {
         sodium: parseFloat(sodium) || 0,
         sugar: parseFloat(sugar) || 0,
       };
-      setHabits([...habits, newHabit]);
-      setItemName("");
-      setCalories("");
-      setCarbs("");
-      setFat("");
-      setProtein("");
-      setSodium("");
-      setSugar("");
-      handleDialogClose();
+  
+      try {
+        const response = await fetch(flaskURL + "/add_habit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            ...newHabit,
+          }),
+        });
+  
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log(responseData.message); // Log success message
+          // Update habits state or perform any necessary actions
+          setHabits([...habits, newHabit]);
+          // Clear input fields and close dialog
+          setItemName("");
+          setCalories("");
+          setCarbs("");
+          setFat("");
+          setProtein("");
+          setSodium("");
+          setSugar("");
+          setOpenDialog(false);
+        } else {
+          const errorData = await response.json();
+          console.error("Error adding habit: ", errorData.error);
+          alert("Failed to add habit. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error adding habit: ", error);
+        alert("An error occurred while adding the habit.");
+      }
     } else {
       alert("Item Name and Calories are required fields.");
     }
   };
+  
+
 
   const generateCSV = () => {
     const csvData = [
@@ -183,29 +310,6 @@ export default function Habits() {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <AppBar position="static" color="primary">
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Button variant="contained" href="./calendar">
-            <CalendarMonthIcon sx={{ marginRight: 1 }} />
-            <Typography variant="body1">ScheduSmart</Typography>
-          </Button>
-          <div>
-            <Button color="inherit" href="./settings">
-              Settings
-            </Button>
-            <Button variant="inherit" href="./calendar">
-                <CalendarMonthIcon sx={{ marginRight: 1 }} />
-            </Button>
-            <Button color="secondary">Habits</Button>
-            <Button color="inherit" href="./notes">
-              Notes
-            </Button>
-            <Button color="inherit" href="./signout">
-              Sign Out
-            </Button>
-          </div>
-        </Toolbar>
-      </AppBar> */}
       <div>{Dashboard()}</div>
       <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
         <div className="habits-container">
