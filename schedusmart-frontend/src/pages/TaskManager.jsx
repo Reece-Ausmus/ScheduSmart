@@ -3,37 +3,44 @@ import "./TaskManager.css";
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 import FileUpload from "./FileUpload";
-import { storage } from "./Firebase"
-import { listAll, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { storage } from "./Firebase";
+import { listAll, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import CssBaseline from "@mui/material/CssBaseline";
-import { v4 } from "uuid"
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { v4 } from "uuid";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
+import InputLabel from "@mui/material/InputLabel";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { orange, grey } from "@mui/material/colors";
-import Fab from '@mui/material/Fab';
-import Icon from '@mui/material/Icon';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';;
-import TextField from '@mui/material/TextField';
-import EventParser from "./EventParser"
-import PropTypes from 'prop-types';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-import { Table, TableHead, TableBody, TableRow, TableCell, Grid } from '@mui/material';
+import Fab from "@mui/material/Fab";
+import Icon from "@mui/material/Icon";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import TextField from "@mui/material/TextField";
+import EventParser from "./EventParser";
+import PropTypes from "prop-types";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Grid,
+} from "@mui/material";
 import send_request from "./requester";
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import Dashboard from "./Dashboard";
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
@@ -56,7 +63,7 @@ const theme = createTheme({
   },
 });
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 const handleCreateTaskCalendar = async () => {
   const new_calendar = {
@@ -94,11 +101,38 @@ const handleCreateTaskCalendar = async () => {
 };
 
 // valid file extension list
-const validExtensions = ["txt", "rtf", "docx", "csv", "doc", "wps", "wpd", "msg",
-  "jpg", "png", "webp", "gif", "tif", "bmp", "eps", "mp3",
-  "wma", "snd", "wav", "ra", "au", "aac", "mp4", "3gp",
-  "avi", "mpg", "mov", "wmv", "xlsx", "pdf"];
-
+const validExtensions = [
+  "txt",
+  "rtf",
+  "docx",
+  "csv",
+  "doc",
+  "wps",
+  "wpd",
+  "msg",
+  "jpg",
+  "png",
+  "webp",
+  "gif",
+  "tif",
+  "bmp",
+  "eps",
+  "mp3",
+  "wma",
+  "snd",
+  "wav",
+  "ra",
+  "au",
+  "aac",
+  "mp4",
+  "3gp",
+  "avi",
+  "mpg",
+  "mov",
+  "wmv",
+  "xlsx",
+  "pdf",
+];
 
 // initial list for new users
 const initialList = [
@@ -110,9 +144,11 @@ const initialList = [
     desc: "Complete design document and sumbit",
     completed: false,
     completed_time: null,
-    sub_tasks: [{ id: 0, name: "Question 1", comp: true },
-    { id: 1, name: "Question 2", comp: true },
-    { id: 2, name: "Question 3", comp: false },],
+    sub_tasks: [
+      { id: 0, name: "Question 1", comp: true },
+      { id: 1, name: "Question 2", comp: true },
+      { id: 2, name: "Question 3", comp: false },
+    ],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
     time_allo: 0,
@@ -125,9 +161,11 @@ const initialList = [
     desc: "Speak with team coordinator",
     completed: false,
     completed_time: null,
-    sub_tasks: [{ id: 0, name: "Backlog", comp: false },
-    { id: 1, name: "User Stories", comp: false },
-    { id: 2, name: "Acceptable Criteria", comp: false },],
+    sub_tasks: [
+      { id: 0, name: "Backlog", comp: false },
+      { id: 1, name: "User Stories", comp: false },
+      { id: 2, name: "Acceptable Criteria", comp: false },
+    ],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
     time_allo: 0,
@@ -140,9 +178,11 @@ const initialList = [
     desc: "Look at slides lol",
     completed: false,
     completed_time: null,
-    sub_tasks: [{ id: 0, name: "Chapter 1", comp: true },
-    { id: 1, name: "Chapter 2", comp: false },
-    { id: 2, name: "Chapter 3", comp: false },],
+    sub_tasks: [
+      { id: 0, name: "Chapter 1", comp: true },
+      { id: 1, name: "Chapter 2", comp: false },
+      { id: 2, name: "Chapter 3", comp: false },
+    ],
     file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
     scheduled: false,
     time_allo: 0,
@@ -150,7 +190,6 @@ const initialList = [
 ];
 let nextId = initialList.length;
 let calendarId = 0;
-
 
 // create new task manager
 export default function TaskManager() {
@@ -172,23 +211,28 @@ export default function TaskManager() {
         case 201:
           const responseData = await response.json();
           const userId = responseData.user_id;
-          if (responseData.task_list !== null && responseData.task_list !== undefined) {
+          if (
+            responseData.task_list !== null &&
+            responseData.task_list !== undefined
+          ) {
             let temporaryToDoList = [];
             let temporaryCompleteList = [];
             responseData.task_list.map((task) => {
-              task.completed ? temporaryCompleteList.push(task) : temporaryToDoList.push(task);
+              task.completed
+                ? temporaryCompleteList.push(task)
+                : temporaryToDoList.push(task);
             });
             console.log("TodoList", temporaryToDoList);
             console.log("CompleteList", temporaryCompleteList);
-            setTodoList(temporaryToDoList)
+            setTodoList(temporaryToDoList);
             setCompletedList(temporaryCompleteList);
             nextId = todoList.length;
           }
           console.log(userId);
           if (responseData.calendars == null) {
-            handleCreateTaskCalendar()
+            handleCreateTaskCalendar();
           } else if (responseData.calendars["tasks"] == null) {
-            handleCreateTaskCalendar()
+            handleCreateTaskCalendar();
           } else {
             calendarId = responseData.calendars["tasks"].calendar_id;
           }
@@ -224,7 +268,7 @@ export default function TaskManager() {
 
   const [subtaskList, setSubtaskList] = useState([]);
   const [subtaskDesc, setSubtaskDesc] = useState("");
-  const [file, setFile] = useState(null)
+  const [file, setFile] = useState(null);
 
   // Task creator pop-up
   const modal = document.querySelector("#modal");
@@ -273,25 +317,27 @@ export default function TaskManager() {
     let mapped = todoList.map((task) => {
       if (task.id == id) {
         let sub_mapped = task.sub_tasks.map((sub_task) => {
-          return sub_task.id == sub_id ? { ...sub_task, comp: checked } : { ...sub_task };
-        })
-        return { ...task, sub_tasks: sub_mapped }
+          return sub_task.id == sub_id
+            ? { ...sub_task, comp: checked }
+            : { ...sub_task };
+        });
+        return { ...task, sub_tasks: sub_mapped };
       } else {
         return { ...task };
       }
-    })
-    setTodoList(mapped)
+    });
+    setTodoList(mapped);
   }
 
   function handleScheduledTask(id, time) {
     let mapped = todoList.map((task) => {
       if (task.id == id) {
-        return { ...task, scheduled: true, time_allo: time }
+        return { ...task, scheduled: true, time_allo: time };
       } else {
-        return { ...task }
+        return { ...task };
       }
-    })
-    setTodoList(mapped)
+    });
+    setTodoList(mapped);
   }
 
   // search list
@@ -335,7 +381,6 @@ export default function TaskManager() {
     }
     setSearchQueryCompleted(keyword);
   };
-
 
   const [selectedFormat, setSelectedFormat] = useState("pdf");
 
@@ -383,7 +428,7 @@ export default function TaskManager() {
     // Add completed task items with spacing (modify as needed)
     completedList.forEach((task) => {
       doc.text(task.title, 15, y);
-      y += lineHeight * 2;  // Adjust spacing as needed
+      y += lineHeight * 2; // Adjust spacing as needed
     });
 
     try {
@@ -401,7 +446,15 @@ export default function TaskManager() {
   const generateCSV = () => {
     const allTasks = [...todoList, ...completedList]; // Combine all tasks
     const csvData = [
-      ["ID", "Title", "Description", "Workload (hours)", "Deadline", "Completed", "Completed Time"],
+      [
+        "ID",
+        "Title",
+        "Description",
+        "Workload (hours)",
+        "Deadline",
+        "Completed",
+        "Completed Time",
+      ],
       ...allTasks.map((task) => [
         task.id,
         task.title,
@@ -409,7 +462,9 @@ export default function TaskManager() {
         task.time,
         task.date,
         task.completed,
-        task.completed_time ? new Date(task.completed_time).toLocaleString() : "",
+        task.completed_time
+          ? new Date(task.completed_time).toLocaleString()
+          : "",
       ]),
     ];
 
@@ -437,17 +492,19 @@ export default function TaskManager() {
   };
 
   function uploadFile(fileRef, file) {
-    uploadBytes(fileRef, file).then(() => {
-      console.log("File Uploaded")
-    }).then(() => {
-      getDownloadURL(fileRef).then((url) => {
-        console.log(url)
+    uploadBytes(fileRef, file)
+      .then(() => {
+        console.log("File Uploaded");
       })
-    })
+      .then(() => {
+        getDownloadURL(fileRef).then((url) => {
+          console.log(url);
+        });
+      });
   }
 
   const saveTasks = async () => {
-    let saveList = [...todoList, ...completedList]
+    let saveList = [...todoList, ...completedList];
     console.log(saveList);
     const info = {
       user_id: userId,
@@ -466,7 +523,7 @@ export default function TaskManager() {
       switch (response.status) {
         case 201:
           console.log("Updated task list!");
-          alert("Task list saved!")
+          alert("Task list saved!");
           break;
         case 205:
           console.log("Failed to save task list! Check Connection!");
@@ -478,7 +535,7 @@ export default function TaskManager() {
           break;
       }
     }
-  }
+  };
 
   //handle dialog
   const [open, setOpen] = React.useState(false);
@@ -496,9 +553,22 @@ export default function TaskManager() {
       <div>{Dashboard()}</div>
       <CssBaseline />
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <h1>Task List</h1>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 10 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 10,
+            }}
+          >
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <InputLabel id="f_format">Option</InputLabel>
               <Select
@@ -507,23 +577,26 @@ export default function TaskManager() {
                 value={selectedFormat}
                 label="f_forma"
                 onChange={(e) => setSelectedFormat(e.target.value)}
-                style={{ minWidth: '120px' }}
+                style={{ minWidth: "120px" }}
               >
                 <MenuItem value="pdf">PDF</MenuItem>
                 <MenuItem value="csv">CSV</MenuItem>
               </Select>
             </FormControl>
-            <Button variant="contained" onClick={handleExport}>Export as {selectedFormat.toUpperCase()}</Button>
+            <Button variant="contained" onClick={handleExport}>
+              Export as {selectedFormat.toUpperCase()}
+            </Button>
           </div>
         </div>
       </div>
-
 
       <div className="task-columns-container">
         <div className="task-column">
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <h2 style={{ margin: 0 }}>To Do</h2>
                 <Fab
                   aria-label="add"
@@ -543,14 +616,16 @@ export default function TaskManager() {
               </div>
             </Grid>
             <Grid item>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <TextField
                   type="search"
                   label="Search"
                   variant="outlined"
                   value={searchQueryTodo}
                   onChange={filterTodo}
-                  style={{ width: '200px' }}
+                  style={{ width: "200px" }}
                   size="small"
                 />
                 <FormControl sx={{ m: 1, width: 200 }} size="small">
@@ -578,7 +653,12 @@ export default function TaskManager() {
           <dialog id="modal">
             <DialogTitle>Add tasks:</DialogTitle>
             <DialogContent>
-              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }} >
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                style={{ marginBottom: "15px" }}
+              >
                 <Grid item>
                   <DialogContentText>Task Name:</DialogContentText>
                 </Grid>
@@ -591,7 +671,12 @@ export default function TaskManager() {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                style={{ marginBottom: "15px" }}
+              >
                 <Grid item>
                   <DialogContentText>Workload:</DialogContentText>
                 </Grid>
@@ -605,7 +690,12 @@ export default function TaskManager() {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                style={{ marginBottom: "15px" }}
+              >
                 <Grid item>
                   <DialogContentText>Due Date:</DialogContentText>
                 </Grid>
@@ -618,7 +708,12 @@ export default function TaskManager() {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                style={{ marginBottom: "15px" }}
+              >
                 <Grid item>
                   <DialogContentText>Description:</DialogContentText>
                 </Grid>
@@ -631,7 +726,12 @@ export default function TaskManager() {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                style={{ marginBottom: "15px" }}
+              >
                 <Grid item>
                   <DialogContentText>Attachment:</DialogContentText>
                 </Grid>
@@ -639,26 +739,36 @@ export default function TaskManager() {
                   <input
                     type="file"
                     onChange={(event) => {
-                      let file_exen = event.target.files[0].name.split(".").pop()
-                      let valid = false
+                      let file_exen = event.target.files[0].name
+                        .split(".")
+                        .pop();
+                      let valid = false;
                       validExtensions.map((extension) => {
-                        if (file_exen == extension)
-                          valid = true;
-                      })
+                        if (file_exen == extension) valid = true;
+                      });
                       if (valid) {
-                        setFile(event.target.files[0])
-                        let ref_url = `files/${event.target.files[0].name + v4()}`
+                        setFile(event.target.files[0]);
+                        let ref_url = `files/${
+                          event.target.files[0].name + v4()
+                        }`;
                         const fileRef = ref(storage, ref_url);
-                        uploadFile(fileRef, event.target.files[0])
-                        setTaskFile(fileRef.name)
+                        uploadFile(fileRef, event.target.files[0]);
+                        setTaskFile(fileRef.name);
                       } else {
-                        alert("Invalid File! Only image, text, audio, or video files allowed!")
+                        alert(
+                          "Invalid File! Only image, text, audio, or video files allowed!"
+                        );
                       }
                     }}
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={2} alignItems="center" style={{ marginBottom: '15px' }}>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                style={{ marginBottom: "15px" }}
+              >
                 <Grid item>
                   <DialogContentText>Add subtask:</DialogContentText>
                 </Grid>
@@ -668,7 +778,7 @@ export default function TaskManager() {
                     value={subtaskDesc}
                     size="small"
                     onChange={(e) => setSubtaskDesc(e.target.value)}
-                    style={{ marginRight: '10px' }}
+                    style={{ marginRight: "10px" }}
                   />
                   <Fab
                     aria-label="add"
@@ -683,22 +793,21 @@ export default function TaskManager() {
                           comp: false,
                         },
                       ]);
-                    }}>
+                    }}
+                  >
                     <AddIcon />
                   </Fab>
                 </Grid>
               </Grid>
               <ol>
                 {subtaskList.map((subtask) => (
-                  <li key={subtask.id}>
-                    {subtask.name}
-                  </li>
+                  <li key={subtask.id}>{subtask.name}</li>
                 ))}
               </ol>
 
               <button
                 id="closeModal"
-                style={{ marginRight: '10px' }}
+                style={{ marginRight: "10px" }}
                 onClick={() => {
                   if (subtaskList != [] && taskDate != "") {
                     setTodoList([
@@ -717,20 +826,26 @@ export default function TaskManager() {
                       },
                     ]);
                   } else {
-                    alert("Error! Missing Information! Please try again!")
+                    alert("Error! Missing Information! Please try again!");
                   }
-                }
-                }> Add </button>
-              <button id="closeModal" onClick={() => {
-                // Reset all the form fields or close the dialog
-                setTaskName("New Task");
-                setTaskTime(0);
-                setTaskDesc("Task Description");
-                setSubtaskDesc("");
-                setSubtaskList([]);
-                setTaskFile("");
-                document.getElementById('modal').close();
-              }}>
+                }}
+              >
+                {" "}
+                Add{" "}
+              </button>
+              <button
+                id="closeModal"
+                onClick={() => {
+                  // Reset all the form fields or close the dialog
+                  setTaskName("New Task");
+                  setTaskTime(0);
+                  setTaskDesc("Task Description");
+                  setSubtaskDesc("");
+                  setSubtaskList([]);
+                  setTaskFile("");
+                  document.getElementById("modal").close();
+                }}
+              >
                 Cancel
               </button>
             </DialogContent>
@@ -747,11 +862,25 @@ export default function TaskManager() {
         </div>
 
         <div className="task-column">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px' }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "10px",
+            }}
+          >
             <h2 style={{ marginLeft: 0 }}>Completed</h2>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <TextField type="search" label="Search" variant="outlined" value={searchQueryCompleted}
-                onChange={filterCompleted} style={{ width: '200px' }} size="small" />
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <TextField
+                type="search"
+                label="Search"
+                variant="outlined"
+                value={searchQueryCompleted}
+                onChange={filterCompleted}
+                style={{ width: "200px" }}
+                size="small"
+              />
               <FormControl sx={{ m: 1, width: 200 }} size="small">
                 <InputLabel id="c_sorting">Sort</InputLabel>
                 <Select
@@ -780,12 +909,26 @@ export default function TaskManager() {
           />
         </div>
       </div>
-      <Button variant="contained" onClick={saveTasks} style={{ marginTop: '20px' }}> Save Tasks</Button>
-    </ThemeProvider >
+      <Button
+        variant="contained"
+        onClick={saveTasks}
+        style={{ marginTop: "20px" }}
+      >
+        {" "}
+        Save Tasks
+      </Button>
+    </ThemeProvider>
   );
 }
 
-function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keyword }) {
+function TodoList({
+  list,
+  onToggle,
+  option,
+  onToggleSubtask,
+  onScheduled,
+  keyword,
+}) {
   let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
@@ -800,22 +943,22 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
     list = defaultList;
   }
 
-  const [fileList, setFileList] = useState([])
-  const [eventList, setEventList] = useState([])
+  const [fileList, setFileList] = useState([]);
+  const [eventList, setEventList] = useState([]);
 
-  const fileListRef = ref(storage, "files/")
+  const fileListRef = ref(storage, "files/");
   useEffect(() => {
     listAll(fileListRef).then((response) => {
       response.items.forEach((item) => {
         getDownloadURL(item).then((url) => {
           setFileList((prev) => [...prev, { name: item.name, url: url }]);
-        })
-      })
-    })
+        });
+      });
+    });
     get_events().then((response) => {
-      setEventList(response)
-    })
-  }, [])
+      setEventList(response);
+    });
+  }, []);
 
   const idAscending = [...list].sort((a, b) => a.id - b.id);
   const idDescending = [...list].sort((a, b) => b.id - a.id);
@@ -847,36 +990,42 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
   }
 
   const progressValue = (id) => {
-    let progress = 0
-    let n = 0
+    let progress = 0;
+    let n = 0;
     sortedList.map((task) => {
       if (task.id == id) {
         if (task.sub_tasks == null) {
-          n = 1
+          n = 1;
         } else {
           task.sub_tasks.map((sub_task) => {
-            n = n + 1
+            n = n + 1;
             if (sub_task.comp == true) {
-              progress = progress + 1
+              progress = progress + 1;
             }
-          })
+          });
         }
       }
-    })
-    return progress / n
-  }
+    });
+    return progress / n;
+  };
 
   const get_events = async () => {
-    return await send_request("/get_events", { calendar_id: calendarId })
-  }
+    return await send_request("/get_events", { calendar_id: calendarId });
+  };
 
   const handleCreateEvent = async (task) => {
     const [year, month, day] = task.date.split("-").map(Number);
-    let last_workday = new Date(year, month - 1, day - 1)
-    const today = new Date()
-    let days_diff = Math.ceil(((last_workday) - (today)) / (60 * 60 * 24 * 1000) % 365)
+    let last_workday = new Date(year, month - 1, day - 1);
+    const today = new Date();
+    let days_diff = Math.ceil(
+      ((last_workday - today) / (60 * 60 * 24 * 1000)) % 365
+    );
     if (days_diff > task.time) {
-      last_workday = new Date(year, month - 1, day - 1 - (days_diff - task.time))
+      last_workday = new Date(
+        year,
+        month - 1,
+        day - 1 - (days_diff - task.time)
+      );
       days_diff = task.time;
     }
     const new_event = {
@@ -887,7 +1036,7 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
       start_date: today,
       end_date: last_workday,
       location: "",
-      calendar: "tasks",
+      calendar: sessionStorage.getItem("taskCalendarId"),
       repetition_type: "daily",
       repetition_unit: "",
       repetition_val: 1,
@@ -895,8 +1044,8 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
       user_id: userId,
       emails: [],
       type: "",
-    }
-    console.log(JSON.stringify(new_event))
+    };
+    console.log(JSON.stringify(new_event));
     const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
@@ -916,17 +1065,17 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
           return days_diff
         case 205:
           alert("Event not created!");
-          return days_diff
+          return days_diff;
         case 206:
           alert("Missing information!");
-          return days_diff
+          return days_diff;
       }
     }
-  }
+  };
 
   function CircularProgressWithLabel(props) {
     return (
-      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+      <Box sx={{ position: "relative", display: "inline-flex" }}>
         <CircularProgress variant="determinate" {...props} />
         <Box
           sx={{
@@ -934,10 +1083,10 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
             left: 0,
             bottom: 0,
             right: 0,
-            position: 'absolute',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Typography variant="caption" component="div" color="text.secondary">
@@ -949,12 +1098,12 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
   }
 
   const get_link = (name) => {
-    let link = ""
+    let link = "";
     fileList.map((file) => {
       if (file.name == name) link = file.url;
-    })
+    });
     return link;
-  }
+  };
 
   return (
     <Table>
@@ -976,23 +1125,41 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
           <TableRow key={task.id}>
             <TableCell>{task.title}</TableCell>
             <TableCell>
-              <CircularProgressWithLabel variant="determinate" value={progressValue(task.id) * 100} />
-              <p style={{ align: "center" }}><small>Worktime: {task.time_allo} hour(s)</small></p>
+              <CircularProgressWithLabel
+                variant="determinate"
+                value={progressValue(task.id) * 100}
+              />
+              <p style={{ align: "center" }}>
+                <small>Worktime: {task.time_allo} hour(s)</small>
+              </p>
             </TableCell>
             <TableCell>{task.desc}</TableCell>
             <TableCell>{task.time} hour(s)</TableCell>
             <TableCell>{task.date}</TableCell>
-            <TableCell><a href={get_link(task.file_url)}>Get Attached File!</a></TableCell>
             <TableCell>
-              {task.sub_tasks && (task.sub_tasks.map((sub_task) => (
-                <p key={sub_task.id}>
-                  <FormControlLabel control={<Checkbox
-                    checked={sub_task.comp}
-                    onChange={(e) => {
-                      onToggleSubtask(task.id, sub_task.id, e.target.checked)
-                    }} />} label={sub_task.name} />
-                </p>
-              )))}
+              <a href={get_link(task.file_url)}>Get Attached File!</a>
+            </TableCell>
+            <TableCell>
+              {task.sub_tasks &&
+                task.sub_tasks.map((sub_task) => (
+                  <p key={sub_task.id}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={sub_task.comp}
+                          onChange={(e) => {
+                            onToggleSubtask(
+                              task.id,
+                              sub_task.id,
+                              e.target.checked
+                            );
+                          }}
+                        />
+                      }
+                      label={sub_task.name}
+                    />
+                  </p>
+                ))}
             </TableCell>
             <TableCell>
               <Button
@@ -1000,20 +1167,22 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
                 size="small"
                 onClick={() => {
                   const [year, month, day] = task.date.split("-").map(Number);
-                  const dueDate = new Date(year, month - 1, day)
-                  if (dueDate <= (new Date())) {
-                    alert("Unable to schedule time for tasks past due!")
+                  const dueDate = new Date(year, month - 1, day);
+                  if (dueDate <= new Date()) {
+                    alert("Unable to schedule time for tasks past due!");
                   } else if (task.scheduled === false) {
                     handleCreateEvent(task).then((response) => {
-                      onScheduled(task.id, response)
-                      task.scheduled = true
-                      task.time_allo = response
-                    })
+                      onScheduled(task.id, response);
+                      task.scheduled = true;
+                      task.time_allo = response;
+                    });
                   } else {
-                    alert("Task already scheduled!")
+                    alert("Task already scheduled!");
                   }
                 }}
-              >Schedule Task Time</Button>
+              >
+                Schedule Task Time
+              </Button>
               {/* <Button
                 variant="contained"
                 size="small"
@@ -1027,7 +1196,10 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
               <Checkbox
                 {...label}
                 checked={task.completed}
-                onChange={(e) => { onToggle(task.id, e.target.checked); }} />
+                onChange={(e) => {
+                  onToggle(task.id, e.target.checked);
+                }}
+              />
             </TableCell>
           </TableRow>
         ))}
@@ -1112,7 +1284,10 @@ function CompletedList({ list, onToggle, option, keyword }) {
               <Checkbox
                 {...label}
                 checked={task.completed}
-                onChange={(e) => { onToggle(task.id, e.target.checked); }} />
+                onChange={(e) => {
+                  onToggle(task.id, e.target.checked);
+                }}
+              />
             </TableCell>
           </TableRow>
         ))}
