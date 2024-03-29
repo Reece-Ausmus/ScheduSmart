@@ -39,6 +39,32 @@ export default function Calendar(selectMode, e, d) {
   const [eventSelectedDays, setEventSelectedDays] = useState([]); // Array to store selected days
   const [LocationSettings, setLocationSettings] = useState("text");
 
+  useEffect(() => {
+    if (
+      eventName !== "" &&
+      eventStartDate !== "" &&
+      eventEndDate !== "" &&
+      eventStartTime !== "" &&
+      eventEndTime !== "" &&
+      eventLocation !== "" &&
+      eventDescription !== "" &&
+      eventType !== "" &&
+      eventRepetitionType !== "none"
+    ) {
+      toggleShowUpdateEventPopup();
+    }
+  }, [
+    eventName,
+    eventStartDate,
+    eventEndDate,
+    eventStartTime,
+    eventEndTime,
+    eventLocation,
+    eventDescription,
+    eventType,
+    eventRepetitionType,
+  ]);
+
   const toggleShowUpdateEventPopup = () => {
     setShowUpdateEventPopup(!showUpdateEventPopup);
   };
@@ -273,7 +299,6 @@ export default function Calendar(selectMode, e, d) {
           setEventRepetitionType(responseData["repetition_type"]);
           setEventCustomFrequencyUnit(responseData["repetition_unit"]);
           setEventCustomFrequencyValue(responseData["repetition_val"]);
-          toggleShowUpdateEventPopup();
           break;
         case 202:
           alert("Event Not Found");
