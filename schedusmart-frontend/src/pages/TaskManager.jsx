@@ -60,7 +60,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 const handleCreateTaskCalendar = async () => {
   const new_calendar = {
-    newCalendarName: "tasks",
+    newCalendarName: "Tasks",
     user_id: userId,
   };
   const response = await fetch(flaskURL + "/create_calendar", {
@@ -642,7 +642,7 @@ export default function TaskManager() {
                       let file_exen = event.target.files[0].name.split(".").pop()
                       let valid = false
                       validExtensions.map((extension) => {
-                        if (file_exen === extension)
+                        if (file_exen == extension)
                           valid = true;
                       })
                       if (valid) {
@@ -907,13 +907,13 @@ function TodoList({ list, onToggle, option, onToggleSubtask, onScheduled, keywor
     });
     if (!response.ok) {
       alert("Something went wrong, refresh your website!");
-      return days_diff;
+      return days_diff
     } else {
       switch (response.status) {
         case 201:
           console.log("Event created successfully");
           alert("Event Created Successfully!");
-          return days_diff;
+          return days_diff
         case 205:
           alert("Event not created!");
           return days_diff
