@@ -42,6 +42,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dashboard from "./Dashboard";
+import moment from "moment"
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 
@@ -230,11 +231,15 @@ export default function TaskManager() {
           }
           console.log(userId);
           if (responseData.calendars == null) {
-            handleCreateTaskCalendar();
-          } else if (responseData.calendars["tasks"] == null) {
-            handleCreateTaskCalendar();
+            handleCreateTaskCalendar().then(() => {
+              calendarId = responseData.calendars["Tasks"].calendar_id;
+            });
+          } else if (responseData.calendars["Tasks"] == null) {
+            handleCreateTaskCalendar().then(() => {
+              calendarId = responseData.calendars["Tasks"].calendar_id;
+            });
           } else {
-            calendarId = responseData.calendars["tasks"].calendar_id;
+            calendarId = responseData.calendars["Tasks"].calendar_id;
           }
           break;
         case 202:
@@ -650,8 +655,8 @@ export default function TaskManager() {
             </Grid>
           </Grid>
 
-          <dialog id="modal">
-            <DialogTitle>Add tasks:</DialogTitle>
+          <dialog id="modal" style={{background: "#f8c06c"}}>
+            <DialogTitle style={{color: "black"}}>Add tasks:</DialogTitle>
             <DialogContent>
               <Grid
                 container
@@ -755,6 +760,7 @@ export default function TaskManager() {
                         uploadFile(fileRef, event.target.files[0]);
                         setTaskFile(fileRef.name);
                       } else {
+                        event.target.value = null; 
                         alert(
                           "Invalid File! Only image, text, audio, or video files allowed!"
                         );
@@ -1033,19 +1039,20 @@ function TodoList({
       desc: task.desc,
       start_time: "17:00",
       end_time: "18:00",
-      start_date: today,
-      end_date: last_workday,
+      start_date: moment(today).format('YYYY-MM-DD'),
+      end_date: moment(last_workday).format('YYYY-MM-DD'),
       location: "",
-      calendar: sessionStorage.getItem("taskCalendarId"),
+      calendar: calendarId,
       repetition_type: "daily",
       repetition_unit: "",
-      repetition_val: 1,
+      repetition_val: days_diff,
       selected_days: "",
       user_id: userId,
       emails: [],
       type: "",
     };
     console.log(JSON.stringify(new_event));
+    console.log(calendarId)
     const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
@@ -1183,13 +1190,13 @@ function TodoList({
               >
                 Schedule Task Time
               </Button>
-              {/* <Button
+              {/*<Button
                 variant="contained"
                 size="small"
                 onClick={() => {
-                  console.log(fileList)
+                  
                 }}
-              >
+              > 
               Print</Button>*/}
             </TableCell>
             <TableCell>

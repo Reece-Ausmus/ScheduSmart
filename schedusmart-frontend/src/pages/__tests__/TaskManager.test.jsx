@@ -11,5 +11,5 @@ test(('testing the tester'), () => {
 })
 
 test(('Test 3 - Verify Progress Meter'), () => {
-    render(<TaskManager/>)
+    render(<Welcome/>)
 })
