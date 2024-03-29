@@ -66,8 +66,7 @@ export default function Welcome() {
                 color: (theme) =>
                   theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
               }}
-            >
-              Schedusmart!
+            >Schedusmart!
             </Typography>
           </Typography>
           <Typography
