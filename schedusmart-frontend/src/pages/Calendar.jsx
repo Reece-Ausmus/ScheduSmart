@@ -6,6 +6,7 @@ import { flaskURL, user_id } from "../config";
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 import send_request from "./requester";
 import moment from "moment";
+import { red } from "@mui/material/colors";
 
 function firstDaySeeker(today) {
   let date = today.getDate();
@@ -38,9 +39,10 @@ export default function Calendar(selectMode, e, d) {
   const [eventCustomFrequencyUnit, setEventCustomFrequencyUnit] = useState("");
   const [eventSelectedDays, setEventSelectedDays] = useState([]); // Array to store selected days
   const [LocationSettings, setLocationSettings] = useState("text");
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
-    if (
+    /*if (
       eventName !== "" &&
       eventStartDate !== "" &&
       eventEndDate !== "" &&
@@ -51,8 +53,9 @@ export default function Calendar(selectMode, e, d) {
       eventType !== "" &&
       eventRepetitionType !== "none"
     ) {
-      toggleShowUpdateEventPopup();
-    }
+      setShowUpdateEventPopup(true);
+    }*/
+    setUnsavedChanges(true);
   }, [
     eventName,
     eventStartDate,
@@ -67,6 +70,7 @@ export default function Calendar(selectMode, e, d) {
 
   const toggleShowUpdateEventPopup = () => {
     setShowUpdateEventPopup(!showUpdateEventPopup);
+    setUnsavedChanges(false);
   };
 
   const renderLocationInput = () => {
@@ -299,6 +303,7 @@ export default function Calendar(selectMode, e, d) {
           setEventRepetitionType(responseData["repetition_type"]);
           setEventCustomFrequencyUnit(responseData["repetition_unit"]);
           setEventCustomFrequencyValue(responseData["repetition_val"]);
+          setShowUpdateEventPopup(true);
           break;
         case 202:
           alert("Event Not Found");
@@ -388,6 +393,7 @@ export default function Calendar(selectMode, e, d) {
       {showUpdateEventPopup && (
         <div className="popup">
           <div className="popup-content">
+            {unsavedChanges && <h2>Unsaved Changes!</h2>}
             <h2>Update Event</h2>
             <div>
               <div className="formgroup">
