@@ -20,8 +20,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { orange, grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
+import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
 // import MapContainer from './Googlemap';
 
 const theme = createTheme({
@@ -512,6 +512,9 @@ export default function MainFrame() {
 
               for (const calendarName in newCalendars) {
                 const name = newCalendars[calendarName];
+                if (calendarName === "Tasks") {
+                  sessionStorage.setItem("taskCalendarId", name["calendar_id"]);
+                }
                 updatedCalendarList.push({
                   calendar_id: name["calendar_id"],
                   name: calendarName,
@@ -601,8 +604,8 @@ export default function MainFrame() {
       setSelectedCalendars((prevSelected) =>
         prevSelected.some((cal) => cal.calendar_id === calendar["calendar_id"])
           ? prevSelected.filter(
-            (cal) => cal.calendar_id !== calendar["calendar_id"]
-          )
+              (cal) => cal.calendar_id !== calendar["calendar_id"]
+            )
           : [...prevSelected, calendar]
       );
     };
@@ -704,17 +707,26 @@ export default function MainFrame() {
               size="small"
             />
             <div className="add_button">
-              <Button variant="contained" onClick={handleCreateCalendar} style={{ marginLeft: "10px" }}>
+              <Button
+                variant="contained"
+                onClick={handleCreateCalendar}
+                style={{ marginLeft: "10px" }}
+              >
                 Create Calendar
               </Button>
             </div>
             <div className="add_button">
-              <Button variant="contained" onClick={handleCreateEventButton} style={{ marginLeft: "10px" }}>
+              <Button
+                variant="contained"
+                onClick={handleCreateEventButton}
+                style={{ marginLeft: "10px" }}
+              >
                 Create Event
               </Button>
             </div>
             <div className="add_button">
-              <Button variant="contained"
+              <Button
+                variant="contained"
                 onClick={handleCreateAvailabilityButton}
                 style={{ marginLeft: "10px" }}
               >
@@ -961,7 +973,11 @@ export default function MainFrame() {
 
             {/*SetupCourses*/}
             <div className="add_button">
-              <Button variant="contained" onClick={handleSetupCourses} style={{ marginLeft: "10px" }}>
+              <Button
+                variant="contained"
+                onClick={handleSetupCourses}
+                style={{ marginLeft: "10px" }}
+              >
                 Setup Courses
               </Button>
             </div>
@@ -1011,7 +1027,11 @@ export default function MainFrame() {
 
             {/* See Invitations */}
             <div className="add_button">
-              <Button variant="contained" onClick={handleSeeInvitationsOpen} style={{ marginLeft: "10px" }}>
+              <Button
+                variant="contained"
+                onClick={handleSeeInvitationsOpen}
+                style={{ marginLeft: "10px" }}
+              >
                 See Invitations
               </Button>
             </div>
@@ -1081,7 +1101,7 @@ export default function MainFrame() {
 
           {/* List of existing calendars */}
           <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
-          {/* <Typography variant="body1" style={{ marginLeft: "10px" }}>Calendar list:</Typography> */}
+            {/* <Typography variant="body1" style={{ marginLeft: "10px" }}>Calendar list:</Typography> */}
             {calendarList.map((calendar) => (
               <li key={calendar["calendar_id"]}>
                 <Checkbox
@@ -1090,7 +1110,7 @@ export default function MainFrame() {
                     (cal) => cal.calendar_id === calendar["calendar_id"]
                   )}
                   onChange={() => handleCalendarSelection(calendar)}
-                  inputProps={{ 'aria-label': 'controlled' }}
+                  inputProps={{ "aria-label": "controlled" }}
                 />
                 <label htmlFor={calendar["calendar_id"]}>
                   {calendar["name"]}
@@ -1603,12 +1623,14 @@ export default function MainFrame() {
     return arr.map(
       (task) =>
         !task.completed && (
-          <div className="taskBar" onClick={() => { }}>
+          <div className="taskBar" onClick={() => {}}>
             <p className="taskName">{task.date.slice(5, 10)}</p>
             <p className="taskName">{task.title}</p>
             <Checkbox
               edge="end"
-              onChange={(e) => { changeStatusOfTask(task, e.target.checked); }}
+              onChange={(e) => {
+                changeStatusOfTask(task, e.target.checked);
+              }}
               defaultChecked={false}
             />
           </div>
