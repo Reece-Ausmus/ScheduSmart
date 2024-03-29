@@ -1126,23 +1126,22 @@ export default function MainFrame() {
   const d = moment();
   const [currentTime, setCurrentTime] = useState(d);
 
-
   function calendarControlFlowButtonPackage() {
     //const d = moment();
     //const [currentTime, setCurrentTime] = useState(d);
-    
+
     // next
-    useHotkeys('Shift+n', () => {
+    useHotkeys("Shift+n", () => {
       /*console.log(today.toString())
       console.log(String(today.getFullYear()))
       console.log(String(today.getMonth))
       console.log(String(today.getDate))
       console.log(selectMode)*/
-     //console.log(d.format('MM/DD'));
-           
       //console.log(d.format('MM/DD'));
-      setCurrentTime(moment(currentTime.add(1, 'days')))
-      updateToday(1)
+
+      //console.log(d.format('MM/DD'));
+      setCurrentTime(moment(currentTime.add(1, "days")));
+      updateToday(1);
       //console.log(today.toDateString())
       //setCurrentTime(today => {
       //  today.setDate(today.getDate() + 1);
@@ -1150,14 +1149,12 @@ export default function MainFrame() {
       //});
 
       //console.log(currentTime.format('MM/DD'))
-
-     
     });
 
     // prev
-    useHotkeys('Shift+p', () => {
-      setCurrentTime(moment(currentTime.subtract(1, 'days')))
-      updateToday(-1)
+    useHotkeys("Shift+p", () => {
+      setCurrentTime(moment(currentTime.subtract(1, "days")));
+      updateToday(-1);
       //console.log(today.toDateString)
       //setCurrentTime(today => {
       //  today.setDate(today.getDate() + 1);
@@ -1165,17 +1162,17 @@ export default function MainFrame() {
       //});
 
       //console.log(currentTime.format('MM/DD'))
-
-     
     });
 
     return (
       <div>
-        <h2 className="detailInfo">{currentTime.format('YYYY/MM/DD')}</h2>
+        <h2 className="detailInfo">{currentTime.format("YYYY/MM/DD")}</h2>
         <div>
           <div className="buttonGroup">
             <button
-              style={{ backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d" }}
+              style={{
+                backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d",
+              }}
               className="modeButton"
               id="1"
               onClick={() => {
@@ -1189,7 +1186,9 @@ export default function MainFrame() {
             </button>
             <button
               className="modeButton"
-              style={{ backgroundColor: selectMode == 2 ? "#cfcfcf" : "#2d2d2d" }}
+              style={{
+                backgroundColor: selectMode == 2 ? "#cfcfcf" : "#2d2d2d",
+              }}
               id="2"
               onClick={() => {
                 setSelectMode(2);
@@ -1202,7 +1201,9 @@ export default function MainFrame() {
             </button>
             <button
               className="modeButton"
-              style={{ backgroundColor: selectMode == 3 ? "#cfcfcf" : "#2d2d2d" }}
+              style={{
+                backgroundColor: selectMode == 3 ? "#cfcfcf" : "#2d2d2d",
+              }}
               id="3"
               onClick={() => {
                 setSelectMode(3);
@@ -1213,7 +1214,9 @@ export default function MainFrame() {
             </button>
             <button
               className="modeButton"
-              style={{ backgroundColor: selectMode == 4 ? "#cfcfcf" : "#2d2d2d" }}
+              style={{
+                backgroundColor: selectMode == 4 ? "#cfcfcf" : "#2d2d2d",
+              }}
               id="4"
               onClick={() => {
                 setSelectMode(4);
@@ -1560,7 +1563,10 @@ export default function MainFrame() {
 
   useEffect(() => {
     const fetchEvents = () => {
-      if (selectedCalendars == undefined) {
+      console.log(selectedCalendars);
+      if (selectedCalendars == undefined || selectedCalendars.length == 0) {
+        console.log("selectedCalendars is null!!");
+        setAllEventsArray([]);
         return;
       }
 
