@@ -1,6 +1,5 @@
 // This documentation is used for building create-account UI page
 import { useState } from "react";
-import "./Createaccount.css";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";

@@ -1,7 +1,6 @@
 // This documentation is used for building create-account UI page
 
 import { useState, useEffect } from "react";
-import "./AccountInfo.css";
 import languageData from "../components/language.json";
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';

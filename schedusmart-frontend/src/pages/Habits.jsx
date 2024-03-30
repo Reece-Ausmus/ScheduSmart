@@ -12,7 +12,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppBar, Toolbar } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import { DataGrid } from "@mui/x-data-grid";
-import "./Habits.css";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";

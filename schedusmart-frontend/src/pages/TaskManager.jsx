@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./TaskManager.css";
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 import FileUpload from "./FileUpload";
@@ -25,6 +24,7 @@ import EventParser from "./EventParser";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import {
   Table,
   TableHead,
@@ -43,6 +43,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dashboard from "./Dashboard";
 import moment from "moment"
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Alert from '@mui/material/Alert';
+import dayjs from 'dayjs';
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 
@@ -655,8 +661,8 @@ export default function TaskManager() {
             </Grid>
           </Grid>
 
-          <dialog id="modal" style={{background: "#f8c06c"}}>
-            <DialogTitle style={{color: "black"}}>Add tasks:</DialogTitle>
+          <dialog id="modal" style={{ background: "#f8c06c" }}>
+            <DialogTitle style={{ color: "black" }}>Add tasks:</DialogTitle>
             <DialogContent>
               <Grid
                 container
@@ -753,14 +759,13 @@ export default function TaskManager() {
                       });
                       if (valid) {
                         setFile(event.target.files[0]);
-                        let ref_url = `files/${
-                          event.target.files[0].name + v4()
-                        }`;
+                        let ref_url = `files/${event.target.files[0].name + v4()
+                          }`;
                         const fileRef = ref(storage, ref_url);
                         uploadFile(fileRef, event.target.files[0]);
                         setTaskFile(fileRef.name);
                       } else {
-                        event.target.value = null; 
+                        event.target.value = null;
                         alert(
                           "Invalid File! Only image, text, audio, or video files allowed!"
                         );
@@ -1190,14 +1195,6 @@ function TodoList({
               >
                 Schedule Task Time
               </Button>
-              {/*<Button
-                variant="contained"
-                size="small"
-                onClick={() => {
-                  
-                }}
-              > 
-              Print</Button>*/}
             </TableCell>
             <TableCell>
               <Checkbox
