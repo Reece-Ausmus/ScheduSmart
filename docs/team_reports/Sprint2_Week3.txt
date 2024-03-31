@@ -6,7 +6,9 @@ Week 6	(Srum master: Reece Ausmus)
 03/26/24    5 hr    4a81fab     The task in the mainframe, including its functions and UI
 03/27/24    2 hr    8c3e951     Updates to storing events in the database
 03/28/24    2 hr    3f8668c     Users can accept or decline invitations
+03/28/24    5 hr    2ac4b9b     Style all the pages
 03/29/24    4 hr    5b607db     Can update events
+
 
 
 Week 7 	(Plan) (Scrum master: Reece Ausmus)
@@ -21,4 +23,4 @@ Cassie Chang:
 Stanley Huang:  Fix some issues found in creating account. Add more function to store chat box'x data
 Bradley Norris: 
 Himanshu Sinha: Begin work on AI chatbot, as well as polish previous features and styling on task manager.
-Gloria Xu:
+Gloria Xu: Fix bugs in the google map and begin work on friend list UI
