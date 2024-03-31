@@ -18,5 +18,5 @@ Reece Ausmus:   Brainstorm some more advanced features and develop a plan for th
 Cassie Chang:
 Stanley Huang:
 Bradley Norris: 
-Himanshu Sinha: Begin work on AI chatbot, as well as polish previous featurees and styling on task manager.
+Himanshu Sinha: Begin work on AI chatbot, as well as polish previous features and styling on task manager.
 Gloria Xu:
