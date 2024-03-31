@@ -1,7 +1,9 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 6	(Srum master: Reece Ausmus)
+03/25/24    1hr     8920f33     adding backend function to deny same username and function to find user
 03/26/24    4 hr    dfb4a60     Set up course creation
+03/26/24    5 hr    4a81fab     The task in the mainframe, including its functions and UI
 03/27/24    2 hr    8c3e951     Updates to storing events in the database
 03/28/24    2 hr    3f8668c     Users can accept or decline invitations
 03/29/24    4 hr    5b607db     Can update events
@@ -16,7 +18,7 @@ Week 7 	(Plan) (Scrum master: Reece Ausmus)
 [Individual Goals]
 Reece Ausmus:   Brainstorm some more advanced features and develop a plan for the sprint to complete in a timely manner.
 Cassie Chang:
-Stanley Huang:
+Stanley Huang:  Fix some issues found in creating account. Add more function to store chat box'x data
 Bradley Norris: 
 Himanshu Sinha: Begin work on AI chatbot, as well as polish previous features and styling on task manager.
 Gloria Xu:
