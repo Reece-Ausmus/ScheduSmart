@@ -7,9 +7,9 @@ Week 6	(Srum master: Reece Ausmus)
 03/27/24    2 hr    8c3e951     Updates to storing events in the database
 03/28/24    2 hr    3f8668c     Users can accept or decline invitations
 03/28/24    5 hr    2ac4b9b     Style all the pages
+03/28/24    5 hr    e499d8a     Full CRUD capability for Habits page + Data visualization
 03/29/24    4 hr    5b607db     Can update events
 03/29/24    3 hr    56bee79     finish shortcut: change day
-
 
 
 Week 7 	(Plan) (Scrum master: Reece Ausmus)
@@ -22,6 +22,6 @@ Week 7 	(Plan) (Scrum master: Reece Ausmus)
 Reece Ausmus:   Brainstorm some more advanced features and develop a plan for the sprint to complete in a timely manner.
 Cassie Chang: try to figure out more unitest putting in Jenkins test stage
 Stanley Huang:  Fix some issues found in creating account. Add more function to store chat box'x data
-Bradley Norris: 
+Bradley Norris: Incorporate more visualization capabilities to the Habits page and also refine the visuals
 Himanshu Sinha: Begin work on AI chatbot, as well as polish previous features and styling on task manager.
 Gloria Xu: Fix bugs in the google map and begin work on friend list UI
