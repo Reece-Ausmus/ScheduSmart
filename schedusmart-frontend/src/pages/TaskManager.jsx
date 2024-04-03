@@ -33,6 +33,7 @@ import {
   TableRow,
   TableCell,
   Grid,
+  Hidden,
 } from "@mui/material";
 import send_request from "./requester";
 import Checkbox from "@mui/material/Checkbox";
@@ -50,6 +51,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Alert from '@mui/material/Alert';
 import dayjs from 'dayjs';
+import GPTChatBox from '../components/GPTChatBox.jsx'
+import "./TaskManager.css"
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 
@@ -964,6 +967,7 @@ export default function TaskManager() {
         {" "}
         Save Tasks
       </Button>
+      <div className="GPTChatBox">{GPTChatBox()}</div>
     </ThemeProvider>
   );
 }
