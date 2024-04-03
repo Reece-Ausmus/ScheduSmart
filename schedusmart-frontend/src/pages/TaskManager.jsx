@@ -19,6 +19,7 @@ import Fab from "@mui/material/Fab";
 import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
 import EventParser from "./EventParser";
 import PropTypes from "prop-types";
@@ -559,6 +560,24 @@ export default function TaskManager() {
     setOpen(false);
   };
 
+  function handleRemoveSubtask(id) {
+    const newList = subtaskList.filter((item) => item.id !== id)
+
+    setSubtaskList(newList)
+  }
+
+  function handleEditSubtask(id, name) {
+    const mapped = subtaskList.map((item) => {
+      if (item.id == id) {
+        item = {...item, name: name}
+      }
+
+      return item;
+    })
+
+    setSubtaskList(mapped)
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
@@ -812,7 +831,24 @@ export default function TaskManager() {
               </Grid>
               <ol>
                 {subtaskList.map((subtask) => (
-                  <li key={subtask.id}>{subtask.name}</li>
+                    <li key={subtask.id}>
+                      <Fab 
+                        color="primary" 
+                        size="small" 
+                        onClick={() => {
+                          handleRemoveSubtask(subtask.id)
+                        }}
+                      >
+                        <DeleteIcon/>
+                      </Fab>
+                      {' '}
+                      <TextField
+                        type="text" 
+                        size="small"
+                        value={subtask.name}
+                        onChange={(e) => {handleEditSubtask(subtask.id, e.target.value)}}
+                      /> 
+                    </li>
                 ))}
               </ol>
 
