@@ -26,11 +26,13 @@
     display: flex;
     background: linear-gradient(rgb(135, 157, 235), rgb(144, 211, 238));
     background-repeat: no-repeat;
+
   }
   .infoWord {
     margin-left: 170px;
     font-weight: bold;
     font-size: 20px;
+    color: black; 
   }
   
   .info_button {

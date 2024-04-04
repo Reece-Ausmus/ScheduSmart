@@ -13,6 +13,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
+import StarRateIcon from '@mui/icons-material/StarRate';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { orange, grey } from "@mui/material/colors";
 import Fab from "@mui/material/Fab";
@@ -21,9 +22,11 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import EventParser from "./EventParser";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
+import AccessAlarmsIcon from '@mui/icons-material/AccessAlarms';
 import Box from "@mui/material/Box";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import {
@@ -143,6 +146,12 @@ const validExtensions = [
   "wmv",
   "xlsx",
   "pdf",
+];
+
+const tagList = [
+  "Important",
+  "Time-Sensitive",
+  "Overdue",
 ];
 
 // initial list for new users
@@ -273,6 +282,7 @@ export default function TaskManager() {
   const [todoList, setTodoList] = useState([]);
   const [completedList, setCompletedList] = useState([]);
   const [eventList, setEventList] = useState({});
+  const [prioOptionTodo, setPrioOptionTodo] = useState(0);
 
   // used to hold data for tasks
   const [taskName, setTaskName] = useState("");
@@ -677,6 +687,21 @@ export default function TaskManager() {
                     <MenuItem value={4}>Latest due</MenuItem>
                     <MenuItem value={5}>Largest workload</MenuItem>
                     <MenuItem value={6}>Smallest workload</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ m: 1, width: 200 }} size="small">
+                  <InputLabel id="priority">Priority</InputLabel>
+                  <Select
+                    labelId="priority"
+                    id="priority"
+                    value={prioOptionTodo}
+                    label="priority"
+                    onChange={(e) => setPrioOptionTodo(e.target.value)}
+                  > 
+                    <MenuItem value={0}>...</MenuItem>
+                    <MenuItem value={1}><StarRateIcon/></MenuItem>
+                    <MenuItem value={2}><PriorityHighIcon/></MenuItem>
+                    <MenuItem value={3}><AccessAlarmsIcon/></MenuItem>
                   </Select>
                 </FormControl>
               </div>
