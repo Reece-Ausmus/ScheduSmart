@@ -16,6 +16,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppBar, IconButton, Menu, Toolbar } from "@mui/material";
 import { orange } from "@mui/material/colors";
+import send_request from "./requester";
 
 //this can be change when flask's ip become static
 //currently it's localhost
@@ -81,89 +82,79 @@ export default function Createaccount() {
       return;
     }
     const new_account = { firstname, lastname, username, email, password };
-    const response = await fetch(flaskURL + "/create_account", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(new_account),
-      credentials: "include",
-    });
-    if (!response.ok) {
-      alert("Something went wrong, refresh your website!");
+    const response = await send_request("/create_account", new_account);
+    if (response.error != undefined) {
+      if (response.error == "username") {
+        alert("username already exist!\ntry change to other username");
+      } 
+      if (response.error == "email") {
+        alert("account (email) already exist!\ntry using other account");
+      }
+      if (response.error == "invalid") {
+        alert("invalid account\ntry using other account");
+      }
     } else {
-      switch (response.status) {
-        case 201:
-          console.log("Create account successfully");
-          const responseData = await response.json();
-          const userId = responseData.user_id;
-          sessionStorage.setItem("user_id", userId);
-          window.location.href = "./signin";
-          break;
-        case 205:
-          alert("Username has been used. Please change it to another one!");
-          break;
-      }
-    }
-
-    // add initial calendars
-    const user_id = sessionStorage.getItem("user_id");
-    const new_calendars = [
-      {
-        newCalendarName: "Personal",
-        user_id: user_id,
-      },
-      {
-        newCalendarName: "Availability",
-        user_id: user_id,
-      },
-      {
-        newCalendarName: "Invitations",
-        user_id: user_id,
-      },
-      {
-        newCalendarName: "Tasks",
-        user_id: user_id,
-      },
-    ];
-
-    const createCalendar = async (new_calendar) => {
-      const calResponse = await fetch(flaskURL + "/create_calendar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      // add initial calendars
+      console.log(response)
+      const user_id = response.user_id;
+      const new_calendars = [
+        {
+          newCalendarName: "Personal",
+          user_id: user_id,
         },
-        body: JSON.stringify(new_calendar),
-        credentials: "include",
-      });
-      if (!calResponse.ok) {
-        alert("Something went wrong, refresh your website!");
-        return;
-      } else {
-        switch (calResponse.status) {
-          case 201:
-            console.log("Calendar created successfully");
-            break;
-          case 205:
-            alert("Calendar not created!");
-            break;
-          case 206:
-            alert("Missing information!");
-            break;
-          case 207:
-            alert("Calendar not added to user!");
-            break;
+        {
+          newCalendarName: "Availability",
+          user_id: user_id,
+        },
+        {
+          newCalendarName: "Invitations",
+          user_id: user_id,
+        },
+        {
+          newCalendarName: "Tasks",
+          user_id: user_id,
+        },
+      ];
+
+      const createCalendar = async (new_calendar) => {
+        const calResponse = await fetch(flaskURL + "/create_calendar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(new_calendar),
+          credentials: "include",
+        });
+        if (!calResponse.ok) {
+          alert("Something went wrong, refresh your website!");
+          return;
+        } else {
+          switch (calResponse.status) {
+            case 201:
+              console.log("Calendar created successfully");
+              break;
+            case 205:
+              alert("Calendar not created!");
+              break;
+            case 206:
+              alert("Missing information!");
+              break;
+            case 207:
+              alert("Calendar not added to user!");
+              break;
+          }
         }
-      }
-    };
+      };
 
-    const createCalendars = async () => {
-      for (const new_calendar of new_calendars) {
-        await createCalendar(new_calendar);
-      }
-    };
+      const createCalendars = async () => {
+        for (const new_calendar of new_calendars) {
+          await createCalendar(new_calendar);
+        }
+      };
 
-    createCalendars();
+      createCalendars();
+      window.location.href = "./signin";
+    }  //end of backend else statement
   };
 
   return (
