@@ -87,15 +87,17 @@ def delete_account(user):
         return 1
 
 
-def look_for_same_user_name(user_name):
+def __look_for_same_user_name_or_email(data):
     users = db.child("User").get()
     for user in users.each():
         try:
-            if user_name == user.val()["user_name"]:
-                return True
+            if data["user_name"] == user.val()["user_name"]:
+                return 1
+            if data["email"] == user.val()["email"]:
+                return 2
         except KeyError as e:
             pass
-    return False
+    return 0
 
 
 # login_account_with_username_and_password(username, password)
@@ -159,10 +161,17 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email'],
         }
 
-        if look_for_same_user_name(receive_account['username']):
+        same_account_confirm = __look_for_same_user_name_or_email(data)
+
+        if same_account_confirm == 1:
             return {
-                "error": "UserName already exist",
-                "response_status": 1
+                "error": "username",
+                "response_status": 0
+            }
+        if same_account_confirm == 2:
+            return {
+                "error": "email",
+                "response_status": 0
             }
 
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
@@ -175,7 +184,7 @@ def create_account_by_username_and_password(receive_account):
         }
     except Exception as e:
         return {
-            "error": "Failed to create account",
+            "error": "invalid",
             "response_status": 1
         }
 
@@ -285,8 +294,10 @@ def mark_task_as_done(task):
         for each_task in tasks:
             if each_task.val()["id"] == task["id"]:
                 id_path = each_task.key()
-        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update({"completed_time": task["completed_time"]})
-        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update({"completed": task["completed"]})
+        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update(
+            {"completed_time": task["completed_time"]})
+        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update(
+            {"completed": task["completed"]})
     except KeyError as e:
         print(f"{e}")
 
@@ -321,13 +332,13 @@ def add_new_calendar(calendar_info):
 
 def f_get_events(calendar):
     try:
-        #data_events = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
-        #data_event_counter = 0
-        #data_event = []
-        #for data in data_events.each():
+        # data_events = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
+        # data_event_counter = 0
+        # data_event = []
+        # for data in data_events.each():
         #    data_event.append(data.val())
-        #return {"data": data_event}
-    
+        # return {"data": data_event}
+
         data_event_ids = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
         events = []
         for event_id in data_event_ids.each():
@@ -353,11 +364,12 @@ def update_task(task_info):
         return 1
     return 0
 
+
 def add_new_event(event_info):
     user_id = event_info['user_id']
     if user_id is None:
         raise Exception("User ID is None")
-    
+
     event_id = secrets.token_hex(16)
     data = {
         'name': event_info['name'],
@@ -392,6 +404,7 @@ def add_new_event(event_info):
         'event_id': event_id
     }
 
+
 def update_event_db(event_info):
     user_id = event_info['user_id']
     if user_id is None:
@@ -417,6 +430,7 @@ def update_event_db(event_info):
         print("Failed to update event:", e)
         return {'response_status': 1}
     return {'response_status': 0}
+
 
 def delete_event_db(event_info):
     user_id = event_info['user_id']
@@ -450,6 +464,7 @@ def delete_event_db(event_info):
         return {'response_status': 1}
     return {'response_status': 0}
 
+
 def get_event_with_id_db(data):
     try:
         if data['user_id'] is None:
@@ -460,6 +475,7 @@ def get_event_with_id_db(data):
     except Exception as e:
         print("Failed to get event with ID:", e)
         return {'response_status': 1}
+
 
 def invite_users_to_event_db(data):
     try:
@@ -473,7 +489,8 @@ def invite_users_to_event_db(data):
     except Exception as e:
         print("Failed to invite user to event:", e)
         return {'response_status': 1}
-    
+
+
 def get_invitations_db(data):
     try:
         if data['user_id'] is None:
@@ -490,7 +507,8 @@ def get_invitations_db(data):
     except Exception as e:
         print("Failed to get invitations:", e)
         return {'response_status': 1}
-    
+
+
 def accept_invitation_db(data):
     try:
         if data['user_id'] is None:
@@ -504,9 +522,10 @@ def accept_invitation_db(data):
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         return {'response_status': 0}
     except Exception as e:
-        #print("Failed to accept invitation:", e)
+        # print("Failed to accept invitation:", e)
         return {'response_status': 1}
-    
+
+
 def decline_invitation_db(data):
     try:
         if data['user_id'] is None:
@@ -554,6 +573,7 @@ def update_default_location_settings(info):
         print("Failed to set the location settings")
         return 1
 
+
 # This function is used to create a new Habits list for the logged in user
 def add_new_habit(data):
     user_id = data['user_id']
@@ -577,6 +597,7 @@ def add_new_habit(data):
         print("Failed to create habit:", e)
         return 1
 
+
 # used to test with firebase #######################
 
 # Make sure you download the firebaseConfig.py file in google doc
@@ -585,4 +606,3 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-
