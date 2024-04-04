@@ -185,7 +185,7 @@ def create_account_by_username_and_password(receive_account):
     except Exception as e:
         return {
             "error": "invalid",
-            "response_status": 1
+            "response_status": 0
         }
 
 

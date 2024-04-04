@@ -9,20 +9,10 @@ def create_account():
     receive_account = request.get_json()
     try:
         data = create_account_by_username_and_password(receive_account)
-        ret = data['response_status']
-        if ret == 2:
-            response = jsonify({'error': 'username has been used'})
-            response.status_code = 205
-        elif ret == 1:
-            response = jsonify({'error': 'failed to create account'})
-            response.status_code = 206
-        else:
-            response = jsonify({
-                'message': 'Done',
-                'user_id': data['user_id']
-            })
+
+        response = jsonify(data)
         response.status_code = 201
-    except:
+    except Exception as e:
         response = jsonify({'error': 'failed to create account'})
         response.status_code = 206
     return response
