@@ -315,67 +315,6 @@ export default function Calendar(selectMode, e, d) {
     }
   };
 
-  // Function to handle the creation of a new calendar
-  /*const handleCreateCalendar = async () => {
-    if (!newCalendarName.localeCompare("")) {
-      alert("Please enter a calendar name!");
-      return;
-    }
-    const regex = /[\\"\t\n\'\\\x00-\x1F\x7F]/g;
-    if (regex.test(newCalendarName)) {
-      alert("Calendar name includes prohibited characters!");
-      return;
-    }
-    const calendarExists = calendarList.some(
-      (calendar) => calendar.name === newCalendarName
-    );
-    if (calendarExists) {
-      alert("A calendar with the same name already exists.");
-      setNewCalendarName("");
-      return;
-    }
-    const new_calendar = {
-      newCalendarName: newCalendarName,
-      user_id: user_id,
-    };
-    const response = await fetch(flaskURL + "/create_calendar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(new_calendar),
-      credentials: "include",
-    });
-    if (!response.ok) {
-      alert("Something went wrong, refresh your website!");
-      return;
-    } else {
-      switch (response.status) {
-        case 201:
-          console.log("Calendar created successfully");
-          const responseData = await response.json();
-          setCalendarList([
-            ...calendarList,
-            {
-              calendar_id: responseData["calendar_id"],
-              name: newCalendarName,
-            },
-          ]);
-          break;
-        case 205:
-          alert("Calendar not created!");
-          break;
-        case 206:
-          alert("Missing information!");
-          break;
-        case 207:
-          alert("Calendar not added to user!");
-          break;
-      }
-    }
-    toggleShowUpdateEventPopup();
-  };*/
-
   return (
     <div className="sub_main_calnedar_box">
       <div
