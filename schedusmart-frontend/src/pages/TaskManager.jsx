@@ -851,6 +851,7 @@ export default function TaskManager() {
                           comp: false,
                         },
                       ]);
+                      setSubtaskDesc('');
                     }}
                   >
                     <AddIcon />
@@ -860,6 +861,14 @@ export default function TaskManager() {
               <ol>
                 {subtaskList.map((subtask) => (
                   <li key={subtask.id}>
+                    <TextField
+                      type="text"
+                      size="small"
+                      style={{ marginBottom: '10px' }}
+                      value={subtask.name}
+                      onChange={(e) => { handleEditSubtask(subtask.id, e.target.value) }}
+                    />
+                    {'  '}
                     <Fab
                       color="primary"
                       size="small"
@@ -869,13 +878,6 @@ export default function TaskManager() {
                     >
                       <DeleteIcon />
                     </Fab>
-                    {' '}
-                    <TextField
-                      type="text"
-                      size="small"
-                      value={subtask.name}
-                      onChange={(e) => { handleEditSubtask(subtask.id, e.target.value) }}
-                    />
                   </li>
                 ))}
               </ol>
