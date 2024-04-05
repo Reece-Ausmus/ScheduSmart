@@ -582,7 +582,7 @@ export default function TaskManager() {
   function handleEditSubtask(id, name) {
     const mapped = subtaskList.map((item) => {
       if (item.id == id) {
-        item = {...item, name: name}
+        item = { ...item, name: name }
       }
 
       return item;
@@ -633,8 +633,8 @@ export default function TaskManager() {
         </div>
       </div>
 
-      <div className="task-columns-container">
-        <div className="task-column">
+      <div>
+        <div>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
               <div
@@ -697,11 +697,11 @@ export default function TaskManager() {
                     value={prioOptionTodo}
                     label="priority"
                     onChange={(e) => setPrioOptionTodo(e.target.value)}
-                  > 
+                  >
                     <MenuItem value={0}>...</MenuItem>
-                    <MenuItem value={1}><StarRateIcon/></MenuItem>
-                    <MenuItem value={2}><PriorityHighIcon/></MenuItem>
-                    <MenuItem value={3}><AccessAlarmsIcon/></MenuItem>
+                    <MenuItem value={1}><StarRateIcon /></MenuItem>
+                    <MenuItem value={2}><PriorityHighIcon /></MenuItem>
+                    <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -859,24 +859,24 @@ export default function TaskManager() {
               </Grid>
               <ol>
                 {subtaskList.map((subtask) => (
-                    <li key={subtask.id}>
-                      <Fab 
-                        color="primary" 
-                        size="small" 
-                        onClick={() => {
-                          handleRemoveSubtask(subtask.id)
-                        }}
-                      >
-                        <DeleteIcon/>
-                      </Fab>
-                      {' '}
-                      <TextField
-                        type="text" 
-                        size="small"
-                        value={subtask.name}
-                        onChange={(e) => {handleEditSubtask(subtask.id, e.target.value)}}
-                      /> 
-                    </li>
+                  <li key={subtask.id}>
+                    <Fab
+                      color="primary"
+                      size="small"
+                      onClick={() => {
+                        handleRemoveSubtask(subtask.id)
+                      }}
+                    >
+                      <DeleteIcon />
+                    </Fab>
+                    {' '}
+                    <TextField
+                      type="text"
+                      size="small"
+                      value={subtask.name}
+                      onChange={(e) => { handleEditSubtask(subtask.id, e.target.value) }}
+                    />
+                  </li>
                 ))}
               </ol>
 
@@ -936,7 +936,7 @@ export default function TaskManager() {
           />
         </div>
 
-        <div className="task-column">
+        <div>
           <div
             style={{
               display: "flex",

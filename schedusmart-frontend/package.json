@@ -26,6 +26,7 @@
     "@mui/x-data-grid": "^7.0.0",
     "@mui/x-date-pickers": "^7.1.0",
     "@react-google-maps/api": "^2.19.3",
+    "autosuggest-highlight": "^3.3.4",
     "dayjs": "^1.11.10",
     "file-saver": "^2.0.5",
     "firebase": "^10.8.0",
@@ -44,6 +45,7 @@
     "react-native": "^0.73.6",
     "react-router-dom": "^6.22.1",
     "react-toastify": "^10.0.4",
+    "use-places-autocomplete": "^4.0.1",
     "uuid": "^9.0.1"
   },
   "proxy": "http://localhost:5000",
