@@ -3,17 +3,15 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { AppBar, IconButton, Menu, Toolbar } from "@mui/material";
+import { AppBar, Toolbar } from "@mui/material";
 import { orange } from "@mui/material/colors";
 
 // To install the dependencies, run the following command in the terminal:
@@ -30,51 +28,32 @@ const theme = createTheme({
   },
 });
 
-export default function SignIn() {
+export default function ResetPassword() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
 
-    // Validate if email and password are not empty
-    if (!email || !password) {
-      alert("Please enter both email and password.");
+    // Validate if email is not empty
+    if (!email) {
+      alert("Please enter your email address.");
       return;
     }
 
-    const response = await fetch(flaskURL + "/login", {
+    const response = await fetch(flaskURL + "/reset_password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email,
-        password: password,
       }),
-      credentials: "include",
     });
+
     if (!response.ok) {
-      alert("something went wrong, refresh your website");
+      alert("Something went wrong. Please try again later.");
     } else {
-      switch (response.status) {
-        case 201:
-          console.log("sign-in account successfull");
-          const responseData = await response.json();
-          const userId = responseData.user_id;
-          sessionStorage.setItem("user_id", userId);
-          window.location.href = "/calendar";
-          window.location.href = "/calendar";
-          break;
-        case 205:
-          alert("Invalid email or password.");
-          break;
-        case 206:
-          alert(
-            "To login, please click on the verification link in the email we sent you!",
-          );
-          break;
-      }
+      alert("Password reset email sent successfully.");
     }
   };
 
@@ -88,7 +67,9 @@ export default function SignIn() {
           </Button>
           <div>
             <Button color="inherit">Features</Button>
-            <Button color="secondary">Sign In</Button>
+            <Button color="inherit" href="./signin">
+              Sign In
+            </Button>
             <Button color="inherit" href="./createaccount">
               Create Account
             </Button>
@@ -106,13 +87,13 @@ export default function SignIn() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOpenOutlinedIcon />
+            <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Reset Password
           </Typography>
           <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-            Enter your email and password
+            Enter your email address to reset your password.
           </Typography>
           <Box
             component="form"
@@ -130,33 +111,18 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2, bgcolor: "warning.main" }}
             >
-              Login
+              Reset Password
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="./resetpassword" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
-                <Link href="./createaccount" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="./signin" variant="body2">
+                  Back to Sign In
                 </Link>
               </Grid>
             </Grid>

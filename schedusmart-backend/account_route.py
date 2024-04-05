@@ -39,6 +39,18 @@ def login():
         response.status_code = 201
     return response
 
+# Route to handle password reset requests
+@account.route('/reset_password', methods=['POST'])
+def reset_password():
+    data = request.get_json()
+    email = data.get('email')
+
+    try:
+        auth.send_password_reset_email(email)
+        return jsonify({'message': 'Password reset email sent successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @account.route('/user_data', methods=['POST'])
 def user_data():
