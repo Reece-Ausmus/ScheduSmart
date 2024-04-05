@@ -4,10 +4,10 @@ import { Navigate } from 'react-router-dom'
 import './MainFrame.css'
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { AppBar, Toolbar } from "@mui/material";
-import { orange, yellow } from "@mui/material/colors";
+import { AppBar, Toolbar, Typography, Avatar, Menu, MenuItem, IconButton } from "@mui/material";
+import { orange } from "@mui/material/colors";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import Typography from "@mui/material/Typography";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const theme = createTheme({
   palette: {
@@ -15,7 +15,7 @@ const theme = createTheme({
       main: orange[500],
     },
     secondary: {
-      main: "#ab5600",
+      main: "#ab5600"
     },
   },
   components: {
@@ -31,6 +31,15 @@ const theme = createTheme({
 
 export default function Dashboard() {
   const [goToWelcome, setGoToWelcome] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   if (goToWelcome) {
     return (
@@ -68,16 +77,29 @@ export default function Dashboard() {
             <Button color="inherit" href="./taskmanager">
               Task manager
             </Button>
-            <Button color="inherit" href="./settings">
-              Settings
-            </Button>
-            <Button color="inherit" onClick={handleConfirmClick}>
-              Sign Out
-            </Button>
+            <IconButton
+              color="inherit"
+              onClick={handleMenuOpen}
+              aria-controls="profile-menu"
+              aria-haspopup="true"
+              edge="end"
+            >
+              <AccountCircleIcon/>
+            </IconButton>
+            <Menu
+              id="profile-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem component="a" href="./settings" onClick={handleMenuClose}>
+                Settings
+              </MenuItem>
+              <MenuItem onClick={handleConfirmClick}>Sign Out</MenuItem>
+            </Menu>
           </div>
         </Toolbar>
       </AppBar>
     </ThemeProvider>
   );
 }
-
