@@ -35,14 +35,14 @@ def create_event():
         ret = add_new_event(receive_event)
         if ret == 1:
             response = jsonify({'error': 'event not created'})
-            response.status_code = 205
+            response.status_code = 201
         else:
             response = jsonify({'message': 'Done'})
             response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status_code = 206
+        response.status_code = 201
     return response
 
 
@@ -164,8 +164,8 @@ def get_events():
     calendar = request.get_json()
     ret = f_get_events(calendar)
     if ret == 1:
-        response = jsonify({'response': 'fail retrieve events'})
-        response.status_code = 205
+        response = jsonify({'error': 'events is null'})
+        response.status_code = 201
     else:
         response = jsonify(ret)
         response.status_code = 201
