@@ -19,7 +19,7 @@ import { flaskURL, user_id } from "../config";
 import React, { useState, useEffect,useRef,useMemo } from "react";
 import Weather from "./Weather";
 import Timezone from "./Timezone";
-import PopUpForm from "../components/PopupForm";
+import EmailForm from "../components/Email";
 import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
 import send_request from "./requester";
@@ -52,37 +52,17 @@ const theme = createTheme({
 
 const steps = [
   {
-    target: '#calendar-button',
-    content: 'Navigate back to the calendar page here.',
+    target: ".upperBarButton",
+    content: "Go to settings",
     disableBeacon: true, // automate to start the tours
   },
   {
-    target: '#change-calendar',
-    content: 'Update your calendar view here.',
+    target: ".calender_container_controlbar",
+    content: "You can change the format",
   },
   {
-    target: "#weather-container",
+    target: ".weather_container",
     content: "The current weather. Location can be changed in settings.",
-  },
-  {
-    target: '#habits-button',
-    content: 'Track your calories and health here.',
-  },
-  {
-    target: '#notes-button',
-    content: 'Keep track of your notes here.',
-  },
-  {
-    target: '#task-manager',
-    content: 'Manage your assignments and tasks here.',
-  },
-  {
-    target: '#profile-menu',
-    content: 'Access settings or sign out in your profile menu.',
-  },
-  {
-    target: "#timezone-select",
-    content: "Update your timezone here.",
   },
 ];
 
@@ -848,6 +828,48 @@ export default function MainFrame() {
       setSemesterEndDate(e.target.value);
     };
 
+
+    const [amountOfTime, setAmountOfTime] = useState("");
+    const [availableTime, setAvailableTime] = useState("");
+    const [email, setEmail] = useState("");
+    const [showClosestAvailablePopup, setShowClosestAvailablePopup] = useState(false);
+
+    const handleClosestAvailable = () => {
+      setShowClosestAvailablePopup(!showClosestAvailablePopup);
+    };
+
+    const handleFindClosestAvailable = async (e) => {
+      e.preventDefault();
+
+      const user_time = {
+        timeAmount: semesterName,
+        user_id: user_id,
+      };
+
+      const response = await fetch(flaskURL + "/find_closest_available", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user_time),
+        credentials: "include",
+      });
+      if (response.status_code = 200) {
+        console.log("find time range!");
+        setAvailableTime(response.time);
+        setEmail(response,email);
+        const message = 'You have an extraordinary session during ${availableTime}';
+
+        // TODO: send email
+        EmailForm(email, message);
+      }
+      setShowClosestAvailablePopup(!showClosestAvailablePopup);
+    };
+
+    const handleCancelClosestAvailable = () => {
+      setShowClosestAvailablePopup(!showClosestAvailablePopup);
+    };
+
     return (
       <ThemeProvider theme={theme}>
         <div className="calendar-list">
@@ -1256,6 +1278,45 @@ export default function MainFrame() {
             )}
           </div>
 
+          {/*find closest available*/}
+          <div className="add_button">
+              <Button
+                variant="contained"
+                onClick={handleClosestAvailable}
+                style={{ marginLeft: "10px" }}
+              >
+                Find Closest Available
+              </Button>
+            </div>
+            {showClosestAvailablePopup && (
+              <div className="popup">
+                <div className="popup-content">
+                  <h2>Find Closest Available Time</h2>
+                  <div className="formgroup">
+                    <label htmlFor="amountOfTime">Amount of Time:</label>
+                    <input
+                      type="text"
+                      id="amountOfTime"
+                      value={amountOfTime}
+                      onChange={(e) => setAmountOfTime(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    className="formbutton fb1"
+                    onClick={handleFindClosestAvailable}
+                  >
+                    Add
+                  </button>
+                  <button
+                    className="formbutton fb2"
+                    onClick={handleCancelClosestAvailable}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
           {/* List of existing calendars */}
           <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
             {/* <Typography variant="body1" style={{ marginLeft: "10px" }}>Calendar list:</Typography> */}
@@ -1325,7 +1386,7 @@ export default function MainFrame() {
       <div>
         <h2 className="detailInfo">{currentTime.format("YYYY/MM/DD")}</h2>
         <div>
-          <div className="buttonGroup" id="change-calendar">
+          <div className="buttonGroup">
             <button
               style={{
                 backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d",
