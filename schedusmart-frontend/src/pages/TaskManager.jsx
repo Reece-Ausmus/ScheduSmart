@@ -762,6 +762,7 @@ export default function TaskManager() {
                     type="date"
                     id="date"
                     value={taskDate}
+                    style={{ backgroundColor: "transparent" }}
                     onChange={(e) => setTaskDate(e.target.value)}
                   />
                   {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -889,7 +890,8 @@ export default function TaskManager() {
                 ))}
               </ol>
 
-              <button
+              <Button 
+                variant="contained"    
                 id="closeModal"
                 style={{ marginRight: "10px" }}
                 onClick={() => {
@@ -912,26 +914,22 @@ export default function TaskManager() {
                   } else {
                     alert("Error! Missing Information! Please try again!");
                   }
-                }}
-              >
-                {" "}
-                Add{" "}
-              </button>
-              <button
-                id="closeModal"
-                onClick={() => {
-                  // Reset all the form fields or close the dialog
-                  setTaskName("New Task");
-                  setTaskTime(0);
-                  setTaskDesc("Task Description");
-                  setSubtaskDesc("");
-                  setSubtaskList([]);
-                  setTaskFile("");
-                  document.getElementById("modal").close();
-                }}
-              >
-                Cancel
-              </button>
+                }}>
+              Add
+            </Button>
+            <Button 
+            variant="contained"
+            id="closeModal"
+            onClick={() => {
+              // Reset all the form fields or close the dialog
+              setTaskName("New Task");
+              setTaskTime(0);
+              setTaskDesc("Task Description");
+              setSubtaskDesc("");
+              setSubtaskList([]);
+              setTaskFile("");
+              document.getElementById("modal").close();
+            }}>Cancel </Button>              
             </DialogContent>
           </dialog>
 
