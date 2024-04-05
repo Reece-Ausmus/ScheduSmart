@@ -442,32 +442,15 @@ export default function MainFrame() {
         emails: eventEmailInvitations,
         type: eventType,
       };
-      const response = await fetch(flaskURL + "/create_event", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(new_event),
-        credentials: "include",
-      });
-      if (!response.ok) {
-        alert("Something went wrong, refresh your website!");
-        return;
+      
+      const creat_event_response = await send_request("/create_event", new_event);
+      if (creat_event_response.error != undefined) {
+        alert(creat_event_response.error)
       } else {
-        switch (response.status) {
-          case 201:
-            console.log("Event created successfully");
-            const data = await response.json();
-            new_event["event_id"] = data["event_id"];
-            setEvents([...events, new_event]);
-            break;
-          case 205:
-            alert("Event not created!");
-            break;
-          case 206:
-            alert("Missing information!");
-            break;
-        }
+        console.log("Event created successfully");
+        const data = await response.json();
+        new_event["event_id"] = data["event_id"];
+        setEvents([...events, new_event]);
       }
 
       setEventName("");
@@ -1662,7 +1645,6 @@ export default function MainFrame() {
 
   useEffect(() => {
     const fetchEvents = () => {
-      console.log(selectedCalendars);
       if (selectedCalendars == undefined || selectedCalendars.length == 0) {
         console.log("selectedCalendars is null!!");
         setAllEventsArray([]);
@@ -1680,7 +1662,7 @@ export default function MainFrame() {
 
       selectedCalendars.map(async (calendar) => {
         let events = await send_request("/get_events", {
-          calendar_id: calendar.calendar_id,
+          "calendar_id": calendar.calendar_id
         });
 
         if (events.data != undefined) {
