@@ -287,7 +287,7 @@ export default function TaskManager() {
   // used to hold data for tasks
   const [taskName, setTaskName] = useState("");
   const [taskTime, setTaskTime] = useState(0);
-  const [taskDate, setTaskDate] = useState("");
+  const [taskDate, setTaskDate] = useState(dayjs());
   const [taskDesc, setTaskDesc] = useState("");
   const [taskFile, setTaskFile] = useState();
 
@@ -764,6 +764,13 @@ export default function TaskManager() {
                     value={taskDate}
                     onChange={(e) => setTaskDate(e.target.value)}
                   />
+                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Controlled picker"
+                      value={taskDate}
+                      onChange={(e) => setTaskDate(e.target.value)}
+                    />
+                  </LocalizationProvider> */}
                 </Grid>
               </Grid>
               <Grid
