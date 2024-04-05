@@ -45,6 +45,7 @@ def create_event():
         response.status_code = 206
     return response
 
+
 @calendar.route('/update_event', methods=['POST'])
 def update_event():
     receive_event = request.get_json()
@@ -61,6 +62,7 @@ def update_event():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
 
 @calendar.route('/delete_event', methods=['POST'])
 def delete_event():
@@ -80,6 +82,7 @@ def delete_event():
         response.status_code = 206
     return response
 
+
 @calendar.route('/invite_users_to_event', methods=['POST'])
 def invite_users_to_event():
     receive_event = request.get_json()
@@ -97,6 +100,7 @@ def invite_users_to_event():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
 
 @calendar.route('/get_invitations', methods=['POST'])
 def get_invitations():
@@ -116,6 +120,7 @@ def get_invitations():
         response.status_code = 206
     return response
 
+
 @calendar.route('/accept_invitation', methods=['POST'])
 def accept_invitation():
     receive_user = request.get_json()
@@ -133,6 +138,7 @@ def accept_invitation():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
 
 @calendar.route('/decline_invitation', methods=['POST'])
 def decline_invitation():
@@ -152,6 +158,7 @@ def decline_invitation():
         response.status_code = 206
     return response
 
+
 @calendar.route('/get_events', methods=['POST'])
 def get_events():
     calendar = request.get_json()
@@ -163,6 +170,7 @@ def get_events():
         response = jsonify(ret)
         response.status_code = 201
     return response
+
 
 @calendar.route('/get_event', methods=['POST'])
 def get_event():
