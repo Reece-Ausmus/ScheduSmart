@@ -60,7 +60,7 @@ export default function Dashboard() {
     <ThemeProvider theme={theme}>
       <AppBar position="static" color="primary">
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Button variant="contained" href="./calendar">
+          <Button variant="contained" href="./calendar" id="calendar-button">
             <CalendarMonthIcon sx={{ marginRight: 1 }} />
             <Typography variant="body1">ScheduSmart</Typography>
           </Button>
@@ -68,13 +68,13 @@ export default function Dashboard() {
             <Button variant="inherit" href="./calendar">
               <CalendarMonthIcon sx={{ marginRight: 1 }} />
             </Button>
-            <Button color="inherit" href="./habits">
+            <Button color="inherit" href="./habits" id="habits-button">
               Habits
             </Button>
-            <Button color="inherit" href="./notes">
+            <Button color="inherit" href="./notes" id="notes-button">
               Notes
             </Button>
-            <Button color="inherit" href="./taskmanager">
+            <Button color="inherit" href="./taskmanager" id="task-manager">
               Task manager
             </Button>
             <IconButton
@@ -83,6 +83,7 @@ export default function Dashboard() {
               aria-controls="profile-menu"
               aria-haspopup="true"
               edge="end"
+              id="profile-menu"
             >
               <AccountCircleIcon/>
             </IconButton>

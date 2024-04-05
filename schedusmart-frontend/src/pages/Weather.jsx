@@ -62,7 +62,7 @@ export default function Weather() {
         <CardContent> */}
         <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
           {typeof weather.main !== "undefined" ? (
-            <Typography variant="body1">
+            <Typography variant="body1" id="weather-container">
               The temperature in {weather.name} is {weather.main.temp} ℉.
             </Typography>
           ) : (
