@@ -89,6 +89,7 @@ const steps = [
 export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
+  const [calendarList, setCalendarList] = useState([]);
 
   const [goToTaskManager, setGoToTaskManager] = useState(false);
   const [allEventsArray, setAllEventsArray] = useState([]);
@@ -109,11 +110,7 @@ export default function MainFrame() {
     "November",
     "December",
   ];
-  //const todayYear = today.getFullYear();
 
-  const [detailInfo, setDetailInfo] = useState(
-    String(today.getMonth() + 1) + "/" + String(today.getDate())
-  );
 
   useEffect(() => {
     const fetchDefaultMode = async () => {
@@ -126,6 +123,20 @@ export default function MainFrame() {
       });
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
+      const newCalendars = dataOfUser.calendars;
+      const updatedCalendarList = [...calendarList];
+
+      for (const calendarName in newCalendars) {
+        const name = newCalendars[calendarName];
+        if (calendarName === "Tasks") {
+          sessionStorage.setItem("taskCalendarId", name["calendar_id"]);
+        }
+        updatedCalendarList.push({
+          calendar_id: name["calendar_id"],
+          name: calendarName,
+        });
+      }
+      setCalendarList(updatedCalendarList);
     };
 
     fetchDefaultMode();
@@ -636,53 +647,8 @@ export default function MainFrame() {
 
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
-    const [calendarList, setCalendarList] = useState([]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        const response = await fetch(flaskURL + "/user_data", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: user_id,
-          }),
-          credentials: "include",
-        });
-        if (!response.ok) {
-          alert("Account Info Not Found. Please log-out and log-in again");
-        } else {
-          switch (response.status) {
-            case 201:
-              const responseData = await response.json();
-              const newCalendars = responseData.calendars;
-              const updatedCalendarList = [...calendarList];
-
-              for (const calendarName in newCalendars) {
-                const name = newCalendars[calendarName];
-                if (calendarName === "Tasks") {
-                  sessionStorage.setItem("taskCalendarId", name["calendar_id"]);
-                }
-                updatedCalendarList.push({
-                  calendar_id: name["calendar_id"],
-                  name: calendarName,
-                });
-              }
-              setCalendarList(updatedCalendarList);
-              break;
-            case 202:
-              alert("User Not Found");
-              break;
-            case 205:
-              alert("Failing to retrieve user data");
-              break;
-          }
-        }
-      };
-      fetchData();
-    }, []);
-
+    
     // Function to handle the creation of a new calendar
     const handleCreateCalendar = async () => {
       console.log("this is called, new calendar", newCalendarName)
