@@ -166,7 +166,7 @@ export default function Createaccount() {
             <Typography variant="body1">ScheduSmart</Typography>
           </Button>
           <div>
-            <Button color="inherit">Features</Button>
+            <Button color="inherit" href="./resetpassword">Features</Button>
             <Button color="inherit" href="./signin">
               Sign In
             </Button>
