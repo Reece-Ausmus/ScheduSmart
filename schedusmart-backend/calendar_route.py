@@ -14,17 +14,17 @@ def create_calendar():
         ret = response['response_status']
         if ret == 1:
             response = jsonify({'error': 'calendar not created'})
-            response.status_code = 205
+            response.status_code = 201
         elif ret == 2:
             response = jsonify({'error': 'calendar not added to user'})
-            response.status_code = 207
+            response.status_code = 201
         else:
             response = jsonify({'calendar_id': response['calendar_id']})
             response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status_code = 206
+        response.status_code = 201
     return response
 
 
