@@ -89,13 +89,7 @@ const steps = [
 export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
-  /*
-  
-    { calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5", name: "cal_name" },
-    { calendar_id: "1edf8a72d18a382312e04eaa1e8aa8c3", name: "cal_name" },
-    { calendar_id: "80ce85b4eaa97197e2dd929f20646552", name: "cal_name" },
 
-  */
   const [goToTaskManager, setGoToTaskManager] = useState(false);
   const [allEventsArray, setAllEventsArray] = useState([]);
   const [taskList, setTaskList] = useState([]);
@@ -138,9 +132,7 @@ export default function MainFrame() {
   }, []);
 
   function CalendarList() {
-    const [loading, setLoading] = useState(true);
     const [invitations, setInvitations] = useState([]);
-    const [invitationsWithInfo, setInvitationsWithInfo] = useState([]);
 
     // add event consts
     const [events, setEvents] = useState([]);
@@ -678,7 +670,6 @@ export default function MainFrame() {
                 });
               }
               setCalendarList(updatedCalendarList);
-              setLoading(false);
               break;
             case 202:
               alert("User Not Found");
@@ -694,6 +685,7 @@ export default function MainFrame() {
 
     // Function to handle the creation of a new calendar
     const handleCreateCalendar = async () => {
+      console.log("this is called, new calendar", newCalendarName)
       if (!newCalendarName.localeCompare("")) {
         alert("Please enter a calendar name!");
         return;
@@ -715,40 +707,17 @@ export default function MainFrame() {
         newCalendarName: newCalendarName,
         user_id: user_id,
       };
-      const response = await fetch(flaskURL + "/create_calendar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(new_calendar),
-        credentials: "include",
-      });
-      if (!response.ok) {
-        alert("Something went wrong, refresh your website!");
-        return;
+      const createCalendarRet = await send_request("/create_calendar", new_calendar);
+      if (createCalendarRet["error"] !== undefined) {
+        alert(createCalendarRet["error"] + "\ntry again!")
       } else {
-        switch (response.status) {
-          case 201:
-            console.log("Calendar created successfully");
-            const responseData = await response.json();
-            setCalendarList([
-              ...calendarList,
-              {
-                calendar_id: responseData["calendar_id"],
-                name: newCalendarName,
-              },
-            ]);
-            break;
-          case 205:
-            alert("Calendar not created!");
-            break;
-          case 206:
-            alert("Missing information!");
-            break;
-          case 207:
-            alert("Calendar not added to user!");
-            break;
-        }
+        setCalendarList([
+          ...calendarList,
+          {
+            calendar_id: createCalendarRet["calendar_id"],
+            name: newCalendarName,
+          },
+        ]);
       }
 
       // Clear the input field after creating the calendar
