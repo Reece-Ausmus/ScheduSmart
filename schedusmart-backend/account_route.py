@@ -39,6 +39,7 @@ def login():
         response.status_code = 201
     return response
 
+
 # Route to handle password reset requests
 @account.route('/reset_password', methods=['POST'])
 def reset_password():
@@ -103,6 +104,7 @@ def update_location_settings():
         response.status_code = 206
     return response
 
+
 @account.route('/get_location_default_settings', methods=['POST'])
 def get_location_default_settings():
     receive_user = request.get_json()
@@ -128,6 +130,7 @@ def update_account_info():
         response.status_code = 206
     return response
 
+
 # This route is for adding habits
 @account.route('/add_habit', methods=['POST'])
 def add_habit():
@@ -144,6 +147,7 @@ def add_habit():
         response = jsonify({'error': 'An error occured'})
         response.status_code = 500
     return response
+
 
 # This route is for updating habits
 @account.route('/update_habit', methods=['POST'])
@@ -181,13 +185,14 @@ def update_habit():
         print("Failed to update habit:", e)
         return jsonify({'error': 'Failed to update habit'}), 500
 
+
 # This route is for deleting habits
 @account.route('/delete_habit', methods=['POST'])
 def delete_habit():
     data = request.get_json()
     user_id = data.get('user_id')
     item_name = data.get('item_name')
-    
+
     if not user_id or not item_name:
         return jsonify({'error': 'User ID and habit ID are required parameters'}), 400
 
@@ -201,13 +206,14 @@ def delete_habit():
     except Exception as e:
         print("Failed to delete habit:", e)
         return jsonify({'error': 'Failed to delete habit'}), 500
-    
+
+
 # This route is for getting all habits for a user
 @account.route('/get_habits', methods=['POST'])
 def get_habits():
     data = request.get_json()
     user_id = data.get('user_id')
-    
+
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
 
@@ -217,17 +223,17 @@ def get_habits():
     try:
         # Get all habits for the user from the Firebase database
         user_habits = db.child(user_habits_path).get()
-        
+
         # If the user has no habits, return an empty list
         if not user_habits.val():
             return jsonify({'habits': []}), 200
-        
+
         # Convert Firebase response to list of habits
         habits_list = []
         for habit_name, habit_data in user_habits.val().items():
             habit_data['itemName'] = habit_name
             habits_list.append(habit_data)
-        
+
         return jsonify({'habits': habits_list}), 200
     except Exception as e:
         print("Failed to get habits:", e)

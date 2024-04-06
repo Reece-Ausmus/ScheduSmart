@@ -19,7 +19,7 @@ def get_events():
     ret = f_get_events(calendar)
     if ret == 1:
         response = jsonify({'response': 'fail retrieve events'})
-        response.status_code = 205
+        response.status_code = 201
     else:
         response = jsonify(ret)
         response.status_code = 201

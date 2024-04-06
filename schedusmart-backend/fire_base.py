@@ -343,11 +343,9 @@ def f_get_events(calendar):
         events = []
         for event_id in data_event_ids.each():
             event = event_id.val()
-            print(event["event_id"])
             e = db.child("Events").child(event["event_id"]).get().val()
             e["event_id"] = event["event_id"]
             events.append(e)
-        print(events)
         return {"data": events}
     except Exception as e:
         print(f"fail to retrieve events data: \n{e}")
