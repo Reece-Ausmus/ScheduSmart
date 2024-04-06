@@ -262,15 +262,14 @@ export default function Calendar(selectMode, e, d) {
 
   let viewType = selectMode == 1 ? "Day" : "Week";
 
+  const [calendar, setCalendar] = useState(false);
+  const [events, setEvents] = useState([]);
   const calendarRef = useRef();
 
   useEffect(() => {
-    //console.log("this is called", e);
-    calendarRef.current.control.update({
-      startDate: todayString,
-      events: e,
-    });
-  }, [e, d]);
+    setEvents(e);
+    setCalendar(true);
+  }, [e]);
 
   const handleOnEventClick = async (args) => {
     console.log(args);
@@ -322,11 +321,12 @@ export default function Calendar(selectMode, e, d) {
           display: selectMode === 1 || selectMode === 2 ? "block" : "none",
         }}
       >
-        <DayPilotCalendar
-          {...{ viewType: viewType }}
-          ref={calendarRef}
+        {calendar && (<DayPilotCalendar
+          viewType={viewType} 
+          events={events}
+          controlRef={setCalendar}
           onEventClick={handleOnEventClick}
-        />
+        />)}
       </div>
 
       {showUpdateEventPopup && (

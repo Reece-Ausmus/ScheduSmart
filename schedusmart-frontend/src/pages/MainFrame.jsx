@@ -1566,7 +1566,6 @@ export default function MainFrame() {
   useEffect(() => {
     const fetchEvents = () => {
       if (selectedCalendars == undefined || selectedCalendars.length == 0) {
-        console.log("selectedCalendars is null!!");
         setAllEventsArray([]);
         return;
       }
