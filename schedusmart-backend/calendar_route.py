@@ -34,11 +34,11 @@ def create_event():
     receive_event = request.get_json()
     try:
         ret = add_new_event(receive_event)
-        if ret == 1:
+        if ret['response_status'] == 1:
             response = jsonify({'error': 'event not created'})
             response.status_code = 201
         else:
-            response = jsonify({'message': 'Done'})
+            response = jsonify({'message': 'Done', "even_id": ret['event_id']})
             response.status_code = 201
     except:
         traceback.print_exc()

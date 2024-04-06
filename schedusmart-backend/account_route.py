@@ -256,6 +256,7 @@ def request_friend():
         return jsonify({'error': 'require friend\'s username in name field'}), 201
     return jsonify(add_friend(data)), 201
 
+
 @account.route('/get_friends', methods=['POST'])
 def get_friend():
     data = request.get_json()
@@ -265,4 +266,3 @@ def get_friend():
     except KeyError:
         return jsonify({'error': 'User ID is required'}), 201
     return jsonify(get_friend_manager(data)), 201
-

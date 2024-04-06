@@ -388,11 +388,11 @@ def add_new_event(event_info):
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
-        traceback.print_exc()
+        print(f"{e}")
         print("Failed to create calendar:", e)
         return {'response_status': 1}
     return {
-        'response_status': 1,
+        'response_status': 0,
         'event_id': event_id
     }
 
