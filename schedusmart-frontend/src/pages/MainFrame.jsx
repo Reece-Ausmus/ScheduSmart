@@ -1292,41 +1292,16 @@ export default function MainFrame() {
   const [currentTime, setCurrentTime] = useState(d);
 
   function calendarControlFlowButtonPackage() {
-    //const d = moment();
-    //const [currentTime, setCurrentTime] = useState(d);
-
     // next
     useHotkeys("Shift+n", () => {
-      /*console.log(today.toString())
-      console.log(String(today.getFullYear()))
-      console.log(String(today.getMonth))
-      console.log(String(today.getDate))
-      console.log(selectMode)*/
-      //console.log(d.format('MM/DD'));
-
-      //console.log(d.format('MM/DD'));
       setCurrentTime(moment(currentTime.add(1, "days")));
       updateToday(1);
-      //console.log(today.toDateString())
-      //setCurrentTime(today => {
-      //  today.setDate(today.getDate() + 1);
-
-      //});
-
-      //console.log(currentTime.format('MM/DD'))
     });
 
     // prev
     useHotkeys("Shift+p", () => {
       setCurrentTime(moment(currentTime.subtract(1, "days")));
       updateToday(-1);
-      //console.log(today.toDateString)
-      //setCurrentTime(today => {
-      //  today.setDate(today.getDate() + 1);
-
-      //});
-
-      //console.log(currentTime.format('MM/DD'))
     });
 
     return (
@@ -1342,9 +1317,6 @@ export default function MainFrame() {
               id="1"
               onClick={() => {
                 setSelectMode(1);
-                //setDetailInfo(
-                //</div>  String(today.getMonth() + 1) + "/" + String(today.getDate())
-                //);
               }}
             >
               day
@@ -1357,9 +1329,6 @@ export default function MainFrame() {
               id="2"
               onClick={() => {
                 setSelectMode(2);
-                //setDetailInfo(
-                //</div>  String(today.getMonth() + 1) + "/" + String(today.getDate())
-                //);
               }}
             >
               week
@@ -1372,7 +1341,6 @@ export default function MainFrame() {
               id="3"
               onClick={() => {
                 setSelectMode(3);
-                //setDetailInfo(monthArray[todayMonth]);
               }}
             >
               month
@@ -1385,7 +1353,6 @@ export default function MainFrame() {
               id="4"
               onClick={() => {
                 setSelectMode(4);
-                //setDetailInfo(todayYear);
               }}
             >
               year
