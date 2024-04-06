@@ -370,10 +370,6 @@ def add_new_event(event_info):
         raise Exception("User ID is None")
 
     event_id = secrets.token_hex(16)
-    print('name')
-    print(event_info['start_time'])
-    print('calendar')
-    print(event_info['calendar'])
     data = {
         'name': event_info['name'],
         'desc': event_info['desc'],
@@ -616,6 +612,7 @@ def find_closest_available_time(data):
     earlist_end_time = earlist_start_time + time_del
     earlist_start_time = earlist_start_time.strftime("%Y-%m-%d %H:%M")
     earlist_end_time = earlist_end_time.strftime("%Y-%m-%d %H:%M")
+    event_list = []
 
 
     for key, val in calendars.items():
@@ -631,7 +628,12 @@ def find_closest_available_time(data):
                 continue
             start_time = e['start_date'] + ' ' + e['start_time']
             end_time = e['end_date'] + ' ' + e['end_time']
-            if (start_time < earlist_start_time and end_time > earlist_start_time) or (start_time < earlist_end_time and end_time > earlist_end_time):
+            event_list.append((start_time, end_time))
+
+        event_list.sort(key=lambda a: a[1])
+
+        for start_time, end_time in event_list:
+            if (start_time <= earlist_start_time and end_time >= earlist_start_time) or (start_time <= earlist_end_time and end_time >= earlist_end_time):
                 temp_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M")
                 time_del = timedelta(minutes=5)  
                 temp_start = temp_time + time_del
@@ -639,7 +641,6 @@ def find_closest_available_time(data):
                 temp_end = temp_start + time_del
                 earlist_start_time = temp_start.strftime("%Y-%m-%d %H:%M")
                 earlist_end_time = temp_end.strftime("%Y-%m-%d %H:%M")
-        
 
     time = earlist_start_time + ' - ' + earlist_end_time
 
