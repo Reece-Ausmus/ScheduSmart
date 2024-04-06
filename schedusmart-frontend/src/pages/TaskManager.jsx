@@ -591,6 +591,17 @@ export default function TaskManager() {
     setSubtaskList(mapped)
   }
 
+  function handlePriorityChange(id, priority) {
+    const mapped = todoList.map((item) => {
+      if (item.id == id) {
+        item = {...item, priority: priority}
+      }
+      return item;
+    })
+
+    setTodoList(mapped)
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
@@ -909,6 +920,7 @@ export default function TaskManager() {
                         file_url: taskFile,
                         scheduled: false,
                         time_allo: 0,
+                        priority: 0, 
                       },
                     ]);
                   } else {
@@ -937,8 +949,10 @@ export default function TaskManager() {
             list={todoList}
             onToggle={handleToggleCompleted}
             option={sortOptionTodo}
+            priorityOption={prioOptionTodo}
             onToggleSubtask={handleToggleSubtask}
             onScheduled={handleScheduledTask}
+            onPriorityChange={handlePriorityChange}
             keyword={searchQueryTodo}
           />
         </div>
@@ -1008,20 +1022,33 @@ function TodoList({
   list,
   onToggle,
   option,
+  priorityOption,
   onToggleSubtask,
   onScheduled,
+  onPriorityChange,
   keyword,
 }) {
   let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
-    const results = list.filter((task) => {
+    let results = list.filter((task) => {
       return (
         task.title.toLowerCase().includes(keyword.toLowerCase()) ||
         task.desc.toLowerCase().includes(keyword.toLowerCase())
       );
     });
     list = results;
+  } else {
+    list = defaultList;
+  }
+
+  if (priorityOption !== 0) {
+    let results = list.filter((task) => {
+      return (
+        task.priority == priorityOption
+      ); 
+    })
+    list = results; 
   } else {
     list = defaultList;
   }
@@ -1201,6 +1228,7 @@ function TodoList({
           <TableCell>Attached File</TableCell>
           <TableCell>Task Checklist</TableCell>
           <TableCell>Actions</TableCell>
+          <TableCell>Tag</TableCell>
           <TableCell>Complete?</TableCell>
         </TableRow>
       </TableHead>
@@ -1267,6 +1295,22 @@ function TodoList({
               >
                 Schedule Task Time
               </Button>
+            </TableCell>
+            <TableCell sx={{ m: 1, width: 200 }} size="small">
+                  <Select
+                    labelId="priority"
+                    id="priority"
+                    value={task.priority}
+                    label="priority"
+                    onChange={(e) => {
+                      onPriorityChange(task.id, e.target.value)
+                    }}
+                  >
+                    <MenuItem value={0}>None</MenuItem>
+                    <MenuItem value={1}><StarRateIcon /></MenuItem>
+                    <MenuItem value={2}><PriorityHighIcon /></MenuItem>
+                    <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
+                  </Select>
             </TableCell>
             <TableCell>
               <Checkbox
