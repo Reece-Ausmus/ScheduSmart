@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from fire_base import *
+import smtplib
 
 calendar = Blueprint('calendar', __name__)
 
@@ -248,27 +249,15 @@ def update_calendar_format():
 
 
 # this is to retrieve calendar default mode
-@calendar.route('/set_amount_of_time', methods=['POST'])
-def set_amount_of_time():
-    receive_user = request.get_json()
-    uid = receive_user['userId']
-    time = receive_user['time']
-    '''
-    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2':
-        response = jsonify({'available': 60})
-        response.status_code = 205
-        return response
+@calendar.route('/find_closest_available', methods=['POST'])
+def find_closest_available():
+    data = request.get_json()
+    ret = find_closest_available_time(data)
 
-    if time == 15:
-        response = jsonify({'available': 60})
-        response.status_code = 208
-        return response
-
-    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2' and time == '15':
-        response = jsonify({'available': 60})
-        response.status_code = 201
-        return response
-    '''
+    response = jsonify(ret)
+    response.status_code = 201
+    
+    return response
 
 
 @calendar.route('/upload', methods=['POST'])

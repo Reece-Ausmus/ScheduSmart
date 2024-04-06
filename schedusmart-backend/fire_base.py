@@ -67,6 +67,7 @@ import pyrebase
 from firebaseConfig import firebaseConfig
 import secrets
 import traceback
+from datetime import datetime, timedelta
 
 
 # to use this function, you will need to first log in the account with method:
@@ -369,6 +370,10 @@ def add_new_event(event_info):
         raise Exception("User ID is None")
 
     event_id = secrets.token_hex(16)
+    print('name')
+    print(event_info['start_time'])
+    print('calendar')
+    print(event_info['calendar'])
     data = {
         'name': event_info['name'],
         'desc': event_info['desc'],
@@ -594,8 +599,59 @@ def add_new_habit(data):
     except Exception as e:
         print("Failed to create habit:", e)
         return 1
+    
+def find_closest_available_time(data):
+    user_id = data['user_id']
+    timeRange = data['timeAmount']
+
+    # get all calendar
+    calendars = db.child("User").child(user_id).child("calendars").get().val()
+    earlist_start_time = ''
+    earlist_end_time = ''
+
+    loc_dt = datetime.today() 
+    time_del = timedelta(minutes=5)  
+    earlist_start_time = loc_dt + time_del
+    time_del = timedelta(minutes=int(timeRange))
+    earlist_end_time = earlist_start_time + time_del
+    earlist_start_time = earlist_start_time.strftime("%Y-%m-%d %H:%M")
+    earlist_end_time = earlist_end_time.strftime("%Y-%m-%d %H:%M")
 
 
+    for key, val in calendars.items():
+        # get all events from all calendars
+        data_event_ids = db.child("Calendars").child(val['calendar_id']).child("Events").get()
+        if data_event_ids.val() == None:
+            continue
+        
+        for event_id in data_event_ids.each():
+            event = event_id.val()
+            e = db.child("Events").child(event["event_id"]).get().val()
+            if e['start_date'] == '' and e['start_time'] == '' and e['end_date'] == '' and e['end_time'] == '':
+                continue
+            start_time = e['start_date'] + ' ' + e['start_time']
+            end_time = e['end_date'] + ' ' + e['end_time']
+            if (start_time < earlist_start_time and end_time > earlist_start_time) or (start_time < earlist_end_time and end_time > earlist_end_time):
+                temp_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M")
+                time_del = timedelta(minutes=5)  
+                temp_start = temp_time + time_del
+                time_del = timedelta(minutes=int(timeRange))  
+                temp_end = temp_start + time_del
+                earlist_start_time = temp_start.strftime("%Y-%m-%d %H:%M")
+                earlist_end_time = temp_end.strftime("%Y-%m-%d %H:%M")
+        
+
+    time = earlist_start_time + ' - ' + earlist_end_time
+
+    # get user email
+    email = db.child("User").child(user_id).child('email').get().val()
+    username = db.child("User").child(user_id).child("user_name").get().val()
+    ret = {'username': username, 'time': time, 'email':email}
+
+    return ret
+
+
+    
 # used to test with firebase #######################
 
 # Make sure you download the firebaseConfig.py file in google doc

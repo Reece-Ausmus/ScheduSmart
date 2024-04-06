@@ -748,8 +748,6 @@ export default function MainFrame() {
 
 
     const [amountOfTime, setAmountOfTime] = useState("");
-    const [availableTime, setAvailableTime] = useState("");
-    const [email, setEmail] = useState("");
     const [showClosestAvailablePopup, setShowClosestAvailablePopup] = useState(false);
 
     const handleClosestAvailable = () => {
@@ -757,30 +755,61 @@ export default function MainFrame() {
     };
 
     const handleFindClosestAvailable = async (e) => {
+      console.log(amountOfTime)
       e.preventDefault();
 
       const user_time = {
-        timeAmount: semesterName,
+        timeAmount: amountOfTime,
         user_id: user_id,
       };
 
-      const response = await fetch(flaskURL + "/find_closest_available", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user_time),
-        credentials: "include",
-      });
-      if (response.status_code = 200) {
-        console.log("find time range!");
-        setAvailableTime(response.time);
-        setEmail(response,email);
-        const message = 'You have an extraordinary session during ${availableTime}';
-
-        // TODO: send email
-        EmailForm(email, message);
+      const response = await send_request("/find_closest_available", user_time);
+      
+      if (response.username == undefined){
+        console.log('Something went wrong!')
       }
+      else{
+        console.log("find time range!");
+        const message = 'You have an extraordinary session during ' + response.time;
+        
+        // TODO: send email
+        EmailForm(response.username, response.email, message);
+
+        // create event
+        const calendar_id = sessionStorage.getItem("taskCalendarId");
+        var temp = response.time.split(" ")
+        console.log(calendar_id)
+
+        const new_event = {
+          name: 'extraordinary session',
+          desc: eventDescription,
+          start_time: temp[1],
+          end_time: temp[4],
+          start_date: temp[0],
+          end_date: temp[3],
+          location: '',
+          calendar: calendar_id,
+          repetition_type: "none",
+          repetition_unit: "",
+          repetition_val: 1,
+          selected_days: [],
+          user_id: user_id,
+          emails: [],
+          type: eventType,
+        };
+        
+        const creat_event_response = await send_request("/create_event", new_event);
+        if (creat_event_response.error != undefined) {
+          alert(creat_event_response.error)
+        } else {
+          console.log("Event created successfully");
+          const data = await response.json();
+          new_event["event_id"] = data["event_id"];
+          setEvents([...events, new_event]);
+        }
+        
+      }
+
       setShowClosestAvailablePopup(!showClosestAvailablePopup);
     };
 
@@ -1211,7 +1240,7 @@ export default function MainFrame() {
                 <div className="popup-content">
                   <h2>Find Closest Available Time</h2>
                   <div className="formgroup">
-                    <label htmlFor="amountOfTime">Amount of Time:</label>
+                    <label htmlFor="amountOfTime">Amount of Time (time):</label>
                     <input
                       type="text"
                       id="amountOfTime"
@@ -1385,7 +1414,7 @@ export default function MainFrame() {
       //let temp = '12:00 - 13:00'
 
       //const d = moment()
-      console.log(amountOfTime);
+      //console.log(amountOfTime);
       //console.log(d.format('YYYY/MM/DD h:mm:ss a'))
 
       if (amountOfTime < 30) {
