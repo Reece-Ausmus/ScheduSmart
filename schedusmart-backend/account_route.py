@@ -247,13 +247,22 @@ def request_friend():
     try:
         if not data["user_id"]:
             return jsonify({'error': 'User ID is required'}), 201
-    except KeyError as e:
+    except KeyError:
         return jsonify({'error': 'User ID is required'}), 201
     try:
         if not data["name"]:
             return jsonify({'error': 'require friend\'s username in name field'}), 201
-    except KeyError as e:
+    except KeyError:
         return jsonify({'error': 'require friend\'s username in name field'}), 201
     return jsonify(add_friend(data)), 201
 
+@account.route('/get_friends', methods=['POST'])
+def get_friend():
+    data = request.get_json()
+    try:
+        if not data["user_id"]:
+            return jsonify({'error': 'User ID is required'}), 201
+    except KeyError:
+        return jsonify({'error': 'User ID is required'}), 201
+    return jsonify(get_friend_manager(data)), 201
 

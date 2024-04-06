@@ -688,8 +688,14 @@ def __get_user_id(name):
     return None
 
 
-def get_friend_manager():
-    pass
+def get_friend_manager(user_data):
+    friend_list = __get_friend_list(user_data["user_id"])
+    request_list = __get_request_list(user_data["user_id"])
+    friend_manager = {
+        "friend": friend_list,
+        "request": request_list
+    }
+    return friend_manager
 
 
 def add_friend(add_friend_data):
