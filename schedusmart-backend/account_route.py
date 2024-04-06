@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from fire_base import *
+from friendManage import *
 
 account = Blueprint('account', __name__)
 
@@ -238,3 +239,21 @@ def get_habits():
     except Exception as e:
         print("Failed to get habits:", e)
         return jsonify({'error': 'Failed to get habits'}), 500
+
+
+@account.route('/request_friend', methods=['POST'])
+def request_friend():
+    data = request.get_json()
+    try:
+        if not data["user_id"]:
+            return jsonify({'error': 'User ID is required'}), 201
+    except KeyError as e:
+        return jsonify({'error': 'User ID is required'}), 201
+    try:
+        if not data["name"]:
+            return jsonify({'error': 'require friend\'s username in name field'}), 201
+    except KeyError as e:
+        return jsonify({'error': 'require friend\'s username in name field'}), 201
+    return jsonify(add_friend(data)), 201
+
+

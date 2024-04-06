@@ -96,7 +96,7 @@ def __look_for_same_user_name_or_email(data):
                 return 1
             if data["email"] == user.val()["email"]:
                 return 2
-        except KeyError as e:
+        except KeyError:
             pass
     return 0
 
@@ -333,13 +333,6 @@ def add_new_calendar(calendar_info):
 
 def f_get_events(calendar):
     try:
-        # data_events = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
-        # data_event_counter = 0
-        # data_event = []
-        # for data in data_events.each():
-        #    data_event.append(data.val())
-        # return {"data": data_event}
-
         data_event_ids = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
         events = []
         for event_id in data_event_ids.each():
@@ -595,7 +588,8 @@ def add_new_habit(data):
     except Exception as e:
         print("Failed to create habit:", e)
         return 1
-    
+
+
 def find_closest_available_time(data):
     user_id = data['user_id']
     timeRange = data['timeAmount']
@@ -605,8 +599,8 @@ def find_closest_available_time(data):
     earlist_start_time = ''
     earlist_end_time = ''
 
-    loc_dt = datetime.today() 
-    time_del = timedelta(minutes=5)  
+    loc_dt = datetime.today()
+    time_del = timedelta(minutes=5)
     earlist_start_time = loc_dt + time_del
     time_del = timedelta(minutes=int(timeRange))
     earlist_end_time = earlist_start_time + time_del
@@ -614,13 +608,12 @@ def find_closest_available_time(data):
     earlist_end_time = earlist_end_time.strftime("%Y-%m-%d %H:%M")
     event_list = []
 
-
     for key, val in calendars.items():
         # get all events from all calendars
         data_event_ids = db.child("Calendars").child(val['calendar_id']).child("Events").get()
         if data_event_ids.val() == None:
             continue
-        
+
         for event_id in data_event_ids.each():
             event = event_id.val()
             e = db.child("Events").child(event["event_id"]).get().val()
@@ -633,11 +626,12 @@ def find_closest_available_time(data):
         event_list.sort(key=lambda a: a[1])
 
         for start_time, end_time in event_list:
-            if (start_time <= earlist_start_time and end_time >= earlist_start_time) or (start_time <= earlist_end_time and end_time >= earlist_end_time):
+            if (start_time <= earlist_start_time and end_time >= earlist_start_time) or (
+                    start_time <= earlist_end_time and end_time >= earlist_end_time):
                 temp_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M")
-                time_del = timedelta(minutes=5)  
+                time_del = timedelta(minutes=5)
                 temp_start = temp_time + time_del
-                time_del = timedelta(minutes=int(timeRange))  
+                time_del = timedelta(minutes=int(timeRange))
                 temp_end = temp_start + time_del
                 earlist_start_time = temp_start.strftime("%Y-%m-%d %H:%M")
                 earlist_end_time = temp_end.strftime("%Y-%m-%d %H:%M")
@@ -647,13 +641,109 @@ def find_closest_available_time(data):
     # get user email
     email = db.child("User").child(user_id).child('email').get().val()
     username = db.child("User").child(user_id).child("user_name").get().val()
-    ret = {'username': username, 'time': time, 'email':email}
+    ret = {'username': username, 'time': time, 'email': email}
 
     return ret
 
 
-    
-# used to test with firebase #######################
+################################################### friend system ######################################################
+def __get_friend_list(user_id):
+    friend_list = []
+    try:
+        friends = db.child("User").child(user_id).child("friendManager").child("friend").get()
+        for friend in friends.each():
+            friend_data = {
+                'name': friend.val()["name"],
+                'confirm': friend.val()["confirm"]
+            }
+            friend_list.append(friend_data)
+    except TypeError as e:
+        pass
+    return friend_list
+
+
+def __get_request_list(user_id):
+    request_list = []
+    try:
+        requests = db.child("User").child(user_id).child("friendManager").child("request").get()
+        for request in requests.each():
+            friend_data = {
+                'name': request.val()["name"],
+                'confirm': request.val()["confirm"]
+            }
+            request_list.append(friend_data)
+    except TypeError as e:
+        pass
+    return request_list
+
+
+def __get_user_id(name):
+    users = db.child("User").get()
+    for user in users.each():
+        try:
+            if name == user.val()["user_name"]:
+                return user.key()
+        except KeyError as e:
+            pass
+    return None
+
+
+def get_friend_manager():
+    pass
+
+
+def add_friend(add_friend_data):
+    # check if the requester is user himself
+    user_name = get_user({"user_id": add_friend_data["user_id"]})["user_name"]
+    if user_name == add_friend_data["name"]:
+        return {"error": "user requesting himself as friend"}
+    # check if the request has already being post
+    friend_list = __get_friend_list(add_friend_data["user_id"])
+    for friend in friend_list:
+        if friend['name'] == add_friend_data["name"]:
+            return {"error": "request already send"}
+
+    request_list = __get_request_list(add_friend_data["user_id"])
+    for request in request_list:
+        if request['name'] == add_friend_data["name"]:
+            return {"error": "already receive request from friend"}
+
+    room_id = create_room(add_friend_data)
+    friend_data = {
+        "name": add_friend_data["name"],
+        "confirm": False,
+        "chat_room": room_id
+    }
+
+    friend_id = __get_user_id(friend_data["name"])
+
+    if friend_id is not None:
+        db.child("User").child(add_friend_data["user_id"]).child("friendManager").child("friend").push(friend_data)
+        friend_data["name"] = user_name
+        db.child("User").child(friend_id).child("friendManager").child("request").push(friend_data)
+        return {'message': 'request complete'}
+    else:
+        return {'error': 'friend not found'}
+
+
+def create_room(data):
+    username = get_user(data)["user_name"]
+    chat_room_data = {
+        "user1": username,
+        "user2": data["name"],
+        "confirmation": False
+    }
+    a = db.child("Chat_Room").push(chat_room_data)
+    return a["name"]
+
+
+def get_message():
+    pass
+
+
+def add_message():
+    pass
+
 
 # Make sure you download the firebaseConfig.py file in google doc
 firebase = pyrebase.initialize_app(firebaseConfig)
