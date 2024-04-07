@@ -154,61 +154,7 @@ const tagList = [
   "Overdue",
 ];
 
-// initial list for new users
-const initialList = [
-  {
-    id: 0,
-    title: "Homework 2",
-    time: 4,
-    date: "2024-02-25",
-    desc: "Complete design document and sumbit",
-    completed: false,
-    completed_time: null,
-    sub_tasks: [
-      { id: 0, name: "Question 1", comp: true },
-      { id: 1, name: "Question 2", comp: true },
-      { id: 2, name: "Question 3", comp: false },
-    ],
-    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
-    scheduled: false,
-    time_allo: 0,
-  },
-  {
-    id: 1,
-    title: "Sprint Planning",
-    time: 2,
-    date: "2024-09-23",
-    desc: "Speak with team coordinator",
-    completed: false,
-    completed_time: null,
-    sub_tasks: [
-      { id: 0, name: "Backlog", comp: false },
-      { id: 1, name: "User Stories", comp: false },
-      { id: 2, name: "Acceptable Criteria", comp: false },
-    ],
-    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
-    scheduled: false,
-    time_allo: 0,
-  },
-  {
-    id: 2,
-    title: "Midterm Study",
-    time: 5,
-    date: "2059-09-23",
-    desc: "Look at slides lol",
-    completed: false,
-    completed_time: null,
-    sub_tasks: [
-      { id: 0, name: "Chapter 1", comp: true },
-      { id: 1, name: "Chapter 2", comp: false },
-      { id: 2, name: "Chapter 3", comp: false },
-    ],
-    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
-    scheduled: false,
-    time_allo: 0,
-  },
-];
-let nextId = initialList.length;
+let nextId = 0;
 let calendarId = 0;
 
 // create new task manager
@@ -389,6 +335,35 @@ export default function TaskManager() {
 
     setSearchQueryTodo(keyword);
   };
+
+  function updatePriority() {
+      let mapped = todoList.map((task) => {
+      const [year, month, day] = task.date.split("-").map(Number);
+      let last_workday = new Date(year, month - 1, day - 1);
+      const today = new Date();
+      let days_diff = Math.ceil(
+        ((last_workday - today) / (60 * 60 * 24 * 1000)) % 365
+      );
+
+      if (task.autoPrio == true) {
+        if (days_diff == 0) {
+          task.priority = 3; 
+        } else if (days_diff < 0) {
+          task.priority = 2; 
+        } else if (task.time > 8) {
+          task.priority = 1; 
+        }
+      }
+
+      return task; 
+    })
+
+    setTodoList(mapped)
+  }
+
+  useEffect(() => {
+    updatePriority()
+  }, [todoList]);
 
   const filterCompleted = (e) => {
     const keyword = e.target.value;
@@ -594,7 +569,7 @@ export default function TaskManager() {
   function handlePriorityChange(id, priority) {
     const mapped = todoList.map((item) => {
       if (item.id == id) {
-        item = {...item, priority: priority}
+        item = {...item, priority: priority, autoPrio: false}
       }
       return item;
     })
@@ -710,9 +685,9 @@ export default function TaskManager() {
                     onChange={(e) => setPrioOptionTodo(e.target.value)}
                   >
                     <MenuItem value={0}>...</MenuItem>
-                    <MenuItem value={1}><StarRateIcon /></MenuItem>
-                    <MenuItem value={2}><PriorityHighIcon /></MenuItem>
-                    <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
+                    <MenuItem value={1}>Important <StarRateIcon/></MenuItem>
+                    <MenuItem value={2}>Overdue <PriorityHighIcon/></MenuItem>
+                    <MenuItem value={3}>Time Sensitive <AccessAlarmsIcon/></MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -921,6 +896,7 @@ export default function TaskManager() {
                         scheduled: false,
                         time_allo: 0,
                         priority: 0, 
+                        autoPrio: true, 
                       },
                     ]);
                   } else {
