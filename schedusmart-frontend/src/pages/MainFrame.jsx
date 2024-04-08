@@ -97,7 +97,7 @@ export default function MainFrame() {
 
 
   useEffect(() => {
-    const fetchDefaultMode = async () => {
+    const fetchInitializeData = async () => {
       let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {
         user_id: user_id,
       });
@@ -123,7 +123,7 @@ export default function MainFrame() {
       setCalendarList(updatedCalendarList);
     };
 
-    fetchDefaultMode();
+    fetchInitializeData();
   }, []);
 
   function CalendarList() {
