@@ -688,6 +688,25 @@ def __get_user_id(name):
     return None
 
 
+def __create_room(data):
+    username = get_user(data)["user_name"]
+    chat_room_data = {
+        "user1": username,
+        "user2": data["name"],
+        "confirmation": False
+    }
+    a = db.child("Chat_Room").push(chat_room_data)
+    return a["name"]
+
+
+def __delete_chat_room(room_id):
+    try:
+        db.child("Chat_Room").child(room_id).remove()
+    except TypeError | KeyError as e:
+        print(f"{e} in delete chat room")
+        pass
+
+
 def get_friend_manager(user_data):
     friend_list = __get_friend_list(user_data["user_id"])
     request_list = __get_request_list(user_data["user_id"])
@@ -714,7 +733,7 @@ def add_friend(add_friend_data):
         if request['name'] == add_friend_data["name"]:
             return {"error": "already receive request from friend"}
 
-    room_id = create_room(add_friend_data)
+    room_id = __create_room(add_friend_data)
     friend_data = {
         "name": add_friend_data["name"],
         "confirm": False,
@@ -732,15 +751,55 @@ def add_friend(add_friend_data):
         return {'error': 'friend not found'}
 
 
-def create_room(data):
-    username = get_user(data)["user_name"]
-    chat_room_data = {
-        "user1": username,
-        "user2": data["name"],
-        "confirmation": False
-    }
-    a = db.child("Chat_Room").push(chat_room_data)
-    return a["name"]
+def confirm(user_data):
+    try:
+        user_name = get_user({"user_id": user_data["user_id"]})["user_name"]
+        friend_id = __get_user_id(user_data["name"])
+
+        update1 = True
+        update2 = True
+        friends = db.child("User").child(user_data["user_id"]).child("friendManager").child("request").get()
+        for friend in friends.each():
+            if friend.val()["name"] == user_data["name"]:
+                chat_room_id = (db.
+                                child("User").
+                                child(user_data["user_id"]).
+                                child("friendManager").
+                                child("request").
+                                child(friend.key()).
+                                get().val()["chat_room"])
+                if user_data["confirm"]:
+                    db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
+                        friend.key()).update({"confirm": user_data["confirm"]})
+                    db.child("Chat_Room").child(chat_room_id).update({"confirm": True})
+                else:
+                    __delete_chat_room(chat_room_id)
+                    db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
+                        friend.key()).remove()
+                update1 = False
+                break
+        if update1:
+            return {"error": "request not found"}
+
+        if not friend_id:
+            return {"error": "account not found, please send the friend request again"}
+
+        friends = db.child("User").child(friend_id).child("friendManager").child("friend").get()
+        for friend in friends.each():
+            if friend.val()["name"] == user_name:
+                if user_data["confirm"]:
+                    db.child("User").child(friend_id).child("friendManager").child("friend").child(
+                        friend.key()).update({"confirm": user_data["confirm"]})
+                else:
+                    db.child("User").child(friend_id).child("friendManager").child("friend").child(
+                        friend.key()).remove()
+                update2 = False
+                break
+        if update2:
+            return {"error": "admit request not found"}
+        return {"message": "done"}
+    except TypeError as e:
+        return {"error": "request not found"}
 
 
 def get_message():
@@ -757,3 +816,5 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
+
+__delete_chat_room("-NunOZfpRwlDoh0NecIs")

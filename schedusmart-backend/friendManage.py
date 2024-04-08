@@ -3,7 +3,8 @@ from fire_base import *
 
 data = {
     "user_id": "fdBqeU406KdQ5YKMjoManKCxYiF2",
-    "name": "gloria_xu"
+    "name": "stanley",
+    "confirm": False
 }
 
-# print(add_friend(data))
+print(confirm(data))

@@ -266,3 +266,19 @@ def get_friend():
     except KeyError:
         return jsonify({'error': 'User ID is required'}), 201
     return jsonify(get_friend_manager(data)), 201
+
+@account.route('/confirm_friend', methods=['POST'])
+def confirm_friend():
+    data = request.get_json()
+    try:
+        if not data["user_id"]:
+            return jsonify({"error": "user_id not provided"}), 201
+        if not data["name"]:
+            return jsonify({"error": "friend not provided"}), 201
+        if not data["confirm"]:
+            return jsonify({"error": "confirm not provided"}), 201
+
+        return jsonify(confirm(data)), 201
+    except KeyError:
+        return jsonify({"error": "lack of information"}), 201
+
