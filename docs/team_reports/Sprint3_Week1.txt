@@ -16,7 +16,7 @@ Week 8 	(Plan) (Scrum master: Reece Ausmus)
 [Individual Goals]
 Reece Ausmus:   Fully implement zoom integration. Clean up any bugs before final week.
 Cassie Chang: finish notebook feature and construct Nginx server   
-Stanley Huang:  
+Stanley Huang:  finish backend friend and chat room function, fix bug if exist. Implement language
 Bradley Norris: Begin work on goal setting for habits page with CRUD.
 Himanshu Sinha: Implement email feature on task manager.
 Gloria Xu: finish implementation of a freind list and color settings
