@@ -8,7 +8,7 @@ import { CheckBox, LaptopWindowsRounded } from "@material-ui/icons";
 import Grid from '@mui/material/Grid';
 import Joyride from "react-joyride";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { Link, Navigate} from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import moment from "moment";
 import { orange, grey } from "@mui/material/colors";
 import parse from 'autosuggest-highlight/parse';
@@ -16,7 +16,7 @@ import TextField from "@mui/material/TextField";
 import Typography from '@mui/material/Typography';
 import { useHotkeys } from "react-hotkeys-hook";
 import { flaskURL, user_id } from "../config";
-import React, { useState, useEffect,useRef,useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Weather from "./Weather";
 import Timezone from "./Timezone";
 import EmailForm from "../components/Email";
@@ -24,9 +24,13 @@ import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
 import send_request from "./requester";
 import chatBox from "../components/ChatBox";
-// import GoogleMaps from "./Googlemap";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import SetupCourses from "./SetupCourses";
-
+import { GoogleMap, Marker } from '@react-google-maps/api';
 // Google map
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBE_-PEMobIdPsVtpmFOrTm7u-CAB9QGRM';
 function loadScript(src, position, id) {
@@ -146,14 +150,20 @@ export default function MainFrame() {
     const [eventCalendar, setEventCalendar] = useState("");
     const [LocationSettings, setLocationSettings] = useState("text");
 
-    const [value, setValue] = useState(null);
+    // const [value, setValue] = useState(null);
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState([]);
     const loaded = useRef(false);
+    const [showMap, setShowMap] = useState(false);
+    const [showDetails,setDetails]= useState("");
+    const handleShowMap = () => {
+      setShowMap(!showMap);
+    };
+    const PlaceId=0;
     if (typeof window !== 'undefined' && !loaded.current) {
       if (!document.querySelector('#google-maps')) {
         loadScript(
-          `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`,
+          `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&fields=geometry`,
           document.querySelector('head'),
           'google-maps',
         );
@@ -164,7 +174,7 @@ export default function MainFrame() {
     const fetch = useMemo(
       () =>
         debounce((request, callback) => {
-          if (autocompleteService.current){
+          if (autocompleteService.current) {
             try {
               autocompleteService.current.getPlacePredictions(request, callback);
             } catch (error) {
@@ -185,7 +195,7 @@ export default function MainFrame() {
       }
 
       if (inputValue === '') {
-        setOptions(value ? [value] : []);
+        setOptions(eventLocation ? [eventLocation] : []);
         return undefined;
       }
 
@@ -193,8 +203,8 @@ export default function MainFrame() {
         if (active) {
           let newOptions = [];
 
-          if (value) {
-            newOptions = [value];
+          if (eventLocation) {
+            newOptions = [eventLocation];
           }
 
           if (results) {
@@ -208,7 +218,7 @@ export default function MainFrame() {
       return () => {
         active = false;
       };
-    }, [value, inputValue, fetch]);
+    }, [eventLocation, inputValue, fetch]);
 
     useEffect(() => {
       const fetchDefaultsettings = async () => {
@@ -222,6 +232,18 @@ export default function MainFrame() {
       fetchDefaultsettings();
     }, []);
 
+    const fetchPlaceDetails = (placeId) => {
+      fetch(`https://maps.googleapis.com/maps/api/js?place_id=${placeId}&fields=geometry&key=${GOOGLE_MAPS_API_KEY}`)
+        .then(response => response.json())
+        .then(data => {
+          const location = data.result.geometry.location;
+          setDetails({ lat: location.lat, lng: location.lng });
+        })
+        .catch(error => {
+          console.error('Error fetching place details:', error);
+        });
+    };
+
     const renderLocationInput = () => {
       if (LocationSettings === "text") {
         return (
@@ -234,64 +256,92 @@ export default function MainFrame() {
         );
       } else if (LocationSettings === "map") {
         return (
-          <Autocomplete
-            id="google-map-demo"
-            sx={{ width: 300 }}
-            getOptionLabel={(option) =>
-              typeof option === 'string' ? option : option.description
-            }
-            filterOptions={(x) => x}
-            options={options}
-            autoComplete
-            size="small"
-            includeInputInList
-            filterSelectedOptions
-            value={value}
-            noOptionsText="No locations"
-            onChange={(event, newValue) => {
-              setOptions(newValue ? [newValue, ...options] : options);
-              setValue(newValue);
-            }}
-            onInputChange={(event, newInputValue) => {
-              setInputValue(newInputValue);
-            }}
-            renderInput={(params) => (
-              <TextField {...params} label="Add a location" fullWidth />
-            )}
-            renderOption={(props, option) => {
-              const matches =
-                option.structured_formatting.main_text_matched_substrings || [];
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Autocomplete
+              id="google-map-demo"
+              sx={{ width: 300 }}
+              getOptionLabel={(option) =>
+                typeof option === 'string' ? option : option.description
+              }
+              filterOptions={(x) => x}
+              options={options}
+              autoComplete
+              size="small"
+              includeInputInList
+              filterSelectedOptions
+              value={eventLocation}
+              noOptionsText="No locations"
+              onChange={(event, newValue) => {
+                setOptions(newValue ? [newValue, ...options] : options);
+                setEventLocation(newValue);
+                console.log(newValue);
+                // setSelectedLocation(newValue ? { lat: newValue.geometry.location.lat(), lng: newValue.geometry.location.lng() } : null);
+              }}
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Add a location" fullWidth />
+              )}
+              renderOption={(props, option) => {
+                const matches =
+                  option.structured_formatting.main_text_matched_substrings || [];
 
-              const parts = parse(
-                option.structured_formatting.main_text,
-                matches.map((match) => [match.offset, match.offset + match.length]),
-              );
+                const parts = parse(
+                  option.structured_formatting.main_text,
+                  matches.map((match) => [match.offset, match.offset + match.length]),
+                );
 
-              return (
-                <li {...props}>
-                  <Grid container alignItems="center">
-                    <Grid item sx={{ display: 'flex', width: 44 }}>
-                      <LocationOnIcon sx={{ color: 'text.secondary' }} />
+                return (
+                  <li {...props}>
+                    <Grid container alignItems="center">
+                      <Grid item sx={{ display: 'flex', width: 44 }}>
+                        <LocationOnIcon sx={{ color: 'text.secondary' }} />
+                      </Grid>
+                      <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
+                        {parts.map((part, index) => (
+                          <Box
+                            key={index}
+                            component="span"
+                            sx={{ fontWeight: part.highlight ? 'bold' : 'regular' }}
+                          >
+                            {part.text}
+                          </Box>
+                        ))}
+                        <Typography variant="body2" color="text.secondary">
+                          {option.structured_formatting.secondary_text}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
-                      {parts.map((part, index) => (
-                        <Box
-                          key={index}
-                          component="span"
-                          sx={{ fontWeight: part.highlight ? 'bold' : 'regular' }}
-                        >
-                          {part.text}
-                        </Box>
-                      ))}
-                      <Typography variant="body2" color="text.secondary">
-                        {option.structured_formatting.secondary_text}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </li>
-              );
-            }}
-          />
+                  </li>
+                );
+              }}
+            />
+            <Button variant="contained" style={{ marginLeft: '20px' }} onClick={handleShowMap}>map</Button>
+            <Dialog open={showMap} onClose={() => setShowMap(false)} PaperProps={{
+              style: {
+                width: '80%',
+                maxWidth: '800px',
+                height: '80%',
+                maxHeight: '500px',
+              },
+            }}>
+              <DialogTitle>Map</DialogTitle>
+              <DialogContent>
+                <GoogleMap
+                  mapContainerStyle={{ width: '100%', height: '400px' }}
+                  center={
+                    showDetails || { lat: 40.42705717062981, lng: -86.91647096088887 }}
+                  zoom={15}
+                >
+                  {/* {eventLocation && <Marker position={eventLocation} />} */}
+                </GoogleMap>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setShowMap(false)}>Close</Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         );
       }
     };
@@ -422,7 +472,7 @@ export default function MainFrame() {
         emails: eventEmailInvitations,
         type: eventType,
       };
-      
+
       const creat_event_response = await send_request("/create_event", new_event);
       if (creat_event_response.error != undefined) {
         alert(creat_event_response.error)
@@ -611,7 +661,7 @@ export default function MainFrame() {
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
 
-    
+
     // Function to handle the creation of a new calendar
     const handleCreateCalendar = async () => {
       console.log("this is called, new calendar", newCalendarName)
@@ -764,14 +814,14 @@ export default function MainFrame() {
       };
 
       const response = await send_request("/find_closest_available", user_time);
-      
-      if (response.username == undefined){
+
+      if (response.username == undefined) {
         console.log('Something went wrong!')
       }
-      else{
+      else {
         console.log("find time range!");
         const message = 'You have an extraordinary session during ' + response.time;
-        
+
         // TODO: send email
         EmailForm(response.username, response.email, message);
 
@@ -797,7 +847,7 @@ export default function MainFrame() {
           emails: [],
           type: eventType,
         };
-        
+
         const creat_event_response = await send_request("/create_event", new_event);
         if (creat_event_response.error != undefined) {
           alert(creat_event_response.error)
@@ -807,7 +857,7 @@ export default function MainFrame() {
           new_event["event_id"] = data["event_id"];
           setEvents([...events, new_event]);
         }
-        
+
       }
 
       setShowClosestAvailablePopup(!showClosestAvailablePopup);
@@ -1227,42 +1277,42 @@ export default function MainFrame() {
 
           {/*find closest available*/}
           <div className="add_button">
-              <Button
-                variant="contained"
-                onClick={handleClosestAvailable}
-                style={{ marginLeft: "10px" }}
-              >
-                Find Closest Available
-              </Button>
-            </div>
-            {showClosestAvailablePopup && (
-              <div className="popup">
-                <div className="popup-content">
-                  <h2>Find Closest Available Time</h2>
-                  <div className="formgroup">
-                    <label htmlFor="amountOfTime">Amount of Time (time):</label>
-                    <input
-                      type="text"
-                      id="amountOfTime"
-                      value={amountOfTime}
-                      onChange={(e) => setAmountOfTime(e.target.value)}
-                    />
-                  </div>
-                  <button
-                    className="formbutton fb1"
-                    onClick={handleFindClosestAvailable}
-                  >
-                    Add
-                  </button>
-                  <button
-                    className="formbutton fb2"
-                    onClick={handleCancelClosestAvailable}
-                  >
-                    Cancel
-                  </button>
+            <Button
+              variant="contained"
+              onClick={handleClosestAvailable}
+              style={{ marginLeft: "10px" }}
+            >
+              Find Closest Available
+            </Button>
+          </div>
+          {showClosestAvailablePopup && (
+            <div className="popup">
+              <div className="popup-content">
+                <h2>Find Closest Available Time</h2>
+                <div className="formgroup">
+                  <label htmlFor="amountOfTime">Amount of Time (time):</label>
+                  <input
+                    type="text"
+                    id="amountOfTime"
+                    value={amountOfTime}
+                    onChange={(e) => setAmountOfTime(e.target.value)}
+                  />
                 </div>
+                <button
+                  className="formbutton fb1"
+                  onClick={handleFindClosestAvailable}
+                >
+                  Add
+                </button>
+                <button
+                  className="formbutton fb2"
+                  onClick={handleCancelClosestAvailable}
+                >
+                  Cancel
+                </button>
               </div>
-            )}
+            </div>
+          )}
 
           {/* List of existing calendars */}
           <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
