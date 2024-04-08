@@ -137,7 +137,7 @@ export default function MainFrame() {
     const [eventEndDate, setEventEndDate] = useState("");
     const [eventStartTime, setEventStartTime] = useState("");
     const [eventEndTime, setEventEndTime] = useState("");
-    const [eventLocation, setEventLocation] = useState("");
+    const [eventLocation, setEventLocation] = useState(null);
     const [eventDescription, setEventDescription] = useState("");
     const [eventEmailInvitations, setEventEmailInvitations] = useState([]);
     const [eventType, setEventType] = useState("");
@@ -149,21 +149,45 @@ export default function MainFrame() {
     const [eventSelectedDays, setEventSelectedDays] = useState([]); // Array to store selected days
     const [eventCalendar, setEventCalendar] = useState("");
     const [LocationSettings, setLocationSettings] = useState("text");
+    useEffect(() => {
+      const fetchDefaultsettings = async () => {
+        let dataOfDefaultsettings = await send_request(
+          "/get_location_default_settings",
+          { user_id: user_id }
+        );
+        if (dataOfDefaultsettings.type == undefined) return;
+        setLocationSettings(dataOfDefaultsettings.type);
+      };
+      fetchDefaultsettings();
+    }, []);
 
-    // const [value, setValue] = useState(null);
+    const [value, setValue] = useState(null);
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState([]);
     const loaded = useRef(false);
     const [showMap, setShowMap] = useState(false);
-    const [showDetails,setDetails]= useState("");
+    const [showDetails, setDetails] = useState(null);
+    const [marker, setMarker] = useState(null);
+    const map=`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&fields=geometry`;
+    
+    // const handleDetails = async (placeId) => {
+    //   const response = await fetch(`https://maps.googleapis.com/maps/api/js?place_id=${placeId}&fields=geometry&key=${GOOGLE_MAPS_API_KEY}`);
+    //   console.log(response);
+    //   const data = await response.json();
+    //   const location = data.result.geometry.location;
+    //   const latitude = location.lat;
+    //   const longitude = location.lng;
+    //   console.log(latitude, longitude);
+    // };
+
     const handleShowMap = () => {
       setShowMap(!showMap);
     };
-    const PlaceId=0;
+    const PlaceId = 0;
     if (typeof window !== 'undefined' && !loaded.current) {
       if (!document.querySelector('#google-maps')) {
         loadScript(
-          `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&fields=geometry`,
+          map,
           document.querySelector('head'),
           'google-maps',
         );
@@ -195,7 +219,7 @@ export default function MainFrame() {
       }
 
       if (inputValue === '') {
-        setOptions(eventLocation ? [eventLocation] : []);
+        setOptions(value ? [value] : []);
         return undefined;
       }
 
@@ -203,8 +227,8 @@ export default function MainFrame() {
         if (active) {
           let newOptions = [];
 
-          if (eventLocation) {
-            newOptions = [eventLocation];
+          if (value) {
+            newOptions = [value];
           }
 
           if (results) {
@@ -220,29 +244,19 @@ export default function MainFrame() {
       };
     }, [eventLocation, inputValue, fetch]);
 
-    useEffect(() => {
-      const fetchDefaultsettings = async () => {
-        let dataOfDefaultsettings = await send_request(
-          "/get_location_default_settings",
-          { user_id: user_id }
-        );
-        if (dataOfDefaultsettings.type == undefined) return;
-        setLocationSettings(dataOfDefaultsettings.type);
-      };
-      fetchDefaultsettings();
-    }, []);
 
-    const fetchPlaceDetails = (placeId) => {
-      fetch(`https://maps.googleapis.com/maps/api/js?place_id=${placeId}&fields=geometry&key=${GOOGLE_MAPS_API_KEY}`)
-        .then(response => response.json())
-        .then(data => {
-          const location = data.result.geometry.location;
-          setDetails({ lat: location.lat, lng: location.lng });
-        })
-        .catch(error => {
-          console.error('Error fetching place details:', error);
-        });
-    };
+
+    // const fetchPlaceDetails = (placeId) => {
+    //   fetch(`https://maps.googleapis.com/maps/api/js?place_id=${placeId}&fields=geometry&key=${GOOGLE_MAPS_API_KEY}`)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       const location = data.result.geometry.location;
+    //       setDetails({ lat: location.lat, lng: location.lng });
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching place details:', error);
+    //     });
+    // };
 
     const renderLocationInput = () => {
       if (LocationSettings === "text") {
@@ -269,12 +283,14 @@ export default function MainFrame() {
               size="small"
               includeInputInList
               filterSelectedOptions
-              value={eventLocation}
+              value={value}
               noOptionsText="No locations"
               onChange={(event, newValue) => {
                 setOptions(newValue ? [newValue, ...options] : options);
-                setEventLocation(newValue);
-                console.log(newValue);
+                setValue(newValue);
+                setEventLocation(newValue.description);
+                // handleDetails(newValue.place_id);
+                console.log(newValue)
                 // setSelectedLocation(newValue ? { lat: newValue.geometry.location.lat(), lng: newValue.geometry.location.lng() } : null);
               }}
               onInputChange={(event, newInputValue) => {
@@ -317,7 +333,7 @@ export default function MainFrame() {
                 );
               }}
             />
-            <Button variant="contained" style={{ marginLeft: '20px' }} onClick={handleShowMap}>map</Button>
+            <Button variant="contained" style={{ marginLeft: '20px', height: '80%' }} onClick={handleShowMap}>map</Button>
             <Dialog open={showMap} onClose={() => setShowMap(false)} PaperProps={{
               style: {
                 width: '80%',
@@ -331,10 +347,9 @@ export default function MainFrame() {
                 <GoogleMap
                   mapContainerStyle={{ width: '100%', height: '400px' }}
                   center={
-                    showDetails || { lat: 40.42705717062981, lng: -86.91647096088887 }}
+                    showDetails ? showDetails : { lat: 40.42705717062981, lng: -86.91647096088887 }}
                   zoom={15}
                 >
-                  {/* {eventLocation && <Marker position={eventLocation} />} */}
                 </GoogleMap>
               </DialogContent>
               <DialogActions>
