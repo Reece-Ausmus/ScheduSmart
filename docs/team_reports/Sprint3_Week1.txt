@@ -2,7 +2,7 @@
 
 Week 7	(Srum master: Reece Ausmus)
 MM/DD/YY    xhr     commitid    description
-
+04/04/24    2hr     5480c90     finish styling task manager
 
 Week 8 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
@@ -16,4 +16,4 @@ Cassie Chang:
 Stanley Huang:  
 Bradley Norris: 
 Himanshu Sinha: 
-Gloria Xu:      
+Gloria Xu: finish implementation of a freind list and color settings
