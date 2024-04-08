@@ -7,4 +7,3 @@ data = {
     "confirm": False
 }
 
-print(confirm(data))

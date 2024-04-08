@@ -57,6 +57,9 @@ def reset_password():
 @account.route('/user_data', methods=['POST'])
 def user_data():
     receive_user = request.get_json()
+    response = jsonify({
+        'message': 'fail',
+    }), 201
     try:
         data = get_user(receive_user)
         ret = data['return_status']
@@ -267,6 +270,7 @@ def get_friend():
         return jsonify({'error': 'User ID is required'}), 201
     return jsonify(get_friend_manager(data)), 201
 
+
 @account.route('/confirm_friend', methods=['POST'])
 def confirm_friend():
     data = request.get_json()
@@ -282,3 +286,13 @@ def confirm_friend():
     except KeyError:
         return jsonify({"error": "lack of information"}), 201
 
+
+@account.route('/search_user', methods=['POST'])
+def search_user():
+    data = request.get_json()
+    try:
+        if not data["name"]:
+            return jsonify({"error": "search name can not be null"}), 201
+        return jsonify(f_search_user(data["name"])), 201
+    except KeyError:
+        return jsonify({"error": "search can not be null"}), 201

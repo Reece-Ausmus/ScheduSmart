@@ -67,6 +67,7 @@ import pyrebase
 from firebaseConfig import firebaseConfig
 import secrets
 import traceback
+import difflib
 from datetime import datetime, timedelta
 
 
@@ -693,7 +694,8 @@ def __create_room(data):
     chat_room_data = {
         "user1": username,
         "user2": data["name"],
-        "confirmation": False
+        "confirmation": False,
+        "counter": 0,
     }
     a = db.child("Chat_Room").push(chat_room_data)
     return a["name"]
@@ -715,6 +717,22 @@ def get_friend_manager(user_data):
         "request": request_list
     }
     return friend_manager
+
+
+def f_search_user(string):
+    name_list = []
+    names = db.child("User").get()
+    for name in names.each():
+        try:
+            similarity = difflib.SequenceMatcher(None, string, name.val()["user_name"]).ratio()
+            if similarity > 0.65:
+                name_list.append(name.val()["user_name"])
+        except KeyError:
+            pass
+    if name_list:
+        name_list = sorted(name_list, key=lambda x: difflib.SequenceMatcher(None, string, x).ratio(), reverse=True)
+
+    return {"data": name_list}
 
 
 def add_friend(add_friend_data):
@@ -762,12 +780,12 @@ def confirm(user_data):
         for friend in friends.each():
             if friend.val()["name"] == user_data["name"]:
                 chat_room_id = (db.
-                                child("User").
-                                child(user_data["user_id"]).
-                                child("friendManager").
-                                child("request").
-                                child(friend.key()).
-                                get().val()["chat_room"])
+                child("User").
+                child(user_data["user_id"]).
+                child("friendManager").
+                child("request").
+                child(friend.key()).
+                get().val()["chat_room"])
                 if user_data["confirm"]:
                     db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
                         friend.key()).update({"confirm": user_data["confirm"]})
@@ -817,4 +835,3 @@ db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
 
-__delete_chat_room("-NunOZfpRwlDoh0NecIs")
