@@ -11,7 +11,7 @@ Week 8 	(Plan) (Scrum master: Reece Ausmus)
 04/14/24    Meeting with TA to discuss progress.
 
 [Individual Goals]
-Reece Ausmus:   
+Reece Ausmus:   Fully implement zoom integration. Clean up any bugs before final week.
 Cassie Chang:   
 Stanley Huang:  
 Bradley Norris: 
