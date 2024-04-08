@@ -16,6 +16,7 @@ import Notes from './pages/Notes'
 import FileUpload from './pages/FileUpload'
 import SetupCourses from './pages/SetupCourses'
 import Habits from './pages/Habits'
+import ResetPassword from './pages/ResetPassword'
 
 // to run program 
 // Open new terminal
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/signout" element={<Signout/>} />
           <Route path="/createaccount" element={<Createaccount/>} />
           <Route path="/signin" element={<SignIn/>} />
+          <Route path="/resetpassword" element={<ResetPassword/>} />
           <Route path="/calendar" element={<MainFrame/>}/>
           <Route path="/taskmanager" element={<TaskManager/>}/>
           <Route path="/draganddrop" element={<DragAndDrop/>}/>

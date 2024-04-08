@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from fire_base import *
+from friendManage import *
 
 account = Blueprint('account', __name__)
 
@@ -9,20 +10,10 @@ def create_account():
     receive_account = request.get_json()
     try:
         data = create_account_by_username_and_password(receive_account)
-        ret = data['response_status']
-        if ret == 2:
-            response = jsonify({'error': 'username has been used'})
-            response.status_code = 205
-        elif ret == 1:
-            response = jsonify({'error': 'failed to create account'})
-            response.status_code = 206
-        else:
-            response = jsonify({
-                'message': 'Done',
-                'user_id': data['user_id']
-            })
+
+        response = jsonify(data)
         response.status_code = 201
-    except:
+    except Exception as e:
         response = jsonify({'error': 'failed to create account'})
         response.status_code = 206
     return response
@@ -48,6 +39,19 @@ def login():
         })
         response.status_code = 201
     return response
+
+
+# Route to handle password reset requests
+@account.route('/reset_password', methods=['POST'])
+def reset_password():
+    data = request.get_json()
+    email = data.get('email')
+
+    try:
+        auth.send_password_reset_email(email)
+        return jsonify({'message': 'Password reset email sent successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @account.route('/user_data', methods=['POST'])
@@ -101,6 +105,7 @@ def update_location_settings():
         response.status_code = 206
     return response
 
+
 @account.route('/get_location_default_settings', methods=['POST'])
 def get_location_default_settings():
     receive_user = request.get_json()
@@ -126,6 +131,7 @@ def update_account_info():
         response.status_code = 206
     return response
 
+
 # This route is for adding habits
 @account.route('/add_habit', methods=['POST'])
 def add_habit():
@@ -142,6 +148,7 @@ def add_habit():
         response = jsonify({'error': 'An error occured'})
         response.status_code = 500
     return response
+
 
 # This route is for updating habits
 @account.route('/update_habit', methods=['POST'])
@@ -179,13 +186,14 @@ def update_habit():
         print("Failed to update habit:", e)
         return jsonify({'error': 'Failed to update habit'}), 500
 
+
 # This route is for deleting habits
 @account.route('/delete_habit', methods=['POST'])
 def delete_habit():
     data = request.get_json()
     user_id = data.get('user_id')
     item_name = data.get('item_name')
-    
+
     if not user_id or not item_name:
         return jsonify({'error': 'User ID and habit ID are required parameters'}), 400
 
@@ -199,13 +207,14 @@ def delete_habit():
     except Exception as e:
         print("Failed to delete habit:", e)
         return jsonify({'error': 'Failed to delete habit'}), 500
-    
+
+
 # This route is for getting all habits for a user
 @account.route('/get_habits', methods=['POST'])
 def get_habits():
     data = request.get_json()
     user_id = data.get('user_id')
-    
+
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
 
@@ -215,18 +224,45 @@ def get_habits():
     try:
         # Get all habits for the user from the Firebase database
         user_habits = db.child(user_habits_path).get()
-        
+
         # If the user has no habits, return an empty list
         if not user_habits.val():
             return jsonify({'habits': []}), 200
-        
+
         # Convert Firebase response to list of habits
         habits_list = []
         for habit_name, habit_data in user_habits.val().items():
             habit_data['itemName'] = habit_name
             habits_list.append(habit_data)
-        
+
         return jsonify({'habits': habits_list}), 200
     except Exception as e:
         print("Failed to get habits:", e)
         return jsonify({'error': 'Failed to get habits'}), 500
+
+
+@account.route('/request_friend', methods=['POST'])
+def request_friend():
+    data = request.get_json()
+    try:
+        if not data["user_id"]:
+            return jsonify({'error': 'User ID is required'}), 201
+    except KeyError:
+        return jsonify({'error': 'User ID is required'}), 201
+    try:
+        if not data["name"]:
+            return jsonify({'error': 'require friend\'s username in name field'}), 201
+    except KeyError:
+        return jsonify({'error': 'require friend\'s username in name field'}), 201
+    return jsonify(add_friend(data)), 201
+
+
+@account.route('/get_friends', methods=['POST'])
+def get_friend():
+    data = request.get_json()
+    try:
+        if not data["user_id"]:
+            return jsonify({'error': 'User ID is required'}), 201
+    except KeyError:
+        return jsonify({'error': 'User ID is required'}), 201
+    return jsonify(get_friend_manager(data)), 201

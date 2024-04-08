@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from fire_base import *
+import smtplib
 
 calendar = Blueprint('calendar', __name__)
 
@@ -14,17 +15,17 @@ def create_calendar():
         ret = response['response_status']
         if ret == 1:
             response = jsonify({'error': 'calendar not created'})
-            response.status_code = 205
+            response.status_code = 201
         elif ret == 2:
             response = jsonify({'error': 'calendar not added to user'})
-            response.status_code = 207
+            response.status_code = 201
         else:
             response = jsonify({'calendar_id': response['calendar_id']})
             response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status_code = 206
+        response.status_code = 201
     return response
 
 
@@ -33,17 +34,18 @@ def create_event():
     receive_event = request.get_json()
     try:
         ret = add_new_event(receive_event)
-        if ret == 1:
+        if ret['response_status'] == 1:
             response = jsonify({'error': 'event not created'})
-            response.status_code = 205
+            response.status_code = 201
         else:
-            response = jsonify({'message': 'Done'})
+            response = jsonify({'message': 'Done', "even_id": ret['event_id']})
             response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status_code = 206
+        response.status_code = 201
     return response
+
 
 @calendar.route('/update_event', methods=['POST'])
 def update_event():
@@ -61,6 +63,7 @@ def update_event():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
 
 @calendar.route('/delete_event', methods=['POST'])
 def delete_event():
@@ -80,6 +83,7 @@ def delete_event():
         response.status_code = 206
     return response
 
+
 @calendar.route('/invite_users_to_event', methods=['POST'])
 def invite_users_to_event():
     receive_event = request.get_json()
@@ -97,6 +101,7 @@ def invite_users_to_event():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
 
 @calendar.route('/get_invitations', methods=['POST'])
 def get_invitations():
@@ -116,6 +121,7 @@ def get_invitations():
         response.status_code = 206
     return response
 
+
 @calendar.route('/accept_invitation', methods=['POST'])
 def accept_invitation():
     receive_user = request.get_json()
@@ -133,6 +139,7 @@ def accept_invitation():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
 
 @calendar.route('/decline_invitation', methods=['POST'])
 def decline_invitation():
@@ -152,17 +159,19 @@ def decline_invitation():
         response.status_code = 206
     return response
 
+
 @calendar.route('/get_events', methods=['POST'])
 def get_events():
     calendar = request.get_json()
     ret = f_get_events(calendar)
     if ret == 1:
-        response = jsonify({'response': 'fail retrieve events'})
-        response.status_code = 205
+        response = jsonify({'error': 'events is null'})
+        response.status_code = 201
     else:
         response = jsonify(ret)
         response.status_code = 201
     return response
+
 
 @calendar.route('/get_event', methods=['POST'])
 def get_event():
@@ -240,27 +249,15 @@ def update_calendar_format():
 
 
 # this is to retrieve calendar default mode
-@calendar.route('/set_amount_of_time', methods=['POST'])
-def set_amount_of_time():
-    receive_user = request.get_json()
-    uid = receive_user['userId']
-    time = receive_user['time']
-    '''
-    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2':
-        response = jsonify({'available': 60})
-        response.status_code = 205
-        return response
+@calendar.route('/find_closest_available', methods=['POST'])
+def find_closest_available():
+    data = request.get_json()
+    ret = find_closest_available_time(data)
 
-    if time == 15:
-        response = jsonify({'available': 60})
-        response.status_code = 208
-        return response
-
-    if uid == 'Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2' and time == '15':
-        response = jsonify({'available': 60})
-        response.status_code = 201
-        return response
-    '''
+    response = jsonify(ret)
+    response.status_code = 201
+    
+    return response
 
 
 @calendar.route('/upload', methods=['POST'])

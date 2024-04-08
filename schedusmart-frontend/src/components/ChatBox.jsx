@@ -147,4 +147,3 @@ export default function chatBox(friends, message, userId = 1) {
     </>
   );
 }
-//224 219 211

@@ -1,28 +1,45 @@
-import React, { useState, useEffect } from "react";
-// import "./MainFrame.css";
-import { flaskURL, user_id } from "../config";
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import { debounce } from '@mui/material/utils';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CheckBox, LaptopWindowsRounded } from "@material-ui/icons";
+import Grid from '@mui/material/Grid';
 import Joyride from "react-joyride";
-import { Navigate, Link } from "react-router-dom";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { Link, Navigate} from "react-router-dom";
+import moment from "moment";
+import { orange, grey } from "@mui/material/colors";
+import parse from 'autosuggest-highlight/parse';
+import TextField from "@mui/material/TextField";
+import Typography from '@mui/material/Typography';
+import { useHotkeys } from "react-hotkeys-hook";
+import { flaskURL, user_id } from "../config";
+import React, { useState, useEffect,useRef,useMemo } from "react";
 import Weather from "./Weather";
 import Timezone from "./Timezone";
-import PopUpForm from "../components/PopupForm";
-import moment from "moment";
+import EmailForm from "../components/Email";
 import Dashboard from "./Dashboard";
 import Calendar from "./Calendar";
 import send_request from "./requester";
 import chatBox from "../components/ChatBox";
-import Map from "./Googlemap";
-import { useHotkeys } from "react-hotkeys-hook";
-import { CheckBox, LaptopWindowsRounded } from "@material-ui/icons";
+// import GoogleMaps from "./Googlemap";
 import SetupCourses from "./SetupCourses";
-import TextField from "@mui/material/TextField";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { orange, grey } from "@mui/material/colors";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import Typography from "@mui/material/Typography";
-// import MapContainer from './Googlemap';
+
+// Google map
+const GOOGLE_MAPS_API_KEY = 'AIzaSyBE_-PEMobIdPsVtpmFOrTm7u-CAB9QGRM';
+function loadScript(src, position, id) {
+  if (!position) {
+    return;
+  }
+  const script = document.createElement('script');
+  script.setAttribute('async', '');
+  script.setAttribute('id', id);
+  script.src = src;
+  position.appendChild(script);
+}
+const autocompleteService = { current: null };
 
 const theme = createTheme({
   palette: {
@@ -52,13 +69,8 @@ const steps = [
 export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
-  /*
-  
-    { calendar_id: "15e1c4a5f82eeca0a8a57e19bdea4ea5", name: "cal_name" },
-    { calendar_id: "1edf8a72d18a382312e04eaa1e8aa8c3", name: "cal_name" },
-    { calendar_id: "80ce85b4eaa97197e2dd929f20646552", name: "cal_name" },
+  const [calendarList, setCalendarList] = useState([]);
 
-  */
   const [goToTaskManager, setGoToTaskManager] = useState(false);
   const [allEventsArray, setAllEventsArray] = useState([]);
   const [taskList, setTaskList] = useState([]);
@@ -78,11 +90,7 @@ export default function MainFrame() {
     "November",
     "December",
   ];
-  //const todayYear = today.getFullYear();
 
-  const [detailInfo, setDetailInfo] = useState(
-    String(today.getMonth() + 1) + "/" + String(today.getDate())
-  );
 
   useEffect(() => {
     const fetchDefaultMode = async () => {
@@ -95,15 +103,27 @@ export default function MainFrame() {
       });
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
+      const newCalendars = dataOfUser.calendars;
+      const updatedCalendarList = [...calendarList];
+
+      for (const calendarName in newCalendars) {
+        const name = newCalendars[calendarName];
+        if (calendarName === "Tasks") {
+          sessionStorage.setItem("taskCalendarId", name["calendar_id"]);
+        }
+        updatedCalendarList.push({
+          calendar_id: name["calendar_id"],
+          name: calendarName,
+        });
+      }
+      setCalendarList(updatedCalendarList);
     };
 
     fetchDefaultMode();
   }, []);
 
   function CalendarList() {
-    const [loading, setLoading] = useState(true);
     const [invitations, setInvitations] = useState([]);
-    const [invitationsWithInfo, setInvitationsWithInfo] = useState([]);
 
     // add event consts
     const [events, setEvents] = useState([]);
@@ -126,6 +146,70 @@ export default function MainFrame() {
     const [eventCalendar, setEventCalendar] = useState("");
     const [LocationSettings, setLocationSettings] = useState("text");
 
+    const [value, setValue] = useState(null);
+    const [inputValue, setInputValue] = useState('');
+    const [options, setOptions] = useState([]);
+    const loaded = useRef(false);
+    if (typeof window !== 'undefined' && !loaded.current) {
+      if (!document.querySelector('#google-maps')) {
+        loadScript(
+          `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`,
+          document.querySelector('head'),
+          'google-maps',
+        );
+      }
+
+      loaded.current = true;
+    }
+    const fetch = useMemo(
+      () =>
+        debounce((request, callback) => {
+          if (autocompleteService.current){
+            try {
+              autocompleteService.current.getPlacePredictions(request, callback);
+            } catch (error) {
+            }
+          }
+        }, 400),
+      [],
+    );
+    useEffect(() => {
+      let active = true;
+
+      if (!autocompleteService.current && window.google) {
+        autocompleteService.current =
+          new window.google.maps.places.AutocompleteService();
+      }
+      if (!autocompleteService.current) {
+        return undefined;
+      }
+
+      if (inputValue === '') {
+        setOptions(value ? [value] : []);
+        return undefined;
+      }
+
+      fetch({ input: inputValue }, (results) => {
+        if (active) {
+          let newOptions = [];
+
+          if (value) {
+            newOptions = [value];
+          }
+
+          if (results) {
+            newOptions = [...newOptions, ...results];
+          }
+
+          setOptions(newOptions);
+        }
+      });
+
+      return () => {
+        active = false;
+      };
+    }, [value, inputValue, fetch]);
+
     useEffect(() => {
       const fetchDefaultsettings = async () => {
         let dataOfDefaultsettings = await send_request(
@@ -137,6 +221,7 @@ export default function MainFrame() {
       };
       fetchDefaultsettings();
     }, []);
+
     const renderLocationInput = () => {
       if (LocationSettings === "text") {
         return (
@@ -149,9 +234,64 @@ export default function MainFrame() {
         );
       } else if (LocationSettings === "map") {
         return (
-          <div>
-            <Map />
-          </div>
+          <Autocomplete
+            id="google-map-demo"
+            sx={{ width: 300 }}
+            getOptionLabel={(option) =>
+              typeof option === 'string' ? option : option.description
+            }
+            filterOptions={(x) => x}
+            options={options}
+            autoComplete
+            size="small"
+            includeInputInList
+            filterSelectedOptions
+            value={value}
+            noOptionsText="No locations"
+            onChange={(event, newValue) => {
+              setOptions(newValue ? [newValue, ...options] : options);
+              setValue(newValue);
+            }}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Add a location" fullWidth />
+            )}
+            renderOption={(props, option) => {
+              const matches =
+                option.structured_formatting.main_text_matched_substrings || [];
+
+              const parts = parse(
+                option.structured_formatting.main_text,
+                matches.map((match) => [match.offset, match.offset + match.length]),
+              );
+
+              return (
+                <li {...props}>
+                  <Grid container alignItems="center">
+                    <Grid item sx={{ display: 'flex', width: 44 }}>
+                      <LocationOnIcon sx={{ color: 'text.secondary' }} />
+                    </Grid>
+                    <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
+                      {parts.map((part, index) => (
+                        <Box
+                          key={index}
+                          component="span"
+                          sx={{ fontWeight: part.highlight ? 'bold' : 'regular' }}
+                        >
+                          {part.text}
+                        </Box>
+                      ))}
+                      <Typography variant="body2" color="text.secondary">
+                        {option.structured_formatting.secondary_text}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </li>
+              );
+            }}
+          />
         );
       }
     };
@@ -282,32 +422,15 @@ export default function MainFrame() {
         emails: eventEmailInvitations,
         type: eventType,
       };
-      const response = await fetch(flaskURL + "/create_event", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(new_event),
-        credentials: "include",
-      });
-      if (!response.ok) {
-        alert("Something went wrong, refresh your website!");
-        return;
+      
+      const creat_event_response = await send_request("/create_event", new_event);
+      if (creat_event_response.error != undefined) {
+        alert(creat_event_response.error)
       } else {
-        switch (response.status) {
-          case 201:
-            console.log("Event created successfully");
-            const data = await response.json();
-            new_event["event_id"] = data["event_id"];
-            setEvents([...events, new_event]);
-            break;
-          case 205:
-            alert("Event not created!");
-            break;
-          case 206:
-            alert("Missing information!");
-            break;
-        }
+        console.log("Event created successfully");
+        const data = await response.json();
+        new_event["event_id"] = data["event_id"];
+        setEvents([...events, new_event]);
       }
 
       setEventName("");
@@ -487,56 +610,11 @@ export default function MainFrame() {
 
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
-    const [calendarList, setCalendarList] = useState([]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        const response = await fetch(flaskURL + "/user_data", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: user_id,
-          }),
-          credentials: "include",
-        });
-        if (!response.ok) {
-          alert("Account Info Not Found. Please log-out and log-in again");
-        } else {
-          switch (response.status) {
-            case 201:
-              const responseData = await response.json();
-              const newCalendars = responseData.calendars;
-              const updatedCalendarList = [...calendarList];
-
-              for (const calendarName in newCalendars) {
-                const name = newCalendars[calendarName];
-                if (calendarName === "Tasks") {
-                  sessionStorage.setItem("taskCalendarId", name["calendar_id"]);
-                }
-                updatedCalendarList.push({
-                  calendar_id: name["calendar_id"],
-                  name: calendarName,
-                });
-              }
-              setCalendarList(updatedCalendarList);
-              setLoading(false);
-              break;
-            case 202:
-              alert("User Not Found");
-              break;
-            case 205:
-              alert("Failing to retrieve user data");
-              break;
-          }
-        }
-      };
-      fetchData();
-    }, []);
-
+    
     // Function to handle the creation of a new calendar
     const handleCreateCalendar = async () => {
+      console.log("this is called, new calendar", newCalendarName)
       if (!newCalendarName.localeCompare("")) {
         alert("Please enter a calendar name!");
         return;
@@ -558,40 +636,17 @@ export default function MainFrame() {
         newCalendarName: newCalendarName,
         user_id: user_id,
       };
-      const response = await fetch(flaskURL + "/create_calendar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(new_calendar),
-        credentials: "include",
-      });
-      if (!response.ok) {
-        alert("Something went wrong, refresh your website!");
-        return;
+      const createCalendarRet = await send_request("/create_calendar", new_calendar);
+      if (createCalendarRet["error"] !== undefined) {
+        alert(createCalendarRet["error"] + "\ntry again!")
       } else {
-        switch (response.status) {
-          case 201:
-            console.log("Calendar created successfully");
-            const responseData = await response.json();
-            setCalendarList([
-              ...calendarList,
-              {
-                calendar_id: responseData["calendar_id"],
-                name: newCalendarName,
-              },
-            ]);
-            break;
-          case 205:
-            alert("Calendar not created!");
-            break;
-          case 206:
-            alert("Missing information!");
-            break;
-          case 207:
-            alert("Calendar not added to user!");
-            break;
-        }
+        setCalendarList([
+          ...calendarList,
+          {
+            calendar_id: createCalendarRet["calendar_id"],
+            name: newCalendarName,
+          },
+        ]);
       }
 
       // Clear the input field after creating the calendar
@@ -604,8 +659,8 @@ export default function MainFrame() {
       setSelectedCalendars((prevSelected) =>
         prevSelected.some((cal) => cal.calendar_id === calendar["calendar_id"])
           ? prevSelected.filter(
-              (cal) => cal.calendar_id !== calendar["calendar_id"]
-            )
+            (cal) => cal.calendar_id !== calendar["calendar_id"]
+          )
           : [...prevSelected, calendar]
       );
     };
@@ -689,6 +744,77 @@ export default function MainFrame() {
 
     const handleSemesterEndDateChange = (e) => {
       setSemesterEndDate(e.target.value);
+    };
+
+
+    const [amountOfTime, setAmountOfTime] = useState("");
+    const [showClosestAvailablePopup, setShowClosestAvailablePopup] = useState(false);
+
+    const handleClosestAvailable = () => {
+      setShowClosestAvailablePopup(!showClosestAvailablePopup);
+    };
+
+    const handleFindClosestAvailable = async (e) => {
+      console.log(amountOfTime)
+      e.preventDefault();
+
+      const user_time = {
+        timeAmount: amountOfTime,
+        user_id: user_id,
+      };
+
+      const response = await send_request("/find_closest_available", user_time);
+      
+      if (response.username == undefined){
+        console.log('Something went wrong!')
+      }
+      else{
+        console.log("find time range!");
+        const message = 'You have an extraordinary session during ' + response.time;
+        
+        // TODO: send email
+        EmailForm(response.username, response.email, message);
+
+        // create event
+        const calendar_id = sessionStorage.getItem("taskCalendarId");
+        var temp = response.time.split(" ")
+        console.log(calendar_id)
+
+        const new_event = {
+          name: 'extraordinary session',
+          desc: eventDescription,
+          start_time: temp[1],
+          end_time: temp[4],
+          start_date: temp[0],
+          end_date: temp[3],
+          location: '',
+          calendar: calendar_id,
+          repetition_type: "none",
+          repetition_unit: "",
+          repetition_val: 1,
+          selected_days: [],
+          user_id: user_id,
+          emails: [],
+          type: eventType,
+        };
+        
+        const creat_event_response = await send_request("/create_event", new_event);
+        if (creat_event_response.error != undefined) {
+          alert(creat_event_response.error)
+        } else {
+          console.log("Event created successfully");
+          const data = await response.json();
+          new_event["event_id"] = data["event_id"];
+          setEvents([...events, new_event]);
+        }
+        
+      }
+
+      setShowClosestAvailablePopup(!showClosestAvailablePopup);
+    };
+
+    const handleCancelClosestAvailable = () => {
+      setShowClosestAvailablePopup(!showClosestAvailablePopup);
     };
 
     return (
@@ -1099,6 +1225,45 @@ export default function MainFrame() {
             )}
           </div>
 
+          {/*find closest available*/}
+          <div className="add_button">
+              <Button
+                variant="contained"
+                onClick={handleClosestAvailable}
+                style={{ marginLeft: "10px" }}
+              >
+                Find Closest Available
+              </Button>
+            </div>
+            {showClosestAvailablePopup && (
+              <div className="popup">
+                <div className="popup-content">
+                  <h2>Find Closest Available Time</h2>
+                  <div className="formgroup">
+                    <label htmlFor="amountOfTime">Amount of Time (time):</label>
+                    <input
+                      type="text"
+                      id="amountOfTime"
+                      value={amountOfTime}
+                      onChange={(e) => setAmountOfTime(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    className="formbutton fb1"
+                    onClick={handleFindClosestAvailable}
+                  >
+                    Add
+                  </button>
+                  <button
+                    className="formbutton fb2"
+                    onClick={handleCancelClosestAvailable}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
           {/* List of existing calendars */}
           <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
             {/* <Typography variant="body1" style={{ marginLeft: "10px" }}>Calendar list:</Typography> */}
@@ -1127,41 +1292,16 @@ export default function MainFrame() {
   const [currentTime, setCurrentTime] = useState(d);
 
   function calendarControlFlowButtonPackage() {
-    //const d = moment();
-    //const [currentTime, setCurrentTime] = useState(d);
-
     // next
     useHotkeys("Shift+n", () => {
-      /*console.log(today.toString())
-      console.log(String(today.getFullYear()))
-      console.log(String(today.getMonth))
-      console.log(String(today.getDate))
-      console.log(selectMode)*/
-      //console.log(d.format('MM/DD'));
-
-      //console.log(d.format('MM/DD'));
       setCurrentTime(moment(currentTime.add(1, "days")));
       updateToday(1);
-      //console.log(today.toDateString())
-      //setCurrentTime(today => {
-      //  today.setDate(today.getDate() + 1);
-
-      //});
-
-      //console.log(currentTime.format('MM/DD'))
     });
 
     // prev
     useHotkeys("Shift+p", () => {
       setCurrentTime(moment(currentTime.subtract(1, "days")));
       updateToday(-1);
-      //console.log(today.toDateString)
-      //setCurrentTime(today => {
-      //  today.setDate(today.getDate() + 1);
-
-      //});
-
-      //console.log(currentTime.format('MM/DD'))
     });
 
     return (
@@ -1177,9 +1317,6 @@ export default function MainFrame() {
               id="1"
               onClick={() => {
                 setSelectMode(1);
-                //setDetailInfo(
-                //</div>  String(today.getMonth() + 1) + "/" + String(today.getDate())
-                //);
               }}
             >
               day
@@ -1192,9 +1329,6 @@ export default function MainFrame() {
               id="2"
               onClick={() => {
                 setSelectMode(2);
-                //setDetailInfo(
-                //</div>  String(today.getMonth() + 1) + "/" + String(today.getDate())
-                //);
               }}
             >
               week
@@ -1207,7 +1341,6 @@ export default function MainFrame() {
               id="3"
               onClick={() => {
                 setSelectMode(3);
-                //setDetailInfo(monthArray[todayMonth]);
               }}
             >
               month
@@ -1220,7 +1353,6 @@ export default function MainFrame() {
               id="4"
               onClick={() => {
                 setSelectMode(4);
-                //setDetailInfo(todayYear);
               }}
             >
               year
@@ -1229,143 +1361,6 @@ export default function MainFrame() {
         </div>
       </div>
     );
-  }
-
-  function PopUpForm() {
-    const [showPopup, setShowPopup] = useState(false);
-    const [amountOfTime, setAmountOfTime] = useState("");
-    const [availableTime, setAvailableTime] = useState("");
-
-    const togglePopup = () => {
-      setShowPopup(!showPopup);
-    };
-
-    const handleAmountOFTimeChange = (e) => {
-      setAmountOfTime(e.target.value);
-    };
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      //let temp = '12:00 - 13:00'
-
-      //const d = moment()
-      console.log(amountOfTime);
-      //console.log(d.format('YYYY/MM/DD h:mm:ss a'))
-
-      if (amountOfTime < 30) {
-        const d = moment();
-        console.log(d.add(amountOfTime, "m"));
-
-        if (
-          window.confirm(
-            "Add event starting from: " + d.format("YYYY/MM/DD h:mm:ss a")
-          )
-        ) {
-          //Yes
-          setGoToAddEvent(true);
-        } else {
-          //No
-          // do nothing
-        }
-      } else if (amountOfTime >= 30) {
-        //const d = moment('2024/03/01 07:00:00 pm')
-        //console.log(d.add(amountOfTime, 'm'))
-
-        if (amountOfTime < 60) {
-          const d = moment("2024/03/01 07:00:00 pm");
-          if (
-            window.confirm(
-              "Add event starting from: " + d.format("YYYY/MM/DD h:mm:ss a")
-            )
-          ) {
-            //Yes
-            setGoToAddEvent(true);
-          } else {
-            //No
-            // do nothing
-          }
-        } else {
-          const d = moment("2024/03/01 09:15:00 pm");
-          //console.log(d.add(amountOfTime, 'm'))
-
-          if (
-            window.confirm(
-              "Add event starting from: " + d.format("YYYY/MM/DD h:mm:ss a")
-            )
-          ) {
-            //Yes
-            setGoToAddEvent(true);
-          } else {
-            //No
-            // do nothing
-          }
-        }
-      }
-
-      //console.log(d.add(amountOfTime, 'm'))
-
-      if (window.confirm("Add event: " + d.format("YYYY/MM/DD h:mm:ss a"))) {
-        //Yes
-        setGoToAddEvent(true);
-      } else {
-        //No
-        // do nothing
-      }
-
-      setAmountOfTime("");
-      togglePopup();
-    };
-    /*const handleSubmit = async () => {
-          let response = await fetch(flaskURL + "/set_amount_of_time", {
-          method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          'user_id': user_id,
-        'time': amountOfTime
-        }),
-        credentials: "include"
-      })
-        let data = await response.json();
-        console.log(data.available);
-        //setSelectMode(data.type);
-
-        setAmountOfTime("");
-        togglePopup();
-    };*/
-
-    return true;
-    // <div className="add_button">
-    //   <button onClick={togglePopup}>Closest Available Time</button>
-    //   {showPopup && (
-    //     <div className="popup">
-    //       <div className="popup-content">
-    //         <h2>Time (min)</h2>
-    //         <form onSubmit={handleSubmit}>
-    //           <div className="formgroup">
-    //             <label htmlFor="aomuntOfTime">
-    //               Enter the amount of time:
-    //             </label>
-    //             <input
-    //               type="text"
-    //               id="amountOfTime"
-    //               value={amountOfTime}
-    //               onChange={handleAmountOFTimeChange}
-    //             />
-    //           </div>
-    //           <button className="formbutton fb1" type="submit">
-    //             Search
-    //           </button>
-    //           <button className="formbutton fb2" onClick={togglePopup}>
-    //             Cancel
-    //           </button>
-    //           {/*<button onClick={addEvent}>Add Event</button>TODO*/}
-    //         </form>
-    //       </div>
-    //     </div>
-    //   )}
-    // </div>
   }
 
   // shortcuts
@@ -1570,9 +1565,7 @@ export default function MainFrame() {
 
   useEffect(() => {
     const fetchEvents = () => {
-      console.log(selectedCalendars);
       if (selectedCalendars == undefined || selectedCalendars.length == 0) {
-        console.log("selectedCalendars is null!!");
         setAllEventsArray([]);
         return;
       }
@@ -1588,7 +1581,7 @@ export default function MainFrame() {
 
       selectedCalendars.map(async (calendar) => {
         let events = await send_request("/get_events", {
-          calendar_id: calendar.calendar_id,
+          "calendar_id": calendar.calendar_id
         });
 
         if (events.data != undefined) {
@@ -1644,7 +1637,7 @@ export default function MainFrame() {
     return arr.map(
       (task) =>
         !task.completed && (
-          <div className="taskBar" onClick={() => {}}>
+          <div className="taskBar" onClick={() => { }}>
             <p className="taskName">{task.date.slice(5, 10)}</p>
             <p className="taskName">{task.title}</p>
             <Checkbox
@@ -1724,9 +1717,6 @@ export default function MainFrame() {
           <Weather />
           <Timezone />
         </Box>
-        {/* </CardContent>
-        </Card> */}
-        <div>{PopUpForm()}</div>
         {/* Parent container for CalendarList and calendar_container */}
         <div className="main-calendar-content">
           {/* CalendarList component */}

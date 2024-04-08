@@ -13,16 +13,20 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
+import StarRateIcon from '@mui/icons-material/StarRate';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { orange, grey } from "@mui/material/colors";
 import Fab from "@mui/material/Fab";
 import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import EventParser from "./EventParser";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
+import AccessAlarmsIcon from '@mui/icons-material/AccessAlarms';
 import Box from "@mui/material/Box";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import {
@@ -32,6 +36,7 @@ import {
   TableRow,
   TableCell,
   Grid,
+  Hidden,
 } from "@mui/material";
 import send_request from "./requester";
 import Checkbox from "@mui/material/Checkbox";
@@ -49,6 +54,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Alert from '@mui/material/Alert';
 import dayjs from 'dayjs';
+import GPTChatBox from '../components/GPTChatBox.jsx'
+import "./TaskManager.css"
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 
@@ -141,61 +148,13 @@ const validExtensions = [
   "pdf",
 ];
 
-// initial list for new users
-const initialList = [
-  {
-    id: 0,
-    title: "Homework 2",
-    time: 4,
-    date: "2024-02-25",
-    desc: "Complete design document and sumbit",
-    completed: false,
-    completed_time: null,
-    sub_tasks: [
-      { id: 0, name: "Question 1", comp: true },
-      { id: 1, name: "Question 2", comp: true },
-      { id: 2, name: "Question 3", comp: false },
-    ],
-    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
-    scheduled: false,
-    time_allo: 0,
-  },
-  {
-    id: 1,
-    title: "Sprint Planning",
-    time: 2,
-    date: "2024-09-23",
-    desc: "Speak with team coordinator",
-    completed: false,
-    completed_time: null,
-    sub_tasks: [
-      { id: 0, name: "Backlog", comp: false },
-      { id: 1, name: "User Stories", comp: false },
-      { id: 2, name: "Acceptable Criteria", comp: false },
-    ],
-    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
-    scheduled: false,
-    time_allo: 0,
-  },
-  {
-    id: 2,
-    title: "Midterm Study",
-    time: 5,
-    date: "2059-09-23",
-    desc: "Look at slides lol",
-    completed: false,
-    completed_time: null,
-    sub_tasks: [
-      { id: 0, name: "Chapter 1", comp: true },
-      { id: 1, name: "Chapter 2", comp: false },
-      { id: 2, name: "Chapter 3", comp: false },
-    ],
-    file_url: `files/Design Document.pdfd61026c6-3875-4dbc-b542-fbc0c987a25a`,
-    scheduled: false,
-    time_allo: 0,
-  },
+const tagList = [
+  "Important",
+  "Time-Sensitive",
+  "Overdue",
 ];
-let nextId = initialList.length;
+
+let nextId = 0;
 let calendarId = 0;
 
 // create new task manager
@@ -269,11 +228,12 @@ export default function TaskManager() {
   const [todoList, setTodoList] = useState([]);
   const [completedList, setCompletedList] = useState([]);
   const [eventList, setEventList] = useState({});
+  const [prioOptionTodo, setPrioOptionTodo] = useState(0);
 
   // used to hold data for tasks
   const [taskName, setTaskName] = useState("");
   const [taskTime, setTaskTime] = useState(0);
-  const [taskDate, setTaskDate] = useState("");
+  const [taskDate, setTaskDate] = useState(dayjs());
   const [taskDesc, setTaskDesc] = useState("");
   const [taskFile, setTaskFile] = useState();
 
@@ -375,6 +335,35 @@ export default function TaskManager() {
 
     setSearchQueryTodo(keyword);
   };
+
+  function updatePriority() {
+      let mapped = todoList.map((task) => {
+      const [year, month, day] = task.date.split("-").map(Number);
+      let last_workday = new Date(year, month - 1, day - 1);
+      const today = new Date();
+      let days_diff = Math.ceil(
+        ((last_workday - today) / (60 * 60 * 24 * 1000)) % 365
+      );
+
+      if (task.autoPrio == true) {
+        if (days_diff == 0) {
+          task.priority = 3; 
+        } else if (days_diff < 0) {
+          task.priority = 2; 
+        } else if (task.time > 8) {
+          task.priority = 1; 
+        }
+      }
+
+      return task; 
+    })
+
+    setTodoList(mapped)
+  }
+
+  useEffect(() => {
+    updatePriority()
+  }, [todoList]);
 
   const filterCompleted = (e) => {
     const keyword = e.target.value;
@@ -559,6 +548,35 @@ export default function TaskManager() {
     setOpen(false);
   };
 
+  function handleRemoveSubtask(id) {
+    const newList = subtaskList.filter((item) => item.id !== id)
+
+    setSubtaskList(newList)
+  }
+
+  function handleEditSubtask(id, name) {
+    const mapped = subtaskList.map((item) => {
+      if (item.id == id) {
+        item = { ...item, name: name }
+      }
+
+      return item;
+    })
+
+    setSubtaskList(mapped)
+  }
+
+  function handlePriorityChange(id, priority) {
+    const mapped = todoList.map((item) => {
+      if (item.id == id) {
+        item = {...item, priority: priority, autoPrio: false}
+      }
+      return item;
+    })
+
+    setTodoList(mapped)
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
@@ -601,8 +619,8 @@ export default function TaskManager() {
         </div>
       </div>
 
-      <div className="task-columns-container">
-        <div className="task-column">
+      <div>
+        <div>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
               <div
@@ -655,6 +673,21 @@ export default function TaskManager() {
                     <MenuItem value={4}>Latest due</MenuItem>
                     <MenuItem value={5}>Largest workload</MenuItem>
                     <MenuItem value={6}>Smallest workload</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl sx={{ m: 1, width: 200 }} size="small">
+                  <InputLabel id="priority">Priority</InputLabel>
+                  <Select
+                    labelId="priority"
+                    id="priority"
+                    value={prioOptionTodo}
+                    label="priority"
+                    onChange={(e) => setPrioOptionTodo(e.target.value)}
+                  >
+                    <MenuItem value={0}>...</MenuItem>
+                    <MenuItem value={1}>Important <StarRateIcon/></MenuItem>
+                    <MenuItem value={2}>Overdue <PriorityHighIcon/></MenuItem>
+                    <MenuItem value={3}>Time Sensitive <AccessAlarmsIcon/></MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -715,8 +748,16 @@ export default function TaskManager() {
                     type="date"
                     id="date"
                     value={taskDate}
+                    style={{ backgroundColor: "transparent" }}
                     onChange={(e) => setTaskDate(e.target.value)}
                   />
+                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Controlled picker"
+                      value={taskDate}
+                      onChange={(e) => setTaskDate(e.target.value)}
+                    />
+                  </LocalizationProvider> */}
                 </Grid>
               </Grid>
               <Grid
@@ -804,6 +845,7 @@ export default function TaskManager() {
                           comp: false,
                         },
                       ]);
+                      setSubtaskDesc('');
                     }}
                   >
                     <AddIcon />
@@ -812,11 +854,30 @@ export default function TaskManager() {
               </Grid>
               <ol>
                 {subtaskList.map((subtask) => (
-                  <li key={subtask.id}>{subtask.name}</li>
+                  <li key={subtask.id}>
+                    <TextField
+                      type="text"
+                      size="small"
+                      style={{ marginBottom: '10px' }}
+                      value={subtask.name}
+                      onChange={(e) => { handleEditSubtask(subtask.id, e.target.value) }}
+                    />
+                    {'  '}
+                    <Fab
+                      color="primary"
+                      size="small"
+                      onClick={() => {
+                        handleRemoveSubtask(subtask.id)
+                      }}
+                    >
+                      <DeleteIcon />
+                    </Fab>
+                  </li>
                 ))}
               </ol>
 
-              <button
+              <Button 
+                variant="contained"    
                 id="closeModal"
                 style={{ marginRight: "10px" }}
                 onClick={() => {
@@ -834,31 +895,29 @@ export default function TaskManager() {
                         file_url: taskFile,
                         scheduled: false,
                         time_allo: 0,
+                        priority: 0, 
+                        autoPrio: true, 
                       },
                     ]);
                   } else {
                     alert("Error! Missing Information! Please try again!");
                   }
-                }}
-              >
-                {" "}
-                Add{" "}
-              </button>
-              <button
-                id="closeModal"
-                onClick={() => {
-                  // Reset all the form fields or close the dialog
-                  setTaskName("New Task");
-                  setTaskTime(0);
-                  setTaskDesc("Task Description");
-                  setSubtaskDesc("");
-                  setSubtaskList([]);
-                  setTaskFile("");
-                  document.getElementById("modal").close();
-                }}
-              >
-                Cancel
-              </button>
+                }}>
+              Add
+            </Button>
+            <Button 
+            variant="contained"
+            id="closeModal"
+            onClick={() => {
+              // Reset all the form fields or close the dialog
+              setTaskName("New Task");
+              setTaskTime(0);
+              setTaskDesc("Task Description");
+              setSubtaskDesc("");
+              setSubtaskList([]);
+              setTaskFile("");
+              document.getElementById("modal").close();
+            }}>Cancel </Button>              
             </DialogContent>
           </dialog>
 
@@ -866,13 +925,15 @@ export default function TaskManager() {
             list={todoList}
             onToggle={handleToggleCompleted}
             option={sortOptionTodo}
+            priorityOption={prioOptionTodo}
             onToggleSubtask={handleToggleSubtask}
             onScheduled={handleScheduledTask}
+            onPriorityChange={handlePriorityChange}
             keyword={searchQueryTodo}
           />
         </div>
 
-        <div className="task-column">
+        <div>
           <div
             style={{
               display: "flex",
@@ -928,6 +989,7 @@ export default function TaskManager() {
         {" "}
         Save Tasks
       </Button>
+      <div className="GPTChatBox">{GPTChatBox()}</div>
     </ThemeProvider>
   );
 }
@@ -936,20 +998,33 @@ function TodoList({
   list,
   onToggle,
   option,
+  priorityOption,
   onToggleSubtask,
   onScheduled,
+  onPriorityChange,
   keyword,
 }) {
   let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
-    const results = list.filter((task) => {
+    let results = list.filter((task) => {
       return (
         task.title.toLowerCase().includes(keyword.toLowerCase()) ||
         task.desc.toLowerCase().includes(keyword.toLowerCase())
       );
     });
     list = results;
+  } else {
+    list = defaultList;
+  }
+
+  if (priorityOption !== 0) {
+    let results = list.filter((task) => {
+      return (
+        task.priority == priorityOption
+      ); 
+    })
+    list = results; 
   } else {
     list = defaultList;
   }
@@ -1129,6 +1204,7 @@ function TodoList({
           <TableCell>Attached File</TableCell>
           <TableCell>Task Checklist</TableCell>
           <TableCell>Actions</TableCell>
+          <TableCell>Tag</TableCell>
           <TableCell>Complete?</TableCell>
         </TableRow>
       </TableHead>
@@ -1195,6 +1271,22 @@ function TodoList({
               >
                 Schedule Task Time
               </Button>
+            </TableCell>
+            <TableCell sx={{ m: 1, width: 200 }} size="small">
+                  <Select
+                    labelId="priority"
+                    id="priority"
+                    value={task.priority}
+                    label="priority"
+                    onChange={(e) => {
+                      onPriorityChange(task.id, e.target.value)
+                    }}
+                  >
+                    <MenuItem value={0}>None</MenuItem>
+                    <MenuItem value={1}><StarRateIcon /></MenuItem>
+                    <MenuItem value={2}><PriorityHighIcon /></MenuItem>
+                    <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
+                  </Select>
             </TableCell>
             <TableCell>
               <Checkbox

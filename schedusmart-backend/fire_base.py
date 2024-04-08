@@ -67,6 +67,7 @@ import pyrebase
 from firebaseConfig import firebaseConfig
 import secrets
 import traceback
+from datetime import datetime, timedelta
 
 
 # to use this function, you will need to first log in the account with method:
@@ -87,15 +88,17 @@ def delete_account(user):
         return 1
 
 
-def look_for_same_user_name(user_name):
+def __look_for_same_user_name_or_email(data):
     users = db.child("User").get()
     for user in users.each():
         try:
-            if user_name == user.val()["user_name"]:
-                return True
-        except KeyError as e:
+            if data["user_name"] == user.val()["user_name"]:
+                return 1
+            if data["email"] == user.val()["email"]:
+                return 2
+        except KeyError:
             pass
-    return False
+    return 0
 
 
 # login_account_with_username_and_password(username, password)
@@ -159,10 +162,17 @@ def create_account_by_username_and_password(receive_account):
             "email": receive_account['email'],
         }
 
-        if look_for_same_user_name(receive_account['username']):
+        same_account_confirm = __look_for_same_user_name_or_email(data)
+
+        if same_account_confirm == 1:
             return {
-                "error": "UserName already exist",
-                "response_status": 1
+                "error": "username",
+                "response_status": 0
+            }
+        if same_account_confirm == 2:
+            return {
+                "error": "email",
+                "response_status": 0
             }
 
         user = auth.create_user_with_email_and_password(receive_account['email'], receive_account['password'])
@@ -175,8 +185,8 @@ def create_account_by_username_and_password(receive_account):
         }
     except Exception as e:
         return {
-            "error": "Failed to create account",
-            "response_status": 1
+            "error": "invalid",
+            "response_status": 0
         }
 
 
@@ -285,8 +295,10 @@ def mark_task_as_done(task):
         for each_task in tasks:
             if each_task.val()["id"] == task["id"]:
                 id_path = each_task.key()
-        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update({"completed_time": task["completed_time"]})
-        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update({"completed": task["completed"]})
+        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update(
+            {"completed_time": task["completed_time"]})
+        db.child("User").child(task["user_id"]).child("task_list").child(id_path).update(
+            {"completed": task["completed"]})
     except KeyError as e:
         print(f"{e}")
 
@@ -321,22 +333,13 @@ def add_new_calendar(calendar_info):
 
 def f_get_events(calendar):
     try:
-        #data_events = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
-        #data_event_counter = 0
-        #data_event = []
-        #for data in data_events.each():
-        #    data_event.append(data.val())
-        #return {"data": data_event}
-    
         data_event_ids = db.child("Calendars").child(calendar["calendar_id"]).child("Events").get()
         events = []
         for event_id in data_event_ids.each():
             event = event_id.val()
-            print(event["event_id"])
             e = db.child("Events").child(event["event_id"]).get().val()
             e["event_id"] = event["event_id"]
             events.append(e)
-        print(events)
         return {"data": events}
     except Exception as e:
         print(f"fail to retrieve events data: \n{e}")
@@ -353,11 +356,12 @@ def update_task(task_info):
         return 1
     return 0
 
+
 def add_new_event(event_info):
     user_id = event_info['user_id']
     if user_id is None:
         raise Exception("User ID is None")
-    
+
     event_id = secrets.token_hex(16)
     data = {
         'name': event_info['name'],
@@ -384,13 +388,14 @@ def add_new_event(event_info):
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         db.child("Events").child(event_id).set(data)
     except Exception as e:
-        traceback.print_exc()
+        print(f"{e}")
         print("Failed to create calendar:", e)
         return {'response_status': 1}
     return {
-        'response_status': 1,
+        'response_status': 0,
         'event_id': event_id
     }
+
 
 def update_event_db(event_info):
     user_id = event_info['user_id']
@@ -417,6 +422,7 @@ def update_event_db(event_info):
         print("Failed to update event:", e)
         return {'response_status': 1}
     return {'response_status': 0}
+
 
 def delete_event_db(event_info):
     user_id = event_info['user_id']
@@ -450,6 +456,7 @@ def delete_event_db(event_info):
         return {'response_status': 1}
     return {'response_status': 0}
 
+
 def get_event_with_id_db(data):
     try:
         if data['user_id'] is None:
@@ -460,6 +467,7 @@ def get_event_with_id_db(data):
     except Exception as e:
         print("Failed to get event with ID:", e)
         return {'response_status': 1}
+
 
 def invite_users_to_event_db(data):
     try:
@@ -473,7 +481,8 @@ def invite_users_to_event_db(data):
     except Exception as e:
         print("Failed to invite user to event:", e)
         return {'response_status': 1}
-    
+
+
 def get_invitations_db(data):
     try:
         if data['user_id'] is None:
@@ -490,7 +499,8 @@ def get_invitations_db(data):
     except Exception as e:
         print("Failed to get invitations:", e)
         return {'response_status': 1}
-    
+
+
 def accept_invitation_db(data):
     try:
         if data['user_id'] is None:
@@ -504,9 +514,10 @@ def accept_invitation_db(data):
         db.child("Calendars").child(calendar_id).child("Events").push({"event_id": event_id})
         return {'response_status': 0}
     except Exception as e:
-        #print("Failed to accept invitation:", e)
+        # print("Failed to accept invitation:", e)
         return {'response_status': 1}
-    
+
+
 def decline_invitation_db(data):
     try:
         if data['user_id'] is None:
@@ -554,6 +565,7 @@ def update_default_location_settings(info):
         print("Failed to set the location settings")
         return 1
 
+
 # This function is used to create a new Habits list for the logged in user
 def add_new_habit(data):
     user_id = data['user_id']
@@ -577,7 +589,167 @@ def add_new_habit(data):
         print("Failed to create habit:", e)
         return 1
 
-# used to test with firebase #######################
+
+def find_closest_available_time(data):
+    user_id = data['user_id']
+    timeRange = data['timeAmount']
+
+    # get all calendar
+    calendars = db.child("User").child(user_id).child("calendars").get().val()
+    earlist_start_time = ''
+    earlist_end_time = ''
+
+    loc_dt = datetime.today()
+    time_del = timedelta(minutes=5)
+    earlist_start_time = loc_dt + time_del
+    time_del = timedelta(minutes=int(timeRange))
+    earlist_end_time = earlist_start_time + time_del
+    earlist_start_time = earlist_start_time.strftime("%Y-%m-%d %H:%M")
+    earlist_end_time = earlist_end_time.strftime("%Y-%m-%d %H:%M")
+    event_list = []
+
+    for key, val in calendars.items():
+        # get all events from all calendars
+        data_event_ids = db.child("Calendars").child(val['calendar_id']).child("Events").get()
+        if data_event_ids.val() == None:
+            continue
+
+        for event_id in data_event_ids.each():
+            event = event_id.val()
+            e = db.child("Events").child(event["event_id"]).get().val()
+            if e['start_date'] == '' and e['start_time'] == '' and e['end_date'] == '' and e['end_time'] == '':
+                continue
+            start_time = e['start_date'] + ' ' + e['start_time']
+            end_time = e['end_date'] + ' ' + e['end_time']
+            event_list.append((start_time, end_time))
+
+        event_list.sort(key=lambda a: a[1])
+
+        for start_time, end_time in event_list:
+            if (start_time <= earlist_start_time and end_time >= earlist_start_time) or (
+                    start_time <= earlist_end_time and end_time >= earlist_end_time):
+                temp_time = datetime.strptime(end_time, "%Y-%m-%d %H:%M")
+                time_del = timedelta(minutes=5)
+                temp_start = temp_time + time_del
+                time_del = timedelta(minutes=int(timeRange))
+                temp_end = temp_start + time_del
+                earlist_start_time = temp_start.strftime("%Y-%m-%d %H:%M")
+                earlist_end_time = temp_end.strftime("%Y-%m-%d %H:%M")
+
+    time = earlist_start_time + ' - ' + earlist_end_time
+
+    # get user email
+    email = db.child("User").child(user_id).child('email').get().val()
+    username = db.child("User").child(user_id).child("user_name").get().val()
+    ret = {'username': username, 'time': time, 'email': email}
+
+    return ret
+
+
+################################################### friend system ######################################################
+def __get_friend_list(user_id):
+    friend_list = []
+    try:
+        friends = db.child("User").child(user_id).child("friendManager").child("friend").get()
+        for friend in friends.each():
+            friend_data = {
+                'name': friend.val()["name"],
+                'confirm': friend.val()["confirm"]
+            }
+            friend_list.append(friend_data)
+    except TypeError as e:
+        pass
+    return friend_list
+
+
+def __get_request_list(user_id):
+    request_list = []
+    try:
+        requests = db.child("User").child(user_id).child("friendManager").child("request").get()
+        for request in requests.each():
+            friend_data = {
+                'name': request.val()["name"],
+                'confirm': request.val()["confirm"]
+            }
+            request_list.append(friend_data)
+    except TypeError as e:
+        pass
+    return request_list
+
+
+def __get_user_id(name):
+    users = db.child("User").get()
+    for user in users.each():
+        try:
+            if name == user.val()["user_name"]:
+                return user.key()
+        except KeyError as e:
+            pass
+    return None
+
+
+def get_friend_manager(user_data):
+    friend_list = __get_friend_list(user_data["user_id"])
+    request_list = __get_request_list(user_data["user_id"])
+    friend_manager = {
+        "friend": friend_list,
+        "request": request_list
+    }
+    return friend_manager
+
+
+def add_friend(add_friend_data):
+    # check if the requester is user himself
+    user_name = get_user({"user_id": add_friend_data["user_id"]})["user_name"]
+    if user_name == add_friend_data["name"]:
+        return {"error": "user requesting himself as friend"}
+    # check if the request has already being post
+    friend_list = __get_friend_list(add_friend_data["user_id"])
+    for friend in friend_list:
+        if friend['name'] == add_friend_data["name"]:
+            return {"error": "request already send"}
+
+    request_list = __get_request_list(add_friend_data["user_id"])
+    for request in request_list:
+        if request['name'] == add_friend_data["name"]:
+            return {"error": "already receive request from friend"}
+
+    room_id = create_room(add_friend_data)
+    friend_data = {
+        "name": add_friend_data["name"],
+        "confirm": False,
+        "chat_room": room_id
+    }
+
+    friend_id = __get_user_id(friend_data["name"])
+
+    if friend_id is not None:
+        db.child("User").child(add_friend_data["user_id"]).child("friendManager").child("friend").push(friend_data)
+        friend_data["name"] = user_name
+        db.child("User").child(friend_id).child("friendManager").child("request").push(friend_data)
+        return {'message': 'request complete'}
+    else:
+        return {'error': 'friend not found'}
+
+
+def create_room(data):
+    username = get_user(data)["user_name"]
+    chat_room_data = {
+        "user1": username,
+        "user2": data["name"],
+        "confirmation": False
+    }
+    a = db.child("Chat_Room").push(chat_room_data)
+    return a["name"]
+
+
+def get_message():
+    pass
+
+
+def add_message():
+    pass
+
 
 # Make sure you download the firebaseConfig.py file in google doc
 firebase = pyrebase.initialize_app(firebaseConfig)
@@ -585,4 +757,3 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-
