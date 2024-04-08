@@ -71,6 +71,9 @@ export default function Dashboard() {
             <Button color="inherit" href="./habits" id="habits-button">
               Habits
             </Button>
+            <Button color="inherit" href="./friendlist" id="friendlist">
+              Friendlist
+            </Button>
             <Button color="inherit" href="./notes" id="notes-button">
               Notes
             </Button>
