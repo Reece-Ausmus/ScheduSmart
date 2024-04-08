@@ -1,0 +1,19 @@
+=== Weekly Team Report (Team 30: ScheduSmart) ===
+
+Week 7	(Srum master: Reece Ausmus)
+MM/DD/YY    xhr     commitid    description
+
+
+Week 8 	(Plan) (Scrum master: Reece Ausmus)
+[Meetings]
+04/10/24    Discuss needs and goals for the week.
+04/13/24    Discuss second week of sprint progress and any concerns or questions.
+04/14/24    Meeting with TA to discuss progress.
+
+[Individual Goals]
+Reece Ausmus:   Fully implement zoom integration. Clean up any bugs before final week.
+Cassie Chang:   
+Stanley Huang:  
+Bradley Norris: 
+Himanshu Sinha: 
+Gloria Xu:      
