@@ -1,14 +1,11 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 7	(Srum master: Reece Ausmus)
-<<<<<<< HEAD
 MM/DD/YY    xhr     commitid    description
 04/04/24    2hr     5480c90     finish styling task manager
-=======
 04/04/24    2 hr    d322ca9     Updated dashboard UI with profile Icon navigation
 04/04/24    3 hr    0b3fceb     Added reset password page
 04/05/24    4 hr    19f5b42     Added Bar Chart visualization option for Habits page data
->>>>>>> 2706bcca521ccd90b6e27796d5e15f927d83acb7
 
 Week 8 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
