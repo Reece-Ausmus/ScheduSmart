@@ -18,5 +18,5 @@ Reece Ausmus:   Fully implement zoom integration. Clean up any bugs before final
 Cassie Chang: finish notebook feature and construct Nginx server   
 Stanley Huang:  
 Bradley Norris: Begin work on goal setting for habits page with CRUD.
-Himanshu Sinha: 
+Himanshu Sinha: Implement email feature on task manager.
 Gloria Xu: finish implementation of a freind list and color settings
