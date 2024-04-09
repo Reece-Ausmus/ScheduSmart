@@ -48,12 +48,15 @@ export default function Friendlist() {
     const ref = useRef(null);
     const [messages, setMessages] = useState(() => refreshMessages());
     const [open, setOpen] = useState(false);
-    const [flatProps, setFlatProps] = useState({ options: [] });
+    const [Props, setProps] = useState({ options: [] });
     const handleSearchUser = async (event,name) => {
+        if (!name) {
+            setProps({ options: [] });
+            return;
+        }
         const response = await send_request("/search_user", { "name": name });
         const name_list = response.data;
-        console.log(name_list);
-        setFlatProps({ options: name_list.map((name) => ({ title: name })) });
+        setProps({ options: name_list});
     };
 
     const handleClickOpen = () => {
@@ -120,19 +123,8 @@ export default function Friendlist() {
                             To add your friend in your list, please provide your friend's user name here. We
                             will send an invitation after you click the "send inviation" button.
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="username"
-                            name="username"
-                            label="User name"
-                            type="name"
-                            fullWidth
-                            variant="standard"
-                        />
                         <Autocomplete
-                            {...flatProps}
+                            {...Props}
                             id="username"
                             onInputChange={handleSearchUser}
                             renderInput={(params) => (
