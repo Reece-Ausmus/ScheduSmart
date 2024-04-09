@@ -18,12 +18,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { orange, grey } from "@mui/material/colors";
 import Fab from "@mui/material/Fab";
 import Icon from "@mui/material/Icon";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextField from "@mui/material/TextField";
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import EventParser from "./EventParser";
+import SendIcon from '@mui/icons-material/Send';
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import AccessAlarmsIcon from '@mui/icons-material/AccessAlarms';
@@ -1004,6 +1006,16 @@ function TodoList({
   onPriorityChange,
   keyword,
 }) {
+  const emailModal = document.querySelector("#emailModal")
+  const openEmailModal = document.querySelector("#openEmailModal")
+  const closeEmailModal = document.querySelector("#closeEmailModal")
+
+  if (emailModal) {
+    openEmailModal && openEmailModal.addEventListener("click", () => emailModal.showModal());
+
+    closeEmailModal && closeEmailModal.addEventListener("click", () => emailModal.close());
+  }
+
   let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
@@ -1210,6 +1222,71 @@ function TodoList({
       </TableHead>
       <TableBody>
         {sortedList.map((task) => (
+          <>
+          <dialog id="emailModal" style={{ background: "#f8c06c" }}>
+            <DialogTitle style={{ color: "black" }}>Email Task</DialogTitle>
+            <DialogContent>
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                style={{marginBottom: "15px", marginTop: "1px", width: "600px"}}
+              >
+                <Grid item xs={12}>
+                  <TextField
+                    id="recipients"
+                    type="email"
+                    label="To"
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="carbonCopy"
+                    type="email"
+                    label="CC"
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="blindCarbonCopy"
+                    type="email"
+                    label="BCC"
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="subject"
+                    label="Subject"
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="content"
+                    label="Contents"
+                    size="large"
+                    fullWidth
+                    multiline="true"
+                    minRows={5}
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                variant="contained"
+                id="closeEmailModal"
+                onClick={() => {
+                  document.getElementById("emailModal").close();
+                }}
+              >Close</Button>
+            </DialogContent>
+          </dialog>
           <TableRow key={task.id}>
             <TableCell>{task.title}</TableCell>
             <TableCell>
@@ -1252,7 +1329,8 @@ function TodoList({
             <TableCell>
               <Button
                 variant="contained"
-                size="small"
+                size="medium"
+                style={{ marginBottom: "50px" }}
                 onClick={() => {
                   const [year, month, day] = task.date.split("-").map(Number);
                   const dueDate = new Date(year, month - 1, day);
@@ -1269,7 +1347,19 @@ function TodoList({
                   }
                 }}
               >
-                Schedule Task Time
+                <CalendarMonthIcon/>
+              </Button>
+              <Button
+                aria-label="email"
+                variant="contained"
+                size="medium"
+                color="primary"
+                id="openEmailModal"
+                onClick={() => {
+                  
+                }}
+              >
+                <SendIcon/>
               </Button>
             </TableCell>
             <TableCell sx={{ m: 1, width: 200 }} size="small">
@@ -1298,6 +1388,7 @@ function TodoList({
               />
             </TableCell>
           </TableRow>
+          </>
         ))}
       </TableBody>
     </Table>
