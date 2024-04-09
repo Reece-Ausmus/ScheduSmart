@@ -74,7 +74,7 @@ export default function Friendlist() {
             alert("Input contains special characters. Please remove them and try again!");
             return;
         }
-        const response = await send_request("/request_friend", username);
+        const response = await send_request("/request_friend", {"user_id": userId, "name": username});
         if (response.error != undefined) {
             if (response.error == "user requesting himself as friend") {
               alert("You are unable to request yourself as friend.");
