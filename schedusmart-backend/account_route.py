@@ -250,12 +250,12 @@ def request_friend():
     try:
         if not data["user_id"]:
             return jsonify({'error': 'User ID is required'}), 201
-    except KeyError:
+    except KeyError | TypeError:
         return jsonify({'error': 'User ID is required'}), 201
     try:
         if not data["name"]:
             return jsonify({'error': 'require friend\'s username in name field'}), 201
-    except KeyError:
+    except KeyError | TypeError:
         return jsonify({'error': 'require friend\'s username in name field'}), 201
     return jsonify(add_friend(data)), 201
 
@@ -266,7 +266,7 @@ def get_friend():
     try:
         if not data["user_id"]:
             return jsonify({'error': 'User ID is required'}), 201
-    except KeyError:
+    except KeyError | TypeError:
         return jsonify({'error': 'User ID is required'}), 201
     return jsonify(get_friend_manager(data)), 201
 
@@ -283,7 +283,7 @@ def confirm_friend():
             return jsonify({"error": "confirm not provided"}), 201
 
         return jsonify(confirm(data)), 201
-    except KeyError:
+    except KeyError | TypeError:
         return jsonify({"error": "lack of information"}), 201
 
 
@@ -294,5 +294,5 @@ def search_user():
         if not data["name"]:
             return jsonify({"error": "search name can not be null"}), 201
         return jsonify(f_search_user(data["name"])), 201
-    except KeyError:
+    except KeyError | TypeError:
         return jsonify({"error": "search can not be null"}), 201
