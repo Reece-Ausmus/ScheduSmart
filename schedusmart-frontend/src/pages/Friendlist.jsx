@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import AddIcon from "@mui/icons-material/Add";
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -26,9 +27,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import send_request from "./requester";
 
-// Define the Flask API URL
-const flaskURL = "http://127.0.0.1:5000";
-
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
 
@@ -42,11 +40,6 @@ const theme = createTheme({
 });
 
 function refreshMessages() {
-    // const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max));
-
-    // return Array.from(new Array(messageExamples.length)).map(
-    //     () => messageExamples[getRandomInt(messageExamples.length)],
-    // );
     return messageExamples;
 }
 
@@ -55,6 +48,13 @@ export default function Friendlist() {
     const ref = useRef(null);
     const [messages, setMessages] = useState(() => refreshMessages());
     const [open, setOpen] = useState(false);
+    const [flatProps, setFlatProps] = useState({ options: [] });
+    const handleSearchUser = async (event,name) => {
+        const response = await send_request("/search_user", { "name": name });
+        const name_list = response.data;
+        console.log(name_list);
+        setFlatProps({ options: name_list.map((name) => ({ title: name })) });
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -62,6 +62,7 @@ export default function Friendlist() {
     const handleClose = () => {
         setOpen(false);
     };
+
     const handleSubmit = async () => {
         console.log("submit");
         const username = document.getElementById("username").value;
@@ -74,22 +75,22 @@ export default function Friendlist() {
             alert("Input contains special characters. Please remove them and try again!");
             return;
         }
-        const response = await send_request("/request_friend", {"user_id": userId, "name": username});
+        const response = await send_request("/request_friend", { "user_id": userId, "name": username });
         if (response.error != undefined) {
             if (response.error == "user requesting himself as friend") {
-              alert("You are unable to request yourself as friend.");
-            } 
+                alert("You are unable to request yourself as friend.");
+            }
             if (response.error == "request already send") {
-              alert("The request has already been sent.");
+                alert("The request has already been sent.");
             }
             if (response.error == "already receive request from friend") {
-              alert("The request has already been received from your friend");
+                alert("The request has already been received from your friend");
             }
-            if (response.error == "friend not found"){
-              alert("Friend can not been found.")
+            if (response.error == "friend not found") {
+                alert("Friend can not been found.")
             }
         }
-    }
+    };
 
     useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
@@ -112,7 +113,7 @@ export default function Friendlist() {
                     onClose={handleClose}
                     PaperProps={{
                         component: 'form',
-                      }}>
+                    }}>
                     <DialogTitle>Add friend</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -130,6 +131,19 @@ export default function Friendlist() {
                             fullWidth
                             variant="standard"
                         />
+                        <Autocomplete
+                            {...flatProps}
+                            id="username"
+                            onInputChange={handleSearchUser}
+                            renderInput={(params) => (
+                                <TextField {...params}
+                                    autoFocus
+                                    required
+                                    margin="dense"
+                                    label="User name"
+                                    name="username"
+                                    variant="standard" />
+                            )} />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleSubmit}>Send invitation</Button>
