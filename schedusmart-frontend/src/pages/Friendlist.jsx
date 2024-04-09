@@ -15,6 +15,8 @@ import Avatar from '@mui/material/Avatar';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { orange, grey } from "@mui/material/colors";
 import Dashboard from "./Dashboard";
+import AddIcon from "@mui/icons-material/Add";
+import Fab from "@mui/material/Fab";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -53,7 +55,15 @@ export default function Friendlist() {
     return (
         <ThemeProvider theme={theme}>
             <div>{Dashboard()}</div>
-            <h1>Friend list</h1>
+            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+                <h1>Friend list</h1>
+                <Fab
+                    aria-label="add"
+                    color="primary"
+                    size="small">
+                    <AddIcon />
+                </Fab>
+            </div>
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List>

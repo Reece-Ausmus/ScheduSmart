@@ -17,6 +17,7 @@ import FileUpload from './pages/FileUpload'
 import SetupCourses from './pages/SetupCourses'
 import Habits from './pages/Habits'
 import ResetPassword from './pages/ResetPassword'
+import Friendlist from'./pages/Friendlist'
 
 // to run program 
 // Open new terminal
@@ -52,6 +53,7 @@ export default function App() {
           <Route path="/setupcourses" element={<SetupCourses/>}/>
           <Route path="*" element={<NoPage/>} />
           <Route path="/reminder" element={<Reminder/>} />
+          <Route path="/friendlist" element={<Friendlist/>}/>
         </Routes>
       </BrowserRouter>
     </div>
