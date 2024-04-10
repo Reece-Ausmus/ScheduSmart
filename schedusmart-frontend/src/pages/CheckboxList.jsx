@@ -3,9 +3,9 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import { LineChart } from "@mui/x-charts/LineChart";
-import { BarChart } from "@mui/x-charts/BarChart"; // Import BarChart
-import Select from "@mui/material/Select"; // Import Select
-import MenuItem from "@mui/material/MenuItem"; // Import MenuItem
+import { BarChart } from "@mui/x-charts/BarChart"; 
+import Select from "@mui/material/Select"; 
+import MenuItem from "@mui/material/MenuItem"; 
 
 const CheckboxList = ({
   columns,
