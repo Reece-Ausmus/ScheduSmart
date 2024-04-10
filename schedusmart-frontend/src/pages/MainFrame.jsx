@@ -488,13 +488,12 @@ export default function MainFrame() {
         type: eventType,
       };
 
-      const creat_event_response = await send_request("/create_event", new_event);
-      if (creat_event_response.error != undefined) {
-        alert(creat_event_response.error)
+      const create_event_response = await send_request("/create_event", new_event);
+      if (create_event_response['error'] !== undefined) {
+        alert(create_event_response['error'])
       } else {
         console.log("Event created successfully");
-        const data = await response.json();
-        new_event["event_id"] = data["event_id"];
+        new_event["event_id"] = create_event_response["event_id"];
         setEvents([...events, new_event]);
       }
 
@@ -863,13 +862,12 @@ export default function MainFrame() {
           type: eventType,
         };
 
-        const creat_event_response = await send_request("/create_event", new_event);
-        if (creat_event_response.error != undefined) {
-          alert(creat_event_response.error)
+        const create_event_response = await send_request("/create_event", new_event);
+        if (create_event_response['error'] !== undefined) {
+          alert(create_event_response['error'])
         } else {
           console.log("Event created successfully");
-          const data = await response.json();
-          new_event["event_id"] = data["event_id"];
+          new_event["event_id"] = create_event_response["event_id"];
           setEvents([...events, new_event]);
         }
 

@@ -376,7 +376,7 @@ def add_new_event(event_info):
         'repetition_type': event_info['repetition_type'],
         'repetition_unit': event_info['repetition_unit'],
         'repetition_val': event_info['repetition_val'],
-        'selected_days;': event_info['selected_days'],
+        'selected_days': event_info['selected_days'],
         'emails': event_info['emails'],
         'type': event_info['type']
     }
