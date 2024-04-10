@@ -724,9 +724,9 @@ def f_search_user(string):
     names = db.child("User").get()
     for name in names.each():
         try:
-            similarity = difflib.SequenceMatcher(None, string, name.val()["user_name"]).ratio()
-            if similarity > 0.65:
-                name_list.append(name.val()["user_name"])
+            f_user_names = name.val()["user_name"]
+            if (f_user_names.startswith(string) or f_user_names.endswith(string)) or string in f_user_names:
+                name_list.append(f_user_names)
         except KeyError:
             pass
     if name_list:
