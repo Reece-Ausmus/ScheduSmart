@@ -56,17 +56,37 @@ const theme = createTheme({
 
 const steps = [
   {
-    target: ".upperBarButton",
-    content: "Go to settings",
+    target: '#calendar-button',
+    content: 'Navigate back to the calendar page here.',
     disableBeacon: true, // automate to start the tours
   },
   {
-    target: ".calender_container_controlbar",
-    content: "You can change the format",
+    target: '#change-calendar',
+    content: 'Update your calendar view here.',
   },
   {
-    target: ".weather_container",
+    target: "#weather-container",
     content: "The current weather. Location can be changed in settings.",
+  },
+  {
+    target: '#habits-button',
+    content: 'Track your calories and health here.',
+  },
+  {
+    target: '#notes-button',
+    content: 'Keep track of your notes here.',
+  },
+  {
+    target: '#task-manager',
+    content: 'Manage your assignments and tasks here.',
+  },
+  {
+    target: '#profile-menu',
+    content: 'Access settings or sign out in your profile menu.',
+  },
+  {
+    target: "#timezone-select",
+    content: "Update your timezone here.",
   },
 ];
 
@@ -1419,7 +1439,7 @@ export default function MainFrame() {
       <div>
         <h2 className="detailInfo">{currentTime.format("YYYY/MM/DD")}</h2>
         <div>
-          <div className="buttonGroup">
+          <div className="buttonGroup" id="change-calendar">
             <button
               style={{
                 backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d",
