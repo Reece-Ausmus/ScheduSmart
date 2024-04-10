@@ -633,6 +633,7 @@ export default function TaskManager() {
                   aria-label="add"
                   color="primary"
                   id="openModal"
+                  size="small"
                   onClick={() => {
                     setTaskName("New Task");
                     setTaskTime(0);

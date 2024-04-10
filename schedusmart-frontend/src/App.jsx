@@ -17,6 +17,8 @@ import FileUpload from './pages/FileUpload'
 import SetupCourses from './pages/SetupCourses'
 import Habits from './pages/Habits'
 import ResetPassword from './pages/ResetPassword'
+import Friendlist from './pages/Friendlist'
+import Chatbox from "./components/New_chatbox";
 
 // to run program 
 // Open new terminal
@@ -36,22 +38,24 @@ export default function App() {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route index element={<Welcome/>} />
-          <Route path="/welcome" element={<Welcome/>} />
-          <Route path="/settings" element={<Settings/>} />
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/signout" element={<Signout/>} />
-          <Route path="/createaccount" element={<Createaccount/>} />
-          <Route path="/signin" element={<SignIn/>} />
-          <Route path="/resetpassword" element={<ResetPassword/>} />
-          <Route path="/calendar" element={<MainFrame/>}/>
-          <Route path="/taskmanager" element={<TaskManager/>}/>
-          <Route path="/draganddrop" element={<DragAndDrop/>}/>
-          <Route path="/notes" element={<Notes/>}/>
-          <Route path="/Habits" element={<Habits/>}/>
-          <Route path="/setupcourses" element={<SetupCourses/>}/>
-          <Route path="*" element={<NoPage/>} />
-          <Route path="/reminder" element={<Reminder/>} />
+          <Route index element={<Welcome />} />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/signout" element={<Signout />} />
+          <Route path="/createaccount" element={<Createaccount />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/calendar" element={<MainFrame />} />
+          <Route path="/taskmanager" element={<TaskManager />} />
+          <Route path="/draganddrop" element={<DragAndDrop />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/Habits" element={<Habits />} />
+          <Route path="/setupcourses" element={<SetupCourses />} />
+          <Route path="*" element={<NoPage />} />
+          <Route path="/reminder" element={<Reminder />} />
+          <Route path="/friendlist" element={<Friendlist />} />
+          <Route path="/chat/:friendId" element={<Chatbox />} />
         </Routes>
       </BrowserRouter>
     </div>

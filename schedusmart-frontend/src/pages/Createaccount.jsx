@@ -152,7 +152,7 @@ export default function Createaccount() {
         }
       };
 
-      createCalendars();
+      await createCalendars();
       window.location.href = "./signin";
     }  //end of backend else statement
   };

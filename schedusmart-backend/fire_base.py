@@ -371,12 +371,13 @@ def add_new_event(event_info):
         'end_time': event_info['end_time'],
         'start_date': event_info['start_date'],
         'end_date': event_info['end_date'],
+        'conference_link': event_info['conference_link'],
         'location': event_info['location'],
         'calendar': event_info['calendar'],
         'repetition_type': event_info['repetition_type'],
         'repetition_unit': event_info['repetition_unit'],
         'repetition_val': event_info['repetition_val'],
-        'selected_days;': event_info['selected_days'],
+        'selected_days': event_info['selected_days'],
         'emails': event_info['emails'],
         'type': event_info['type']
     }
@@ -410,6 +411,7 @@ def update_event_db(event_info):
         'end_time': event_info['end_time'],
         'start_date': event_info['start_date'],
         'end_date': event_info['end_date'],
+        'conference_link': event_info['conference_link'],
         'location': event_info['location'],
         'repetition_type': event_info['repetition_type'],
         'repetition_unit': event_info['repetition_unit'],
@@ -670,7 +672,8 @@ def __get_request_list(user_id):
         for request in requests.each():
             friend_data = {
                 'name': request.val()["name"],
-                'confirm': request.val()["confirm"]
+                'confirm': request.val()["confirm"],
+                'chatroom':request.val()["chat_room"]
             }
             request_list.append(friend_data)
     except TypeError as e:
@@ -709,6 +712,17 @@ def __delete_chat_room(room_id):
         pass
 
 
+def __get_chat_id(user_id, friend_name):
+    try:
+        friends = db.child("User").child(user_id).child("friendManager").child("friend").get()
+        for friend in friends.each():
+            if friend.val()["name"] == friend_name:
+                return friend.val()["chat_room"]
+        return None
+    except TypeError:
+        return None
+
+
 def get_friend_manager(user_data):
     friend_list = __get_friend_list(user_data["user_id"])
     request_list = __get_request_list(user_data["user_id"])
@@ -724,9 +738,9 @@ def f_search_user(string):
     names = db.child("User").get()
     for name in names.each():
         try:
-            similarity = difflib.SequenceMatcher(None, string, name.val()["user_name"]).ratio()
-            if similarity > 0.65:
-                name_list.append(name.val()["user_name"])
+            f_user_names = name.val()["user_name"]
+            if (f_user_names.startswith(string) or f_user_names.endswith(string)) or string in f_user_names:
+                name_list.append(f_user_names)
         except KeyError:
             pass
     if name_list:
@@ -766,6 +780,7 @@ def add_friend(add_friend_data):
         db.child("User").child(friend_id).child("friendManager").child("request").push(friend_data)
         return {'message': 'request complete'}
     else:
+        __delete_chat_room(room_id)
         return {'error': 'friend not found'}
 
 
@@ -820,12 +835,38 @@ def confirm(user_data):
         return {"error": "request not found"}
 
 
-def get_message():
-    pass
+def get_message(request):
+    user_id = request["user_id"]
+    friend_name = request["name"]
+    start_point = request["start_point"]
+
+    chat_room = __get_chat_id(user_id, friend_name)
+    if chat_room is None:
+        return {"error": "friend not found"}
 
 
-def add_message():
-    pass
+def add_message(add_data):
+    user_id = add_data["user_id"]
+    friend_name = add_data["name"]
+    new_message = add_data["message"]
+
+    chat_room = __get_chat_id(user_id, friend_name)
+    if chat_room is None:
+        return {"error": "friend not found"}
+    try:
+        count = db.child("Chat_Room").child(chat_room).get().val()["counter"]
+        user2 = db.child("Chat_Room").child(chat_room).get().val()["user2"]
+        new_data = {
+            "identifier": 1 if user2 == friend_name else 2,
+            "message": new_message
+        }
+    except TypeError | KeyError:
+        return {"error": "fatal"}
+    db.child("Chat_Room").child(chat_room).child("message_group").child(count).set(new_data)
+    count = int(count)
+    count += 1
+    db.child("Chat_Room").child(chat_room).update({"counter": count})
+    return {"message": "done"}
 
 
 # Make sure you download the firebaseConfig.py file in google doc
@@ -834,4 +875,3 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-

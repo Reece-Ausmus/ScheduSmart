@@ -1,19 +1,19 @@
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
-import { debounce } from '@mui/material/utils';
+import { debounce } from "@mui/material/utils";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CheckBox, LaptopWindowsRounded } from "@material-ui/icons";
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
 import Joyride from "react-joyride";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Link, Navigate } from "react-router-dom";
 import moment from "moment";
 import { orange, grey } from "@mui/material/colors";
-import parse from 'autosuggest-highlight/parse';
+import parse from "autosuggest-highlight/parse";
 import TextField from "@mui/material/TextField";
-import Typography from '@mui/material/Typography';
+import Typography from "@mui/material/Typography";
 import { useHotkeys } from "react-hotkeys-hook";
 import { flaskURL, user_id } from "../config";
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -30,16 +30,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import SetupCourses from "./SetupCourses";
-import { GoogleMap, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from "@react-google-maps/api";
 // Google map
-const GOOGLE_MAPS_API_KEY = 'AIzaSyBE_-PEMobIdPsVtpmFOrTm7u-CAB9QGRM';
+const GOOGLE_MAPS_API_KEY = "AIzaSyBE_-PEMobIdPsVtpmFOrTm7u-CAB9QGRM";
 function loadScript(src, position, id) {
   if (!position) {
     return;
   }
-  const script = document.createElement('script');
-  script.setAttribute('async', '');
-  script.setAttribute('id', id);
+  const script = document.createElement("script");
+  script.setAttribute("async", "");
+  script.setAttribute("id", id);
   script.src = src;
   position.appendChild(script);
 }
@@ -95,7 +95,6 @@ export default function MainFrame() {
     "December",
   ];
 
-
   useEffect(() => {
     const fetchInitializeData = async () => {
       let dataOfDefaultMode = await send_request("/get_calendar_default_mode", {
@@ -138,6 +137,7 @@ export default function MainFrame() {
     const [eventStartTime, setEventStartTime] = useState("");
     const [eventEndTime, setEventEndTime] = useState("");
     const [eventLocation, setEventLocation] = useState(null);
+    const [eventConferencingLink, setEventConferencingLink] = useState("");
     const [eventDescription, setEventDescription] = useState("");
     const [eventEmailInvitations, setEventEmailInvitations] = useState([]);
     const [eventType, setEventType] = useState("");
@@ -162,14 +162,14 @@ export default function MainFrame() {
     }, []);
 
     const [value, setValue] = useState(null);
-    const [inputValue, setInputValue] = useState('');
+    const [inputValue, setInputValue] = useState("");
     const [options, setOptions] = useState([]);
     const loaded = useRef(false);
     const [showMap, setShowMap] = useState(false);
     const [showDetails, setDetails] = useState(null);
     const [marker, setMarker] = useState(null);
-    const map=`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&fields=geometry`;
-    
+    const map = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&fields=geometry`;
+
     // const handleDetails = async (placeId) => {
     //   const response = await fetch(`https://maps.googleapis.com/maps/api/js?place_id=${placeId}&fields=geometry&key=${GOOGLE_MAPS_API_KEY}`);
     //   console.log(response);
@@ -184,13 +184,9 @@ export default function MainFrame() {
       setShowMap(!showMap);
     };
     const PlaceId = 0;
-    if (typeof window !== 'undefined' && !loaded.current) {
-      if (!document.querySelector('#google-maps')) {
-        loadScript(
-          map,
-          document.querySelector('head'),
-          'google-maps',
-        );
+    if (typeof window !== "undefined" && !loaded.current) {
+      if (!document.querySelector("#google-maps")) {
+        loadScript(map, document.querySelector("head"), "google-maps");
       }
 
       loaded.current = true;
@@ -200,12 +196,14 @@ export default function MainFrame() {
         debounce((request, callback) => {
           if (autocompleteService.current) {
             try {
-              autocompleteService.current.getPlacePredictions(request, callback);
-            } catch (error) {
-            }
+              autocompleteService.current.getPlacePredictions(
+                request,
+                callback
+              );
+            } catch (error) {}
           }
         }, 400),
-      [],
+      []
     );
     useEffect(() => {
       let active = true;
@@ -218,7 +216,7 @@ export default function MainFrame() {
         return undefined;
       }
 
-      if (inputValue === '') {
+      if (inputValue === "") {
         setOptions(value ? [value] : []);
         return undefined;
       }
@@ -244,8 +242,6 @@ export default function MainFrame() {
       };
     }, [eventLocation, inputValue, fetch]);
 
-
-
     // const fetchPlaceDetails = (placeId) => {
     //   fetch(`https://maps.googleapis.com/maps/api/js?place_id=${placeId}&fields=geometry&key=${GOOGLE_MAPS_API_KEY}`)
     //     .then(response => response.json())
@@ -270,12 +266,12 @@ export default function MainFrame() {
         );
       } else if (LocationSettings === "map") {
         return (
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Autocomplete
               id="google-map-demo"
               sx={{ width: 300 }}
               getOptionLabel={(option) =>
-                typeof option === 'string' ? option : option.description
+                typeof option === "string" ? option : option.description
               }
               filterOptions={(x) => x}
               options={options}
@@ -290,7 +286,7 @@ export default function MainFrame() {
                 setValue(newValue);
                 setEventLocation(newValue.description);
                 // handleDetails(newValue.place_id);
-                console.log(newValue)
+                console.log(newValue);
                 // setSelectedLocation(newValue ? { lat: newValue.geometry.location.lat(), lng: newValue.geometry.location.lng() } : null);
               }}
               onInputChange={(event, newInputValue) => {
@@ -301,25 +297,37 @@ export default function MainFrame() {
               )}
               renderOption={(props, option) => {
                 const matches =
-                  option.structured_formatting.main_text_matched_substrings || [];
+                  option.structured_formatting.main_text_matched_substrings ||
+                  [];
 
                 const parts = parse(
                   option.structured_formatting.main_text,
-                  matches.map((match) => [match.offset, match.offset + match.length]),
+                  matches.map((match) => [
+                    match.offset,
+                    match.offset + match.length,
+                  ])
                 );
 
                 return (
                   <li {...props}>
                     <Grid container alignItems="center">
-                      <Grid item sx={{ display: 'flex', width: 44 }}>
-                        <LocationOnIcon sx={{ color: 'text.secondary' }} />
+                      <Grid item sx={{ display: "flex", width: 44 }}>
+                        <LocationOnIcon sx={{ color: "text.secondary" }} />
                       </Grid>
-                      <Grid item sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
+                      <Grid
+                        item
+                        sx={{
+                          width: "calc(100% - 44px)",
+                          wordWrap: "break-word",
+                        }}
+                      >
                         {parts.map((part, index) => (
                           <Box
                             key={index}
                             component="span"
-                            sx={{ fontWeight: part.highlight ? 'bold' : 'regular' }}
+                            sx={{
+                              fontWeight: part.highlight ? "bold" : "regular",
+                            }}
                           >
                             {part.text}
                           </Box>
@@ -333,24 +341,36 @@ export default function MainFrame() {
                 );
               }}
             />
-            <Button variant="contained" style={{ marginLeft: '20px', height: '80%' }} onClick={handleShowMap}>map</Button>
-            <Dialog open={showMap} onClose={() => setShowMap(false)} PaperProps={{
-              style: {
-                width: '80%',
-                maxWidth: '800px',
-                height: '80%',
-                maxHeight: '500px',
-              },
-            }}>
+            <Button
+              variant="contained"
+              style={{ marginLeft: "20px", height: "80%" }}
+              onClick={handleShowMap}
+            >
+              map
+            </Button>
+            <Dialog
+              open={showMap}
+              onClose={() => setShowMap(false)}
+              PaperProps={{
+                style: {
+                  width: "80%",
+                  maxWidth: "800px",
+                  height: "80%",
+                  maxHeight: "500px",
+                },
+              }}
+            >
               <DialogTitle>Map</DialogTitle>
               <DialogContent>
                 <GoogleMap
-                  mapContainerStyle={{ width: '100%', height: '400px' }}
+                  mapContainerStyle={{ width: "100%", height: "400px" }}
                   center={
-                    showDetails ? showDetails : { lat: 40.42705717062981, lng: -86.91647096088887 }}
+                    showDetails
+                      ? showDetails
+                      : { lat: 40.42705717062981, lng: -86.91647096088887 }
+                  }
                   zoom={15}
-                >
-                </GoogleMap>
+                ></GoogleMap>
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setShowMap(false)}>Close</Button>
@@ -388,6 +408,10 @@ export default function MainFrame() {
 
     const handleEventEndTimeChange = (e) => {
       setEventEndTime(e.target.value);
+    };
+
+    const handleEventConferencingLinkChange = (e) => {
+      setEventConferencingLink(e.target.value);
     };
 
     const handleEventLocationChange = (e) => {
@@ -436,6 +460,7 @@ export default function MainFrame() {
       setEventEndDate("");
       setEventStartTime("");
       setEventEndTime("");
+      setEventConferencingLink("");
       setEventLocation("");
       setEventDescription("");
       setEventEmailInvitations([]);
@@ -454,6 +479,7 @@ export default function MainFrame() {
       setEventEndDate("");
       setEventStartTime("");
       setEventEndTime("");
+      setEventConferencingLink("");
       setEventLocation("");
       setEventDescription("");
       setEventEmailInvitations([]);
@@ -476,6 +502,7 @@ export default function MainFrame() {
         end_time: eventEndTime,
         start_date: eventStartDate,
         end_date: eventEndDate,
+        conferencing_link: eventConferencingLink,
         location: eventLocation,
         calendar: calendarList.find((cal) => cal.name === eventCalendar)
           ?.calendar_id,
@@ -488,13 +515,15 @@ export default function MainFrame() {
         type: eventType,
       };
 
-      const creat_event_response = await send_request("/create_event", new_event);
-      if (creat_event_response.error != undefined) {
-        alert(creat_event_response.error)
+      const create_event_response = await send_request(
+        "/create_event",
+        new_event
+      );
+      if (create_event_response["error"] !== undefined) {
+        alert(create_event_response["error"]);
       } else {
         console.log("Event created successfully");
-        const data = await response.json();
-        new_event["event_id"] = data["event_id"];
+        new_event["event_id"] = create_event_response["event_id"];
         setEvents([...events, new_event]);
       }
 
@@ -503,6 +532,7 @@ export default function MainFrame() {
       setEventEndDate("");
       setEventStartTime("");
       setEventEndTime("");
+      setEventConferencingLink("");
       setEventLocation("");
       setEventDescription("");
       setEventEmailInvitations([]);
@@ -676,10 +706,9 @@ export default function MainFrame() {
     // Define new states
     const [newCalendarName, setNewCalendarName] = useState("");
 
-
     // Function to handle the creation of a new calendar
     const handleCreateCalendar = async () => {
-      console.log("this is called, new calendar", newCalendarName)
+      console.log("this is called, new calendar", newCalendarName);
       if (!newCalendarName.localeCompare("")) {
         alert("Please enter a calendar name!");
         return;
@@ -701,9 +730,12 @@ export default function MainFrame() {
         newCalendarName: newCalendarName,
         user_id: user_id,
       };
-      const createCalendarRet = await send_request("/create_calendar", new_calendar);
+      const createCalendarRet = await send_request(
+        "/create_calendar",
+        new_calendar
+      );
       if (createCalendarRet["error"] !== undefined) {
-        alert(createCalendarRet["error"] + "\ntry again!")
+        alert(createCalendarRet["error"] + "\ntry again!");
       } else {
         setCalendarList([
           ...calendarList,
@@ -724,8 +756,8 @@ export default function MainFrame() {
       setSelectedCalendars((prevSelected) =>
         prevSelected.some((cal) => cal.calendar_id === calendar["calendar_id"])
           ? prevSelected.filter(
-            (cal) => cal.calendar_id !== calendar["calendar_id"]
-          )
+              (cal) => cal.calendar_id !== calendar["calendar_id"]
+            )
           : [...prevSelected, calendar]
       );
     };
@@ -811,16 +843,16 @@ export default function MainFrame() {
       setSemesterEndDate(e.target.value);
     };
 
-
     const [amountOfTime, setAmountOfTime] = useState("");
-    const [showClosestAvailablePopup, setShowClosestAvailablePopup] = useState(false);
+    const [showClosestAvailablePopup, setShowClosestAvailablePopup] =
+      useState(false);
 
     const handleClosestAvailable = () => {
       setShowClosestAvailablePopup(!showClosestAvailablePopup);
     };
 
     const handleFindClosestAvailable = async (e) => {
-      console.log(amountOfTime)
+      console.log(amountOfTime);
       e.preventDefault();
 
       const user_time = {
@@ -831,28 +863,28 @@ export default function MainFrame() {
       const response = await send_request("/find_closest_available", user_time);
 
       if (response.username == undefined) {
-        console.log('Something went wrong!')
-      }
-      else {
+        console.log("Something went wrong!");
+      } else {
         console.log("find time range!");
-        const message = 'You have an extraordinary session during ' + response.time;
+        const message =
+          "You have an extraordinary session during " + response.time;
 
         // TODO: send email
         EmailForm(response.username, response.email, message);
 
         // create event
         const calendar_id = sessionStorage.getItem("taskCalendarId");
-        var temp = response.time.split(" ")
-        console.log(calendar_id)
+        var temp = response.time.split(" ");
+        console.log(calendar_id);
 
         const new_event = {
-          name: 'extraordinary session',
+          name: "extraordinary session",
           desc: eventDescription,
           start_time: temp[1],
           end_time: temp[4],
           start_date: temp[0],
           end_date: temp[3],
-          location: '',
+          location: "",
           calendar: calendar_id,
           repetition_type: "none",
           repetition_unit: "",
@@ -863,16 +895,17 @@ export default function MainFrame() {
           type: eventType,
         };
 
-        const creat_event_response = await send_request("/create_event", new_event);
-        if (creat_event_response.error != undefined) {
-          alert(creat_event_response.error)
+        const create_event_response = await send_request(
+          "/create_event",
+          new_event
+        );
+        if (create_event_response["error"] !== undefined) {
+          alert(create_event_response["error"]);
         } else {
           console.log("Event created successfully");
-          const data = await response.json();
-          new_event["event_id"] = data["event_id"];
+          new_event["event_id"] = create_event_response["event_id"];
           setEvents([...events, new_event]);
         }
-
       }
 
       setShowClosestAvailablePopup(!showClosestAvailablePopup);
@@ -971,9 +1004,22 @@ export default function MainFrame() {
                       />
                     </div>
                     {eventType === "event" && (
-                      <div className="formgroup">
-                        <label htmlFor="eventLocation">Event Location:</label>
-                        {renderLocationInput()}
+                      <div>
+                        <div className="formgroup">
+                          <label htmlFor="eventLocation">Event Location:</label>
+                          {renderLocationInput()}
+                        </div>
+                        <div className="formgroup">
+                          <label htmlFor="eventConferencingLink">
+                            Conferencing Link:
+                          </label>
+                          <input
+                            type="text"
+                            id="eventConferencingLink"
+                            value={eventConferencingLink}
+                            onChange={handleEventConferencingLinkChange}
+                          />
+                        </div>
                       </div>
                     )}
                     <div className="formgroup">
@@ -1646,7 +1692,7 @@ export default function MainFrame() {
 
       selectedCalendars.map(async (calendar) => {
         let events = await send_request("/get_events", {
-          "calendar_id": calendar.calendar_id
+          calendar_id: calendar.calendar_id,
         });
 
         if (events.data != undefined) {
@@ -1702,7 +1748,7 @@ export default function MainFrame() {
     return arr.map(
       (task) =>
         !task.completed && (
-          <div className="taskBar" onClick={() => { }}>
+          <div className="taskBar" onClick={() => {}}>
             <p className="taskName">{task.date.slice(5, 10)}</p>
             <p className="taskName">{task.title}</p>
             <Checkbox

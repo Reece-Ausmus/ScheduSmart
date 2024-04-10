@@ -296,3 +296,25 @@ def search_user():
         return jsonify(f_search_user(data["name"])), 201
     except KeyError:
         return jsonify({"error": "search can not be null"}), 201
+
+
+@account.route("/send_message", methods=['POST'])
+def send_message():
+    message_data = request.get_json()
+    try:
+        if not message_data["user_id"]:
+            return jsonify({"error": "user_id is required"}), 201
+    except KeyError:
+        return jsonify({"error": "user_id is required"}), 201
+    try:
+        if not message_data["name"]:
+            return jsonify({"error": "friend's name is required"}), 201
+    except KeyError:
+        return jsonify({"error": "friend's name is required"}), 201
+    try:
+        if not message_data["message"]:
+            return jsonify({"error": "message can not be null"}), 201
+    except KeyError:
+        return jsonify({"error": "message is required"}), 201
+
+    return jsonify(add_message(message_data)), 201
