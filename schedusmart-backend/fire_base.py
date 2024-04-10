@@ -673,7 +673,7 @@ def __get_request_list(user_id):
             friend_data = {
                 'name': request.val()["name"],
                 'confirm': request.val()["confirm"],
-                'chatroom':request.val()["chat_room"]
+                'chatroom': request.val()["chat_room"]
             }
             request_list.append(friend_data)
     except TypeError as e:
@@ -843,6 +843,24 @@ def get_message(request):
     chat_room = __get_chat_id(user_id, friend_name)
     if chat_room is None:
         return {"error": "friend not found"}
+
+    line = db.child("Chat_Room").child(chat_room).get().val()["counter"]
+    user2 = db.child("Chat_Room").child(chat_room).get().val()["user2"]
+    identification = 1 if user2 == friend_name else 2
+    messages = []
+
+    for x in range(start_point, line):
+        data_base_message_group = db.child("Chat_Room").child(chat_room).child("message_group").child(x).get().val()
+        data = {
+            "message": data_base_message_group["message"],
+            "type": data_base_message_group["identifier"]
+        }
+        if identification == 2:
+            data["type"] = 1 if data_base_message_group["identifier"] == 2 else 2
+        messages.append(data)
+
+    return {"data": messages}
+
 
 
 def add_message(add_data):

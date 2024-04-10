@@ -318,3 +318,24 @@ def send_message():
         return jsonify({"error": "message is required"}), 201
 
     return jsonify(add_message(message_data)), 201
+
+
+@account.route('/get_messages', methods=['POST'])
+def get_messages():
+    request_message_data = request.get_json()
+    try:
+        if not request_message_data["user_id"]:
+            return jsonify({"error": "user_id is required"}), 201
+    except KeyError:
+        return jsonify({"error": "user_id is required"}), 201
+    try:
+        if not request_message_data["name"]:
+            return jsonify({"error": "friend's name is required"}), 201
+    except KeyError:
+        return jsonify({"error": "friend's name is required"}), 201
+    try:
+        print = request_message_data["start_point"]
+    except KeyError:
+        return jsonify({"error": "start_point is required"}), 201
+
+    return jsonify(get_message(request_message_data)), 201
