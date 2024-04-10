@@ -633,7 +633,6 @@ export default function TaskManager() {
                   aria-label="add"
                   color="primary"
                   id="openModal"
-                  size="small"
                   onClick={() => {
                     setTaskName("New Task");
                     setTaskTime(0);
@@ -1011,10 +1010,19 @@ function TodoList({
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")
 
-  const [emailSubject, setEmailSubject] = useState(""); 
-  const [emailContent, setEmailContent] = useState("");
+  const [emailSubject, setEmailSubject] = useState(``); 
+  const [emailContent, setEmailContent] = useState(``);
 
-
+  function parseTaskContent(task) {
+    const subject = `From ScheduSmart: Task - ${task.title}`
+    const content = `You have been sent a task.
+    \nTask Name: ${task.title}\nTask Due Date: ${task.date}
+    \nTask Description: ${task.desc}
+    \nSubTasks: ${task.sub_tasks.map((subtask) =>  {return `\n${subtask.id + 1} - ${subtask.name}`})}
+    \nFrom,\nScheduSmart`
+    setEmailSubject(subject)
+    setEmailContent(content)
+  }
 
   if (emailModal) {
     openEmailModal && openEmailModal.addEventListener("click", () => emailModal.showModal());
@@ -1211,6 +1219,75 @@ function TodoList({
   };
 
   return (
+    <>
+    <dialog id="emailModal" style={{ background: "#f8c06c" }}>
+      <DialogTitle style={{ color: "black" }}>Email Task</DialogTitle>
+      <DialogContent>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          style={{marginBottom: "15px", marginTop: "1px", width: "600px"}}
+        >
+          <Grid item xs={12}>
+            <TextField
+              id="recipients"
+              type="email"
+              label="To"
+              size="small"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="carbonCopy"
+              type="email"
+              label="CC"
+              size="small"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="blindCarbonCopy"
+              type="email"
+              label="BCC"
+              size="small"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="subject"
+              label="Subject"
+              size="small"
+              fullWidth
+              value={emailSubject}
+              onChange={(e) => {setEmailSubject(e.target.value)}}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="content"
+              label="Contents"
+              size="large"
+              fullWidth
+              multiline={true}
+              minRows={5}
+              value={emailContent}
+              onChange={(e) => {setEmailContent(e.target.value)}}
+            />
+          </Grid>
+        </Grid>
+        <Button
+          variant="contained"
+          id="closeEmailModal"
+          onClick={() => {
+            document.getElementById("emailModal").close();
+          }}
+        >Close</Button>
+      </DialogContent>
+    </dialog>
     <Table>
       <TableHead>
         <TableRow>
@@ -1228,71 +1305,6 @@ function TodoList({
       </TableHead>
       <TableBody>
         {sortedList.map((task) => (
-          <>
-          <dialog id="emailModal" style={{ background: "#f8c06c" }}>
-            <DialogTitle style={{ color: "black" }}>Email Task</DialogTitle>
-            <DialogContent>
-              <Grid
-                container
-                spacing={2}
-                alignItems="center"
-                style={{marginBottom: "15px", marginTop: "1px", width: "600px"}}
-              >
-                <Grid item xs={12}>
-                  <TextField
-                    id="recipients"
-                    type="email"
-                    label="To"
-                    size="small"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="carbonCopy"
-                    type="email"
-                    label="CC"
-                    size="small"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="blindCarbonCopy"
-                    type="email"
-                    label="BCC"
-                    size="small"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="subject"
-                    label="Subject"
-                    size="small"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="content"
-                    label="Contents"
-                    size="large"
-                    fullWidth
-                    multiline="true"
-                    minRows={5}
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                variant="contained"
-                id="closeEmailModal"
-                onClick={() => {
-                  document.getElementById("emailModal").close();
-                }}
-              >Close</Button>
-            </DialogContent>
-          </dialog>
           <TableRow key={task.id}>
             <TableCell>{task.title}</TableCell>
             <TableCell>
@@ -1324,7 +1336,7 @@ function TodoList({
                               sub_task.id,
                               e.target.checked
                             );
-                          }}
+                          }}  
                         />
                       }
                       label={sub_task.name}
@@ -1362,7 +1374,7 @@ function TodoList({
                 color="primary"
                 id="openEmailModal"
                 onClick={() => {
-                  
+                  parseTaskContent(task)
                 }}
               >
                 <SendIcon/>
@@ -1394,10 +1406,10 @@ function TodoList({
               />
             </TableCell>
           </TableRow>
-          </>
         ))}
       </TableBody>
     </Table>
+    </>
   );
 }
 
