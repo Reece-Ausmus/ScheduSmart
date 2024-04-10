@@ -863,6 +863,7 @@ def add_message(add_data):
     count = int(count)
     count += 1
     db.child("Chat_Room").child(chat_room).update({"counter": count})
+    return {"message": "done"}
 
 
 # Make sure you download the firebaseConfig.py file in google doc
