@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
@@ -28,7 +28,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import send_request from "./requester";
-import { Link as RouterLink} from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // user_id to get user info
@@ -53,30 +53,43 @@ const messageExamples = [
         person: '/static/images/avatar/5.jpg',
     },
 ];
-
 const friends = [
     { id: 1, name: 'Friend 1' },
     { id: 2, name: 'Friend 2' },
     { id: 3, name: 'Friend 3' },
-];
+  ];
+
+// function getNameList(){
+//     const [friends, setFriends] = useState();
+//     const NameList = async () => {
+//         const response = await send_request("/get_friends", { "user_id": userId });
+//         const request_list=response.request;
+//         console.log(request_list.chatroom);
+//         const updatedFriends = request_list.map((friend, index) => ({
+//             id: friend.id,
+//             name: friend.name
+//         }));
+//         setFriends(updatedFriends);
+//     };
+// }
 
 
 const Link = RouterLink;
 function ListItemLink(props) {
-  const { icon, primary, to } = props;
-  return (
-    <li>
-      <ListItem button component={Link} to={to}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
-        <ListItemText primary={primary} />
-      </ListItem>
-    </li>
-  );
+    const { icon, primary, to } = props;
+    return (
+        <li>
+            <ListItem button component={Link} to={to}>
+                {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+                <ListItemText primary={primary} />
+            </ListItem>
+        </li>
+    );
 }
 ListItemLink.propTypes = {
-  icon: PropTypes.element,
-  primary: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired,
+    icon: PropTypes.element,
+    primary: PropTypes.string.isRequired,
+    to: PropTypes.string.isRequired,
 };
 
 export default function Friendlist() {
