@@ -182,7 +182,7 @@ def get_event():
         response = jsonify({'response': 'fail retrieve event'})
         response.status_code = 205
     else:
-        response = jsonify(ret)
+        response = jsonify(ret['event'])
         response.status_code = 201
     return response
 

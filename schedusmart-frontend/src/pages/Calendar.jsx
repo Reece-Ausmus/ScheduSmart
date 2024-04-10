@@ -42,7 +42,7 @@ export default function Calendar(selectMode, e, d) {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
-    /*if (
+    if (
       eventName !== "" &&
       eventStartDate !== "" &&
       eventEndDate !== "" &&
@@ -53,8 +53,9 @@ export default function Calendar(selectMode, e, d) {
       eventType !== "" &&
       eventRepetitionType !== "none"
     ) {
+      console.log(eventName);
       setShowUpdateEventPopup(true);
-    }*/
+    }
     setUnsavedChanges(true);
   }, [
     eventName,
@@ -195,7 +196,7 @@ export default function Calendar(selectMode, e, d) {
     setEventRepetitionType("none");
     setEventCustomFrequencyUnit("");
     setEventCustomFrequencyValue(1);
-    toggleShowUpdateEventPopup();
+    //toggleShowUpdateEventPopup();
   };
 
   const handleDeleteEvent = async () => {
@@ -302,7 +303,7 @@ export default function Calendar(selectMode, e, d) {
           setEventRepetitionType(responseData["repetition_type"]);
           setEventCustomFrequencyUnit(responseData["repetition_unit"]);
           setEventCustomFrequencyValue(responseData["repetition_val"]);
-          setShowUpdateEventPopup(true);
+          //setShowUpdateEventPopup(true);
           break;
         case 202:
           alert("Event Not Found");
@@ -321,12 +322,14 @@ export default function Calendar(selectMode, e, d) {
           display: selectMode === 1 || selectMode === 2 ? "block" : "none",
         }}
       >
-        {calendar && (<DayPilotCalendar
-          viewType={viewType} 
-          events={events}
-          controlRef={setCalendar}
-          onEventClick={handleOnEventClick}
-        />)}
+        {calendar && (
+          <DayPilotCalendar
+            viewType={viewType}
+            events={events}
+            controlRef={setCalendar}
+            onEventClick={handleOnEventClick}
+          />
+        )}
       </div>
 
       {showUpdateEventPopup && (
