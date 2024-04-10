@@ -1010,6 +1010,11 @@ function TodoList({
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")
 
+  const [emailSubject, setEmailSubject] = useState(""); 
+  const [emailContent, setEmailContent] = useState("");
+
+
+
   if (emailModal) {
     openEmailModal && openEmailModal.addEventListener("click", () => emailModal.showModal());
 
