@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef} from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
@@ -12,7 +12,9 @@ import Fab from "@mui/material/Fab";
 import ArchiveIcon from '@mui/icons-material/Archive';
 import Paper from '@mui/material/Paper';
 import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
@@ -26,6 +28,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import send_request from "./requester";
+import { Link as RouterLink} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
@@ -42,6 +46,38 @@ const theme = createTheme({
 function refreshMessages() {
     return messageExamples;
 }
+const messageExamples = [
+    {
+        primary: 'Brunch this week?',
+        secondary: "I'll be in the neighbourhood this week. Let's grab a bite to eat",
+        person: '/static/images/avatar/5.jpg',
+    },
+];
+
+const friends = [
+    { id: 1, name: 'Friend 1' },
+    { id: 2, name: 'Friend 2' },
+    { id: 3, name: 'Friend 3' },
+];
+
+
+const Link = RouterLink;
+function ListItemLink(props) {
+  const { icon, primary, to } = props;
+  return (
+    <li>
+      <ListItem button component={Link} to={to}>
+        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
+  );
+}
+ListItemLink.propTypes = {
+  icon: PropTypes.element,
+  primary: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
+};
 
 export default function Friendlist() {
     const [value, setValue] = useState(0);
@@ -49,14 +85,14 @@ export default function Friendlist() {
     const [messages, setMessages] = useState(() => refreshMessages());
     const [open, setOpen] = useState(false);
     const [Props, setProps] = useState({ options: [] });
-    const handleSearchUser = async (event,name) => {
+    const handleSearchUser = async (event, name) => {
         if (!name) {
             setProps({ options: [] });
             return;
         }
         const response = await send_request("/search_user", { "name": name });
         const name_list = response.data;
-        setProps({ options: name_list});
+        setProps({ options: name_list });
     };
 
     const handleClickOpen = () => {
@@ -146,6 +182,11 @@ export default function Friendlist() {
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List>
+                    {friends.map((friend) => (
+                        <ListItemLink key={friend.id} to={`/chat/${friend.id}`} primary={friend.name} />
+                    ))}
+                </List>
+                {/* <List>
                     {messages.map(({ primary, secondary, person }, index) => (
                         <ListItemButton key={index + person}>
                             <ListItemAvatar>
@@ -154,7 +195,7 @@ export default function Friendlist() {
                             <ListItemText primary={primary} secondary={secondary} />
                         </ListItemButton>
                     ))}
-                </List>
+                </List> */}
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                     <BottomNavigation
                         showLabels
@@ -173,44 +214,4 @@ export default function Friendlist() {
     );
 }
 
-const messageExamples = [
-    {
-        primary: 'Brunch this week?',
-        secondary: "I'll be in the neighbourhood this week. Let's grab a bite to eat",
-        person: '/static/images/avatar/5.jpg',
-    },
-    {
-        primary: 'Birthday Gift',
-        secondary: `Do you have a suggestion for a good present for John on his work
-      anniversary. I am really confused & would love your thoughts on it.`,
-        person: '/static/images/avatar/1.jpg',
-    },
-    {
-        primary: 'Recipe to try',
-        secondary: 'I am try out this new BBQ recipe, I think this might be amazing',
-        person: '/static/images/avatar/2.jpg',
-    },
-    {
-        primary: 'Yes!',
-        secondary: 'I have the tickets to the ReactConf for this year.',
-        person: '/static/images/avatar/3.jpg',
-    },
-    {
-        primary: "Doctor's Appointment",
-        secondary: 'My appointment for the doctor was rescheduled for next Saturday.',
-        person: '/static/images/avatar/4.jpg',
-    },
-    {
-        primary: 'Discussion',
-        secondary: `Menus that are generated by the bottom app bar (such as a bottom
-      navigation drawer or overflow menu) open as bottom sheets at a higher elevation
-      than the bar.`,
-        person: '/static/images/avatar/5.jpg',
-    },
-    {
-        primary: 'Summer BBQ',
-        secondary: `Who wants to have a cookout this weekend? I just got some furniture
-      for my backyard and would love to fire up the grill.`,
-        person: '/static/images/avatar/1.jpg',
-    },
-];
+
