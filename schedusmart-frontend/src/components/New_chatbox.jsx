@@ -55,22 +55,19 @@ const Chatbox = () => {
                     fullWidth
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                />
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}/>
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={handleSendMessage}
-                    style={{ marginTop: '10px', alignSelf: 'flex-end' }}
-                >
+                    style={{ marginTop: '10px', alignSelf: 'flex-end' }}>
                     Send
                 </Button>
                 <Button
                     variant="contained"
                     color="primary"
                     href="/friendlist"
-                    style={{ marginTop: '10px', alignSelf: 'flex-end',marginLeft:'20px' }}
-                >
+                    style={{ marginTop: '10px', alignSelf: 'flex-end',marginLeft:'20px' }}>
                     Back
                 </Button>
             </div>

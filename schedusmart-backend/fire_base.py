@@ -672,7 +672,8 @@ def __get_request_list(user_id):
         for request in requests.each():
             friend_data = {
                 'name': request.val()["name"],
-                'confirm': request.val()["confirm"]
+                'confirm': request.val()["confirm"],
+                'chatroom':request.val()["chat_room"]
             }
             request_list.append(friend_data)
     except TypeError as e:
