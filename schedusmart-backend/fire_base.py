@@ -711,6 +711,17 @@ def __delete_chat_room(room_id):
         pass
 
 
+def __get_chat_id(user_id, friend_name):
+    try:
+        friends = db.child("User").child(user_id).child("friendManager").child("friend").get()
+        for friend in friends.each():
+            if friend.val()["name"] == friend_name:
+                return friend.val()["chat_room"]
+        return None
+    except TypeError:
+        return None
+
+
 def get_friend_manager(user_data):
     friend_list = __get_friend_list(user_data["user_id"])
     request_list = __get_request_list(user_data["user_id"])
@@ -823,12 +834,38 @@ def confirm(user_data):
         return {"error": "request not found"}
 
 
-def get_message():
-    pass
+def get_message(request):
+    user_id = request["user_id"]
+    friend_name = request["name"]
+    start_point = request["start_point"]
+
+    chat_room = __get_chat_id(user_id, friend_name)
+    if chat_room is None:
+        return {"error": "friend not found"}
 
 
-def add_message():
-    pass
+def add_message(add_data):
+    user_id = add_data["user_id"]
+    friend_name = add_data["name"]
+    new_message = add_data["message"]
+
+    chat_room = __get_chat_id(user_id, friend_name)
+    if chat_room is None:
+        return {"error": "friend not found"}
+    try:
+        count = db.child("Chat_Room").child(chat_room).get().val()["counter"]
+        user2 = db.child("Chat_Room").child(chat_room).get().val()["user2"]
+        new_data = {
+            "identifier": 1 if user2 == friend_name else 2,
+            "message": new_message
+        }
+    except TypeError | KeyError:
+        return {"error": "fatal"}
+    db.child("Chat_Room").child(chat_room).child("message_group").child(count).set(new_data)
+    count = int(count)
+    count += 1
+    db.child("Chat_Room").child(chat_room).update({"counter": count})
+    return {"message": "done"}
 
 
 # Make sure you download the firebaseConfig.py file in google doc
@@ -837,4 +874,3 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-

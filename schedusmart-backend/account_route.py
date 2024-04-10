@@ -250,12 +250,12 @@ def request_friend():
     try:
         if not data["user_id"]:
             return jsonify({'error': 'User ID is required'}), 201
-    except KeyError | TypeError:
+    except KeyError:
         return jsonify({'error': 'User ID is required'}), 201
     try:
         if not data["name"]:
             return jsonify({'error': 'require friend\'s username in name field'}), 201
-    except KeyError | TypeError:
+    except KeyError:
         return jsonify({'error': 'require friend\'s username in name field'}), 201
     return jsonify(add_friend(data)), 201
 
@@ -266,7 +266,7 @@ def get_friend():
     try:
         if not data["user_id"]:
             return jsonify({'error': 'User ID is required'}), 201
-    except KeyError | TypeError:
+    except KeyError:
         return jsonify({'error': 'User ID is required'}), 201
     return jsonify(get_friend_manager(data)), 201
 
@@ -283,7 +283,7 @@ def confirm_friend():
             return jsonify({"error": "confirm not provided"}), 201
 
         return jsonify(confirm(data)), 201
-    except KeyError | TypeError:
+    except KeyError:
         return jsonify({"error": "lack of information"}), 201
 
 
@@ -294,5 +294,27 @@ def search_user():
         if not data["name"]:
             return jsonify({"error": "search name can not be null"}), 201
         return jsonify(f_search_user(data["name"])), 201
-    except KeyError | TypeError:
+    except KeyError:
         return jsonify({"error": "search can not be null"}), 201
+
+
+@account.route("/send_message", methods=['POST'])
+def send_message():
+    message_data = request.get_json()
+    try:
+        if not message_data["user_id"]:
+            return jsonify({"error": "user_id is required"}), 201
+    except KeyError:
+        return jsonify({"error": "user_id is required"}), 201
+    try:
+        if not message_data["name"]:
+            return jsonify({"error": "friend's name is required"}), 201
+    except KeyError:
+        return jsonify({"error": "friend's name is required"}), 201
+    try:
+        if not message_data["message"]:
+            return jsonify({"error": "message can not be null"}), 201
+    except KeyError:
+        return jsonify({"error": "message is required"}), 201
+
+    return jsonify(add_message(message_data)), 201
