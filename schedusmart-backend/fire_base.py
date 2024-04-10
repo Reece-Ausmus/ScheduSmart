@@ -766,6 +766,7 @@ def add_friend(add_friend_data):
         db.child("User").child(friend_id).child("friendManager").child("request").push(friend_data)
         return {'message': 'request complete'}
     else:
+        __delete_chat_room(room_id)
         return {'error': 'friend not found'}
 
 
