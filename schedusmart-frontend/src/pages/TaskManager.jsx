@@ -58,6 +58,7 @@ import Alert from '@mui/material/Alert';
 import dayjs from 'dayjs';
 import GPTChatBox from '../components/GPTChatBox.jsx'
 import "./TaskManager.css"
+import emailjs from '@emailjs/browser';
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 
@@ -73,9 +74,6 @@ const theme = createTheme({
     secondary: {
       main: "#ab5600",
     },
-    // background: {
-    //   default: "#fff8e1",
-    // },
   },
 });
 
@@ -158,6 +156,7 @@ const tagList = [
 
 let nextId = 0;
 let calendarId = 0;
+let userData = {};
 
 // create new task manager
 export default function TaskManager() {
@@ -179,6 +178,7 @@ export default function TaskManager() {
         case 201:
           const responseData = await response.json();
           const userId = responseData.user_id;
+          userData = responseData; 
           if (
             responseData.task_list !== null &&
             responseData.task_list !== undefined
@@ -932,6 +932,7 @@ export default function TaskManager() {
             onScheduled={handleScheduledTask}
             onPriorityChange={handlePriorityChange}
             keyword={searchQueryTodo}
+            userData={userData}
           />
         </div>
 
@@ -996,6 +997,29 @@ export default function TaskManager() {
   );
 }
 
+const EmailForm = (email, subject, from_name, message, bcc, cc) => {
+  const serviceId = 'service_ydqwgth';
+  const templateId = 'template_69t7fmd';
+  const publicKey = 'fjIa52LVlUWhGQqPw';
+
+  const templateParams = {
+    recipient: email,
+    subject: subject,
+    from_name: from_name,
+    message: message,
+    bcc: bcc,
+    cc: cc,
+  }
+
+  emailjs.send(serviceId, templateId, templateParams, publicKey)
+    .then((response) => {
+      console.log('Email sent successfully!', response);
+    })
+    .catch((error) => {
+      console.error('Error sending email:', error);
+    });
+}
+
 function TodoList({
   list,
   onToggle,
@@ -1005,18 +1029,21 @@ function TodoList({
   onScheduled,
   onPriorityChange,
   keyword,
+  userData,
 }) {
   const emailModal = document.querySelector("#emailModal")
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")
 
+  const [toEmail, setToEmail] = useState("");
+  const [ccEmails, setCCEmails] = useState("");
+  const [bccEmails, setBCCEmails] = useState("");
   const [emailSubject, setEmailSubject] = useState(``); 
   const [emailContent, setEmailContent] = useState(``);
 
   function parseTaskContent(task) {
     const subject = `From ScheduSmart: Task - ${task.title}`
-    const content = `You have been sent a task.
-    \nTask Name: ${task.title}\nTask Due Date: ${task.date}
+    const content = `Task Name: ${task.title}\nTask Due Date: ${task.date}
     \nTask Description: ${task.desc}
     \nSubTasks: ${task.sub_tasks.map((subtask) =>  {return `\n${subtask.id + 1} - ${subtask.name}`})}
     \nFrom,\nScheduSmart`
@@ -1236,6 +1263,8 @@ function TodoList({
               label="To"
               size="small"
               fullWidth
+              value={toEmail}
+              onChange={(e) => {setToEmail(e.target.value)}}
             />
           </Grid>
           <Grid item xs={12}>
@@ -1245,6 +1274,9 @@ function TodoList({
               label="CC"
               size="small"
               fullWidth
+              multiple
+              value={ccEmails}
+              onChange={(e) => {setCCEmails(e.target.value)}}
             />
           </Grid>
           <Grid item xs={12}>
@@ -1254,6 +1286,9 @@ function TodoList({
               label="BCC"
               size="small"
               fullWidth
+              multiple
+              value={bccEmails}
+              onChange={(e) => {setBCCEmails(e.target.value)}}
             />
           </Grid>
           <Grid item xs={12}>
@@ -1279,6 +1314,19 @@ function TodoList({
             />
           </Grid>
         </Grid>
+        <Button
+          variant="contained"
+          id="closeEmailModal"
+          onClick={() => {
+            if (/\S+@\S+\.\S+/.test(toEmail)) {
+              const name = `${userData.first_name} ${userData.last_name}`
+              EmailForm(toEmail, emailSubject, name, emailContent, bccEmails, ccEmails);
+              document.getElementById("emailModal").close();
+            } else {
+              alert("Invalid Email!")
+            }
+          }}
+        >Send</Button>
         <Button
           variant="contained"
           id="closeEmailModal"
@@ -1374,6 +1422,9 @@ function TodoList({
                 color="primary"
                 id="openEmailModal"
                 onClick={() => {
+                  setToEmail("")
+                  setCCEmails("")
+                  setBCCEmails("")
                   parseTaskContent(task)
                 }}
               >
