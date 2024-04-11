@@ -98,7 +98,7 @@ ListItemLink.propTypes = {
 };
 
 export default function Friendlist() {
-    // invitation
+    // Implementation of invitations
     const [value, setValue] = useState(0);
     const ref = useRef(null);
     const [messages, setMessages] = useState(() => refreshMessages());
@@ -149,25 +149,31 @@ export default function Friendlist() {
         }
     };
 
-    // Request list
-    const [requestopen, SetRequestOpen] = useState(false);
+    // Implementation of request list
+    const [requestopen, setRequestOpen] = useState(false);
+    const handleRequestClickOpen = () => {
+        setRequestOpen(true);
+    };
+    const handleRequestClose = () => {
+        setRequestOpen(false);
+    };
+
     const [requestList, setRequestList] = useState(null);
     const getRequestList = async () => {
         const response = await send_request("/get_friends", { "user_id": userId });
         const request_list = response.request;
         setRequestList(request_list);
     };
-    const handleRequestClickOpen = () => {
-        SetRequestOpen(true);
-    };
-    const handleRequestClose = () => {
-        SetRequestOpen(false);
-    };
     useEffect(() => {
         if (requestopen) {
             getRequestList();
         }
     }, [requestopen]);
+
+    const confirmRequest = async (friend,choice) => {
+        console.log(choice);
+        const response = await send_request("/confirm_friend", { "user_id": userId,"name":friend,"confirm":choice});
+    }
 
     useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
@@ -239,11 +245,11 @@ export default function Friendlist() {
                                 <ListItem key={name+index}>
                                     <ListItemText primary={`${name} wants to add you as a friend`} />
                                     <ListItemSecondaryAction>
-                                        <IconButton edge="end" aria-label="accept" sx={{ color: 'green' }}>
-                                            <CheckIcon />
+                                        <IconButton edge="end" aria-label="accept" sx={{ color: 'green' }} onClick={() => confirmRequest(name, true)}>
+                                            <CheckIcon/>
                                         </IconButton>
-                                        <IconButton edge="end" aria-label="reject" sx={{ color: 'red', marginLeft: 3 }}>
-                                            <CloseIcon />
+                                        <IconButton edge="end" aria-label="reject" sx={{ color: 'red', marginLeft: 3 }} onClick={() => confirmRequest(name, false)}>
+                                            <CloseIcon/>
                                         </IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>
