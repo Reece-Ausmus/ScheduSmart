@@ -653,12 +653,12 @@ def find_closest_available_time(data):
 def __get_name(id):
     return get_user({"user_id": id})["user_name"]
 
+
 def __get_friend_list(user_id):
     friend_list = []
     try:
         friends = db.child("User").child(user_id).child("friendManager").child("friend").get()
         for friend in friends.each():
-            print(friend.val())
             friend_name = __get_name(friend.val()["id"])
             friend_data = {
                 'name': friend_name,
@@ -754,12 +754,15 @@ def f_search_user(string):
 
 
 def add_friend(add_friend_data):
+    friend_id = __get_user_id(add_friend_data["name"])
     # check if the requester is user himself
     user_name = get_user({"user_id": add_friend_data["user_id"]})["user_name"]
     if user_name == add_friend_data["name"]:
         return {"error": "user requesting himself as friend"}
     # check if the request has already being post
+
     friend_list = __get_friend_list(add_friend_data["user_id"])
+
     for friend in friend_list:
         if friend['name'] == add_friend_data["name"]:
             return {"error": "request already send"}
@@ -776,7 +779,7 @@ def add_friend(add_friend_data):
         "id": __get_user_id(add_friend_data["name"])
     }
 
-    friend_id = __get_user_id(add_friend_data["name"])
+
 
     if friend_id is not None:
         db.child("User").child(add_friend_data["user_id"]).child("friendManager").child("friend").push(friend_data)
@@ -790,32 +793,49 @@ def add_friend(add_friend_data):
 
 def confirm(user_data):
     try:
-        user_name = get_user({"user_id": user_data["user_id"]})["user_name"]
         friend_id = __get_user_id(user_data["name"])
 
         update1 = True
         update2 = True
 
-        users_friends = db.child("User").child(friend_id).child("friendManager").child("friend").get()
+        # dealing user's request
+        user_requester = db.child("User").child(user_data["user_id"]).child("friendManager").child("request").get()
 
-        for user_friend in users_friends.each():
-            print(user_friend)
-            if user_friend.val()["name"] == user_name:
+        for requester in user_requester.each():
+            if requester.val()["id"] == friend_id:
+                if user_data["confirm"]:
+                    c = (db.child("User").child(user_data["user_id"]).child("friendManager").child("friend").
+                         push(requester.val()))
+                    (db.child("User").child(user_data["user_id"]).child("friendManager").child("friend").
+                        child(c["name"]).update({"confirm": True}))
+
+                db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
+                     requester.key()).remove()
+                update2 = False
+                break
+        if update2:
+            return {"error": "user's requester not found"}
+
+        # update value in requester
+        requester_friends = db.child("User").child(friend_id).child("friendManager").child("friend").get()
+
+        for requester in requester_friends.each():
+            if requester.val()["id"] == user_data["user_id"]:
                 chat_room_id = (db.
-                child("User").
-                child(user_data["user_id"]).
-                child("friendManager").
-                child("request").
-                child(user_friend.key()).
-                get().val()["chat_room"])
+                    child("User").
+                    child(friend_id).
+                    child("friendManager").
+                    child("friend").
+                    child(requester.key()).
+                    get().val()["chat_room"])
                 if user_data["confirm"]:
                     db.child("User").child(friend_id).child("friendManager").child("friend").child(
-                        user_friend.key()).update({"confirm": user_data["confirm"]})
+                        requester.key()).update({"confirm": user_data["confirm"]})
                     db.child("Chat_Room").child(chat_room_id).update({"confirm": True})
                 else:
                     __delete_chat_room(chat_room_id)
-                    db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
-                        user_friend.key()).remove()
+                    db.child("User").child(friend_id).child("friendManager").child("friend").child(
+                        requester.key()).remove()
                 update1 = False
                 break
         if update1:
@@ -824,22 +844,10 @@ def confirm(user_data):
         if not friend_id:
             return {"error": "account not found, please send the friend request again"}
 
+        user_requester = db.child("User").child(user_data["user_id"]).child("friendManager").child("friend").get()
 
-        users_friends = db.child("User").child(user_data["user_id"]).child("friendManager").child("friend").get()
-
-        for user_friend in users_friends.each():
-            if user_friend.val()["name"] == user_data["name"]:
-                if user_data["confirm"]:
-                    db.child("User").child(friend_id).child("friendManager").child("friend").child(
-                        user_friend.key()).update({"confirm": user_data["confirm"]})
-                else:
-                    db.child("User").child(friend_id).child("friendManager").child("friend").child(
-                        user_friend.key()).remove()
-                update2 = False
-                break
-        if update2:
-            return {"error": "admit request not found"}
         return {"message": "done"}
+
     except TypeError as e:
         print(f"main: {e}")
         return {"error": "request not found"}
@@ -872,7 +880,6 @@ def get_message(request):
     return {"data": messages}
 
 
-
 def add_message(add_data):
     user_id = add_data["user_id"]
     friend_name = add_data["name"]
@@ -903,4 +910,3 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
-
