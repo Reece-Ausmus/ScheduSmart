@@ -279,8 +279,7 @@ def confirm_friend():
             return jsonify({"error": "user_id not provided"}), 201
         if not data["name"]:
             return jsonify({"error": "friend not provided"}), 201
-        if not data["confirm"]:
-            return jsonify({"error": "confirm not provided"}), 201
+        test = data["confirm"]
 
         return jsonify(confirm(data)), 201
     except KeyError:

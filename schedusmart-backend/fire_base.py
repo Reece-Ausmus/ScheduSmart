@@ -831,7 +831,7 @@ def confirm(user_data):
                 if user_data["confirm"]:
                     db.child("User").child(friend_id).child("friendManager").child("friend").child(
                         requester.key()).update({"confirm": user_data["confirm"]})
-                    db.child("Chat_Room").child(chat_room_id).update({"confirm": True})
+                    db.child("Chat_Room").child(chat_room_id).update({"confirmation": True})
                 else:
                     __delete_chat_room(chat_room_id)
                     db.child("User").child(friend_id).child("friendManager").child("friend").child(
