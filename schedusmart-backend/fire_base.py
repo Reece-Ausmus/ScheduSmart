@@ -650,13 +650,18 @@ def find_closest_available_time(data):
 
 
 ################################################### friend system ######################################################
+def __get_name(id):
+    return get_user({"user_id": id})["user_name"]
+
 def __get_friend_list(user_id):
     friend_list = []
     try:
         friends = db.child("User").child(user_id).child("friendManager").child("friend").get()
         for friend in friends.each():
+            print(friend.val())
+            friend_name = __get_name(friend.val()["id"])
             friend_data = {
-                'name': friend.val()["name"],
+                'name': friend_name,
                 'confirm': friend.val()["confirm"]
             }
             friend_list.append(friend_data)
@@ -670,10 +675,9 @@ def __get_request_list(user_id):
     try:
         requests = db.child("User").child(user_id).child("friendManager").child("request").get()
         for request in requests.each():
+            request_name = __get_name(request.val()["id"])
             friend_data = {
-                'name': request.val()["name"],
-                'confirm': request.val()["confirm"],
-                'chatroom': request.val()["chat_room"]
+                'name': request_name
             }
             request_list.append(friend_data)
     except TypeError as e:
@@ -693,10 +697,10 @@ def __get_user_id(name):
 
 
 def __create_room(data):
-    username = get_user(data)["user_name"]
+    friend_id = __get_user_id(data["name"])
     chat_room_data = {
-        "user1": username,
-        "user2": data["name"],
+        "user1": data["user_id"],
+        "user2": friend_id,
         "confirmation": False,
         "counter": 0,
     }
@@ -899,3 +903,4 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
+
