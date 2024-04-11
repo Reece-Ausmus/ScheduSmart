@@ -1014,9 +1014,11 @@ const EmailForm = (email, subject, from_name, message, bcc, cc) => {
   emailjs.send(serviceId, templateId, templateParams, publicKey)
     .then((response) => {
       console.log('Email sent successfully!', response);
+      alert("Email sent successfully!")
     })
     .catch((error) => {
       console.error('Error sending email:', error);
+      alert("Error sending email!")
     });
 }
 
