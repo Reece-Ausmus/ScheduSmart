@@ -173,6 +173,20 @@ export default function Friendlist() {
     const confirmRequest = async (friend,choice) => {
         console.log(choice);
         const response = await send_request("/confirm_friend", { "user_id": userId,"name":friend,"confirm":choice});
+        if (response.error != undefined) {
+            if (response.error == "request not found") {
+                alert("request not found");
+            }
+            if (response.error == "account not found, please send the friend request again") {
+                alert("account not found, please send the friend request again");
+            }
+            if (response.error == "admit request not found") {
+                alert("admit request not found");
+            }
+            if (response.error == "request not found") {
+                alert("request not found")
+            }
+        }
     }
 
     useEffect(() => {
