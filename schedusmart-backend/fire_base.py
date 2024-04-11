@@ -767,16 +767,16 @@ def add_friend(add_friend_data):
 
     room_id = __create_room(add_friend_data)
     friend_data = {
-        "name": add_friend_data["name"],
         "confirm": False,
-        "chat_room": room_id
+        "chat_room": room_id,
+        "id": __get_user_id(add_friend_data["name"])
     }
 
-    friend_id = __get_user_id(friend_data["name"])
+    friend_id = __get_user_id(add_friend_data["name"])
 
     if friend_id is not None:
         db.child("User").child(add_friend_data["user_id"]).child("friendManager").child("friend").push(friend_data)
-        friend_data["name"] = user_name
+        friend_data["id"] = add_friend_data["user_id"]
         db.child("User").child(friend_id).child("friendManager").child("request").push(friend_data)
         return {'message': 'request complete'}
     else:
@@ -791,47 +791,53 @@ def confirm(user_data):
 
         update1 = True
         update2 = True
-        friends = db.child("User").child(user_data["user_id"]).child("friendManager").child("request").get()
-        for friend in friends.each():
-            if friend.val()["name"] == user_data["name"]:
+
+        users_friends = db.child("User").child(friend_id).child("friendManager").child("friend").get()
+
+        for user_friend in users_friends.each():
+            print(user_friend)
+            if user_friend.val()["name"] == user_name:
                 chat_room_id = (db.
                 child("User").
                 child(user_data["user_id"]).
                 child("friendManager").
                 child("request").
-                child(friend.key()).
+                child(user_friend.key()).
                 get().val()["chat_room"])
                 if user_data["confirm"]:
-                    db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
-                        friend.key()).update({"confirm": user_data["confirm"]})
+                    db.child("User").child(friend_id).child("friendManager").child("friend").child(
+                        user_friend.key()).update({"confirm": user_data["confirm"]})
                     db.child("Chat_Room").child(chat_room_id).update({"confirm": True})
                 else:
                     __delete_chat_room(chat_room_id)
                     db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
-                        friend.key()).remove()
+                        user_friend.key()).remove()
                 update1 = False
                 break
         if update1:
-            return {"error": "request not found"}
+            return {"error": "requester friend not found"}
 
         if not friend_id:
             return {"error": "account not found, please send the friend request again"}
 
-        friends = db.child("User").child(friend_id).child("friendManager").child("friend").get()
-        for friend in friends.each():
-            if friend.val()["name"] == user_name:
+
+        users_friends = db.child("User").child(user_data["user_id"]).child("friendManager").child("friend").get()
+
+        for user_friend in users_friends.each():
+            if user_friend.val()["name"] == user_data["name"]:
                 if user_data["confirm"]:
                     db.child("User").child(friend_id).child("friendManager").child("friend").child(
-                        friend.key()).update({"confirm": user_data["confirm"]})
+                        user_friend.key()).update({"confirm": user_data["confirm"]})
                 else:
                     db.child("User").child(friend_id).child("friendManager").child("friend").child(
-                        friend.key()).remove()
+                        user_friend.key()).remove()
                 update2 = False
                 break
         if update2:
             return {"error": "admit request not found"}
         return {"message": "done"}
     except TypeError as e:
+        print(f"main: {e}")
         return {"error": "request not found"}
 
 
