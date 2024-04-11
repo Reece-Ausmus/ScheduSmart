@@ -31,6 +31,7 @@ export default function Calendar(selectMode, e, d) {
   const [eventEndDate, setEventEndDate] = useState("");
   const [eventStartTime, setEventStartTime] = useState("");
   const [eventEndTime, setEventEndTime] = useState("");
+  const [eventConferencingLink, setEventConferencingLink] = useState("");
   const [eventLocation, setEventLocation] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventType, setEventType] = useState("");
@@ -42,18 +43,64 @@ export default function Calendar(selectMode, e, d) {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
+    if (eventName === undefined) {
+      setEventName("");
+    }
+    if (eventStartDate === undefined) {
+      setEventStartDate("");
+    }
+    if (eventEndDate === undefined) {
+      setEventEndDate("");
+    }
+    if (eventStartTime === undefined) {
+      setEventStartTime("");
+    }
+    if (eventEndTime === undefined) {
+      setEventEndTime("");
+    }
+    if (eventConferencingLink === undefined) {
+      setEventConferencingLink("");
+    }
+    if (eventLocation === undefined) {
+      setEventLocation("");
+    }
+    if (eventDescription === undefined) {
+      setEventDescription("");
+    }
+    if (eventType === undefined) {
+      setEventType("");
+    }
+    if (eventRepetitionType === undefined) {
+      setEventRepetitionType("none");
+    }
+    if (eventCustomFrequencyUnit === undefined) {
+      setEventCustomFrequencyUnit("");
+    }
+    if (eventCustomFrequencyValue === undefined) {
+      setEventCustomFrequencyValue(1);
+    }
+    if (eventSelectedDays === undefined) {
+      setEventSelectedDays([]);
+    }
+    if (LocationSettings === undefined) {
+      setLocationSettings("text");
+    }
+    if (unsavedChanges === undefined) {
+      setUnsavedChanges(false);
+    }
+
     if (
       eventName !== "" &&
       eventStartDate !== "" &&
       eventEndDate !== "" &&
       eventStartTime !== "" &&
       eventEndTime !== "" &&
+      eventConferencingLink !== "" &&
       eventLocation !== "" &&
       eventDescription !== "" &&
       eventType !== "" &&
       eventRepetitionType !== "none"
     ) {
-      console.log(eventName);
       setShowUpdateEventPopup(true);
     }
     setUnsavedChanges(true);
@@ -63,6 +110,7 @@ export default function Calendar(selectMode, e, d) {
     eventEndDate,
     eventStartTime,
     eventEndTime,
+    eventConferencingLink,
     eventLocation,
     eventDescription,
     eventType,
@@ -71,6 +119,18 @@ export default function Calendar(selectMode, e, d) {
 
   const toggleShowUpdateEventPopup = () => {
     setShowUpdateEventPopup(!showUpdateEventPopup);
+    setEventName("");
+    setEventStartDate("");
+    setEventEndDate("");
+    setEventStartTime("");
+    setEventEndTime("");
+    setEventConferencingLink("");
+    setEventLocation("");
+    setEventDescription("");
+    setEventType("");
+    setEventRepetitionType("none");
+    setEventCustomFrequencyUnit("");
+    setEventCustomFrequencyValue(1);
     setUnsavedChanges(false);
   };
 
@@ -113,6 +173,10 @@ export default function Calendar(selectMode, e, d) {
     setEventEndTime(e.target.value);
   };
 
+  const handleEventConferencingLinkChange = (e) => {
+    setEventConferencingLink(e.target.value);
+  };
+
   const handleEventLocationChange = (e) => {
     setEventLocation(e.target.value);
   };
@@ -151,6 +215,7 @@ export default function Calendar(selectMode, e, d) {
       end_time: eventEndTime,
       start_date: eventStartDate,
       end_date: eventEndDate,
+      conferencing_link: eventConferencingLink,
       location: eventLocation,
       repetition_type: eventRepetitionType,
       repetition_unit: eventCustomFrequencyUnit,
@@ -190,13 +255,14 @@ export default function Calendar(selectMode, e, d) {
     setEventEndDate("");
     setEventStartTime("");
     setEventEndTime("");
+    setEventConferencingLink("");
     setEventLocation("");
     setEventDescription("");
     setEventType("");
     setEventRepetitionType("none");
     setEventCustomFrequencyUnit("");
     setEventCustomFrequencyValue(1);
-    //toggleShowUpdateEventPopup();
+    toggleShowUpdateEventPopup();
   };
 
   const handleDeleteEvent = async () => {
@@ -234,6 +300,7 @@ export default function Calendar(selectMode, e, d) {
     setEventEndDate("");
     setEventStartTime("");
     setEventEndTime("");
+    setEventConferencingLink("");
     setEventLocation("");
     setEventDescription("");
     setEventType("");
@@ -245,7 +312,7 @@ export default function Calendar(selectMode, e, d) {
 
   // END UPDATE EVENT STUFF
 
-  console.log(d.format("MM/DD"));
+  //console.log(d.format("MM/DD"));
   const today = new Date(d);
   const localDay = new Date(
     today.getFullYear(),
@@ -256,7 +323,7 @@ export default function Calendar(selectMode, e, d) {
   const isoToday = localDay.toISOString();
   const todayString = isoToday.slice(0, 10);
 
-  console.log(todayString);
+  //console.log(todayString);
 
   const lastDayInt = Math.floor(lastDay.getDate());
   let date = firstDaySeeker(today);
@@ -273,7 +340,6 @@ export default function Calendar(selectMode, e, d) {
   }, [e]);
 
   const handleOnEventClick = async (args) => {
-    console.log(args);
     setEventId(args.e.data.fb_event_id);
     const response = await fetch(flaskURL + "/get_event", {
       method: "POST",
@@ -297,6 +363,7 @@ export default function Calendar(selectMode, e, d) {
           setEventEndDate(responseData["end_date"]);
           setEventStartTime(responseData["start_time"]);
           setEventEndTime(responseData["end_time"]);
+          setEventConferencingLink(responseData["conferencing_link"]);
           setEventLocation(responseData["location"]);
           setEventDescription(responseData["desc"]);
           setEventType(responseData["type"]);
@@ -380,9 +447,25 @@ export default function Calendar(selectMode, e, d) {
                 />
               </div>
               {eventType === "event" && (
-                <div className="formgroup">
-                  <label htmlFor="eventLocation">Event Location:</label>
-                  {renderLocationInput()}
+                <div>
+                  <div className="formgroup">
+                    <label htmlFor="eventLocation">Event Location:</label>
+                    {renderLocationInput()}
+                  </div>
+                  {eventConferencingLink !== "" && (
+                    <div className="formgroup">
+                      <label htmlFor="eventConferencingLink">
+                        Conferencing Link:
+                      </label>
+                      <a
+                        href={eventConferencingLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {eventConferencingLink}
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
               <div className="formgroup">

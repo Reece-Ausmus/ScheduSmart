@@ -56,33 +56,33 @@ const theme = createTheme({
 
 const steps = [
   {
-    target: '#calendar-button',
-    content: 'Navigate back to the calendar page here.',
+    target: "#calendar-button",
+    content: "Navigate back to the calendar page here.",
     disableBeacon: true, // automate to start the tours
   },
   {
-    target: '#change-calendar',
-    content: 'Update your calendar view here.',
+    target: "#change-calendar",
+    content: "Update your calendar view here.",
   },
   {
     target: "#weather-container",
     content: "The current weather. Location can be changed in settings.",
   },
   {
-    target: '#habits-button',
-    content: 'Track your calories and health here.',
+    target: "#habits-button",
+    content: "Track your calories and health here.",
   },
   {
-    target: '#notes-button',
-    content: 'Keep track of your notes here.',
+    target: "#notes-button",
+    content: "Keep track of your notes here.",
   },
   {
-    target: '#task-manager',
-    content: 'Manage your assignments and tasks here.',
+    target: "#task-manager",
+    content: "Manage your assignments and tasks here.",
   },
   {
-    target: '#profile-menu',
-    content: 'Access settings or sign out in your profile menu.',
+    target: "#profile-menu",
+    content: "Access settings or sign out in your profile menu.",
   },
   {
     target: "#timezone-select",
@@ -1590,7 +1590,7 @@ export default function MainFrame() {
     let endDate = addDaysToSpecificDate(firstEndDate, 0);
     let counter = 1; //Default will add 1
 
-    console.log(event.repetition_type);
+    //console.log(event.repetition_type);
 
     if (event.repetition_type === "none") {
       eventArray.push({

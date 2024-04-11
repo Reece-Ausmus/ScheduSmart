@@ -45,7 +45,8 @@ export default function TimezoneConverter() {
       //console.log("Timezone:", userData.timezoneTest);
 
       // Check if timezone field is populated
-      const userTimezone = userData.timezone || "No timezone set";
+      //const userTimezone = userData.timezone || "No timezone set";
+      const userTimezone = userData.timezone || "";
 
       setSelectedTimezone(userTimezone);
       setCurrentTime(getCurrentTime(userTimezone));
