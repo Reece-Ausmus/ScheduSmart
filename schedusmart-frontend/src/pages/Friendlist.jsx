@@ -34,6 +34,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MessageIcon from '@mui/icons-material/Message';
 import IconButton from '@mui/material/IconButton';
+import Typography from "@mui/material/Typography";
+import Chatbox from "../components/New_chatbox"
 
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
@@ -149,16 +151,17 @@ export default function Friendlist() {
         }
     };
 
-    // Implementation of request list
+    // Implementation of request list 
     const [requestopen, setRequestOpen] = useState(false);
+    // const [addedFriend, setAddedFriend] = useState(null);
     const handleRequestClickOpen = () => {
         setRequestOpen(true);
     };
     const handleRequestClose = () => {
         setRequestOpen(false);
     };
-
-    const [requestList, setRequestList] = useState(null);
+    const [requestList, setRequestList] = useState([]);
+    
     const getRequestList = async () => {
         const response = await send_request("/get_friends", { "user_id": userId });
         const request_list = response.request;
@@ -170,9 +173,9 @@ export default function Friendlist() {
         }
     }, [requestopen]);
 
-    const confirmRequest = async (friend,choice) => {
+    const confirmRequest = async (friend, choice) => {
         console.log(choice);
-        const response = await send_request("/confirm_friend", { "user_id": userId,"name":friend,"confirm":choice});
+        const response = await send_request("/confirm_friend", { "user_id": userId, "name": friend, "confirm": choice });
         if (response.error != undefined) {
             if (response.error == "request not found") {
                 alert("request not found");
@@ -183,12 +186,21 @@ export default function Friendlist() {
             if (response.error == "admit request not found") {
                 alert("admit request not found");
             }
-            if (response.error == "request not found") {
-                alert("request not found")
-            }
         }
+        // setAddedFriend(friend);
     }
 
+    // Implementation of friend list 
+    const [friendList, setFriendList] = useState([]);
+    const getfriendList = async () => {
+        const response = await send_request("/get_friends", { "user_id": userId });
+        const friend_list = response.friend
+        setFriendList(friend_list);
+    };
+    useEffect(() => {
+        getfriendList();
+    }, []);
+    
     useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
         setMessages(refreshMessages());
@@ -255,19 +267,19 @@ export default function Friendlist() {
                     <DialogTitle>Friend request</DialogTitle>
                     <DialogContent>
                         <List sx={{ width: 500 }}>
-                            {requestList && requestList.map(({ name, confirm, chatroom }, index) => (
-                                <ListItem key={name+index}>
+                            {requestList.length > 0? (requestList.map(({ name, confirm, chatroom }, index) => (
+                                <ListItem key={name + index}>
                                     <ListItemText primary={`${name} wants to add you as a friend`} />
                                     <ListItemSecondaryAction>
                                         <IconButton edge="end" aria-label="accept" sx={{ color: 'green' }} onClick={() => confirmRequest(name, true)}>
-                                            <CheckIcon/>
+                                            <CheckIcon />
                                         </IconButton>
                                         <IconButton edge="end" aria-label="reject" sx={{ color: 'red', marginLeft: 3 }} onClick={() => confirmRequest(name, false)}>
-                                            <CloseIcon/>
+                                            <CloseIcon />
                                         </IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>
-                            ))}
+                            ))): <Typography variant="body1">No requests found.</Typography>}
                         </List>
                     </DialogContent>
                     <DialogActions>
@@ -277,14 +289,15 @@ export default function Friendlist() {
             </div>
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
-                <List>
-                    {messages.map(({ name, message1, person, id }, index) => (
-                        <ListItemButton key={index + person} component={Link} to={`/chat/${id}`}>
+                <List sx={{ width: "40%" }}>
+                    {friendList.length > 0? friendList.map(({ name, confirm}, index) => (
+                        <ListItemButton key={index + name} component={Link} to={`/friendlist/${name}/${index}`}>
                             <ListItemAvatar>
-                                <Avatar alt="Profile Picture" src={person} />
+                                <Avatar alt="Profile Picture" src={name} />
                             </ListItemAvatar>
-                            <ListItemText primary={name} secondary={message1} />
-                        </ListItemButton>))}
+                            {/* <ListItemText primary={name} secondary={confirm} /> */}
+                            <ListItemText primary={name}  />
+                        </ListItemButton>)): <Typography variant="body1">No friends found.</Typography>}
                 </List>
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                     <BottomNavigation
@@ -298,6 +311,7 @@ export default function Friendlist() {
                         <BottomNavigationAction label="Archive" icon={<ArchiveIcon />} />
                     </BottomNavigation>
                 </Paper>
+
             </Box>
         </ThemeProvider>
     );

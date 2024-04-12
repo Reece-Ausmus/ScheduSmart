@@ -55,7 +55,7 @@ export default function App() {
           <Route path="*" element={<NoPage />} />
           <Route path="/reminder" element={<Reminder />} />
           <Route path="/friendlist" element={<Friendlist />} />
-          <Route path="/chat/:friendId" element={<Chatbox />} />
+          <Route path="/friendlist/:fname/:id" element={<Chatbox />} />
         </Routes>
       </BrowserRouter>
     </div>

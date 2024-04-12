@@ -3,6 +3,9 @@ import { TextField, Button, List, ListItem, ListItemText, Paper } from '@mui/mat
 import { useParams } from 'react-router-dom';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { orange, grey } from "@mui/material/colors";
+import send_request from "../pages/requester";
+
+const userId = sessionStorage.getItem("user_id");
 const theme = createTheme({
     palette: {
         primary: orange,
@@ -30,10 +33,29 @@ const Chatbox = () => {
         scrollToBottom();
     }, [messages]);
 
+    let start_point=0;
+    let { fname,id } = useParams();
+    // const getMessages = async() => {
+    //     const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": start_point });
+    //     const message_history = response.data;
+    //     console.log(message_history);
+    //     setMessages(message_history);
+    // }
+    // useEffect(() => {
+    //     const getMessages = async () => {
+    //         const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": start_point });
+    //         const message_history = response.data;
+    //         console.log(message_history);
+    //         setMessages(message_history);
+    //     }
+    //     getMessages();
+    //     return () => {};
+    // }, [])
+
     return (
         <ThemeProvider theme={theme}>
             <div style={{ minHeight: 'calc(100vh - 100px)', position: 'relative',top:'30px' }}>
-            <Paper style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+            <Paper style={{ height: 'calc(100vh - 200px)', overflowY: 'auto' }}>
                 <List>
                     {messages.map((message, index) => (
                         <ListItem key={index}>
