@@ -6,7 +6,7 @@ data = {
     "name": "stanley",
     "confirm": True,
     "message": "hello?",
-    "start_point": 4
+    "start_point": 0
 }
 
-print(confirm(data))
+print(get_message((data)))

@@ -568,6 +568,7 @@ def update_default_location_settings(info):
         print("Failed to set the location settings")
         return 1
 
+
 def get_system_color_settings(info):
     user_id = info['user_id']
     color = info['color']
@@ -577,7 +578,6 @@ def get_system_color_settings(info):
     except Exception:
         print("Failed to set the system color settings")
         return 1
-
 
 
 # This function is used to create a new Habits list for the logged in user
@@ -727,11 +727,11 @@ def __delete_chat_room(room_id):
         pass
 
 
-def __get_chat_id(user_id, friend_name):
+def __get_chat_id(user_id, friend_id):
     try:
         friends = db.child("User").child(user_id).child("friendManager").child("friend").get()
         for friend in friends.each():
-            if friend.val()["name"] == friend_name:
+            if friend.val()["id"] == friend_id:
                 return friend.val()["chat_room"]
         return None
     except TypeError:
@@ -790,8 +790,6 @@ def add_friend(add_friend_data):
         "id": __get_user_id(add_friend_data["name"])
     }
 
-
-
     if friend_id is not None:
         db.child("User").child(add_friend_data["user_id"]).child("friendManager").child("friend").push(friend_data)
         friend_data["id"] = add_friend_data["user_id"]
@@ -818,10 +816,10 @@ def confirm(user_data):
                     c = (db.child("User").child(user_data["user_id"]).child("friendManager").child("friend").
                          push(requester.val()))
                     (db.child("User").child(user_data["user_id"]).child("friendManager").child("friend").
-                        child(c["name"]).update({"confirm": True}))
+                     child(c["name"]).update({"confirm": True}))
 
                 db.child("User").child(user_data["user_id"]).child("friendManager").child("request").child(
-                     requester.key()).remove()
+                    requester.key()).remove()
                 update2 = False
                 break
         if update2:
@@ -833,12 +831,12 @@ def confirm(user_data):
         for requester in requester_friends.each():
             if requester.val()["id"] == user_data["user_id"]:
                 chat_room_id = (db.
-                    child("User").
-                    child(friend_id).
-                    child("friendManager").
-                    child("friend").
-                    child(requester.key()).
-                    get().val()["chat_room"])
+                child("User").
+                child(friend_id).
+                child("friendManager").
+                child("friend").
+                child(requester.key()).
+                get().val()["chat_room"])
                 if user_data["confirm"]:
                     db.child("User").child(friend_id).child("friendManager").child("friend").child(
                         requester.key()).update({"confirm": user_data["confirm"]})
@@ -869,13 +867,14 @@ def get_message(request):
     friend_name = request["name"]
     start_point = request["start_point"]
 
-    chat_room = __get_chat_id(user_id, friend_name)
+    friend_id = __get_user_id(friend_name)
+    chat_room = __get_chat_id(user_id, friend_id)
     if chat_room is None:
         return {"error": "friend not found"}
 
     line = db.child("Chat_Room").child(chat_room).get().val()["counter"]
     user2 = db.child("Chat_Room").child(chat_room).get().val()["user2"]
-    identification = 1 if user2 == friend_name else 2
+    identification = 1 if user2 == friend_id else 2
     messages = []
 
     for x in range(start_point, line):
@@ -894,16 +893,17 @@ def get_message(request):
 def add_message(add_data):
     user_id = add_data["user_id"]
     friend_name = add_data["name"]
+    friend_id = __get_user_id(friend_name)
     new_message = add_data["message"]
 
-    chat_room = __get_chat_id(user_id, friend_name)
+    chat_room = __get_chat_id(user_id, friend_id)
     if chat_room is None:
         return {"error": "friend not found"}
     try:
         count = db.child("Chat_Room").child(chat_room).get().val()["counter"]
         user2 = db.child("Chat_Room").child(chat_room).get().val()["user2"]
         new_data = {
-            "identifier": 1 if user2 == friend_name else 2,
+            "identifier": 1 if user2 == friend_id else 2,
             "message": new_message
         }
     except TypeError | KeyError:
