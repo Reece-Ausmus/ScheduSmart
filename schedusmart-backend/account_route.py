@@ -338,3 +338,22 @@ def get_messages():
         return jsonify({"error": "start_point is required"}), 201
 
     return jsonify(get_message(request_message_data)), 201
+
+# This route is for changing system color
+@account.route('/change_system_color', methods=['POST'])
+def change_system_color():
+    info = request.get_json()
+    try:
+        ret = get_system_color_settings(info)
+        if ret == 1:
+            response = jsonify({'error': 'system color settings can not be changed'})
+            response.status = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status= 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status = 206
+    return response
+

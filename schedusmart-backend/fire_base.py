@@ -568,6 +568,17 @@ def update_default_location_settings(info):
         print("Failed to set the location settings")
         return 1
 
+def get_system_color_settings(info):
+    user_id = info['user_id']
+    color = info['color']
+    try:
+        db.child("User").child(user_id).child("system_color").set(color)
+        return 0
+    except Exception:
+        print("Failed to set the system color settings")
+        return 1
+
+
 
 # This function is used to create a new Habits list for the logged in user
 def add_new_habit(data):
