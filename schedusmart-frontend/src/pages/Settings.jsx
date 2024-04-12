@@ -87,7 +87,7 @@ export default function Settings() {
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
-      <h1>{languageData[language][0][0].setting}</h1>
+      <h1>{"setting"}</h1>
       <div>{AccountInfo(language)}</div>
       <div>{Calendar_Settings()}</div>
       <div>{Reminder()}</div>

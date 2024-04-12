@@ -142,32 +142,32 @@ export default function AccountInfo(language) {
             <Stack spacing={3} sx={{ maxWidth: 'sm' }}>
               <div style={{ display: 'flex' }}>
                 <FormControl style={{ marginRight: '20px' }}>
-                  <InputLabel htmlFor="component-outlined">{languageData[language][0][0].firstName}</InputLabel>
+                  <InputLabel htmlFor="component-outlined">{}</InputLabel>
                   <OutlinedInput id="firstname" value={firstname} label="firstName" onChange={(e) => setFirstName(e.target.value)}/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel htmlFor="component-outlined">{languageData[language][0][0].lastName}</InputLabel>
+                  <InputLabel htmlFor="component-outlined">{}</InputLabel>
                   <OutlinedInput id="lastname" value={lastname} label="lastName" onChange={(e) => setLastName(e.target.value)}/>
                 </FormControl>
               </div>
               <FormControl>
-                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].userName}</InputLabel>
+                <InputLabel htmlFor="component-outlined">{}</InputLabel>
                 <OutlinedInput id="username" value={username} label="userName" onChange={(e) => setUsername(e.target.value)}/>
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].email}</InputLabel>
+                <InputLabel htmlFor="component-outlined">{}</InputLabel>
                 <OutlinedInput id="email" value={email} label="email" onChange={(e) => setEmail(e.target.value)}/>
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].location}</InputLabel>
+                <InputLabel htmlFor="component-outlined">{}</InputLabel>
                 <OutlinedInput id="location" value={location} label="location"onChange={(e) => setLocation(e.target.value)} />
               </FormControl>
             </Stack>
           </CardContent>
           <Divider />
           <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button  variant="contained" onClick={handleInfo}>{languageData[language][0][0].restToDefault}</Button>
-            <Button  variant="contained" onClick={updateInfo}>{languageData[language][0][0].Updateaccount}</Button>
+            <Button  variant="contained" onClick={handleInfo}>{}</Button>
+            <Button  variant="contained" onClick={updateInfo}>{}</Button>
           </CardActions>
         </Card>
     </ThemeProvider>
