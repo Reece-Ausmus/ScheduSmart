@@ -105,6 +105,7 @@ export default function Friendlist() {
     const ref = useRef(null);
     const [messages, setMessages] = useState(() => refreshMessages());
     const [invitationopen, setInvitationOpen] = useState(false);
+    const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [Props, setProps] = useState({ options: [] });
     const handleSearchUser = async (event, name) => {
         if (!name) {
@@ -120,6 +121,10 @@ export default function Friendlist() {
         setInvitationOpen(true);
     };
     const handleInvitationClose = () => {
+        setInvitationOpen(false);
+    };
+    const handleConfirmationClose = () => {
+        setConfirmationOpen(false);
         setInvitationOpen(false);
     };
     const handleInvitationSubmit = async () => {
@@ -149,11 +154,13 @@ export default function Friendlist() {
                 alert("Friend can not been found.")
             }
         }
+        setConfirmationOpen(true);
     };
 
     // Implementation of request list 
     const [requestopen, setRequestOpen] = useState(false);
-    // const [addedFriend, setAddedFriend] = useState(null);
+    const [showList, setShowList] = useState(true);
+    // const [confirmedFriends, setConfirmedFriends] = useState([]);
     const handleRequestClickOpen = () => {
         setRequestOpen(true);
     };
@@ -161,7 +168,7 @@ export default function Friendlist() {
         setRequestOpen(false);
     };
     const [requestList, setRequestList] = useState([]);
-    
+
     const getRequestList = async () => {
         const response = await send_request("/get_friends", { "user_id": userId });
         const request_list = response.request;
@@ -187,7 +194,7 @@ export default function Friendlist() {
                 alert("admit request not found");
             }
         }
-        // setAddedFriend(friend);
+        setShowList(false);
     }
 
     // Implementation of friend list 
@@ -200,7 +207,7 @@ export default function Friendlist() {
     useEffect(() => {
         getfriendList();
     }, []);
-    
+
     useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
         setMessages(refreshMessages());
@@ -248,6 +255,15 @@ export default function Friendlist() {
                         <Button onClick={handleInvitationClose}>Cancel</Button>
                     </DialogActions>
                 </Dialog>
+                <Dialog open={confirmationOpen} onClose={handleConfirmationClose}>
+                    <DialogTitle>Confirmation</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Your friend request has been sent.</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleConfirmationClose}>Sure</Button>
+                    </DialogActions>
+                </Dialog>
                 <Fab
                     aria-label="friend request"
                     color="primary"
@@ -267,8 +283,9 @@ export default function Friendlist() {
                     <DialogTitle>Friend request</DialogTitle>
                     <DialogContent>
                         <List sx={{ width: 500 }}>
-                            {requestList.length > 0? (requestList.map(({ name, confirm, chatroom }, index) => (
+                            {showList && requestList.length > 0 ? (requestList.map(({ name, confirm, chatroom }, index) => (
                                 <ListItem key={name + index}>
+
                                     <ListItemText primary={`${name} wants to add you as a friend`} />
                                     <ListItemSecondaryAction>
                                         <IconButton edge="end" aria-label="accept" sx={{ color: 'green' }} onClick={() => confirmRequest(name, true)}>
@@ -279,7 +296,7 @@ export default function Friendlist() {
                                         </IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>
-                            ))): <Typography variant="body1">No requests found.</Typography>}
+                            ))) : <Typography variant="body1">No requests found.</Typography>}
                         </List>
                     </DialogContent>
                     <DialogActions>
@@ -290,14 +307,14 @@ export default function Friendlist() {
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List sx={{ width: "40%" }}>
-                    {friendList.length > 0? friendList.map(({ name, confirm}, index) => (
+                    {friendList.length > 0 ? friendList.map(({ name, confirm }, index) => (
                         <ListItemButton key={index + name} component={Link} to={`/friendlist/${name}/${index}`}>
                             <ListItemAvatar>
                                 <Avatar alt="Profile Picture" src={name} />
                             </ListItemAvatar>
                             {/* <ListItemText primary={name} secondary={confirm} /> */}
-                            <ListItemText primary={name}  />
-                        </ListItemButton>)): <Typography variant="body1">No friends found.</Typography>}
+                            <ListItemText primary={name} />
+                        </ListItemButton>)) : <Typography variant="body1">No friends found.</Typography>}
                 </List>
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                     <BottomNavigation
