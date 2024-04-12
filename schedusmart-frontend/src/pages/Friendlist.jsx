@@ -143,15 +143,19 @@ export default function Friendlist() {
         if (response.error != undefined) {
             if (response.error == "user requesting himself as friend") {
                 alert("You are unable to request yourself as friend.");
+                return;
             }
             if (response.error == "request already send") {
                 alert("The request has already been sent.");
+                return;
             }
             if (response.error == "already receive request from friend") {
                 alert("The request has already been received from your friend");
+                return;
             }
             if (response.error == "friend not found") {
                 alert("Friend can not been found.")
+                return;
             }
         }
         setConfirmationOpen(true);
@@ -159,7 +163,7 @@ export default function Friendlist() {
 
     // Implementation of request list 
     const [requestopen, setRequestOpen] = useState(false);
-    const [showList, setShowList] = useState(true);
+    // const [makeChoice , setMakeChoice] = useState(false);
     // const [confirmedFriends, setConfirmedFriends] = useState([]);
     const handleRequestClickOpen = () => {
         setRequestOpen(true);
@@ -178,7 +182,7 @@ export default function Friendlist() {
         if (requestopen) {
             getRequestList();
         }
-    }, [requestopen]);
+    }, [requestopen,requestList]);
 
     const confirmRequest = async (friend, choice) => {
         console.log(choice);
@@ -194,7 +198,7 @@ export default function Friendlist() {
                 alert("admit request not found");
             }
         }
-        setShowList(false);
+        // setMakeChoice(true);
     }
 
     // Implementation of friend list 
@@ -283,7 +287,7 @@ export default function Friendlist() {
                     <DialogTitle>Friend request</DialogTitle>
                     <DialogContent>
                         <List sx={{ width: 500 }}>
-                            {showList && requestList.length > 0 ? (requestList.map(({ name, confirm, chatroom }, index) => (
+                            {requestList.length > 0 ? (requestList.map(({ name, confirm, chatroom }, index) => (
                                 <ListItem key={name + index}>
 
                                     <ListItemText primary={`${name} wants to add you as a friend`} />
