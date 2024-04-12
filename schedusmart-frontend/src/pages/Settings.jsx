@@ -21,6 +21,15 @@ import Dashboard from "./Dashboard";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
+const Colors = [
+  { id: 0, value: {primary:red[200],secondary:red[100]}, label: "Red" },
+  { id: 1, value: {primary:orange[200],secondary:orange[100]}, label: "Orange" },
+  { id: 2, value: {primary:yellow[200],secondary:yellow[100]}, label: "Yellow" },
+  { id: 3, value: {primary:green[200],secondary:green[100]}, label: "Green" },
+  { id: 4, value: {primary:blue[200],secondary:blue[100]}, label: "Blue" },
+  { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
+  { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
+];
 
 export default function Settings() {
   const fetchLanguage = async () => {
@@ -44,18 +53,8 @@ export default function Settings() {
   const handleLanguageOption = (e) => {
     setLanguage(e.target.value)
   };
-
-  const [Colors] = useState([
-    { id: 0, value: {primary:red[200],secondary:red[100]}, label: "Red" },
-    { id: 1, value: {primary:orange[200],secondary:orange[100]}, label: "Orange" },
-    { id: 2, value: {primary:yellow[200],secondary:yellow[100]}, label: "Yellow" },
-    { id: 3, value: {primary:green[200],secondary:green[100]}, label: "Green" },
-    { id: 4, value: {primary:blue[200],secondary:blue[100]}, label: "Blue" },
-    { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
-    { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
-  ]);
-
-  const [Color, setColor] = useState(1);
+  
+  const [Color, setColor] = useState(() => { return parseInt(localStorage.getItem('systemcolor')) || 1; });
   useEffect(() => {
     localStorage.setItem('systemcolor', Color);
   }, [Color]);

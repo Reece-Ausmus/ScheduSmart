@@ -5,31 +5,43 @@ import './MainFrame.css'
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppBar, Toolbar, Typography, Avatar, Menu, MenuItem, IconButton } from "@mui/material";
-import { orange } from "@mui/material/colors";
+import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import send_request from "./requester.jsx";
 
+const userId = sessionStorage.getItem("user_id");
+const Colors = [
+  { id: 0, value: {primary:red[200],secondary:red[100]}, label: "Red" },
+  { id: 1, value: {primary:orange[200],secondary:orange[100]}, label: "Orange" },
+  { id: 2, value: {primary:yellow[200],secondary:yellow[100]}, label: "Yellow" },
+  { id: 3, value: {primary:green[200],secondary:green[100]}, label: "Green" },
+  { id: 4, value: {primary:blue[200],secondary:blue[100]}, label: "Blue" },
+  { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
+  { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
+];
+
+export default function Dashboard() {
+  const [Color, setColor] = useState(() => { return parseInt(localStorage.getItem('systemcolor')) || 1;});
+  const getColorOption = async () => {
+    let response = await send_request("/get_system_color", { "user_id": userId});
+    if (response.type == undefined)return;
+    setColor(response.type);
+  };
+  useEffect(() => {
+    getColorOption();
+}, []);
 const theme = createTheme({
   palette: {
     primary: {
-      main: orange[500],
+      main: Colors[Color].value.primary,
     },
     secondary: {
-      main: "#ab5600"
-    },
-  },
-  components: {
-    MuiDataGrid: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "gray",
-        },
-      },
+      main: Colors[Color].value.secondary,
     },
   },
 });
 
-export default function Dashboard() {
   const [goToWelcome, setGoToWelcome] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -50,10 +62,9 @@ export default function Dashboard() {
   }
   const handleConfirmClick = () => {
     if (window.confirm("Are you sure you want to sign out?")) {
-      //Yes
       sessionStorage.clear();
       setGoToWelcome(true);
-    } 
+    }
   };
 
   return (
@@ -88,7 +99,7 @@ export default function Dashboard() {
               edge="end"
               id="profile-menu"
             >
-              <AccountCircleIcon/>
+              <AccountCircleIcon />
             </IconButton>
             <Menu
               id="profile-menu"

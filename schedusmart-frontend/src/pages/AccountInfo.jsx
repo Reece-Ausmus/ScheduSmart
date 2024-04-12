@@ -61,7 +61,6 @@ export default function AccountInfo(language) {
           setUsername(responseData.user_name);
           setEmail(responseData.email);
           if (responseData.location != null) setLocation(responseData.location);
-          console.log(userId);
           break;
         case 202:
           alert("User Not Found");

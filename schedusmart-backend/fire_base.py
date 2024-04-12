@@ -569,7 +569,7 @@ def update_default_location_settings(info):
         return 1
 
 
-def get_system_color_settings(info):
+def system_color_settings(info):
     user_id = info['user_id']
     color = info['color']
     try:
@@ -579,6 +579,11 @@ def get_system_color_settings(info):
         print("Failed to set the system color settings")
         return 1
 
+def get_system_color_settings(info):
+    user_id = info['user_id']
+    color= db.child("User").child(user_id).child("system_color").get()
+    return color.val()
+ 
 
 # This function is used to create a new Habits list for the logged in user
 def add_new_habit(data):
