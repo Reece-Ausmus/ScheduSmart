@@ -93,6 +93,7 @@ const steps = [
 
 export default function MainFrame() {
   const [selectMode, setSelectMode] = useState(1);
+  const [eventFilter, setEventFilter] = useState("all");
   const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [calendarList, setCalendarList] = useState([]);
 
@@ -113,7 +114,7 @@ export default function MainFrame() {
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
       if (dataOfUser.language != undefined) {
-        setLanguage(dataOfUser.language)
+        setLanguage(dataOfUser.language);
       }
       const newCalendars = dataOfUser.calendars;
       const updatedCalendarList = [...calendarList];
@@ -135,7 +136,6 @@ export default function MainFrame() {
   }, []);
 
   function CalendarList() {
-    
     const [invitations, setInvitations] = useState([]);
     const [language, setLanguage] = useState(0);
 
@@ -974,7 +974,9 @@ export default function MainFrame() {
                   <h2>Add {eventType}</h2>
                   <div>
                     <div className="formgroup">
-                      <label htmlFor="eventName">{languageData[0][language].main_frame.event_name}</label>
+                      <label htmlFor="eventName">
+                        {languageData[0][language].main_frame.event_name}
+                      </label>
                       <input
                         type="text"
                         id="eventName"
@@ -983,14 +985,18 @@ export default function MainFrame() {
                       />
                     </div>
                     <div className="formgroup">
-                      <label htmlFor="eventStartDate">{languageData[0][language].main_frame.startDate}</label>
+                      <label htmlFor="eventStartDate">
+                        {languageData[0][language].main_frame.startDate}
+                      </label>
                       <input
                         type="date"
                         id="eventStartDate"
                         value={eventStartDate}
                         onChange={handleEventStartDateChange}
                       />
-                      <label htmlFor="eventEndDate">{languageData[0][language].main_frame.end_date}</label>
+                      <label htmlFor="eventEndDate">
+                        {languageData[0][language].main_frame.end_date}
+                      </label>
                       <input
                         type="date"
                         id="eventEndDate"
@@ -999,14 +1005,18 @@ export default function MainFrame() {
                       />
                     </div>
                     <div className="formgroup">
-                      <label htmlFor="eventStartTime">{languageData[0][language].main_frame.startTime}</label>
+                      <label htmlFor="eventStartTime">
+                        {languageData[0][language].main_frame.startTime}
+                      </label>
                       <input
                         type="time"
                         id="eventStartTime"
                         value={eventStartTime}
                         onChange={handleEventStartTimeChange}
                       />
-                      <label htmlFor="eventEndTime">{languageData[0][language].main_frame.endTime}</label>
+                      <label htmlFor="eventEndTime">
+                        {languageData[0][language].main_frame.endTime}
+                      </label>
                       <input
                         type="time"
                         id="eventEndTime"
@@ -1017,12 +1027,17 @@ export default function MainFrame() {
                     {eventType === "event" && (
                       <div>
                         <div className="formgroup">
-                          <label htmlFor="eventLocation">{languageData[0][language].main_frame.eventLocation}</label>
+                          <label htmlFor="eventLocation">
+                            {languageData[0][language].main_frame.eventLocation}
+                          </label>
                           {renderLocationInput()}
                         </div>
                         <div className="formgroup">
                           <label htmlFor="eventConferencingLink">
-                            {languageData[0][language].main_frame.conferencingLink}
+                            {
+                              languageData[0][language].main_frame
+                                .conferencingLink
+                            }
                           </label>
                           <input
                             type="text"
@@ -1061,14 +1076,21 @@ export default function MainFrame() {
                         </div>
 
                         <div className="formgroup">
-                          <label htmlFor="eventCalendar">{languageData[0][language].main_frame.calendar}</label>
+                          <label htmlFor="eventCalendar">
+                            {languageData[0][language].main_frame.calendar}
+                          </label>
                           <select
                             id="eventCalendar"
                             value={eventCalendar}
                             onChange={handleEventCalendarChange}
                             className="calendar_option"
                           >
-                            <option value="">{languageData[0][language].main_frame.selectCalendar}</option>
+                            <option value="">
+                              {
+                                languageData[0][language].main_frame
+                                  .selectCalendar
+                              }
+                            </option>
                             {calendarList.map((cal) => (
                               <option key={cal.id} value={cal.id}>
                                 {cal.name}
@@ -1079,7 +1101,9 @@ export default function MainFrame() {
                       </div>
                     )}
                     <div className="event-repetition-form">
-                      <h2>{languageData[0][language].main_frame.eventRepetition}</h2>
+                      <h2>
+                        {languageData[0][language].main_frame.eventRepetition}
+                      </h2>
                       <div className="repetition-options">
                         <button
                           type="button"
@@ -1120,7 +1144,9 @@ export default function MainFrame() {
                       </div>
                       {eventRepetitionType === "custom" && (
                         <div className="custom-repetition">
-                          <label htmlFor="customFrequency">{languageData[0][language].main_frame.repeatEvery}</label>
+                          <label htmlFor="customFrequency">
+                            {languageData[0][language].main_frame.repeatEvery}
+                          </label>
                           <input
                             type="number"
                             id="eventCustomFrequencyValue"
@@ -1133,10 +1159,18 @@ export default function MainFrame() {
                             value={eventCustomFrequencyUnit}
                             onChange={handleEventCustomFrequencyUnitChange}
                           >
-                            <option value="days">{languageData[0][language].main_frame.days}</option>
-                            <option value="weeks">{languageData[0][language].main_frame.weeks}</option>
-                            <option value="months">{languageData[0][language].main_frame.months}</option>
-                            <option value="years">{languageData[0][language].main_frame.years}</option>
+                            <option value="days">
+                              {languageData[0][language].main_frame.days}
+                            </option>
+                            <option value="weeks">
+                              {languageData[0][language].main_frame.weeks}
+                            </option>
+                            <option value="months">
+                              {languageData[0][language].main_frame.months}
+                            </option>
+                            <option value="years">
+                              {languageData[0][language].main_frame.years}
+                            </option>
                           </select>
                         </div>
                       )}
@@ -1183,14 +1217,18 @@ export default function MainFrame() {
                     />
                   </div>
                   <div className="formgroup">
-                    <label htmlFor="semesterStartDate">{languageData[0][language].main_frame.startDate}</label>
+                    <label htmlFor="semesterStartDate">
+                      {languageData[0][language].main_frame.startDate}
+                    </label>
                     <input
                       type="date"
                       id="semesterStartDate"
                       value={semesterStartDate}
                       onChange={handleSemesterStartDateChange}
                     />
-                    <label htmlFor="semesterEndDate">{languageData[0][language].main_frame.end_date}</label>
+                    <label htmlFor="semesterEndDate">
+                      {languageData[0][language].main_frame.end_date}
+                    </label>
                     <input
                       type="date"
                       id="semesterEndDate"
@@ -1229,15 +1267,23 @@ export default function MainFrame() {
                 <div className="popup-content">
                   <h2>{languageData[0][language].main_frame.invitations}</h2>
                   <div className="formgroup">
-                    <label htmlFor="invitationFilter">{languageData[0][language].main_frame.filter}</label>
+                    <label htmlFor="invitationFilter">
+                      {languageData[0][language].main_frame.filter}
+                    </label>
                     <select
                       id="invitationFilter"
                       value={invitationFilter}
                       onChange={(e) => setInvitationFilter(e.target.value)}
                     >
-                      <option value="all">{languageData[0][language].main_frame.all}</option>
-                      <option value="pending">{languageData[0][language].main_frame.pending}</option>
-                      <option value="accepted">{languageData[0][language].main_frame.Accepted}</option>
+                      <option value="all">
+                        {languageData[0][language].main_frame.all}
+                      </option>
+                      <option value="pending">
+                        {languageData[0][language].main_frame.pending}
+                      </option>
+                      <option value="accepted">
+                        {languageData[0][language].main_frame.Accepted}
+                      </option>
                     </select>
                   </div>
                   <div className="formgroup">
@@ -1255,11 +1301,26 @@ export default function MainFrame() {
                         <div key={invitation.id}>
                           <h3>{invitation.name}</h3>
                           <p>{invitation.description}</p>
-                          <p>{languageData[0][language].main_frame.startDate + invitation.startDate}</p>
-                          <p>{languageData[0][language].main_frame.end_date + invitation.endDate}</p>
-                          <p>{languageData[0][language].main_frame.startTime + invitation.startTime}</p>
-                          <p>{languageData[0][language].main_frame.endTime + invitation.endTime}</p>
-                          <p>{languageData[0][language].main_frame.status + invitation.status}</p>
+                          <p>
+                            {languageData[0][language].main_frame.startDate +
+                              invitation.startDate}
+                          </p>
+                          <p>
+                            {languageData[0][language].main_frame.end_date +
+                              invitation.endDate}
+                          </p>
+                          <p>
+                            {languageData[0][language].main_frame.startTime +
+                              invitation.startTime}
+                          </p>
+                          <p>
+                            {languageData[0][language].main_frame.endTime +
+                              invitation.endTime}
+                          </p>
+                          <p>
+                            {languageData[0][language].main_frame.status +
+                              invitation.status}
+                          </p>
                           <button
                             className="formbutton fb1"
                             onClick={() => handleAcceptInvitation(invitation)}
@@ -1372,6 +1433,15 @@ export default function MainFrame() {
         <h2 className="detailInfo">{currentTime.format("YYYY/MM/DD")}</h2>
         <div>
           <div className="buttonGroup" id="change-calendar">
+            <div className="buttonGroupSelect">
+              <select
+                value={eventFilter}
+                onChange={(e) => setEventFilter(e.target.value)}
+              >
+                <option value="all">All</option>
+                <option value="zoom">Zoom Meetings</option>
+              </select>
+            </div>
             <button
               style={{
                 backgroundColor: selectMode == 1 ? "#cfcfcf" : "#2d2d2d",
@@ -1645,6 +1715,7 @@ export default function MainFrame() {
       selectedCalendars.map(async (calendar) => {
         let events = await send_request("/get_events", {
           calendar_id: calendar.calendar_id,
+          event_filter: eventFilter,
         });
 
         if (events.data != undefined) {
@@ -1671,11 +1742,10 @@ export default function MainFrame() {
           }
         }
       });
-      //console.log("updates");
       setAllEventsArray(eventsArray);
     };
     fetchEvents();
-  }, [selectedCalendars]);
+  }, [selectedCalendars, eventFilter]);
 
   ///////////////////Task handle///////////////////////////////////
   const taskSortFunction = (a, b) => {
