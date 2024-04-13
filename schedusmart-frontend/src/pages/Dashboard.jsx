@@ -9,6 +9,7 @@ import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/co
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import send_request from "./requester.jsx";
+import {useLocation} from 'react-router-dom';
 
 const userId = sessionStorage.getItem("user_id");
 const Colors = [
@@ -22,15 +23,15 @@ const Colors = [
 ];
 
 export default function Dashboard() {
-  const [Color, setColor] = useState(() => { return parseInt(localStorage.getItem('systemcolor')) || 1;});
-  const getColorOption = async () => {
-    let response = await send_request("/get_system_color", { "user_id": userId});
-    if (response.type == undefined)return;
-    setColor(response.type);
-  };
-  useEffect(() => {
-    getColorOption();
-}, []);
+  const location = useLocation();
+  let Color;
+  if (location.state == null){
+    Color =localStorage.getItem('systemcolor');
+  }
+  else{
+    Color =location.state.color_choice;
+  }
+
 const theme = createTheme({
   palette: {
     primary: {
