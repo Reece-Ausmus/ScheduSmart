@@ -1002,7 +1002,7 @@ export default function TaskManager() {
         {" "}
         Save Tasks
       </Button>
-      <div className="GPTChatBox">{GPTChatBox()}</div>
+      <div className="GPTChatBox">{GPTChatBox(todoList)}</div>
     </ThemeProvider>
   );
 }
