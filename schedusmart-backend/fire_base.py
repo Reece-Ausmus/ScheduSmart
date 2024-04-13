@@ -340,7 +340,12 @@ def f_get_events(calendar):
             event = event_id.val()
             e = db.child("Events").child(event["event_id"]).get().val()
             e["event_id"] = event["event_id"]
-            events.append(e)
+            if calendar['event_filter'] == 'all':
+                events.append(e)
+            elif calendar['event_filter'] == 'zoom' and 'conferencing_link' in e and 'zoom' in e['conferencing_link']:
+                events.append(e)
+            else:
+                events.append(e)
         return {"data": events}
     except Exception as e:
         print(f"fail to retrieve events data: \n{e}")

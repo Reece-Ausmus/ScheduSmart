@@ -54,6 +54,11 @@
   margin-right: 2%;
   float: right;
 }
+.buttonGroupSelect {
+  padding-top: 6px;
+  margin-right: 2px;
+  float: right;
+}
 .modeButton {
   padding: auto;
   margin-right: 5px;
