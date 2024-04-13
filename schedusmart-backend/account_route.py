@@ -80,6 +80,7 @@ def user_data():
                 'location': data['location'],
                 'timezone': data['timezone'],
                 'task_list': data['task_list'],
+                'language': data['language']
             })
             response.status_code = 201
     except:
