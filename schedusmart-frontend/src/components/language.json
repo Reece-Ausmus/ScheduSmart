@@ -1,8 +1,7 @@
 [
   [
     {
-      "main_frame": 
-      {
+      "main_frame": {
         "create_calendar": "Create Calendar",
         "create_event": "Create Event",
         "create_avaliability": "Create Availability",
@@ -25,10 +24,10 @@
         "yearly": "Yearly",
         "custome": "Custome",
         "repeatEvery": "Repeat every ",
-        "days": "days",
-        "weeks": "weeks",
-        "months": "months",
-        "years": "years",
+        "days": "day",
+        "weeks": "week",
+        "months": "month",
+        "years": "year",
         "add": "Add",
         "cancel": "Cancel",
         "setUpCourse": "Setup Courses",
@@ -42,18 +41,120 @@
         "status": "Status: ",
         "accept": "Accept",
         "decline": "Decline",
-        "close": "Close"
+        "close": "Close",
+        "findClosestAvailable": "Find Closest Available",
+        "findClosestAvailableTime": "Find Closest Available Time",
+        "amountOfTime": "Amount Of Time (time): ",
+        "allTasksHaveBeenCompleted": "All tasks have been completed.",
+        "task": "Task",
+        "detail": "detail"
       },
-      "setting":
-      {
-
-      }
+      "setting": {}
     }
   ],
   [
-    
+    {
+      "main_frame": {
+        "create_calendar": "創建日曆",
+        "create_event": "創建事件",
+        "create_avaliability": "創建休息時間",
+        "event_name": "事件名稱: ",
+        "startDate": "開始日期: ",
+        "end_date": "結束日期: ",
+        "startTime": "開始時間: ",
+        "endTime": "結束時間: ",
+        "eventLocation": "地點: ",
+        "conferencingLink": "連結: ",
+        "eventDescription": "描述: ",
+        "inviteEmail": "邀請電子郵件: (逗號分隔) ",
+        "calendar": "日曆: ",
+        "selectCalendar": "選擇日曆 ",
+        "eventRepetition": "重複係數",
+        "none": "無",
+        "daily": "每天",
+        "weekly": "每週",
+        "monthly": "每月",
+        "yearly": "每年",
+        "custome": "自訂",
+        "repeatEvery": "每 ",
+        "days": "天",
+        "weeks": "週",
+        "months": "月",
+        "years": "年",
+        "add": "新增",
+        "cancel": "取消",
+        "setUpCourse": "安排課程",
+        "semester": "學期: ",
+        "seeInvitation": "檢視邀請",
+        "invitations": "邀請",
+        "filter": "篩選: ",
+        "all": "全部",
+        "pending": "待處理",
+        "Accepted": "已接受",
+        "status": "狀態: ",
+        "accept": "接受",
+        "decline": "拒絕",
+        "close": "關閉",
+        "findClosestAvailable": "尋找近期空檔",
+        "findClosestAvailableTime": "尋找近期可用時間",
+        "amountOfTime": "時間: ",
+        "allTasksHaveBeenCompleted": "所有任務已完成。",
+        "task": "任務",
+        "detail": "詳細資料"
+      },
+      "setting": {}
+    }
   ],
   [
-    
+    {
+      "main_frame": {
+        "create_calendar": "Crear calendario",
+        "create_event": "Crear evento",
+        "create_avaliability": "Crear disponibilidad",
+        "event_name": "Nombre del evento: ",
+        "startDate": "Fecha de inicio: ",
+        "end_date": "Fecha de finalización: ",
+        "startTime": "Hora de inicio: ",
+        "endTime": "Hora de finalización: ",
+        "eventLocation": "Ubicación del evento: ",
+        "conferencingLink": "Enlace de conferencia: ",
+        "eventDescription": "Descripción del evento: ",
+        "inviteEmail": "Correos electrónicos de invitación: (Separados por comas) ",
+        "calendar": "Calendario: ",
+        "selectCalendar": "Seleccione calendario ",
+        "eventRepetition": "Repetición del evento ",
+        "none": "Ninguno",
+        "daily": "Diariamente",
+        "weekly": "Semanalmente",
+        "monthly": "Mensualmente",
+        "yearly": "Anualmente",
+        "custome": "Personalizado",
+        "repeatEvery": "Repetir cada ",
+        "days": "día",
+        "weeks": "semana",
+        "months": "mes",
+        "years": "año",
+        "add": "Añadir",
+        "cancel": "Cancelar",
+        "setUpCourse": "Configurar cursos",
+        "semester": "Semestre: ",
+        "seeInvitation": "Ver invitaciones",
+        "invitations": "Invitaciones",
+        "filter": "Filtro: ",
+        "all": "Todos",
+        "pending": "Pendientes",
+        "Accepted": "Aceptados",
+        "status": "Estado: ",
+        "accept": "Aceptar",
+        "decline": "Rechazar",
+        "close": "Cerrar",
+        "findClosestAvailable": "Encontrar más cercano disponible",
+        "findClosestAvailableTime": "Encontrar el tiempo más cercano disponible",
+        "amountOfTime": "Cantidad de tiempo (tiempo): ",
+        "allTasksHaveBeenCompleted": "Se han completado todas las tareas.",
+        "task": "Tarea",
+        "detail": "Detalle"
+      }
+    }
   ]
 ]

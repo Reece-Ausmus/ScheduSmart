@@ -113,6 +113,7 @@ export default function MainFrame() {
       });
       setTaskList(dataOfUser.task_list);
       setSelectMode(dataOfDefaultMode.type);
+      console.log("data", dataOfUser);
       if (dataOfUser.language != undefined) {
         setLanguage(dataOfUser.language);
       }
@@ -134,10 +135,10 @@ export default function MainFrame() {
 
     fetchInitializeData();
   }, []);
+  const [language, setLanguage] = useState(0);
 
   function CalendarList() {
     const [invitations, setInvitations] = useState([]);
-    const [language, setLanguage] = useState(0);
 
     // add event consts
     const [events, setEvents] = useState([]);
@@ -947,7 +948,7 @@ export default function MainFrame() {
                 onClick={handleCreateCalendar}
                 style={{ marginLeft: "10px" }}
               >
-                {languageData[0][language].main_frame.create_calendar}
+                {languageData[language][0].main_frame.create_calendar}
               </Button>
             </div>
             <div className="add_button">
@@ -956,7 +957,7 @@ export default function MainFrame() {
                 onClick={handleCreateEventButton}
                 style={{ marginLeft: "10px" }}
               >
-                {languageData[0][language].main_frame.create_event}
+                {languageData[language][0].main_frame.create_event}
               </Button>
             </div>
             <div className="add_button">
@@ -965,7 +966,7 @@ export default function MainFrame() {
                 onClick={handleCreateAvailabilityButton}
                 style={{ marginLeft: "10px" }}
               >
-                {languageData[0][language].main_frame.create_avaliability}
+                {languageData[language][0].main_frame.create_avaliability}
               </Button>
             </div>
             {showEventPopup && (
@@ -975,7 +976,7 @@ export default function MainFrame() {
                   <div>
                     <div className="formgroup">
                       <label htmlFor="eventName">
-                        {languageData[0][language].main_frame.event_name}
+                        {languageData[language][0].main_frame.event_name}
                       </label>
                       <input
                         type="text"
@@ -986,7 +987,7 @@ export default function MainFrame() {
                     </div>
                     <div className="formgroup">
                       <label htmlFor="eventStartDate">
-                        {languageData[0][language].main_frame.startDate}
+                        {languageData[language][0].main_frame.startDate}
                       </label>
                       <input
                         type="date"
@@ -995,7 +996,7 @@ export default function MainFrame() {
                         onChange={handleEventStartDateChange}
                       />
                       <label htmlFor="eventEndDate">
-                        {languageData[0][language].main_frame.end_date}
+                        {languageData[language][0].main_frame.end_date}
                       </label>
                       <input
                         type="date"
@@ -1006,7 +1007,7 @@ export default function MainFrame() {
                     </div>
                     <div className="formgroup">
                       <label htmlFor="eventStartTime">
-                        {languageData[0][language].main_frame.startTime}
+                        {languageData[language][0].main_frame.startTime}
                       </label>
                       <input
                         type="time"
@@ -1015,7 +1016,7 @@ export default function MainFrame() {
                         onChange={handleEventStartTimeChange}
                       />
                       <label htmlFor="eventEndTime">
-                        {languageData[0][language].main_frame.endTime}
+                        {languageData[language][0].main_frame.endTime}
                       </label>
                       <input
                         type="time"
@@ -1028,14 +1029,14 @@ export default function MainFrame() {
                       <div>
                         <div className="formgroup">
                           <label htmlFor="eventLocation">
-                            {languageData[0][language].main_frame.eventLocation}
+                            {languageData[language][0].main_frame.eventLocation}
                           </label>
                           {renderLocationInput()}
                         </div>
                         <div className="formgroup">
                           <label htmlFor="eventConferencingLink">
                             {
-                              languageData[0][language].main_frame
+                              languageData[language][0].main_frame
                                 .conferencingLink
                             }
                           </label>
@@ -1050,7 +1051,7 @@ export default function MainFrame() {
                     )}
                     <div className="formgroup">
                       <label htmlFor="eventDescription">
-                        {languageData[0][language].main_frame.eventDescription}
+                        {languageData[language][0].main_frame.eventDescription}
                       </label>
                       <textarea
                         id="eventDescription"
@@ -1065,7 +1066,7 @@ export default function MainFrame() {
                       <div>
                         <div className="formgroup">
                           <label htmlFor="eventEmailInvitations">
-                            {languageData[0][language].main_frame.inviteEmail}
+                            {languageData[language][0].main_frame.inviteEmail}
                           </label>
                           <input
                             type="text"
@@ -1077,7 +1078,7 @@ export default function MainFrame() {
 
                         <div className="formgroup">
                           <label htmlFor="eventCalendar">
-                            {languageData[0][language].main_frame.calendar}
+                            {languageData[language][0].main_frame.calendar}
                           </label>
                           <select
                             id="eventCalendar"
@@ -1087,7 +1088,7 @@ export default function MainFrame() {
                           >
                             <option value="">
                               {
-                                languageData[0][language].main_frame
+                                languageData[language][0].main_frame
                                   .selectCalendar
                               }
                             </option>
@@ -1102,50 +1103,50 @@ export default function MainFrame() {
                     )}
                     <div className="event-repetition-form">
                       <h2>
-                        {languageData[0][language].main_frame.eventRepetition}
+                        {languageData[language][0].main_frame.eventRepetition}
                       </h2>
                       <div className="repetition-options">
                         <button
                           type="button"
                           onClick={() => handleEventRepetitionChange("none")}
                         >
-                          {languageData[0][language].main_frame.none}
+                          {languageData[language][0].main_frame.none}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleEventRepetitionChange("daily")}
                         >
-                          {languageData[0][language].main_frame.daily}
+                          {languageData[language][0].main_frame.daily}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleEventRepetitionChange("weekly")}
                         >
-                          {languageData[0][language].main_frame.weekly}
+                          {languageData[language][0].main_frame.weekly}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleEventRepetitionChange("monthly")}
                         >
-                          {languageData[0][language].main_frame.monthly}
+                          {languageData[language][0].main_frame.monthly}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleEventRepetitionChange("yearly")}
                         >
-                          {languageData[0][language].main_frame.yearly}
+                          {languageData[language][0].main_frame.yearly}
                         </button>
                         <button
                           type="button"
                           onClick={() => handleEventRepetitionChange("custom")}
                         >
-                          {languageData[0][language].main_frame.custome}
+                          {languageData[language][0].main_frame.custome}
                         </button>
                       </div>
                       {eventRepetitionType === "custom" && (
                         <div className="custom-repetition">
                           <label htmlFor="customFrequency">
-                            {languageData[0][language].main_frame.repeatEvery}
+                            {languageData[language][0].main_frame.repeatEvery}
                           </label>
                           <input
                             type="number"
@@ -1160,16 +1161,16 @@ export default function MainFrame() {
                             onChange={handleEventCustomFrequencyUnitChange}
                           >
                             <option value="days">
-                              {languageData[0][language].main_frame.days}
+                              {languageData[language][0].main_frame.days}
                             </option>
                             <option value="weeks">
-                              {languageData[0][language].main_frame.weeks}
+                              {languageData[language][0].main_frame.weeks}
                             </option>
                             <option value="months">
-                              {languageData[0][language].main_frame.months}
+                              {languageData[language][0].main_frame.months}
                             </option>
                             <option value="years">
-                              {languageData[0][language].main_frame.years}
+                              {languageData[language][0].main_frame.years}
                             </option>
                           </select>
                         </div>
@@ -1179,13 +1180,13 @@ export default function MainFrame() {
                       className="formbutton fb1"
                       onClick={handleCreateEvent}
                     >
-                      {languageData[0][language].main_frame.add}
+                      {languageData[language][0].main_frame.add}
                     </button>
                     <button
                       className="formbutton fb2"
                       onClick={toggleEventPopup}
                     >
-                      {languageData[0][language].main_frame.cancel}
+                      {languageData[language][0].main_frame.cancel}
                     </button>
                   </div>
                 </div>
@@ -1199,7 +1200,7 @@ export default function MainFrame() {
                 onClick={handleSetupCourses}
                 style={{ marginLeft: "10px" }}
               >
-                {languageData[0][language].main_frame.setUpCourse}
+                {languageData[language][0].main_frame.setUpCourse}
               </Button>
             </div>
             {showSemesterPopup && (
@@ -1207,7 +1208,7 @@ export default function MainFrame() {
                 <div className="popup-content">
                   <div className="formgroup">
                     <label htmlFor="semesterName">
-                      {languageData[0][language].main_frame.semester}
+                      {languageData[language][0].main_frame.semester}
                     </label>
                     <input
                       type="text"
@@ -1218,7 +1219,7 @@ export default function MainFrame() {
                   </div>
                   <div className="formgroup">
                     <label htmlFor="semesterStartDate">
-                      {languageData[0][language].main_frame.startDate}
+                      {languageData[language][0].main_frame.startDate}
                     </label>
                     <input
                       type="date"
@@ -1227,7 +1228,7 @@ export default function MainFrame() {
                       onChange={handleSemesterStartDateChange}
                     />
                     <label htmlFor="semesterEndDate">
-                      {languageData[0][language].main_frame.end_date}
+                      {languageData[language][0].main_frame.end_date}
                     </label>
                     <input
                       type="date"
@@ -1240,13 +1241,13 @@ export default function MainFrame() {
                     className="formbutton fb1"
                     onClick={handleSemesterSelection}
                   >
-                    {languageData[0][language].main_frame.add}
+                    {languageData[language][0].main_frame.add}
                   </button>
                   <button
                     className="formbutton fb2"
                     onClick={handleCancelSemester}
                   >
-                    {languageData[0][language].main_frame.cancel}
+                    {languageData[language][0].main_frame.cancel}
                   </button>
                 </div>
               </div>
@@ -1259,16 +1260,16 @@ export default function MainFrame() {
                 onClick={handleSeeInvitationsOpen}
                 style={{ marginLeft: "10px" }}
               >
-                {languageData[0][language].main_frame.seeInvitation}
+                {languageData[language][0].main_frame.seeInvitation}
               </Button>
             </div>
             {showSeeInvitationsPopup && (
               <div className="popup">
                 <div className="popup-content">
-                  <h2>{languageData[0][language].main_frame.invitations}</h2>
+                  <h2>{languageData[language][0].main_frame.invitations}</h2>
                   <div className="formgroup">
                     <label htmlFor="invitationFilter">
-                      {languageData[0][language].main_frame.filter}
+                      {languageData[language][0].main_frame.filter}
                     </label>
                     <select
                       id="invitationFilter"
@@ -1276,13 +1277,13 @@ export default function MainFrame() {
                       onChange={(e) => setInvitationFilter(e.target.value)}
                     >
                       <option value="all">
-                        {languageData[0][language].main_frame.all}
+                        {languageData[language][0].main_frame.all}
                       </option>
                       <option value="pending">
-                        {languageData[0][language].main_frame.pending}
+                        {languageData[language][0].main_frame.pending}
                       </option>
                       <option value="accepted">
-                        {languageData[0][language].main_frame.Accepted}
+                        {languageData[language][0].main_frame.Accepted}
                       </option>
                     </select>
                   </div>
@@ -1302,36 +1303,36 @@ export default function MainFrame() {
                           <h3>{invitation.name}</h3>
                           <p>{invitation.description}</p>
                           <p>
-                            {languageData[0][language].main_frame.startDate +
+                            {languageData[language][0].main_frame.startDate +
                               invitation.startDate}
                           </p>
                           <p>
-                            {languageData[0][language].main_frame.end_date +
+                            {languageData[language][0].main_frame.end_date +
                               invitation.endDate}
                           </p>
                           <p>
-                            {languageData[0][language].main_frame.startTime +
+                            {languageData[language][0].main_frame.startTime +
                               invitation.startTime}
                           </p>
                           <p>
-                            {languageData[0][language].main_frame.endTime +
+                            {languageData[language][0].main_frame.endTime +
                               invitation.endTime}
                           </p>
                           <p>
-                            {languageData[0][language].main_frame.status +
+                            {languageData[language][0].main_frame.status +
                               invitation.status}
                           </p>
                           <button
                             className="formbutton fb1"
                             onClick={() => handleAcceptInvitation(invitation)}
                           >
-                            {language[0][language].main_frame.accept}
+                            {languageData[language][0].main_frame.accept}
                           </button>
                           <button
                             className="formbutton fb1"
                             onClick={() => handleDeclineInvitation(invitation)}
                           >
-                            {languageData[0][language].main_frame.decline}
+                            {languageData[language][0].main_frame.decline}
                           </button>
                         </div>
                       ))}
@@ -1341,7 +1342,7 @@ export default function MainFrame() {
                       className="formbutton fb1"
                       onClick={handleSeeInvitationsClose}
                     >
-                      {languageData[0][language].main_frame.close}
+                      {languageData[language][0].main_frame.close}
                     </button>
                   </div>
                 </div>
@@ -1356,15 +1357,22 @@ export default function MainFrame() {
               onClick={handleClosestAvailable}
               style={{ marginLeft: "10px" }}
             >
-              Find Closest Available
+              {languageData[language][0].main_frame.findClosestAvailable}
             </Button>
           </div>
           {showClosestAvailablePopup && (
             <div className="popup">
               <div className="popup-content">
-                <h2>Find Closest Available Time</h2>
+                <h2>
+                  {
+                    languageData[language][0].main_frame
+                      .findClosestAvailableTime
+                  }
+                </h2>
                 <div className="formgroup">
-                  <label htmlFor="amountOfTime">Amount of Time (time):</label>
+                  <label htmlFor="amountOfTime">
+                    {languageData[language][0].main_frame.amountOfTime}
+                  </label>
                   <input
                     type="text"
                     id="amountOfTime"
@@ -1376,13 +1384,13 @@ export default function MainFrame() {
                   className="formbutton fb1"
                   onClick={handleFindClosestAvailable}
                 >
-                  Add
+                  {languageData[language][0].main_frame.add}
                 </button>
                 <button
                   className="formbutton fb2"
                   onClick={handleCancelClosestAvailable}
                 >
-                  Cancel
+                  {languageData[language][0].main_frame.cancel}
                 </button>
               </div>
             </div>
@@ -1427,7 +1435,7 @@ export default function MainFrame() {
       setCurrentTime(moment(currentTime.subtract(1, "days")));
       updateToday(-1);
     });
-
+    console.log("here", languageData[language][0].main_frame.days);
     return (
       <div>
         <h2 className="detailInfo">{currentTime.format("YYYY/MM/DD")}</h2>
@@ -1452,7 +1460,7 @@ export default function MainFrame() {
                 setSelectMode(1);
               }}
             >
-              day
+              {languageData[language][0].main_frame.days}
             </button>
             <button
               className="modeButton"
@@ -1464,7 +1472,7 @@ export default function MainFrame() {
                 setSelectMode(2);
               }}
             >
-              week
+              {languageData[language][0].main_frame.weeks}
             </button>
             <button
               className="modeButton"
@@ -1476,7 +1484,7 @@ export default function MainFrame() {
                 setSelectMode(3);
               }}
             >
-              month
+              {languageData[language][0].main_frame.months}
             </button>
             <button
               className="modeButton"
@@ -1488,7 +1496,7 @@ export default function MainFrame() {
                 setSelectMode(4);
               }}
             >
-              year
+              {languageData[language][0].main_frame.years}
             </button>
           </div>
         </div>
@@ -1759,7 +1767,9 @@ export default function MainFrame() {
     if (!arr || arr == undefined) {
       return (
         <div className="taskBar">
-          <p>All tasks have been completed.</p>
+          <p>
+            {languageData[language][0].main_frame.allTasksHaveBeenCompleted}
+          </p>
         </div>
       );
     }
@@ -1868,18 +1878,18 @@ export default function MainFrame() {
             </div>
           </div>
         </div>
-        <div className="ChatBox">{chatBox()}</div>
-        {/* task container */}
         <div className="task_container">
           <div className="task_upperbar">
-            <h1 className="task_title">Task</h1>
+            <h1 className="task_title">
+              {languageData[language][0].main_frame.task}
+            </h1>
             <button
               className="modeButton"
               onClick={() => {
                 setGoToTaskManager(true);
               }}
             >
-              detail
+              {languageData[language][0].main_frame.detail}
             </button>
           </div>
           <div className="ToDoList">{generateTaskListHTML(taskList)}</div>
