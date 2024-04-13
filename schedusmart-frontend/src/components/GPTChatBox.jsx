@@ -3,9 +3,10 @@ import "./GPTChatBox.css";
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator} from "@chatscope/chat-ui-kit-react"
 
-const API_KEY = "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"
 
 export default function GPTChatBox() {
+
+  const API_KEY = "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"
   
   const [isExpand, setIsExpand] = useState(false);
   const [typing, setTyping] = useState(false)
@@ -96,7 +97,7 @@ export default function GPTChatBox() {
         <MainContainer style={{width: "150%", height: "100%"}}>
           <ChatContainer>
             <MessageList 
-              typingIndicator={typing ? <TypingIndicator content="ChatGPT is typing" /> : null}
+              typingIndicator={typing ? <TypingIndicator content="Tasky is typing" /> : null}
             >
               {messages.map((message, i) => {
                 return <Message key={i} model={message}/>

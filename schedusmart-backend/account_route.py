@@ -18,7 +18,6 @@ def create_account():
         response.status_code = 206
     return response
 
-
 # this is where you modify login method
 @account.route('/login', methods=['POST'])
 def login():
