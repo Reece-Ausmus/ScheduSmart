@@ -11,21 +11,41 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { orange } from "@mui/material/colors";
+import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
+import { useLocation } from 'react-router-dom';
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
-
-const theme = createTheme({
-  palette: {
-    primary: orange,
-    secondary: {
-      main: "#ab5600",
-    },
-  },
-});
+const Colors = [
+  { id: 0, value: { primary: red[200], secondary: red[100] }, label: "Red" },
+  { id: 1, value: { primary: orange[200], secondary: orange[100] }, label: "Orange" },
+  { id: 2, value: { primary: yellow[200], secondary: yellow[100] }, label: "Yellow" },
+  { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
+  { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
+  { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
+  { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
+];
 
 export default function Calendar_Settings() {
+  const location = useLocation();
+  let Color;
+  if (location.state == null) {
+    Color = localStorage.getItem('systemcolor');
+  }
+  else {
+    Color = location.state.color_choice;
+  }
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+  });
   // calendar virsualization settings
   const [showVirtual, setShowVirsual] = useState(() => { return parseInt(localStorage.getItem('showVirtual')) || 0; });
   useEffect(() => {

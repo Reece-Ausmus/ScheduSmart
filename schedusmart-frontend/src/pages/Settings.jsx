@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useHistory } from "react";
 import { Navigate } from "react-router-dom";
 import AccountInfo from "./AccountInfo.jsx";
 import languageData from "../components/language.json";
@@ -17,7 +17,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import Dashboard from "./Dashboard";
-
+import { useNavigate } from "react-router-dom";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
@@ -53,10 +53,11 @@ export default function Settings() {
   const handleLanguageOption = (e) => {
     setLanguage(e.target.value)
   };
-  
+
   const [Color, setColor] = useState(() => { return parseInt(localStorage.getItem('systemcolor')) || 1; });
   useEffect(() => {
     localStorage.setItem('systemcolor', Color);
+    navigate('/settings', { state:{color_choice:Color}});
   }, [Color]);
   const handleColorOption = async (Color) => {
     const response = await send_request("/change_system_color", { "user_id": userId, "color": Color });
@@ -71,7 +72,7 @@ export default function Settings() {
       }
     }
   };
-
+  const navigate = useNavigate();
   const handleColorSelectChange = (e) => {
     setColor(e.target.value);
     handleColorOption(e.target.value);
@@ -91,7 +92,7 @@ export default function Settings() {
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
-      <h1>{"setting"}</h1>
+      <h1 style={{ color: theme.palette.primary.main }}>{"setting"}</h1>
       <div>{AccountInfo(language)}</div>
       <div>{Calendar_Settings()}</div>
       <div>{Reminder()}</div>
