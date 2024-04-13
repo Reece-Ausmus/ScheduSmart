@@ -114,7 +114,7 @@ export default function Dashboard() {
               <CalendarMonthIcon sx={{ marginRight: 1 }} />
             </Button>
             <Button color="inherit" href="./datapage" id="datapage-button">
-              Data Page
+              Data
             </Button>
             <Button color="inherit" href="./habits" id="habits-button">
               Habits
