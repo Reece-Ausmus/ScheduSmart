@@ -1,71 +1,59 @@
 [
   [
-    [
+    {
+      "main_frame": 
       {
-        "restToDefault": "Reset to Default",
-        "setting": "Settings",
-        "accountInformation": "Account Information",
-        "firstName": "First Name",
-        "lastName": "Last Name",
-        "userName": "Username",
-        "email": "Email",
-        "password": "Password",
-        "location": "Location",
-        "Updateaccount": "Update Account",
-        "language": "Language",
-        "calendar": "Calendar",
-        "Reminder": "Reminder",
-        "dashBoard": "Dashboard",
-        "signout": "Sign Out",
-        "cancel": "cancel",
-        "cvf": "Calendar visualization format"
+        "create_calendar": "Create Calendar",
+        "create_event": "Create Event",
+        "create_avaliability": "Create Availability",
+        "event_name": "Event Name: ",
+        "startDate": "Start Date: ",
+        "end_date": "End Date: ",
+        "startTime": "Start Time: ",
+        "endTime": "End Time: ",
+        "eventLocation": "Event Location: ",
+        "conferencingLink": "Conferencing Link: ",
+        "eventDescription": "Event Description: ",
+        "inviteEmail": "Invite Emails: (Separate emails with commas) ",
+        "calendar": "Calendar: ",
+        "selectCalendar": "Select Calendar ",
+        "eventRepetition": "Event Repetition ",
+        "none": "None",
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "custome": "Custome",
+        "repeatEvery": "Repeat every ",
+        "days": "days",
+        "weeks": "weeks",
+        "months": "months",
+        "years": "years",
+        "add": "Add",
+        "cancel": "Cancel",
+        "setUpCourse": "Setup Courses",
+        "semester": "Semester:",
+        "seeInvitation": "See Invitations",
+        "invitations": "Invitations",
+        "filter": "Filter: ",
+        "all": "All",
+        "pending": "Pending",
+        "Accepted": "Accepted",
+        "status": "Status: ",
+        "accept": "Accept",
+        "decline": "Decline",
+        "close": "Close"
+      },
+      "setting":
+      {
+
       }
-    ]
+    }
   ],
   [
-    [
-      {
-        "restToDefault": "重置为默认值",
-        "setting": "设置",
-        "accountInformation": "账户信息",
-        "firstName": "名",
-        "lastName": "姓",
-        "userName": "暱稱",
-        "email": "电子邮件",
-        "password": "密码",
-        "location": "位置",
-        "Updateaccount": "更新账户",
-        "language": "语言",
-        "calendar": "日历",
-        "Reminder": "提醒",
-        "dashBoard": "仪表板",
-        "signout": "登出",
-        "cancel": "取消",
-        "cvf": "日历格式"
-      }
-    ]
+    
   ],
   [
-    [
-      {
-        "restToDefault": "Restablecer a predeterminado",
-        "setting": "Ajuste",
-        "accountInformation": "Información de la cuenta",
-        "firstName": "Nombre",
-        "lastName": "Apellido",
-        "userName": "Nombre de usuario",
-        "email": "Correo electrónico",
-        "password": "Contraseña",
-        "location": "Ubicación",
-        "Updateaccount": "Actualizar cuenta",
-        "language": "Idioma",
-        "calendar": "Calendario",
-        "Reminder": "Recordatorio",
-        "dashBoard": "Tablero de control",
-        "signout": "Cerrar sesión",
-        "cancel": "Cancelar",
-        "cvf": "Formato de visualización del calendario"
-      }
-    ]
+    
   ]
 ]

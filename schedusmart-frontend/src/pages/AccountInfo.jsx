@@ -13,25 +13,46 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { orange } from "@mui/material/colors";
+import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import Input from '@mui/material/Input';
+import {useLocation} from 'react-router-dom';
 
 //this can be change when flask's ip become static
 //currently it's localhost
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id"); //"Sup3XDcQrNUm6CGdIJ3W5FHyPpQ2";
+const Colors = [
+  { id: 0, value: {primary:red[200],secondary:red[100]}, label: "Red" },
+  { id: 1, value: {primary:orange[200],secondary:orange[100]}, label: "Orange" },
+  { id: 2, value: {primary:yellow[200],secondary:yellow[100]}, label: "Yellow" },
+  { id: 3, value: {primary:green[200],secondary:green[100]}, label: "Green" },
+  { id: 4, value: {primary:blue[200],secondary:blue[100]}, label: "Blue" },
+  { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
+  { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
+];
+
+export default function AccountInfo(language) {
+  const data = useLocation();
+  let Color;
+  if (data.state == null){
+    Color =localStorage.getItem('systemcolor');
+  }
+  else{
+    Color =data.state.color_choice;
+  }
 
 const theme = createTheme({
   palette: {
-    primary: orange,
+    primary: {
+      main: Colors[Color].value.primary,
+    },
     secondary: {
-      main: "#ab5600",
+      main: Colors[Color].value.secondary,
     },
   },
 });
 
-export default function AccountInfo(language) {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -61,7 +82,6 @@ export default function AccountInfo(language) {
           setUsername(responseData.user_name);
           setEmail(responseData.email);
           if (responseData.location != null) setLocation(responseData.location);
-          console.log(userId);
           break;
         case 202:
           alert("User Not Found");
@@ -142,32 +162,32 @@ export default function AccountInfo(language) {
             <Stack spacing={3} sx={{ maxWidth: 'sm' }}>
               <div style={{ display: 'flex' }}>
                 <FormControl style={{ marginRight: '20px' }}>
-                  <InputLabel htmlFor="component-outlined">{languageData[language][0][0].firstName}</InputLabel>
+                  <InputLabel htmlFor="component-outlined">{}</InputLabel>
                   <OutlinedInput id="firstname" value={firstname} label="firstName" onChange={(e) => setFirstName(e.target.value)}/>
                 </FormControl>
                 <FormControl>
-                  <InputLabel htmlFor="component-outlined">{languageData[language][0][0].lastName}</InputLabel>
+                  <InputLabel htmlFor="component-outlined">{}</InputLabel>
                   <OutlinedInput id="lastname" value={lastname} label="lastName" onChange={(e) => setLastName(e.target.value)}/>
                 </FormControl>
               </div>
               <FormControl>
-                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].userName}</InputLabel>
+                <InputLabel htmlFor="component-outlined">{}</InputLabel>
                 <OutlinedInput id="username" value={username} label="userName" onChange={(e) => setUsername(e.target.value)}/>
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].email}</InputLabel>
+                <InputLabel htmlFor="component-outlined">{}</InputLabel>
                 <OutlinedInput id="email" value={email} label="email" onChange={(e) => setEmail(e.target.value)}/>
               </FormControl>
               <FormControl>
-                <InputLabel htmlFor="component-outlined">{languageData[language][0][0].location}</InputLabel>
+                <InputLabel htmlFor="component-outlined">{}</InputLabel>
                 <OutlinedInput id="location" value={location} label="location"onChange={(e) => setLocation(e.target.value)} />
               </FormControl>
             </Stack>
           </CardContent>
           <Divider />
           <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button  variant="contained" onClick={handleInfo}>{languageData[language][0][0].restToDefault}</Button>
-            <Button  variant="contained" onClick={updateInfo}>{languageData[language][0][0].Updateaccount}</Button>
+            <Button  variant="contained" onClick={handleInfo}>{}</Button>
+            <Button  variant="contained" onClick={updateInfo}>{}</Button>
           </CardActions>
         </Card>
     </ThemeProvider>

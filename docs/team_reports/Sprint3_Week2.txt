@@ -1,0 +1,19 @@
+=== Weekly Team Report (Team 30: ScheduSmart) ===
+
+Week 8	(Srum master: Reece Ausmus)
+MM/DD/YY    x hr    commit      description
+
+
+Week 9 	(Plan) (Scrum master: Reece Ausmus)
+[Meetings]
+04/17/24    Discuss anything inhibiting demo of final product.
+04/20/24    Discuss what needs to happen in the coming week before final presentation
+04/21/24    Meeting with TA to discuss sprint review.
+
+[Individual Goals]
+Reece Ausmus:   goal
+Cassie Chang:   goal
+Stanley Huang:  goal
+Bradley Norris: goal
+Himanshu Sinha: goal
+Gloria Xu:      goal

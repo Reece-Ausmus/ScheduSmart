@@ -344,16 +344,16 @@ def get_messages():
 def change_system_color():
     info = request.get_json()
     try:
-        ret = get_system_color_settings(info)
+        ret = system_color_settings(info)
         if ret == 1:
             response = jsonify({'error': 'system color settings can not be changed'})
-            response.status = 205
+            response.status_code = 205
         else:
             response = jsonify({'message': 'Done'})
-            response.status= 201
+            response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status = 206
+        response.status_code = 206
     return response
 

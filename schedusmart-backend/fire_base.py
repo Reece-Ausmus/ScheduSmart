@@ -341,7 +341,12 @@ def f_get_events(calendar):
             event = event_id.val()
             e = db.child("Events").child(event["event_id"]).get().val()
             e["event_id"] = event["event_id"]
-            events.append(e)
+            if calendar['event_filter'] == 'all':
+                events.append(e)
+            elif calendar['event_filter'] == 'zoom' and 'conferencing_link' in e and 'zoom' in e['conferencing_link']:
+                events.append(e)
+            else:
+                events.append(e)
         return {"data": events}
     except Exception as e:
         print(f"fail to retrieve events data: \n{e}")
@@ -570,7 +575,7 @@ def update_default_location_settings(info):
         return 1
 
 
-def get_system_color_settings(info):
+def system_color_settings(info):
     user_id = info['user_id']
     color = info['color']
     try:
@@ -579,7 +584,6 @@ def get_system_color_settings(info):
     except Exception:
         print("Failed to set the system color settings")
         return 1
-
 
 # This function is used to create a new Habits list for the logged in user
 def add_new_habit(data):
