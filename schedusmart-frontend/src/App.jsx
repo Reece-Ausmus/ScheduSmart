@@ -1,37 +1,38 @@
-import { useState } from 'react'
-import './App.css'
-import { BrowserRouter, Routes, Route} from 'react-router-dom'
-import Welcome from './pages/Welcome'
-import Settings from './pages/Settings'
-import Dashboard from './pages/Dashboard'
-import Signout from './pages/Signout'
-import NoPage from './pages/NoPage'
-import Createaccount from './pages/Createaccount'
-import MainFrame from './pages/MainFrame'
-import SignIn from './pages/SignIn'
-import TaskManager from './pages/TaskManager'
-import DragAndDrop from './pages/MainFrameWithDragandDrug'
-import Reminder from './pages/Reminder'
-import Notes from './pages/Notes'
-import FileUpload from './pages/FileUpload'
-import SetupCourses from './pages/SetupCourses'
-import Habits from './pages/Habits'
-import ResetPassword from './pages/ResetPassword'
-import Friendlist from './pages/Friendlist'
+import { useState } from "react";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Welcome from "./pages/Welcome";
+import Settings from "./pages/Settings";
+import Dashboard from "./pages/Dashboard";
+import Signout from "./pages/Signout";
+import NoPage from "./pages/NoPage";
+import Createaccount from "./pages/Createaccount";
+import MainFrame from "./pages/MainFrame";
+import SignIn from "./pages/SignIn";
+import TaskManager from "./pages/TaskManager";
+import DragAndDrop from "./pages/MainFrameWithDragandDrug";
+import Reminder from "./pages/Reminder";
+import Notes from "./pages/Notes";
+import FileUpload from "./pages/FileUpload";
+import SetupCourses from "./pages/SetupCourses";
+import Habits from "./pages/Habits";
+import ResetPassword from "./pages/ResetPassword";
+import Friendlist from "./pages/Friendlist";
 import Chatbox from "./components/New_chatbox";
+import DataPage from "./pages/DataPage";
 
-// to run program 
+// to run program
 // Open new terminal
 // cd into ScheduSmart\schedusmart-frontend
 // run command: s
-//    npm run dev 
+//    npm run dev
 // save program to update to local server
 
 // to create new page
 // create new .jsx file in pages
 // <Route path="/new_page_name" element={<NewPage/>} />
 
-// Ensure path to NoPage remains at the bottom 
+// Ensure path to NoPage remains at the bottom
 
 export default function App() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/taskmanager" element={<TaskManager />} />
           <Route path="/draganddrop" element={<DragAndDrop />} />
           <Route path="/notes" element={<Notes />} />
+          <Route path="/datapage" element={<DataPage />} />
           <Route path="/Habits" element={<Habits />} />
           <Route path="/setupcourses" element={<SetupCourses />} />
           <Route path="*" element={<NoPage />} />
