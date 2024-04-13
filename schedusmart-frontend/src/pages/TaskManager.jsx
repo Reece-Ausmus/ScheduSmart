@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 import FileUpload from "./FileUpload";
@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
@@ -61,6 +62,7 @@ import "./TaskManager.css"
 import emailjs from '@emailjs/browser';
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
+import { isCellExitEditModeKeys } from "@mui/x-data-grid/utils/keyboardUtils.js";
 
 // Define the Flask API URL
 const flaskURL = "http://127.0.0.1:5000";
@@ -235,7 +237,7 @@ export default function TaskManager() {
   // used to hold data for tasks
   const [taskName, setTaskName] = useState("");
   const [taskTime, setTaskTime] = useState(0);
-  const [taskDate, setTaskDate] = useState(dayjs());
+  const [taskDate, setTaskDate] = useState("");
   const [taskDesc, setTaskDesc] = useState("");
   const [taskFile, setTaskFile] = useState();
 
@@ -539,6 +541,12 @@ export default function TaskManager() {
     }
   };
 
+  const deleteTaskForever = (id) => {
+    const updatedList = completedList.filter((item) => item.id !== id);
+
+    setCompletedList(updatedList);
+  }
+
   //handle dialog
   const [open, setOpen] = React.useState(false);
 
@@ -638,6 +646,7 @@ export default function TaskManager() {
                     setTaskTime(0);
                     setTaskDesc("Task Description");
                     setSubtaskDesc("");
+                    setTaskDate("");
                     setSubtaskList([]);
                     setTaskFile("");
                   }}
@@ -981,6 +990,7 @@ export default function TaskManager() {
             onToggle={handleToggleCompleted}
             option={sortOptionCompleted}
             keyword={searchQueryCompleted}
+            deleteFunction={deleteTaskForever}
           />
         </div>
       </div>
@@ -1466,7 +1476,8 @@ function TodoList({
   );
 }
 
-function CompletedList({ list, onToggle, option, keyword }) {
+
+function CompletedList({ list, onToggle, option, keyword, deleteFunction }) {
   let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
@@ -1529,6 +1540,7 @@ function CompletedList({ list, onToggle, option, keyword }) {
           <TableCell>Deadline</TableCell>
           <TableCell>Completed Time</TableCell>
           <TableCell>Completed</TableCell>
+          <TableCell>Delete?</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -1546,6 +1558,13 @@ function CompletedList({ list, onToggle, option, keyword }) {
                   onToggle(task.id, e.target.checked);
                 }}
               />
+            </TableCell>
+            <TableCell>
+              <Button
+                onClick={() => {deleteFunction(task.id)}}
+              >
+                <DeleteForeverIcon/>
+              </Button>
             </TableCell>
           </TableRow>
         ))}
