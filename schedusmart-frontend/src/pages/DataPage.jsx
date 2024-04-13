@@ -28,5 +28,9 @@ const theme = createTheme({
 });
 
 export default function DataPage() {
-  return <h1>Data Page</h1>;
+  return (
+    <ThemeProvider theme={theme}>
+      <h1>Data</h1>
+    </ThemeProvider>
+  );
 }
