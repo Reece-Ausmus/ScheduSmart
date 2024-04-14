@@ -26,5 +26,5 @@ node_modules
 #prettier config
 .prettierrc.json
 
-#api keys
-.env
+#api key
+schedusmart-frontend/src/components/gpt.api.config.js

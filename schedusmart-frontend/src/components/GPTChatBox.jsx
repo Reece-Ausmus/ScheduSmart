@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import "./GPTChatBox.css";
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator} from "@chatscope/chat-ui-kit-react"
+import GPT_API_KEY from "./gpt.api.config"
 
 
 export default function GPTChatBox(taskList) {
 
-  const API_KEY = "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"
-  
+  const API_KEY = GPT_API_KEY;
+
   const [isExpand, setIsExpand] = useState(false);
   const [typing, setTyping] = useState(false)
   const [messages, setMessages] = useState([
