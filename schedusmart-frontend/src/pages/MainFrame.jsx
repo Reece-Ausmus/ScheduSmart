@@ -881,7 +881,6 @@ export default function MainFrame() {
         const message =
           "You have an extraordinary session during " + response.time;
 
-        // TODO: send email
         EmailForm(response.username, response.email, message);
 
         // create event
@@ -920,7 +919,7 @@ export default function MainFrame() {
         }
       }
 
-      setShowClosestAvailablePopup(!showClosestAvailablePopup);
+      handleCancelClosestAvailable()
     };
 
     const handleCancelClosestAvailable = () => {
