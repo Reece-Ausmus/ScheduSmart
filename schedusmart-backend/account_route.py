@@ -134,6 +134,22 @@ def update_account_info():
         response.status_code = 206
     return response
 
+# This route is for adding exercises
+@account.route('/add_exercise', methods=['POST'])
+def add_exercise():
+    data = request.get_json()
+    try:
+        result = add_new_exercise(data)
+        if result == 0:
+            response = jsonify({'message': 'Exercise added successfully'})
+            response.status_code = 201
+        else:
+            response = jsonify({'error': 'Failed to add exercise'})
+            response.status_code = 400
+    except Exception as e:
+        response = jsonify({'error': 'An error occured'})
+        response.status_code = 500
+    return response
 
 # This route is for adding habits
 @account.route('/add_habit', methods=['POST'])

@@ -15,6 +15,9 @@ import { DataGrid } from "@mui/x-data-grid";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
+const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
+const userId = sessionStorage.getItem("user_id");
+
 const theme = createTheme({
     palette: {
         primary: {
@@ -74,27 +77,51 @@ function GoalTracker({ habits }) {
         setOpenDialog(false);
     };
 
-    const addExerciseEvent = () => {
+    const addExerciseEvent = async () => {
         if (eventName.trim() !== "" && caloriesBurned.trim() !== "") {
             const newEvent = {
-                eventName: eventName.trim(),
+                eventName: eventName.trim(), 
                 id: exerciseEvents.length + 1,
                 caloriesBurned: parseFloat(caloriesBurned),
             };
     
-            setExerciseEvents([...exerciseEvents, newEvent]);
+            try {
+                const response = await fetch(`${flaskURL}/add_exercise`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        id: newEvent.id, 
+                        caloriesBurned: newEvent.caloriesBurned, 
+                        eventName: newEvent.eventName, 
+                    }),
+                });
     
-            // Update totalCaloriesBurned
-            const newTotalCaloriesBurned = totalCaloriesBurned + parseFloat(caloriesBurned);
-            setTotalCaloriesBurned(newTotalCaloriesBurned);
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log(responseData.message);
     
-            setEventName("");
-            setOpenDialog(false);
+                    setExerciseEvents([...exerciseEvents, newEvent]);
+    
+                    setEventName("");
+                    setOpenDialog(false);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Error adding exercise event: ", errorData.error);
+                    alert("Failed to add exercise event. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error adding exercise event: ", error);
+                alert("An error occurred while adding the exercise event.");
+            }
         } else {
             alert("Workout Name and Calories Burned are required fields.");
         }
     };
-
+    
+    
     const generateCSV = () => {
         const csvData = [
             ["Workout Name", "Calories Burned"],

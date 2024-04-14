@@ -608,6 +608,24 @@ def add_new_habit(data):
         print("Failed to create habit:", e)
         return 1
 
+# This function is used to create a new Exercise list for the logged in user
+def add_new_exercise(data):
+    user_id = data['user_id']
+    exercise_data = {
+        "id": data['id'],
+        "calories burned": data['caloriesBurned'],
+    }
+    # Construct the Firebase structure
+    exercise_path = f"/Exercise/{user_id}/{data['eventName']}"
+
+    # Push the exercise data to the Firebase database
+    try:
+        db.child(exercise_path).set(exercise_data)
+        return 0
+    except Exception as e:
+        print("Failed to create exercise:", e)
+        return 1
+
 
 def find_closest_available_time(data):
     user_id = data['user_id']
