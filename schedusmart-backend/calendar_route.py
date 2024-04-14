@@ -264,3 +264,15 @@ def find_closest_available():
 def upload_file():
     response = jsonify({'message': 'success', "status": 0})
     return response
+
+
+@calendar.route('/get_done_events', methods=['POST'])
+def get_done_events():
+    user_id = request.get_json()
+    print(user_id)
+    ret = f_get_done_events(user_id)
+   
+    response = jsonify(ret)
+    response.status_code = 201
+    
+    return response
