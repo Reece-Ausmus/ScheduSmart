@@ -126,6 +126,9 @@ export default function Dashboard() {
             <Button color="inherit" href="./notes" id="notes-button">
               Notes
             </Button>
+            <Button color="inherit" href="./notebook" id="notes-button">
+              Notebook
+            </Button>
             <Button color="inherit" href="./taskmanager" id="task-manager">
               Task manager
             </Button>
