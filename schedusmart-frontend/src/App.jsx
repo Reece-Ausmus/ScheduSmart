@@ -20,6 +20,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Friendlist from "./pages/Friendlist";
 import Chatbox from "./components/New_chatbox";
 import DataPage from "./pages/DataPage";
+import Notebook from "./pages/Notebook";
 
 // to run program
 // Open new terminal
@@ -54,6 +55,7 @@ export default function App() {
           <Route path="/datapage" element={<DataPage />} />
           <Route path="/Habits" element={<Habits />} />
           <Route path="/setupcourses" element={<SetupCourses />} />
+          <Route path="/notebook" element={<Notebook />} />
           <Route path="*" element={<NoPage />} />
           <Route path="/reminder" element={<Reminder />} />
           <Route path="/friendlist" element={<Friendlist />} />

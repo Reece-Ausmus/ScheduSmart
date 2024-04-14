@@ -664,6 +664,39 @@ def find_closest_available_time(data):
 
     return ret
 
+def f_get_done_events(data):
+    user_id = data['user_id']
+
+    # get all calendar
+    calendars = db.child("User").child(user_id).child("calendars").get().val()
+
+    loc_dt = datetime.today()
+    now = loc_dt.strftime("%Y-%m-%d %H:%M")
+    event_list = []
+
+    for key, val in calendars.items():
+        # get all events from all calendars
+        data_event_ids = db.child("Calendars").child(val['calendar_id']).child("Events").get()
+        if data_event_ids.val() == None:
+            continue
+
+        for event_id in data_event_ids.each():
+            event = event_id.val()
+            e = db.child("Events").child(event["event_id"]).get().val()
+            if e['start_date'] == '' and e['start_time'] == '' and e['end_date'] == '' and e['end_time'] == '':
+                continue
+
+            # check if event is done    
+            end_time = e['end_date'] + ' ' + e['end_time']
+            if end_time < now:
+                event_list.append({
+                    'title': e['name'],
+                    'content': e['desc']
+                })
+
+    return {"data": event_list}
+
+
 
 ################################################### friend system ######################################################
 def __get_name(id):
