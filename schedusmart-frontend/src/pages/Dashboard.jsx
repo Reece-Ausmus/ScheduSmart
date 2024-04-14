@@ -25,19 +25,19 @@ import {
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import send_request from "./requester.jsx";
-import { useLocation } from "react-router-dom";
+import {useLocation} from 'react-router-dom';
 
 const userId = sessionStorage.getItem("user_id");
 const Colors = [
-  { id: 0, value: { primary: red[200], secondary: red[100] }, label: "Red" },
+  { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
   {
     id: 1,
-    value: { primary: orange[200], secondary: orange[100] },
+    value: { primary: orange[300], secondary: orange[200] },
     label: "Orange",
   },
   {
     id: 2,
-    value: { primary: yellow[200], secondary: yellow[100] },
+    value: { primary: yellow[300], secondary: yellow[200] },
     label: "Yellow",
   },
   {
@@ -55,17 +55,14 @@ const Colors = [
 ];
 
 export default function Dashboard() {
-  const [Color, setColor] = useState(() => {
-    return parseInt(localStorage.getItem("systemcolor")) || 1;
-  });
-  const getColorOption = async () => {
-    let response = await send_request("/get_system_color", { user_id: userId });
-    if (response.type == undefined) return;
-    setColor(response.type);
-  };
-  useEffect(() => {
-    getColorOption();
-  }, []);
+  const location = useLocation();
+  let Color;
+  if (location.state == null) {
+    Color = localStorage.getItem('systemcolor');
+  }
+  else {
+    Color = location.state.color_choice;
+  }
   const theme = createTheme({
     palette: {
       primary: {
