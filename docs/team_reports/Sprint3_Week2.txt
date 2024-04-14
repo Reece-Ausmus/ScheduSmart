@@ -1,7 +1,7 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 8	(Srum master: Reece Ausmus)
-MM/DD/YY    x hr    commit      description
+04/05/24    5 hr    271d198     notebook func can list all done thing
 
 
 Week 9 	(Plan) (Scrum master: Reece Ausmus)
@@ -12,7 +12,7 @@ Week 9 	(Plan) (Scrum master: Reece Ausmus)
 
 [Individual Goals]
 Reece Ausmus:   goal
-Cassie Chang:   goal
+Cassie Chang:   design test cases for all the system for CI/CD
 Stanley Huang:  goal
 Bradley Norris: goal
 Himanshu Sinha: goal

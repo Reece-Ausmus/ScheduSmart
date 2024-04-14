@@ -29,6 +29,7 @@ export default function Notebook() {
   const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [showDtailsPopup, setShowDetailsPopup] = useState(false);
 
 
   useEffect(() => {
@@ -84,6 +85,10 @@ export default function Notebook() {
     
   }
 
+  function showDetails(){
+    setShowDetailsPopup(!showDtailsPopup)
+  }
+
   return (
     <ThemeProvider theme={theme}>
         <div className="main">
@@ -109,7 +114,7 @@ export default function Notebook() {
                     type="text"
                     id="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(showDetails)}
                   />
                 </div>
                 <div className="formgroup">
@@ -148,10 +153,51 @@ export default function Notebook() {
                 id={index}
                 title={item.title}
                 content={item.content}
-                onEdit={() => EditNote(index)}
+                onDetails={() => showDetails(index)}
             />
             );
         })}
+
+        {showDtailsPopup && (
+            <div className="popup">
+              <div className="popup-content">
+                <h2>
+                    Details
+                </h2>
+                <div className="formgroup">
+                  <label htmlFor="email">
+                    enter email address
+                  </label>
+                  <input
+                    type="text"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <div className="formgroup">
+                  <label htmlFor="name">
+                    enter recepient name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+          
+                <button
+                  className="formbutton fb2"
+                  onClick={showDetails}
+                >
+                  close
+                </button>
+              </div>
+            </div>
+          )
+
+        }
 
         {!flag &&
             <p>Nothing has been completed</p>
