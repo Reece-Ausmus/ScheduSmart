@@ -694,7 +694,6 @@ def f_get_done_events(data):
                     'content': e['desc']
                 })
 
-    print(event_list)
     return {"data": event_list}
 
 

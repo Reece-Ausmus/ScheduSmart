@@ -269,7 +269,6 @@ def upload_file():
 @calendar.route('/get_done_events', methods=['POST'])
 def get_done_events():
     user_id = request.get_json()
-    print(user_id)
     ret = f_get_done_events(user_id)
    
     response = jsonify(ret)
