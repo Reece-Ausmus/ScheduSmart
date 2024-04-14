@@ -22,6 +22,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import CheckboxList from "./CheckboxList";
 import Dashboard from "./Dashboard";
+import GoalTracker from "./GoalTracker";
 
 const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
 const userId = sessionStorage.getItem("user_id");
@@ -317,7 +318,7 @@ export default function Habits() {
             variant="h5"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
-            Calorie Tracker
+            Diet Tracker
           </Typography>
           <div style={{ height: 400, width: "115%" }}>
             <DataGrid
@@ -368,6 +369,10 @@ export default function Habits() {
             habits={habits}
             selectedColumns={selectedColumns}
             setSelectedColumns={setSelectedColumns}
+          />
+          <GoalTracker 
+            columns={columns}
+            habits={habits} 
           />
         </div>
         <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
