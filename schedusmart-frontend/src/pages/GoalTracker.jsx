@@ -36,7 +36,7 @@ const theme = createTheme({
 });
 
 const columns = [
-    { field: "eventName", headerName: "Event Name", width: 200 },
+    { field: "eventName", headerName: "Workout Name", width: 200 },
     { field: "caloriesBurned", headerName: "Calories Burned", width: 200 },
 ];
 
@@ -91,13 +91,13 @@ function GoalTracker({ habits }) {
             setEventName("");
             setOpenDialog(false);
         } else {
-            alert("Event Name and Calories Burned are required fields.");
+            alert("Workout Name and Calories Burned are required fields.");
         }
     };
 
     const generateCSV = () => {
         const csvData = [
-            ["Event Name", "Calories Burned"],
+            ["Workout Name", "Calories Burned"],
             ...exerciseEvents.map((event) => [event.eventName, event.caloriesBurned]),
         ];
         const csvContent = csvData.map((row) => row.join(",")).join("\n");
@@ -137,7 +137,13 @@ function GoalTracker({ habits }) {
                         <CircularProgress
                             size={150}
                             variant="determinate"
-                            value={(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) * 100}
+                            value={Math.min((caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))), 1) * 100}
+                            sx={{
+                                color: (theme) =>
+                                    (caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) >= 1
+                                        ? theme.palette.success.main
+                                        : undefined,
+                            }}
                         />
                         <Box
                             sx={{
@@ -158,16 +164,20 @@ function GoalTracker({ habits }) {
                                 color="text.primary"
                                 style={{ fontWeight: "bold" }}
                             >
-                                {dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)}
+                                {(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) >= 1
+                                    ? "Complete!"
+                                    : dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)}
                             </Typography>
-                            <Typography
-                                variant="body2"
-                                component="div"
-                                color="text.secondary"
-                                style={{ fontSize: "smaller" }}
-                            >
-                                Remaining
-                            </Typography>
+                            {(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) < 1 && (
+                                <Typography
+                                    variant="body2"
+                                    component="div"
+                                    color="text.secondary"
+                                    style={{ fontSize: "smaller" }}
+                                >
+                                    Remaining
+                                </Typography>
+                            )}
                         </Box>
                     </Box>
                     <Typography
@@ -193,7 +203,7 @@ function GoalTracker({ habits }) {
                             onClick={handleDialogOpen}
                             style={{ marginRight: "10px" }}
                         >
-                            Add Exercise Event
+                            Add Workout
                         </Button>
                         <Button variant="contained" onClick={generateCSV}>
                             Export as CSV
@@ -201,13 +211,13 @@ function GoalTracker({ habits }) {
                     </div>
                 </div>
                 <Dialog open={openDialog} onClose={handleDialogClose}>
-                    <DialogTitle>Add New Exercise Event</DialogTitle>
+                    <DialogTitle>Add New Workout</DialogTitle>
                     <DialogContent>
                         <TextField
                             required
                             autoFocus
                             margin="dense"
-                            label="Event Name"
+                            label="Workout Name"
                             fullWidth
                             value={eventName}
                             onChange={(e) => setEventName(e.target.value)}
