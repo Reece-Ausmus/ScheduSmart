@@ -48,13 +48,22 @@ export default function GPTChatBox(taskList) {
 
     const systemMessage = {
       role: "system",
-      content: "You are Tasky, a Task Manager assistant. Help the user manage and prioritize their tasks and nothing more."
+      content: "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following messages are the users current tasks. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive"
     }
+
+    const taskMessages = taskList.map((task) => {
+      let content = JSON.stringify(task)
+
+      return {
+        role: "system",
+        content: content,
+      }
+    })
 
     const apiRequestBody = {
       "model": "gpt-3.5-turbo",
       "messages": [
-        systemMessage,
+        systemMessage, ...taskMessages,
         ...apiMessages
       ]
     }
