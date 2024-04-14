@@ -2,6 +2,8 @@
 
 Week 9	(Srum master: Reece Ausmus)
 MM/DD/YY    x hr    commit      description
+04/11/24    6hrs    71a17fc     implmentation of friend list
+04/12/24    4hrs    734523d     implementation of changing system color
 
 
 Week 10 	(Plan) (Scrum master: Reece Ausmus)
@@ -15,4 +17,4 @@ Cassie Chang:   goal
 Stanley Huang:  goal
 Bradley Norris: goal
 Himanshu Sinha: goal
-Gloria Xu:      goal
+Gloria Xu:      Finish implementation of friendlist and reminders
