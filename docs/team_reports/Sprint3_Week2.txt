@@ -5,23 +5,23 @@ Week 8	(Srum master: Reece Ausmus)
 04/10/24    3 hr    9b6ca07    Added Zoom link to events
 04/10/24    2 hr    69110a7    Bug fix for reading events
 04/11/24    8 hr    03cd6aa    Add friend and message function in backend
-04/11/24    6 hr    71a17fc     implmentation of friend list
-04/12/24    4 hr    734523d     implementation of changing system color
+04/11/24    6 hr    71a17fc    Implmentation of friend list
+04/12/24    4 hr    734523d    Implementation of changing system color
 04/12/24    2 hr    88011ba    Add filter to events on calendar
 04/13/24    4 hr    7011903    Implemented Exercise & Goal Tracking base capabilities
-04/13/24    5 hr    271d198    notebook func can list all done thing
+04/13/24    5 hr    271d198    Notebook func can list all done thing
 
 Week 9 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
 04/17/24    Discuss anything inhibiting demo of final product.
 04/18/24    Practice presentation for sprint review.
-04/20/24    Discuss what needs to happen in the coming week before final presentation
+04/20/24    Discuss what needs to happen in the coming week before final presentation.
 04/21/24    Meeting with TA to discuss sprint review.
 
 [Individual Goals]
 Reece Ausmus:   Finish up data dashboard and create some tests.
-Cassie Chang:   design test cases for all the system for CI/CD
-Stanley Huang:  add more language in library to translate in other page, fix bug if found
-Bradley Norris: Small UI tweaks and bug fixes, implement more goal-related capabilities
-Himanshu Sinha: Teasting and Bugfixes, more polishing on style if need be. 
-Gloria Xu:      Finish implementation of friendlist and reminders
+Cassie Chang:   Design test cases for all the system for CI/CD.
+Stanley Huang:  Add more language in library to translate in other page, fix bug if found.
+Bradley Norris: Small UI tweaks and bug fixes, implement more goal-related capabilities.
+Himanshu Sinha: Testing and bug fixes, more polishing on style if need be. 
+Gloria Xu:      Finish implementation of friendlist and reminders.
