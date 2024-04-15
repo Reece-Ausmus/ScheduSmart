@@ -928,6 +928,36 @@ def confirm(user_data):
         return {"error": "request not found"}
 
 
+def delete_amigos(delete_data):
+    user_id = delete_data["user_id"]
+    friend_name = delete_data["name"]
+    friend_id = __get_user_id(friend_name)
+
+    if friend_id is None:
+        return {"error": "friend not found: 1"}
+
+    user_f_list = db.child("User").child(user_id).child("friendManager").child("friend").get()
+    friends_f_list = db.child("User").child(friend_id).child("friendManager").child("friend").get()
+
+    user_key = None
+    friend_key = None
+
+    for user_f in user_f_list.each():
+        if user_f.val()["id"] == friend_id:
+            user_key = user_f.key()
+
+    for friends_f in friends_f_list.each():
+        if friends_f.val()["id"] == user_id:
+            friend_key = friends_f.key()
+
+    if user_key is None or friend_key is None:
+        return {"error": "friend not found"}
+
+    db.child("User").child(friend_id).child("friendManager").child("friend").child(
+        friend_key).remove()
+    db.child("User").child(user_id).child("friendManager").child("friend").child(
+        user_key).remove()
+    return {"message": "Done"}
 def get_message(request):
     user_id = request["user_id"]
     friend_name = request["name"]

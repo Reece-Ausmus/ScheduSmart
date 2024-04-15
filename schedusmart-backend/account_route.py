@@ -18,6 +18,7 @@ def create_account():
         response.status_code = 206
     return response
 
+
 # this is where you modify login method
 @account.route('/login', methods=['POST'])
 def login():
@@ -134,6 +135,7 @@ def update_account_info():
         response.status_code = 206
     return response
 
+
 # This route is for adding exercises
 @account.route('/add_exercise', methods=['POST'])
 def add_exercise():
@@ -150,6 +152,7 @@ def add_exercise():
         response = jsonify({'error': 'An error occured'})
         response.status_code = 500
     return response
+
 
 # This route is for getting all exercises for a user
 @account.route('/get_exercises', methods=['POST'])
@@ -334,6 +337,20 @@ def confirm_friend():
         return jsonify({"error": "lack of information"}), 201
 
 
+@account.route('/delete_friend', methods=['POST'])
+def delete_friend():
+    delete_data = request.get_json()
+    try:
+        if not delete_data["user_id"]:
+            return jsonify({"error": "user_id not provided"}), 201
+        if not delete_data["name"]:
+            return jsonify({"error": "friend not provided"}), 201
+
+        return jsonify(delete_amigos(delete_data)), 201
+    except KeyError:
+        return jsonify({"error": "lack of information"}), 201
+
+
 @account.route('/search_user', methods=['POST'])
 def search_user():
     data = request.get_json()
@@ -387,6 +404,7 @@ def get_messages():
 
     return jsonify(get_message(request_message_data)), 201
 
+
 # This route is for changing system color
 @account.route('/change_system_color', methods=['POST'])
 def change_system_color():
@@ -405,6 +423,7 @@ def change_system_color():
         response.status_code = 206
     return response
 
+
 # This route is for getting users' choice of system color
 @account.route('/get_system_color', methods=['POST'])
 def get_system_color():
@@ -413,6 +432,7 @@ def get_system_color():
     response = jsonify({'type': data})
     response.status_code = 201
     return response
+
 
 @account.route('/change_language', methods=['POST'])
 def change_language():
