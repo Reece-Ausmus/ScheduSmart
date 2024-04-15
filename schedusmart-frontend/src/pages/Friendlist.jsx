@@ -207,17 +207,33 @@ export default function Friendlist() {
         setFriendList(friend_list);
     };
 
-    //Implementation of messages
+    //Implementation of last messages and avatar
     const [value, setValue] = useState(0);
-    let start_point=0;
+    let start_point = 0;
     const ref = useRef(null);
     const [lastMessageHandled, setLastMessageHandled] = useState(false);
+    const avatar_colors = [
+        '#2196f3', // Blue
+        '#f44336', // Red
+        '#4caf50', // Green
+        '#ff9800', // Orange
+        '#9c27b0', // Purple
+        '#ffeb3b', // Yellow
+        '#00bcd4', // Cyan
+    ];
+    const getRandomColor = () => {
+        const randomColorIndex = Math.floor(Math.random() * avatar_colors.length);
+        return avatar_colors[randomColorIndex];
+    };
+
     const handleLastMessage = async () => {
         const updatedFriendList = await Promise.all(friendList.map(async (friend) => {
             const fname = friend.name;
-            const response = await send_request('/get_messages', {"user_id": userId, "name": fname, "start_point": start_point});
+            const response = await send_request('/get_messages', { "user_id": userId, "name": fname, "start_point": start_point });
             const lastMessageIndex = response.data.length - 1;
             friend.message = response.data[lastMessageIndex].message;
+            friend.avatar_color = getRandomColor();
+            console.log(friend);
             return friend;
         }));
         setFriendList(updatedFriendList);
@@ -226,7 +242,7 @@ export default function Friendlist() {
     useEffect(() => {
         getfriendList();
     }, []);
-    
+
     useEffect(() => {
         if (friendList && friendList.length > 0 && !lastMessageHandled) {
             handleLastMessage();
@@ -293,6 +309,19 @@ export default function Friendlist() {
                     color="primary"
                     size="small">
                     <MessageIcon onClick={handleRequestClickOpen} />
+                    {requestList.length != 0 && (
+                        <span
+                            style={{
+                                position: 'absolute',
+                                top: 5,
+                                right: 5,
+                                backgroundColor: 'red',
+                                width: 10,
+                                height: 10,
+                                borderRadius: '50%',
+                            }}
+                        />
+                    )}
                 </Fab>
                 <Dialog
                     open={requestopen}
@@ -331,10 +360,10 @@ export default function Friendlist() {
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List sx={{ width: "40%" }}>
-                    {friendList.length > 0 ? friendList.map(({ name, confirm, message}, id) => (
+                    {friendList.length > 0 ? friendList.map(({ name, confirm, message,avatar_color }, id) => (
                         <ListItemButton key={id + name} component={Link} to={`/friendlist/${name}/${id}`}>
                             <ListItemAvatar>
-                                <Avatar alt="Profile Picture" src={name} />
+                                <Avatar sx={{ bgcolor: avatar_color}}>{name[0]}</Avatar>
                             </ListItemAvatar>
                             <ListItemText primary={name} secondary={message} />
                         </ListItemButton>)) : <Typography variant="body1">No friends found.</Typography>}
