@@ -24,17 +24,14 @@ const Chatbox = () => {
     const getMessages = async () => {
         const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": start_point });
         const message_history = response.data;
-        console.log(message_history);
         setMessages(message_history);
     }
     // handle send messgaes
     const handleSendMessage = async () => {
         if (inputValue.trim() !== '') {
             setMessages([...messages, { message: inputValue, type: 1 }]);
-            console.log("send messages", messages);
             setInputValue('');
             const response = await send_request('/send_message', { "user_id": userId, "name": fname, "message": inputValue });
-            console.log(response);
             if (response.error != undefined) {
                 if (response.error == "friend not found") {
                     alert("friend not found");
@@ -59,9 +56,8 @@ const Chatbox = () => {
     }, [])
 
     const renderMessages = (messages) => {
-        console.log("get messages", messages);
         return messages.map((message, index) => (
-            <ListItem key={index} className={message.type === 1 ? "left-message" : "right-message"}>
+            <ListItem key={index} style={{ textAlign: message.type === 1 ? "left" : "right" }}>
                 <ListItemText
                     primary={message.type === 1 ? "You" : fname}
                     secondary={message.message}

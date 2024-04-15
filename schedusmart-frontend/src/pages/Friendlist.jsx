@@ -57,29 +57,6 @@ const theme = createTheme({
         },
     },
 });
-// Get messages
-const messageExamples = [
-    {
-        name: 'Stanley',
-        message1: "I'll be in the neighbourhood this week. Let's grab a bite to eat",
-        person: '/static/images/avatar/5.jpg',
-        id: 1,
-    },
-    {
-        name: 'Cassie',
-        message1: "I'll be in the neighbourhood this week. Let's grab a bite to eat",
-        person: '/static/images/avatar/5.jpg',
-        id: 2,
-    },
-];
-function refreshMessages() {
-    return messageExamples;
-}
-
-// const messages = async()=> {
-//     const response = await send_request("/get_messages", { "user_id": userId, "name":friend,"start_point":0});
-
-// }
 
 // Get friend list
 const nameList = [
@@ -229,24 +206,34 @@ export default function Friendlist() {
         const friend_list = response.friend
         setFriendList(friend_list);
     };
-    useEffect(() => {
-        getfriendList();
-    }, []);
 
     //Implementation of messages
     const [value, setValue] = useState(0);
     let start_point=0;
     const ref = useRef(null);
-    const [messages, setMessages] = useState(() => refreshMessages());
-    const getmessages = async (fname) => {
-        const response = await send_request('/get_messages',{"user_id": userId,"name":fname,"start_point":start_point});
-        setMessages(response.data);
-        console.log(response.data);
+    const [messages, setMessages] = useState();
+    const handleFirstMessage = async () => {
+        const updatedFriendList = await Promise.all(friendList.map(async (friend) => {
+            const fname = friend.name;
+            const response = await send_request('/get_messages', {"user_id": userId, "name": fname, "start_point": start_point});
+            friend.message = response.data[0].message;
+            return friend;
+        }));
+        setFriendList(updatedFriendList);
     };
     useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
-        setMessages(refreshMessages());
-    }, [value, setMessages]);
+    }, [value, setMessages,friendList]);
+
+    useEffect(() => {
+        getfriendList();
+    }, []);
+    
+    useEffect(() => {
+        if (friendList && friendList.length > 0) {
+            handleFirstMessage();
+        }
+    }, [friendList]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -342,13 +329,12 @@ export default function Friendlist() {
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List sx={{ width: "40%" }}>
-                    {friendList.length > 0 ? friendList.map(({ name, confirm }, id) => (
-                        <ListItemButton key={id + name} component={Link} to={`/friendlist/${name}/${id}`} onClick={() => getmessages(name)}>
+                    {friendList.length > 0 ? friendList.map(({ name, confirm, message}, id) => (
+                        <ListItemButton key={id + name} component={Link} to={`/friendlist/${name}/${id}`}>
                             <ListItemAvatar>
                                 <Avatar alt="Profile Picture" src={name} />
                             </ListItemAvatar>
-                            {/* <ListItemText primary={name} secondary={confirm} /> */}
-                            <ListItemText primary={name} />
+                            <ListItemText primary={name} secondary={message} />
                         </ListItemButton>)) : <Typography variant="body1">No friends found.</Typography>}
                 </List>
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
