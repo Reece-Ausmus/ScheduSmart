@@ -56,14 +56,14 @@ const Colors = [
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
 
-// const theme = createTheme({
-//   palette: {
-//     primary: orange,
-//     secondary: {
-//       main: "#ab5600",
-//     },
-//   },
-// });
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+});
 
 const steps = [
   {
@@ -102,25 +102,25 @@ const steps = [
 ];
 
 export default function MainFrame() {
-  const location = useLocation();
-  let Color;
-  if (location.state == null) {
-    Color = localStorage.getItem('systemcolor');
-  }
-  else {
-    Color = location.state.color_choice;
-  }
+  // const location = useLocation();
+  // let Color;
+  // if (location.state == null) {
+  //   Color = localStorage.getItem('systemcolor');
+  // }
+  // else {
+  //   Color = location.state.color_choice;
+  // }
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: Colors[Color].value.primary,
-      },
-      secondary: {
-        main: Colors[Color].value.secondary,
-      },
-    },
-  });
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: Colors[Color].value.primary,
+  //     },
+  //     secondary: {
+  //       main: Colors[Color].value.secondary,
+  //     },
+  //   },
+  // });
   const [selectMode, setSelectMode] = useState(1);
   const [eventFilter, setEventFilter] = useState("all");
   const [selectedCalendars, setSelectedCalendars] = useState([]);

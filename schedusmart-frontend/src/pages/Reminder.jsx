@@ -28,27 +28,35 @@ const Colors = [
   { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+});
 
 export default function Reminder() {
-  const location = useLocation();
-  let Color;
-  if (location.state == null) {
-    Color = localStorage.getItem('systemcolor');
-  }
-  else {
-    Color = location.state.color_choice;
-  }
+  // const location = useLocation();
+  // let Color;
+  // if (location.state == null) {
+  //   Color = localStorage.getItem('systemcolor');
+  // }
+  // else {
+  //   Color = location.state.color_choice;
+  // }
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: Colors[Color].value.primary,
-      },
-      secondary: {
-        main: Colors[Color].value.secondary,
-      },
-    },
-  });
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: Colors[Color].value.primary,
+  //     },
+  //     secondary: {
+  //       main: Colors[Color].value.secondary,
+  //     },
+  //   },
+  // });
   const IOSSwitch = styled((props) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
   ))(({ theme }) => ({

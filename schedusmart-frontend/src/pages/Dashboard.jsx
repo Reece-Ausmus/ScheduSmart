@@ -53,26 +53,34 @@ const Colors = [
   },
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+});
 
 export default function Dashboard() {
-  const location = useLocation();
-  let Color;
-  if (location.state == null) {
-    Color = localStorage.getItem('systemcolor');
-  }
-  else {
-    Color = location.state.color_choice;
-  }
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: Colors[Color].value.primary,
-      },
-      secondary: {
-        main: Colors[Color].value.secondary,
-      },
-    },
-  });
+  // const location = useLocation();
+  // let Color;
+  // if (location.state == null) {
+  //   Color = localStorage.getItem('systemcolor');
+  // }
+  // else {
+  //   Color = location.state.color_choice;
+  // }
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: Colors[Color].value.primary,
+  //     },
+  //     secondary: {
+  //       main: Colors[Color].value.secondary,
+  //     },
+  //   },
+  // });
 
   const [goToWelcome, setGoToWelcome] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);

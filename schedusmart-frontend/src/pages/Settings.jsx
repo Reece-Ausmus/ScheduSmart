@@ -30,6 +30,14 @@ const Colors = [
   { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
   { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
 ];
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
+    },
+  },
+});
 
 export default function Settings() {
   const fetchLanguage = async () => {
@@ -78,16 +86,16 @@ export default function Settings() {
     handleColorOption(e.target.value);
   };
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: Colors[Color].value.primary,
-      },
-      secondary: {
-        main: Colors[Color].value.secondary,
-      },
-    },
-  });
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: Colors[Color].value.primary,
+  //     },
+  //     secondary: {
+  //       main: Colors[Color].value.secondary,
+  //     },
+  //   },
+  // });
 
   return (
     <ThemeProvider theme={theme}>
