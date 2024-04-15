@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import languageLibrary from "../components/language.json";
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -34,7 +35,8 @@ const theme = createTheme({
   },
 });
 
-export default function Calendar_Settings() {
+export default function Calendar_Settings(language) {
+  const languageData = languageLibrary[language][0].calendar_settings;
   // const location = useLocation();
   // let Color;
   // if (location.state == null) {
@@ -147,15 +149,15 @@ export default function Calendar_Settings() {
   return (
     <ThemeProvider theme={theme}>
       <Card>
-        <CardHeader subheader="Update calendar settings" title="Calendar" />
+        <CardHeader subheader={languageData.updateCalSetting} title={languageData.Calendar} />
         <Divider />
         <CardContent>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              Calendar visualization:
+              {languageData.calVis}
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="visual_format">Visualization</InputLabel>
+              <InputLabel id="visual_format">{languageData.Visualization}</InputLabel>
               <Select
                 labelId="v_format"
                 id="visual_format"
@@ -164,19 +166,19 @@ export default function Calendar_Settings() {
                 onChange={handleVirtualSelectChange}
                 style={{ minWidth: '120px' }}
               >
-                <MenuItem value={1}>day</MenuItem>
-                <MenuItem value={2}>week</MenuItem>
-                <MenuItem value={3}>month</MenuItem>
-                <MenuItem value={4}>year</MenuItem>
+                <MenuItem value={1}>{languageData.day}</MenuItem>
+                <MenuItem value={2}>{languageData.week}</MenuItem>
+                <MenuItem value={3}>{languageData.month}</MenuItem>
+                <MenuItem value={4}>{languageData.year}</MenuItem>
               </Select>
             </FormControl>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              Location input:
+              {languageData.locationIn}
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="location_format">Settings</InputLabel>
+              <InputLabel id="location_format">{languageData.setting}</InputLabel>
               <Select
                 labelId="l_format"
                 id="location_format"
@@ -185,8 +187,8 @@ export default function Calendar_Settings() {
                 onChange={handleLocationSelectChange}
                 style={{ minWidth: '120px' }}
               >
-                <MenuItem value={"text"}>Enter Location as Text</MenuItem>
-                <MenuItem value={"map"}>Choose Location from Map</MenuItem>
+                <MenuItem value={"text"}>{languageData.enterLocTxt}</MenuItem>
+                <MenuItem value={"map"}>{languageData.chooseLocMap}</MenuItem>
               </Select>
             </FormControl>
           </div>

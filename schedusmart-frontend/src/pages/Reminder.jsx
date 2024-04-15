@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
+import languageLibrary from "../components/language.json";
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
@@ -37,7 +38,8 @@ const theme = createTheme({
   },
 });
 
-export default function Reminder() {
+export default function Reminder(language) {
+  const languageData = languageLibrary[language][0].Reminder;
   // const location = useLocation();
   // let Color;
   // if (location.state == null) {
@@ -126,8 +128,8 @@ export default function Reminder() {
   };
 
   const [reminderOptions] = useState([
-    { id: 1, label: "Browser notification", value: 1 },
-    { id: 2, label: "Email", value: 2 },
+    { id: 1, label: languageData.browserNoti, value: 1 },
+    { id: 2, label: languageData.email, value: 2 },
   ]);
   const [selectReminderOptions, setReminderOptions] = useState(1)
   const handleReminderOptionsChange = (e) => {
@@ -138,12 +140,12 @@ export default function Reminder() {
   return (
     <ThemeProvider theme={theme}>
       <Card>
-        <CardHeader subheader="Update reminders settings" title="Reminder" />
+        <CardHeader subheader={languageData.updateReminderSetting} title={languageData.Reminder} />
         <Divider />
         <CardContent>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              Reminders:
+              {languageData.Reminder + ":"}
             </Typography>
             <FormControlLabel
               control={
@@ -158,10 +160,10 @@ export default function Reminder() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              Remind me:
+              {languageData.ReminderMe}
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="reminder_time">Time</InputLabel>
+              <InputLabel id="reminder_time">{languageData.Time}</InputLabel>
               <Select
                 labelId="r_time"
                 id="reminder_time"
@@ -172,7 +174,7 @@ export default function Reminder() {
               >
                 {timeOptions.map((option) => (
                   <MenuItem key={option.id} value={option.value}>
-                    {option.value} minutes before
+                    {option.value} {languageData.ReminderMe}
                   </MenuItem>
                 ))}
               </Select>
@@ -180,10 +182,10 @@ export default function Reminder() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              How do you want to be notified?
+            {languageData.howUwantbeNotified}
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="reminder_option">Option</InputLabel>
+              <InputLabel id="reminder_option">{languageData.Option}</InputLabel>
               <Select
                 labelId="r_option"
                 id="reminder_option"

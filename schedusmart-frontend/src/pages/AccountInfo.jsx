@@ -1,7 +1,7 @@
 // This documentation is used for building create-account UI page
 
 import { useState, useEffect } from "react";
-import languageData from "../components/language.json";
+import languageLibrary from "../components/language.json";
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -14,6 +14,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
+
 import Input from '@mui/material/Input';
 import {useLocation} from 'react-router-dom';
 
@@ -66,6 +67,8 @@ export default function AccountInfo(language) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [location, setLocation] = useState("West Lafayette");
+
+  const languageData = languageLibrary[language][0].AccountInfo;
 
   const handleInfo = async (event) => {
     const response = await fetch(flaskURL + "/user_data", {
@@ -164,7 +167,7 @@ export default function AccountInfo(language) {
   return (
     <ThemeProvider theme={theme}>
         <Card>
-          <CardHeader subheader="Update account information" title="Profile" />
+          <CardHeader subheader={languageData.updateAccountInformation} title={languageData.Profile} />
           <Divider />
           <CardContent>
             <Stack spacing={3} sx={{ maxWidth: 'sm' }}>
@@ -175,7 +178,7 @@ export default function AccountInfo(language) {
                 </FormControl>
                 <FormControl>
                   <InputLabel htmlFor="component-outlined">{}</InputLabel>
-                  <OutlinedInput id="lastname" value={lastname} label="lastName" onChange={(e) => setLastName(e.target.value)}/>
+                  <OutlinedInput id="lastname" value={lastname} label="lastNamer" onChange={(e) => setLastName(e.target.value)}/>
                 </FormControl>
               </div>
               <FormControl>
@@ -194,8 +197,8 @@ export default function AccountInfo(language) {
           </CardContent>
           <Divider />
           <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button  variant="contained" onClick={handleInfo}>{}</Button>
-            <Button  variant="contained" onClick={updateInfo}>{}</Button>
+            <Button  variant="contained" onClick={handleInfo}>{languageData.reset}</Button>
+            <Button  variant="contained" onClick={updateInfo}>{languageData.update}</Button>
           </CardActions>
         </Card>
     </ThemeProvider>

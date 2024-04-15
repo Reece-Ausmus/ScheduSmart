@@ -49,7 +49,53 @@
         "task": "Task",
         "detail": "detail"
       },
-      "setting": {}
+      "setting": {
+        "setting": "setting",
+        "Language": "Language",
+        "UpdateLanguageSettings": "Update language settings",
+        "UpdateSystemSettings": "Update system settings",
+        "system": "system",
+        "Color": "Color",
+        "Option": "Option",
+        "Red": "Red",
+        "Orange": "Orange",
+        "Yellow": "Yellow",
+        "Green": "Green",
+        "Blue": "Blue",
+        "Purple": "Purple",
+        "Pink": "Pink"
+      },
+      "AccountInfo": {
+        "updateAccountInformation": "Update account information",
+        "Profile": "Profile",
+        "update": "confirm update",
+        "reset": "reset"
+      },
+      "calendar_settings": {
+        "updateCalSetting": "Update calendar settings",
+        "Calendar": "Calendar",
+        "calVis": "Calendar visualization:",
+        "Visualization": "Visualization",
+        "locationIn": "Location input:",
+        "day": "day",
+        "week": "week",
+        "month": "month",
+        "year": "year",
+        "enterLocTxt": "Enter Location as Text",
+        "chooseLocMap": "Choose Location from Map",
+        "setting": "Settings"
+      },
+      "Reminder": {
+        "updateReminderSetting": "Update reminders settings",
+        "Reminder": "Reminder",
+        "ReminderMe": "Remind me:",
+        "Time": "Time",
+        "minutesBefore": "minutes before",
+        "howUwantbeNotified": "How do you want to be notified?",
+        "Option": "Option",
+        "browserNoti": "Browser notification",
+        "email": "Email"
+      }
     }
   ],
   [
@@ -102,7 +148,53 @@
         "task": "任務",
         "detail": "詳細資料"
       },
-      "setting": {}
+      "setting": {
+        "setting": "設定",
+        "Language": "語言",
+        "UpdateLanguageSettings": "更新語言設定",
+        "Color": "顏色",
+        "Option": "選項",
+        "Red": "紅色",
+        "Orange": "橙色",
+        "Yellow": "黃色",
+        "Green": "綠色",
+        "Blue": "藍色",
+        "Purple": "紫色",
+        "Pink": "粉色",
+        "UpdateSystemSettings": "更新系統設定",
+        "system": "系統"
+      },
+      "AccountInfo": {
+        "updateAccountInformation": "更新帳戶資訊",
+        "Profile": "個人資料",
+        "update": "確認",
+        "reset": "重設"
+      },
+      "calendar_settings": {
+        "updateCalSetting": "更新日曆設定",
+        "Calendar": "日曆",
+        "calVis": "日曆預設：",
+        "Visualization": "模式",
+        "locationIn": "位置輸入：",
+        "day": "日",
+        "week": "週",
+        "month": "月",
+        "year": "年",
+        "enterLocTxt": "輸入文字位置",
+        "chooseLocMap": "從地圖選擇位置",
+        "setting": "設定"
+      },
+      "Reminder": {
+        "updateReminderSetting": "更新提醒設定",
+        "Reminder": "提醒",
+        "ReminderMe": "提醒我：",
+        "Time": "時間",
+        "minutesBefore": "分鐘前",
+        "howUwantbeNotified": "您想如何收到通知？",
+        "Option": "選項",
+        "browserNoti": "瀏覽器通知",
+        "email": "電子郵件" 
+      }
     }
   ],
   [
@@ -154,6 +246,53 @@
         "allTasksHaveBeenCompleted": "Se han completado todas las tareas.",
         "task": "Tarea",
         "detail": "Detalle"
+      },
+      "setting": {
+        "setting": "ajustes",
+        "Language": "idioma",
+        "UpdateLanguageSettings": "actualizar la configuración del idioma",
+        "Color": "color",
+        "Option": "opción",
+        "Red": "rojo",
+        "Orange": "naranja",
+        "Yellow": "amarillo",
+        "Green": "verde",
+        "Blue": "azul",
+        "Purple": "púrpura",
+        "Pink": "rosa",
+        "UpdateSystemSettings": "Actualizar la configuración del sistema",
+        "system": "sistema"
+      },
+      "AccountInfo": {
+        "updateAccountInformation": "Actualizar la información de la cuenta",
+        "Profile": "Perfil",
+        "update": "confirmar actualización",
+        "reset": "reiniciar"
+      },
+      "calendar_settings": {
+        "updateCalSetting": "Actualizar la configuración del calendario",
+        "Calendar": "Calendario",
+        "calVis": "Visualización del calendario:",
+        "Visualization": "Visualización",
+        "locationIn": "Entrada de ubicación:",
+        "day": "día",
+        "week": "semana",
+        "month": "mes",
+        "year": "año",
+        "enterLocTxt": "Introducir ubicación como texto",
+        "chooseLocMap": "Elegir ubicación en el mapa",
+        "setting": "Configuración"
+      },
+      "Reminder": {
+        "updateReminderSetting": "Actualizar la configuración de recordatorios",
+        "Reminder": "Recordatorio",
+        "ReminderMe": "Recuérdame:",
+        "Time": "Tiempo",
+        "minutesBefore": "minutos antes",
+        "howUwantbeNotified": "¿Cómo quieres ser notificado?",
+        "Option": "Opción",
+        "browserNoti": "Notificación del navegador",
+        "email": "Correo electrónico"
       }
     }
   ]
