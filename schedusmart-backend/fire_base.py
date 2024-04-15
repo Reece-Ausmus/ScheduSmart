@@ -147,11 +147,16 @@ def update_user_info(receive_account):
 def update_language(data):
     try:
         user_id = data['user_id']
+        if int(data["language"]) > 2 or int(data["language"]) < 0:
+            return {"error": "invalid input"}
         db.child("User").child(user_id).update({"language": data["language"]})
-        return 0
-    except Exception:
-        print("fail to update language")
-        return 1
+        return {"message": "done"}
+    except TypeError as e:
+        print(e)
+        return {"error": "fail to update language setting"}
+    except ValueError as e:
+        print(e)
+        return {"error": "invalid input"}
 
 
 def create_account_by_username_and_password(receive_account):

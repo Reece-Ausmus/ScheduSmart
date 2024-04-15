@@ -373,3 +373,17 @@ def change_system_color():
         response.status_code = 206
     return response
 
+@account.route('/change_language', methods=['POST'])
+def change_language():
+    language_data = request.get_json()
+    try:
+        if not language_data["user_id"]:
+            return jsonify({"error": "user_id is required"}), 201
+    except KeyError:
+        return jsonify({"error": "user_id is required"}), 201
+    try:
+        if not language_data["language"]:
+            return jsonify({"error": "language field is required"}), 201
+    except KeyError:
+        return jsonify({"error": "language field is required"}), 201
+    return jsonify(update_language(language_data)), 201
