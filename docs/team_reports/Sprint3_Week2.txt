@@ -5,8 +5,8 @@ Week 8	(Srum master: Reece Ausmus)
 04/10/24    3 hr    9b6ca07    Added Zoom link to events
 04/10/24    2 hr    69110a7    Bug fix for reading events
 04/11/24    8 hr    03cd6aa    Add friend and message function in backend
-04/11/24    6hrs    71a17fc     implmentation of friend list
-04/12/24    4hrs    734523d     implementation of changing system color
+04/11/24    6 hr    71a17fc     implmentation of friend list
+04/12/24    4 hr    734523d     implementation of changing system color
 04/12/24    2 hr    88011ba    Add filter to events on calendar
 04/13/24    4 hr    7011903    Implemented Exercise & Goal Tracking base capabilities
 04/13/24    5 hr    271d198    notebook func can list all done thing
