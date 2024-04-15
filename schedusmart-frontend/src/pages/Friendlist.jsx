@@ -128,9 +128,6 @@ export default function Friendlist() {
     //   },
     // });
     // Implementation of invitations
-    const [value, setValue] = useState(0);
-    const ref = useRef(null);
-    const [messages, setMessages] = useState(() => refreshMessages());
     const [invitationopen, setInvitationOpen] = useState(false);
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [Props, setProps] = useState({ options: [] });
@@ -190,8 +187,6 @@ export default function Friendlist() {
 
     // Implementation of request list 
     const [requestopen, setRequestOpen] = useState(false);
-    // const [makeChoice , setMakeChoice] = useState(false);
-    // const [confirmedFriends, setConfirmedFriends] = useState([]);
     const handleRequestClickOpen = () => {
         setRequestOpen(true);
     };
@@ -225,7 +220,6 @@ export default function Friendlist() {
                 alert("admit request not found");
             }
         }
-        // setMakeChoice(true);
     }
 
     // Implementation of friend list 
@@ -239,6 +233,16 @@ export default function Friendlist() {
         getfriendList();
     }, []);
 
+    //Implementation of messages
+    const [value, setValue] = useState(0);
+    let start_point=0;
+    const ref = useRef(null);
+    const [messages, setMessages] = useState(() => refreshMessages());
+    const getmessages = async (fname) => {
+        const response = await send_request('/get_messages',{"user_id": userId,"name":fname,"start_point":start_point});
+        setMessages(response.data);
+        console.log(response.data);
+    };
     useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
         setMessages(refreshMessages());
@@ -338,8 +342,8 @@ export default function Friendlist() {
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List sx={{ width: "40%" }}>
-                    {friendList.length > 0 ? friendList.map(({ name, confirm }, index) => (
-                        <ListItemButton key={index + name} component={Link} to={`/friendlist/${name}/${index}`}>
+                    {friendList.length > 0 ? friendList.map(({ name, confirm }, id) => (
+                        <ListItemButton key={id + name} component={Link} to={`/friendlist/${name}/${id}`} onClick={() => getmessages(name)}>
                             <ListItemAvatar>
                                 <Avatar alt="Profile Picture" src={name} />
                             </ListItemAvatar>
