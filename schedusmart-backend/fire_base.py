@@ -69,6 +69,7 @@ import secrets
 import traceback
 import difflib
 from datetime import datetime, timedelta
+import random
 
 
 # to use this function, you will need to first log in the account with method:
@@ -590,10 +591,12 @@ def system_color_settings(info):
         print("Failed to set the system color settings")
         return 1
 
+
 def get_system_color_settings(info):
     user_id = info['user_id']
-    color= db.child("User").child(user_id).child("system_color").get()
+    color = db.child("User").child(user_id).child("system_color").get()
     return color.val()
+
 
 # This function is used to create a new Habits list for the logged in user
 def add_new_habit(data):
@@ -617,6 +620,7 @@ def add_new_habit(data):
     except Exception as e:
         print("Failed to create habit:", e)
         return 1
+
 
 # This function is used to create a new Exercise list for the logged in user
 def add_new_exercise(data):
@@ -692,6 +696,7 @@ def find_closest_available_time(data):
 
     return ret
 
+
 def f_get_done_events(data):
     user_id = data['user_id']
 
@@ -725,7 +730,6 @@ def f_get_done_events(data):
     return {"data": event_list}
 
 
-
 ################################################### friend system ######################################################
 def __get_name(id):
     return get_user({"user_id": id})["user_name"]
@@ -739,7 +743,8 @@ def __get_friend_list(user_id):
             friend_name = __get_name(friend.val()["id"])
             friend_data = {
                 'name': friend_name,
-                'confirm': friend.val()["confirm"]
+                'confirm': friend.val()["confirm"],
+                'avatar_color': friend.val()["avatar_color"]
             }
             friend_list.append(friend_data)
     except TypeError as e:
@@ -850,15 +855,18 @@ def add_friend(add_friend_data):
             return {"error": "already receive request from friend"}
 
     room_id = __create_room(add_friend_data)
+
     friend_data = {
         "confirm": False,
         "chat_room": room_id,
-        "id": __get_user_id(add_friend_data["name"])
+        "id": __get_user_id(add_friend_data["name"]),
+        "avatar_color": avatar_color[random.randint(0, 6)]
     }
 
     if friend_id is not None:
         db.child("User").child(add_friend_data["user_id"]).child("friendManager").child("friend").push(friend_data)
         friend_data["id"] = add_friend_data["user_id"]
+        friend_data["avatar_color"] = avatar_color[random.randint(0, 6)]
         db.child("User").child(friend_id).child("friendManager").child("request").push(friend_data)
         return {'message': 'request complete'}
     else:
@@ -958,6 +966,8 @@ def delete_amigos(delete_data):
     db.child("User").child(user_id).child("friendManager").child("friend").child(
         user_key).remove()
     return {"message": "Done"}
+
+
 def get_message(request):
     user_id = request["user_id"]
     friend_name = request["name"]
@@ -1017,3 +1027,12 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 auth = firebase.auth()
 storage = firebase.storage()
+avatar_color = [
+    '#2196f3',
+    "#f44336",
+    "#4caf50",
+    "#ff9800",
+    "#9c27b0",
+    "#ffeb3b",
+    "#00bcd4",
+]
