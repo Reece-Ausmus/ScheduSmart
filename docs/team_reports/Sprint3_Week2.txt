@@ -3,6 +3,7 @@
 Week 8	(Srum master: Reece Ausmus)
 04/05/24    5 hr    271d198     notebook func can list all done thing
 04/10/24    3 hr    c2b5486     Updated checkbox logic + Bar Graph visualization tools
+04/11/24    8 hr    03cd6aa     Add friend and message function in backend
 04/13/24    4 hr    7011903     Implemented Exercise & Goal Tracking base capabilities
 
 Week 9 	(Plan) (Scrum master: Reece Ausmus)
@@ -14,7 +15,7 @@ Week 9 	(Plan) (Scrum master: Reece Ausmus)
 [Individual Goals]
 Reece Ausmus:   goal
 Cassie Chang:   design test cases for all the system for CI/CD
-Stanley Huang:  goal
+Stanley Huang:  add more language in library to translate in other page, fix bug if found
 Bradley Norris: Small UI tweaks and bug fixes, implement more goal-related capabilities
 Himanshu Sinha: goal
 Gloria Xu:      goal
