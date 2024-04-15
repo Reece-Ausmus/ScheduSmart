@@ -225,14 +225,16 @@ export default function Friendlist() {
         const randomColorIndex = Math.floor(Math.random() * avatar_colors.length);
         return avatar_colors[randomColorIndex];
     };
-
     const handleLastMessage = async () => {
         const updatedFriendList = await Promise.all(friendList.map(async (friend) => {
             const fname = friend.name;
             const response = await send_request('/get_messages', { "user_id": userId, "name": fname, "start_point": start_point });
             const lastMessageIndex = response.data.length - 1;
-            friend.message = response.data[lastMessageIndex].message;
-            friend.avatar_color = getRandomColor();
+            if (response.data.length > 0) {
+                const lastMessageIndex = response.data.length - 1;
+                friend.message = response.data[lastMessageIndex].message;
+                friend.avatar_color = getRandomColor();
+            }
             console.log(friend);
             return friend;
         }));
