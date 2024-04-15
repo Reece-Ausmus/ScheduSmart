@@ -17,5 +17,5 @@ Reece Ausmus:   goal
 Cassie Chang:   design test cases for all the system for CI/CD
 Stanley Huang:  add more language in library to translate in other page, fix bug if found
 Bradley Norris: Small UI tweaks and bug fixes, implement more goal-related capabilities
-Himanshu Sinha: goal
+Himanshu Sinha: Teasting and Bugfixes, more polishing on style if need be. 
 Gloria Xu:      goal
