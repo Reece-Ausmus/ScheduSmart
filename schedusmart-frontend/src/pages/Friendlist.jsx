@@ -237,7 +237,6 @@ export default function Friendlist() {
             return friend;
         }));
         setFriendList(updatedFriendList);
-        setLastMessageHandled(true);
     };
     useEffect(() => {
         getfriendList();
@@ -246,8 +245,9 @@ export default function Friendlist() {
     useEffect(() => {
         if (friendList && friendList.length > 0 && !lastMessageHandled) {
             handleLastMessage();
+            setLastMessageHandled(true);
         }
-    }, [friendList, lastMessageHandled]);
+    }, [friendList]);
 
     useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
