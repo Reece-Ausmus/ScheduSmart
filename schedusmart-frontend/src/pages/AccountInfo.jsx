@@ -32,35 +32,20 @@ const Colors = [
   { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
   { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
 ];
+
+export default function AccountInfo(props) {
+  let language=props.language;
+  let Color=props.Color;
 const theme = createTheme({
   palette: {
-    primary: orange,
+    primary: {
+      main: Colors[Color].value.primary,
+    },
     secondary: {
-      main: "#ab5600",
+      main: Colors[Color].value.secondary,
     },
   },
 });
-
-export default function AccountInfo(language) {
-//   const data = useLocation();
-//   let Color;
-//   if (data.state == null){
-//     Color =localStorage.getItem('systemcolor');
-//   }
-//   else{
-//     Color =data.state.color_choice;
-//   }
-
-// const theme = createTheme({
-//   palette: {
-//     primary: {
-//       main: Colors[Color].value.primary,
-//     },
-//     secondary: {
-//       main: Colors[Color].value.secondary,
-//     },
-//   },
-// });
 
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");

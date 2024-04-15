@@ -373,6 +373,15 @@ def change_system_color():
         response.status_code = 206
     return response
 
+# This route is for getting users' choice of system color
+@account.route('/get_system_color', methods=['POST'])
+def get_system_color():
+    info = request.get_json()
+    data = get_system_color_settings(info)
+    response = jsonify({'type': data})
+    response.status_code = 201
+    return response
+
 @account.route('/change_language', methods=['POST'])
 def change_language():
     language_data = request.get_json()
