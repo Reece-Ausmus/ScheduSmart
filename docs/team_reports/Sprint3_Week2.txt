@@ -1,19 +1,23 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 8	(Srum master: Reece Ausmus)
-04/10/24    3 hr    c2b5486     Updated checkbox logic + Bar Graph visualization tools
-04/11/24    8 hr    03cd6aa     Add friend and message function in backend
-04/13/24    4 hr    7011903     Implemented Exercise & Goal Tracking base capabilities
-04/13/24    5 hr    271d198     notebook func can list all done thing
+04/10/24    3 hr    c2b5486    Updated checkbox logic + Bar Graph visualization tools
+04/10/24    3 hr    9b6ca07    Added Zoom link to events
+04/10/24    2 hr    69110a7    Bug fix for reading events
+04/11/24    8 hr    03cd6aa    Add friend and message function in backend
+04/12/24    2 hr    88011ba    Add filter to events on calendar
+04/13/24    4 hr    7011903    Implemented Exercise & Goal Tracking base capabilities
+04/13/24    5 hr    271d198    notebook func can list all done thing
 
 Week 9 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
 04/17/24    Discuss anything inhibiting demo of final product.
+04/18/24    Practice presentation for sprint review.
 04/20/24    Discuss what needs to happen in the coming week before final presentation
 04/21/24    Meeting with TA to discuss sprint review.
 
 [Individual Goals]
-Reece Ausmus:   goal
+Reece Ausmus:   Finish up data dashboard and create some tests.
 Cassie Chang:   design test cases for all the system for CI/CD
 Stanley Huang:  add more language in library to translate in other page, fix bug if found
 Bradley Norris: Small UI tweaks and bug fixes, implement more goal-related capabilities
