@@ -18,6 +18,7 @@ import { useLocation } from 'react-router-dom';
 
 const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
 const userId = sessionStorage.getItem("user_id");
+
 const Colors = [
     { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
     { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
@@ -42,6 +43,7 @@ function GoalTracker({ habits }) {
     else {
       Color = location.state.color_choice;
     }
+
     const theme = createTheme({
       palette: {
         primary: {
@@ -61,6 +63,7 @@ function GoalTracker({ habits }) {
         },
       },
     });
+
     const [exerciseEvents, setExerciseEvents] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
     const [eventName, setEventName] = useState("");
@@ -69,6 +72,38 @@ function GoalTracker({ habits }) {
     const [caloriesConsumed, setCaloriesConsumed] = useState(0); // Consumed calories, taken from Habits.jsx table
     const [totalCaloriesBurned, setTotalCaloriesBurned] = useState(0); // Total calories burned
 
+    useEffect(() => {
+        // Fetch all exercises when component mounts
+        fetchExercises();
+    }, []);
+
+    const fetchExercises = async () => {
+        try {
+            const response = await fetch(`${flaskURL}/get_exercises`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                }),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const sortedExerciseEvents = responseData.exercises.sort((a, b) => a.id - b.id);
+                setExerciseEvents(sortedExerciseEvents);
+            } else {
+                const errorData = await response.json();
+                console.error("Error fetching exercises: ", errorData.error);
+                alert("Failed to fetch exercises. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error fetching exercises: ", error);
+            alert("An error occurred while fetching exercises.");
+        }
+    };
+    
     useEffect(() => {
         // Update totalCaloriesBurned whenever exerciseEvents change
         const totalBurned = exerciseEvents.reduce((total, event) => total + event.caloriesBurned, 0);
@@ -137,7 +172,6 @@ function GoalTracker({ habits }) {
             alert("Workout Name and Calories Burned are required fields.");
         }
     };
-    
     
     const generateCSV = () => {
         const csvData = [

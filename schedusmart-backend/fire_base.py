@@ -623,7 +623,7 @@ def add_new_exercise(data):
     user_id = data['user_id']
     exercise_data = {
         "id": data['id'],
-        "calories burned": data['caloriesBurned'],
+        "caloriesBurned": data['caloriesBurned'],
     }
     # Construct the Firebase structure
     exercise_path = f"/Exercise/{user_id}/{data['eventName']}"

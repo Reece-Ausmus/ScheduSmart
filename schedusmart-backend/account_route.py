@@ -151,6 +151,38 @@ def add_exercise():
         response.status_code = 500
     return response
 
+# This route is for getting all exercises for a user
+@account.route('/get_exercises', methods=['POST'])
+def get_exercises():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's exercises
+    user_exercises_path = f"/Exercise/{user_id}"
+
+    try:
+        # Get all exercises for the user from the Firebase database
+        user_exercises = db.child(user_exercises_path).get()
+
+        # If the user has no exercises, return an empty list
+        if not user_exercises.val():
+            return jsonify({'exercises': []}), 200
+
+        # Convert Firebase response to list of exercises
+        exercises_list = []
+        for event_name, exercise_data in user_exercises.val().items():
+            exercise_data['eventName'] = event_name
+            exercises_list.append(exercise_data)
+
+        return jsonify({'exercises': exercises_list}), 200
+    except Exception as e:
+        print("Failed to get exercises:", e)
+        return jsonify({'error': 'Failed to get exercises'}), 500
+
+
 # This route is for adding habits
 @account.route('/add_habit', methods=['POST'])
 def add_habit():
