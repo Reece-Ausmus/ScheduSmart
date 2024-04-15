@@ -211,29 +211,31 @@ export default function Friendlist() {
     const [value, setValue] = useState(0);
     let start_point=0;
     const ref = useRef(null);
-    const [messages, setMessages] = useState();
-    const handleFirstMessage = async () => {
+    const [lastMessageHandled, setLastMessageHandled] = useState(false);
+    const handleLastMessage = async () => {
         const updatedFriendList = await Promise.all(friendList.map(async (friend) => {
             const fname = friend.name;
             const response = await send_request('/get_messages', {"user_id": userId, "name": fname, "start_point": start_point});
-            friend.message = response.data[0].message;
+            const lastMessageIndex = response.data.length - 1;
+            friend.message = response.data[lastMessageIndex].message;
             return friend;
         }));
         setFriendList(updatedFriendList);
+        setLastMessageHandled(true);
     };
-    useEffect(() => {
-        ref.current.ownerDocument.body.scrollTop = 0;
-    }, [value, setMessages,friendList]);
-
     useEffect(() => {
         getfriendList();
     }, []);
     
     useEffect(() => {
-        if (friendList && friendList.length > 0) {
-            handleFirstMessage();
+        if (friendList && friendList.length > 0 && !lastMessageHandled) {
+            handleLastMessage();
         }
-    }, [friendList]);
+    }, [friendList, lastMessageHandled]);
+
+    useEffect(() => {
+        ref.current.ownerDocument.body.scrollTop = 0;
+    }, [value]);
 
     return (
         <ThemeProvider theme={theme}>
