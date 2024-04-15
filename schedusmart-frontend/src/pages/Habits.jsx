@@ -128,7 +128,8 @@ export default function Habits() {
         });
         if (response.ok) {
           const responseData = await response.json();
-          setHabits(responseData.habits);
+          const sortedHabits = responseData.habits.sort((a, b) => a.id - b.id);
+          setHabits(sortedHabits);
         } else {
           console.error("Error fetching habits: ", response.statusText);
           alert("Failed to fetch habits. Please try again.");
