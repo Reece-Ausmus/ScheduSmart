@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
+import languageLibrary from "../components/language.json";
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
@@ -20,35 +21,43 @@ import { useLocation } from 'react-router-dom';
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
 const Colors = [
-  { id: 0, value: { primary: red[200], secondary: red[100] }, label: "Red" },
-  { id: 1, value: { primary: orange[200], secondary: orange[100] }, label: "Orange" },
-  { id: 2, value: { primary: yellow[200], secondary: yellow[100] }, label: "Yellow" },
+  { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
+  { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
+  { id: 2, value: { primary: yellow[300], secondary: yellow[200] }, label: "Yellow" },
   { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
   { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
   { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
-
-export default function Reminder() {
-  const location = useLocation();
-  let Color;
-  if (location.state == null) {
-    Color = localStorage.getItem('systemcolor');
-  }
-  else {
-    Color = location.state.color_choice;
-  }
-
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: Colors[Color].value.primary,
-      },
-      secondary: {
-        main: Colors[Color].value.secondary,
-      },
+const theme = createTheme({
+  palette: {
+    primary: orange,
+    secondary: {
+      main: "#ab5600",
     },
-  });
+  },
+});
+export default function Reminder(language) {
+  const languageData = languageLibrary[language][0].Reminder;
+  // const location = useLocation();
+  // let Color;
+  // if (location.state == null) {
+  //   Color = localStorage.getItem('systemcolor');
+  // }
+  // else {
+  //   Color = location.state.color_choice;
+  // }
+
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: Colors[Color].value.primary,
+  //     },
+  //     secondary: {
+  //       main: Colors[Color].value.secondary,
+  //     },
+  //   },
+  // });
   const IOSSwitch = styled((props) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
   ))(({ theme }) => ({
@@ -118,8 +127,8 @@ export default function Reminder() {
   };
 
   const [reminderOptions] = useState([
-    { id: 1, label: "Browser notification", value: 1 },
-    { id: 2, label: "Email", value: 2 },
+    { id: 1, label: languageData.browserNoti, value: 1 },
+    { id: 2, label: languageData.email, value: 2 },
   ]);
   const [selectReminderOptions, setReminderOptions] = useState(1)
   const handleReminderOptionsChange = (e) => {
@@ -130,12 +139,12 @@ export default function Reminder() {
   return (
     <ThemeProvider theme={theme}>
       <Card>
-        <CardHeader subheader="Update reminders settings" title="Reminder" />
+        <CardHeader subheader={languageData.updateReminderSetting} title={languageData.Reminder} />
         <Divider />
         <CardContent>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              Reminders:
+              {languageData.Reminder + ":"}
             </Typography>
             <FormControlLabel
               control={
@@ -150,10 +159,10 @@ export default function Reminder() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              Remind me:
+              {languageData.ReminderMe}
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="reminder_time">Time</InputLabel>
+              <InputLabel id="reminder_time">{languageData.Time}</InputLabel>
               <Select
                 labelId="r_time"
                 id="reminder_time"
@@ -164,7 +173,7 @@ export default function Reminder() {
               >
                 {timeOptions.map((option) => (
                   <MenuItem key={option.id} value={option.value}>
-                    {option.value} minutes before
+                    {option.value} {languageData.ReminderMe}
                   </MenuItem>
                 ))}
               </Select>
@@ -172,10 +181,10 @@ export default function Reminder() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-              How do you want to be notified?
+            {languageData.howUwantbeNotified}
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="reminder_option">Option</InputLabel>
+              <InputLabel id="reminder_option">{languageData.Option}</InputLabel>
               <Select
                 labelId="r_option"
                 id="reminder_option"

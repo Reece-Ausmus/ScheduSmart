@@ -9,22 +9,51 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { orange } from "@mui/material/colors";
 import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
+import { useLocation } from 'react-router-dom';
 
-const theme = createTheme({
-    palette: {
+const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
+const userId = sessionStorage.getItem("user_id");
+
+const Colors = [
+    { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
+    { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
+    { id: 2, value: { primary: yellow[300], secondary: yellow[200] }, label: "Yellow" },
+    { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
+    { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
+    { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
+    { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
+  ];
+
+const columns = [
+    { field: "eventName", headerName: "Workout Name", width: 200 },
+    { field: "caloriesBurned", headerName: "Calories Burned", width: 200 },
+];
+
+function GoalTracker({ habits }) {
+    const location = useLocation();
+    let Color;
+    if (location.state == null) {
+      Color = localStorage.getItem('systemcolor');
+    }
+    else {
+      Color = location.state.color_choice;
+    }
+
+    const theme = createTheme({
+      palette: {
         primary: {
-            main: orange[500],
+          main: Colors[Color].value.primary,
         },
         secondary: {
-            main: "#ab5600",
+          main: Colors[Color].value.secondary,
         },
-    },
-    components: {
+      },
+      components: {
         MuiDataGrid: {
           styleOverrides: {
             root: {
@@ -33,14 +62,8 @@ const theme = createTheme({
           },
         },
       },
-});
+    });
 
-const columns = [
-    { field: "eventName", headerName: "Event Name", width: 200 },
-    { field: "caloriesBurned", headerName: "Calories Burned", width: 200 },
-];
-
-function GoalTracker({ habits }) {
     const [exerciseEvents, setExerciseEvents] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
     const [eventName, setEventName] = useState("");
@@ -49,6 +72,38 @@ function GoalTracker({ habits }) {
     const [caloriesConsumed, setCaloriesConsumed] = useState(0); // Consumed calories, taken from Habits.jsx table
     const [totalCaloriesBurned, setTotalCaloriesBurned] = useState(0); // Total calories burned
 
+    useEffect(() => {
+        // Fetch all exercises when component mounts
+        fetchExercises();
+    }, []);
+
+    const fetchExercises = async () => {
+        try {
+            const response = await fetch(`${flaskURL}/get_exercises`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                }),
+            });
+
+            if (response.ok) {
+                const responseData = await response.json();
+                const sortedExerciseEvents = responseData.exercises.sort((a, b) => a.id - b.id);
+                setExerciseEvents(sortedExerciseEvents);
+            } else {
+                const errorData = await response.json();
+                console.error("Error fetching exercises: ", errorData.error);
+                alert("Failed to fetch exercises. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error fetching exercises: ", error);
+            alert("An error occurred while fetching exercises.");
+        }
+    };
+    
     useEffect(() => {
         // Update totalCaloriesBurned whenever exerciseEvents change
         const totalBurned = exerciseEvents.reduce((total, event) => total + event.caloriesBurned, 0);
@@ -74,30 +129,53 @@ function GoalTracker({ habits }) {
         setOpenDialog(false);
     };
 
-    const addExerciseEvent = () => {
+    const addExerciseEvent = async () => {
         if (eventName.trim() !== "" && caloriesBurned.trim() !== "") {
             const newEvent = {
-                eventName: eventName.trim(),
+                eventName: eventName.trim(), 
                 id: exerciseEvents.length + 1,
                 caloriesBurned: parseFloat(caloriesBurned),
             };
     
-            setExerciseEvents([...exerciseEvents, newEvent]);
+            try {
+                const response = await fetch(`${flaskURL}/add_exercise`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        id: newEvent.id, 
+                        caloriesBurned: newEvent.caloriesBurned, 
+                        eventName: newEvent.eventName, 
+                    }),
+                });
     
-            // Update totalCaloriesBurned
-            const newTotalCaloriesBurned = totalCaloriesBurned + parseFloat(caloriesBurned);
-            setTotalCaloriesBurned(newTotalCaloriesBurned);
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log(responseData.message);
     
-            setEventName("");
-            setOpenDialog(false);
+                    setExerciseEvents([...exerciseEvents, newEvent]);
+    
+                    setEventName("");
+                    setOpenDialog(false);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Error adding exercise event: ", errorData.error);
+                    alert("Failed to add exercise event. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error adding exercise event: ", error);
+                alert("An error occurred while adding the exercise event.");
+            }
         } else {
-            alert("Event Name and Calories Burned are required fields.");
+            alert("Workout Name and Calories Burned are required fields.");
         }
     };
-
+    
     const generateCSV = () => {
         const csvData = [
-            ["Event Name", "Calories Burned"],
+            ["Workout Name", "Calories Burned"],
             ...exerciseEvents.map((event) => [event.eventName, event.caloriesBurned]),
         ];
         const csvContent = csvData.map((row) => row.join(",")).join("\n");
@@ -137,7 +215,13 @@ function GoalTracker({ habits }) {
                         <CircularProgress
                             size={150}
                             variant="determinate"
-                            value={(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) * 100}
+                            value={Math.min((caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))), 1) * 100}
+                            sx={{
+                                color: (theme) =>
+                                    (caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) >= 1
+                                        ? theme.palette.success.main
+                                        : undefined,
+                            }}
                         />
                         <Box
                             sx={{
@@ -158,16 +242,20 @@ function GoalTracker({ habits }) {
                                 color="text.primary"
                                 style={{ fontWeight: "bold" }}
                             >
-                                {dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)}
+                                {(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) >= 1
+                                    ? "Complete!"
+                                    : dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)}
                             </Typography>
-                            <Typography
-                                variant="body2"
-                                component="div"
-                                color="text.secondary"
-                                style={{ fontSize: "smaller" }}
-                            >
-                                Remaining
-                            </Typography>
+                            {(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) < 1 && (
+                                <Typography
+                                    variant="body2"
+                                    component="div"
+                                    color="text.secondary"
+                                    style={{ fontSize: "smaller" }}
+                                >
+                                    Remaining
+                                </Typography>
+                            )}
                         </Box>
                     </Box>
                     <Typography
@@ -193,7 +281,7 @@ function GoalTracker({ habits }) {
                             onClick={handleDialogOpen}
                             style={{ marginRight: "10px" }}
                         >
-                            Add Exercise Event
+                            Add Workout
                         </Button>
                         <Button variant="contained" onClick={generateCSV}>
                             Export as CSV
@@ -201,13 +289,13 @@ function GoalTracker({ habits }) {
                     </div>
                 </div>
                 <Dialog open={openDialog} onClose={handleDialogClose}>
-                    <DialogTitle>Add New Exercise Event</DialogTitle>
+                    <DialogTitle>Add New Workout</DialogTitle>
                     <DialogContent>
                         <TextField
                             required
                             autoFocus
                             margin="dense"
-                            label="Event Name"
+                            label="Workout Name"
                             fullWidth
                             value={eventName}
                             onChange={(e) => setEventName(e.target.value)}

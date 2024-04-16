@@ -1,4 +1,4 @@
-import React, { useState,useRef,useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TextField, Button, List, ListItem, ListItemText, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -16,13 +16,30 @@ const theme = createTheme({
 });
 
 const Chatbox = () => {
-    const [messages, setMessages] = useState([]);
+    const { fname, id } = useParams();
     const [inputValue, setInputValue] = useState('');
-
-    const handleSendMessage = () => {
+    const [messages, setMessages] = useState([]);
+    // handle get messages
+    let start_point = 0;
+    const getMessages = async () => {
+        const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": start_point });
+        const message_history = response.data;
+        setMessages(message_history);
+    }
+    // handle send messgaes
+    const handleSendMessage = async () => {
         if (inputValue.trim() !== '') {
-            setMessages([...messages, { text: inputValue, sender: 'You' }]);
+            setMessages([...messages, { message: inputValue, type: 1 }]);
             setInputValue('');
+            const response = await send_request('/send_message', { "user_id": userId, "name": fname, "message": inputValue });
+            if (response.error != undefined) {
+                if (response.error == "friend not found") {
+                    alert("friend not found");
+                }
+                if (response.error == "fatal") {
+                    alert("type error or key error.");
+                }
+            }
         }
     };
     const messagesEndRef = useRef(null);
@@ -33,66 +50,56 @@ const Chatbox = () => {
         scrollToBottom();
     }, [messages]);
 
-    let start_point=0;
-    let { fname,id } = useParams();
-    // const getMessages = async() => {
-    //     const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": start_point });
-    //     const message_history = response.data;
-    //     console.log(message_history);
-    //     setMessages(message_history);
-    // }
-    // useEffect(() => {
-    //     const getMessages = async () => {
-    //         const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": start_point });
-    //         const message_history = response.data;
-    //         console.log(message_history);
-    //         setMessages(message_history);
-    //     }
-    //     getMessages();
-    //     return () => {};
-    // }, [])
+    useEffect(() => {
+        getMessages();
+        renderMessages(messages);
+    }, [])
+
+    const renderMessages = (messages) => {
+        return messages.map((message, index) => (
+            <ListItem key={index} style={{ textAlign: message.type === 1 ? "left" : "right" }}>
+                <ListItemText
+                    primary={message.type === 1 ? "You" : fname}
+                    secondary={message.message}
+                    primaryTypographyProps={{ color: 'primary' }}
+                    secondaryTypographyProps={{ color: 'textPrimary' }}
+                />
+            </ListItem>
+        ));
+    };
 
     return (
         <ThemeProvider theme={theme}>
-            <div style={{ minHeight: 'calc(100vh - 100px)', position: 'relative',top:'30px' }}>
-            <Paper style={{ height: 'calc(100vh - 200px)', overflowY: 'auto' }}>
-                <List>
-                    {messages.map((message, index) => (
-                        <ListItem key={index}>
-                            <ListItemText
-                                primary={message.sender}
-                                secondary={message.text}
-                                primaryTypographyProps={{ color: 'primary' }}
-                                secondaryTypographyProps={{ color: 'textPrimary' }}
-                            />
-                        </ListItem>
-                    ))}
-                    <div ref={messagesEndRef} />
-                </List>
-            </Paper>
-            <div style={{ position: 'absolute', bottom: -30, left: 0, right: 0 }}>
-                <TextField
-                    label="Type a message"
-                    variant="outlined"
-                    fullWidth
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}/>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSendMessage}
-                    style={{ marginTop: '10px', alignSelf: 'flex-end' }}>
-                    Send
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    href="/friendlist"
-                    style={{ marginTop: '10px', alignSelf: 'flex-end',marginLeft:'20px' }}>
-                    Back
-                </Button>
-            </div>
+            <div style={{ minHeight: 'calc(100vh - 100px)', position: 'relative', top: '30px' }}>
+                <Paper style={{ height: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+                    <List>
+                        {renderMessages(messages)}
+                        <div ref={messagesEndRef} />
+                    </List>
+                </Paper>
+                <div style={{ position: 'absolute', bottom: -30, left: 0, right: 0 }}>
+                    <TextField
+                        label="Type a message"
+                        variant="outlined"
+                        fullWidth
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSendMessage}
+                        style={{ marginTop: '10px', alignSelf: 'flex-end' }}>
+                        Send
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        href="/friendlist"
+                        style={{ marginTop: '10px', alignSelf: 'flex-end', marginLeft: '20px' }}>
+                        Back
+                    </Button>
+                </div>
             </div>
         </ThemeProvider>
     );

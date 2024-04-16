@@ -16,7 +16,6 @@ import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import StarRateIcon from '@mui/icons-material/StarRate';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { orange, grey } from "@mui/material/colors";
 import Fab from "@mui/material/Fab";
 import Icon from "@mui/material/Icon";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -60,6 +59,8 @@ import dayjs from 'dayjs';
 import GPTChatBox from '../components/GPTChatBox.jsx'
 import "./TaskManager.css"
 import emailjs from '@emailjs/browser';
+import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
+import { useLocation } from 'react-router-dom';
 
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 import { isCellExitEditModeKeys } from "@mui/x-data-grid/utils/keyboardUtils.js";
@@ -69,7 +70,15 @@ const flaskURL = "http://127.0.0.1:5000";
 
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
-
+const Colors = [
+  { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
+  { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
+  { id: 2, value: { primary: yellow[300], secondary: yellow[200] }, label: "Yellow" },
+  { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
+  { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
+  { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
+  { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
+];
 const theme = createTheme({
   palette: {
     primary: orange,
@@ -162,6 +171,25 @@ let userData = {};
 
 // create new task manager
 export default function TaskManager() {
+  // const location = useLocation();
+  // let Color;
+  // if (location.state == null) {
+  //   Color = localStorage.getItem('systemcolor');
+  // }
+  // else {
+  //   Color = location.state.color_choice;
+  // }
+
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: Colors[Color].value.primary,
+  //     },
+  //     secondary: {
+  //       main: Colors[Color].value.secondary,
+  //     },
+  //   },
+  // });
   const handleInfo = async (event) => {
     const response = await fetch(flaskURL + "/user_data", {
       method: "POST",
@@ -599,7 +627,7 @@ export default function TaskManager() {
             justifyContent: "space-between",
           }}
         >
-          <h1>Task List</h1>
+          <h1 style={{ color: theme.palette.primary.main }}>Task List</h1>
           <div
             style={{
               display: "flex",
@@ -705,7 +733,7 @@ export default function TaskManager() {
             </Grid>
           </Grid>
 
-          <dialog id="modal" style={{ background: "#f8c06c" }}>
+          <dialog id="modal" style={{ background: theme.palette.secondary.main}}>
             <DialogTitle style={{ color: "black" }}>Add tasks:</DialogTitle>
             <DialogContent>
               <Grid

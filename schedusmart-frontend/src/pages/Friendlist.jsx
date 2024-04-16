@@ -21,7 +21,6 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { orange } from "@mui/material/colors";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -36,10 +35,20 @@ import MessageIcon from '@mui/icons-material/Message';
 import IconButton from '@mui/material/IconButton';
 import Typography from "@mui/material/Typography";
 import Chatbox from "../components/New_chatbox"
+import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
+import { useLocation } from 'react-router-dom';
 
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
-
+const Colors = [
+    { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
+    { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
+    { id: 2, value: { primary: yellow[300], secondary: yellow[200] }, label: "Yellow" },
+    { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
+    { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
+    { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
+    { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
+];
 const theme = createTheme({
     palette: {
         primary: orange,
@@ -48,30 +57,6 @@ const theme = createTheme({
         },
     },
 });
-
-// Get messages
-const messageExamples = [
-    {
-        name: 'Stanley',
-        message1: "I'll be in the neighbourhood this week. Let's grab a bite to eat",
-        person: '/static/images/avatar/5.jpg',
-        id: 1,
-    },
-    {
-        name: 'Cassie',
-        message1: "I'll be in the neighbourhood this week. Let's grab a bite to eat",
-        person: '/static/images/avatar/5.jpg',
-        id: 2,
-    },
-];
-function refreshMessages() {
-    return messageExamples;
-}
-
-// const messages = async()=> {
-//     const response = await send_request("/get_messages", { "user_id": userId, "name":friend,"start_point":0});
-
-// }
 
 // Get friend list
 const nameList = [
@@ -100,10 +85,26 @@ ListItemLink.propTypes = {
 };
 
 export default function Friendlist() {
+    // const location = useLocation();
+    // let Color;
+    // if (location.state == null) {
+    //   Color = localStorage.getItem('systemcolor');
+    // }
+    // else {
+    //   Color = location.state.color_choice;
+    // }
+
+    // const theme = createTheme({
+    //   palette: {
+    //     primary: {
+    //       main: Colors[Color].value.primary,
+    //     },
+    //     secondary: {
+    //       main: Colors[Color].value.secondary,
+    //     },
+    //   },
+    // });
     // Implementation of invitations
-    const [value, setValue] = useState(0);
-    const ref = useRef(null);
-    const [messages, setMessages] = useState(() => refreshMessages());
     const [invitationopen, setInvitationOpen] = useState(false);
     const [confirmationOpen, setConfirmationOpen] = useState(false);
     const [Props, setProps] = useState({ options: [] });
@@ -163,8 +164,6 @@ export default function Friendlist() {
 
     // Implementation of request list 
     const [requestopen, setRequestOpen] = useState(false);
-    // const [makeChoice , setMakeChoice] = useState(false);
-    // const [confirmedFriends, setConfirmedFriends] = useState([]);
     const handleRequestClickOpen = () => {
         setRequestOpen(true);
     };
@@ -182,7 +181,7 @@ export default function Friendlist() {
         if (requestopen) {
             getRequestList();
         }
-    }, [requestopen,requestList]);
+    }, [requestopen, requestList]);
 
     const confirmRequest = async (friend, choice) => {
         console.log(choice);
@@ -198,7 +197,6 @@ export default function Friendlist() {
                 alert("admit request not found");
             }
         }
-        // setMakeChoice(true);
     }
 
     // Implementation of friend list 
@@ -208,20 +206,60 @@ export default function Friendlist() {
         const friend_list = response.friend
         setFriendList(friend_list);
     };
+
+    //Implementation of last messages and avatar
+    const [value, setValue] = useState(0);
+    let start_point = 0;
+    const ref = useRef(null);
+    const [lastMessageHandled, setLastMessageHandled] = useState(false);
+    const avatar_colors = [
+        '#2196f3', // Blue
+        '#f44336', // Red
+        '#4caf50', // Green
+        '#ff9800', // Orange
+        '#9c27b0', // Purple
+        '#ffeb3b', // Yellow
+        '#00bcd4', // Cyan
+    ];
+    const getRandomColor = () => {
+        const randomColorIndex = Math.floor(Math.random() * avatar_colors.length);
+        return avatar_colors[randomColorIndex];
+    };
+    const handleLastMessage = async () => {
+        const updatedFriendList = await Promise.all(friendList.map(async (friend) => {
+            const fname = friend.name;
+            const response = await send_request('/get_messages', { "user_id": userId, "name": fname, "start_point": start_point });
+            const lastMessageIndex = response.data.length - 1;
+            if (response.data.length > 0) {
+                const lastMessageIndex = response.data.length - 1;
+                friend.message = response.data[lastMessageIndex].message;
+                friend.avatar_color = getRandomColor();
+            }
+            console.log(friend);
+            return friend;
+        }));
+        setFriendList(updatedFriendList);
+    };
     useEffect(() => {
         getfriendList();
     }, []);
 
     useEffect(() => {
+        if (friendList && friendList.length > 0 && !lastMessageHandled) {
+            handleLastMessage();
+            setLastMessageHandled(true);
+        }
+    }, [friendList]);
+
+    useEffect(() => {
         ref.current.ownerDocument.body.scrollTop = 0;
-        setMessages(refreshMessages());
-    }, [value, setMessages]);
+    }, [value]);
 
     return (
         <ThemeProvider theme={theme}>
             <div>{Dashboard()}</div>
             <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                <h1>Friend list</h1>
+                <h1 style={{ color: theme.palette.primary.main }}>Friend list</h1>
                 <Fab
                     aria-label="add"
                     color="primary"
@@ -273,6 +311,19 @@ export default function Friendlist() {
                     color="primary"
                     size="small">
                     <MessageIcon onClick={handleRequestClickOpen} />
+                    {requestList.length != 0 && (
+                        <span
+                            style={{
+                                position: 'absolute',
+                                top: 5,
+                                right: 5,
+                                backgroundColor: 'red',
+                                width: 10,
+                                height: 10,
+                                borderRadius: '50%',
+                            }}
+                        />
+                    )}
                 </Fab>
                 <Dialog
                     open={requestopen}
@@ -311,13 +362,12 @@ export default function Friendlist() {
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List sx={{ width: "40%" }}>
-                    {friendList.length > 0 ? friendList.map(({ name, confirm }, index) => (
-                        <ListItemButton key={index + name} component={Link} to={`/friendlist/${name}/${index}`}>
+                    {friendList.length > 0 ? friendList.map(({ name, confirm, message,avatar_color }, id) => (
+                        <ListItemButton key={id + name} component={Link} to={`/friendlist/${name}/${id}`}>
                             <ListItemAvatar>
-                                <Avatar alt="Profile Picture" src={name} />
+                                <Avatar sx={{ bgcolor: avatar_color}}>{name[0]}</Avatar>
                             </ListItemAvatar>
-                            {/* <ListItemText primary={name} secondary={confirm} /> */}
-                            <ListItemText primary={name} />
+                            <ListItemText primary={name} secondary={message} />
                         </ListItemButton>)) : <Typography variant="body1">No friends found.</Typography>}
                 </List>
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>

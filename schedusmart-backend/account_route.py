@@ -18,6 +18,7 @@ def create_account():
         response.status_code = 206
     return response
 
+
 # this is where you modify login method
 @account.route('/login', methods=['POST'])
 def login():
@@ -133,6 +134,56 @@ def update_account_info():
         response = jsonify({'error': 'missing information'})
         response.status_code = 206
     return response
+
+
+# This route is for adding exercises
+@account.route('/add_exercise', methods=['POST'])
+def add_exercise():
+    data = request.get_json()
+    try:
+        result = add_new_exercise(data)
+        if result == 0:
+            response = jsonify({'message': 'Exercise added successfully'})
+            response.status_code = 201
+        else:
+            response = jsonify({'error': 'Failed to add exercise'})
+            response.status_code = 400
+    except Exception as e:
+        response = jsonify({'error': 'An error occured'})
+        response.status_code = 500
+    return response
+
+
+# This route is for getting all exercises for a user
+@account.route('/get_exercises', methods=['POST'])
+def get_exercises():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's exercises
+    user_exercises_path = f"/Exercise/{user_id}"
+
+    try:
+        # Get all exercises for the user from the Firebase database
+        user_exercises = db.child(user_exercises_path).get()
+
+        # If the user has no exercises, return an empty list
+        if not user_exercises.val():
+            return jsonify({'exercises': []}), 200
+
+        # Convert Firebase response to list of exercises
+        exercises_list = []
+        for event_name, exercise_data in user_exercises.val().items():
+            exercise_data['eventName'] = event_name
+            exercises_list.append(exercise_data)
+
+        return jsonify({'exercises': exercises_list}), 200
+    except Exception as e:
+        print("Failed to get exercises:", e)
+        return jsonify({'error': 'Failed to get exercises'}), 500
 
 
 # This route is for adding habits
@@ -286,6 +337,20 @@ def confirm_friend():
         return jsonify({"error": "lack of information"}), 201
 
 
+@account.route('/delete_friend', methods=['POST'])
+def delete_friend():
+    delete_data = request.get_json()
+    try:
+        if not delete_data["user_id"]:
+            return jsonify({"error": "user_id not provided"}), 201
+        if not delete_data["name"]:
+            return jsonify({"error": "friend not provided"}), 201
+
+        return jsonify(delete_amigos(delete_data)), 201
+    except KeyError:
+        return jsonify({"error": "lack of information"}), 201
+
+
 @account.route('/search_user', methods=['POST'])
 def search_user():
     data = request.get_json()
@@ -339,6 +404,7 @@ def get_messages():
 
     return jsonify(get_message(request_message_data)), 201
 
+
 # This route is for changing system color
 @account.route('/change_system_color', methods=['POST'])
 def change_system_color():
@@ -357,3 +423,28 @@ def change_system_color():
         response.status_code = 206
     return response
 
+
+# This route is for getting users' choice of system color
+@account.route('/get_system_color', methods=['POST'])
+def get_system_color():
+    info = request.get_json()
+    data = get_system_color_settings(info)
+    response = jsonify({'type': data})
+    response.status_code = 201
+    return response
+
+
+@account.route('/change_language', methods=['POST'])
+def change_language():
+    language_data = request.get_json()
+    try:
+        if not language_data["user_id"]:
+            return jsonify({"error": "user_id is required"}), 201
+    except KeyError:
+        return jsonify({"error": "user_id is required"}), 201
+    try:
+        if not language_data["language"]:
+            return jsonify({"error": "language field is required"}), 201
+    except KeyError:
+        return jsonify({"error": "language field is required"}), 201
+    return jsonify(update_language(language_data)), 201
