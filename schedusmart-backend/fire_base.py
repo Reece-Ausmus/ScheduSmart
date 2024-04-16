@@ -70,6 +70,7 @@ import traceback
 import difflib
 from datetime import datetime, timedelta
 import random
+from datetime import datetime
 
 
 # to use this function, you will need to first log in the account with method:
@@ -1022,13 +1023,25 @@ def add_message(add_data):
 
 def get_user_events_data_db(data):
     user_id = data['user_id']
+    time_filter = data['time_filter']
     for calendar in db.child("User").child(user_id).child("Calendars").get().each():
         calendar_id = calendar.val()['calendar_id']
         events = db.child("Calendars").child(calendar_id).child("Events").get().each()
         event_list = []
         for event in events:
             event_data = db.child("Events").child(event['event_id']).get().val()
-            event_list.append(event_data)
+            time_ago = (datetime.now() - datetime.strptime(event_data['start_time'], '%Y-%m-%d %H:%M:%S')).days
+            if time_filter == 365:
+                if time_ago <= 365:
+                    event_list.append(event_data)
+            elif time_filter == 30:
+                if time_ago <= 30:
+                    event_list.append(event_data)
+            elif time_filter == 7:
+                if time_ago <= 7:
+                    event_list.append(event_data)
+            else:
+                event_list.append(event_data)
     event_type = []
     availability_type = []
     courses_type = []
