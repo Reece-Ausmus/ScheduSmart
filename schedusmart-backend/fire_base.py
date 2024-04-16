@@ -1024,13 +1024,21 @@ def add_message(add_data):
 def get_user_events_data_db(data):
     user_id = data['user_id']
     time_filter = data['time_filter']
-    for calendar in db.child("User").child(user_id).child("Calendars").get().each():
+    event_list = []
+    for calendar in db.child("User").child(user_id).child("calendars").get().each():
+        if calendar.val() is None:
+            continue
         calendar_id = calendar.val()['calendar_id']
+        if db.child("Calendars").child(calendar_id).get().val() is None:
+            continue
+        if db.child("Calendars").child(calendar_id).get().val()['name'] == 'Invitations':
+            continue
         events = db.child("Calendars").child(calendar_id).child("Events").get().each()
-        event_list = []
+        if events is None:
+            continue
         for event in events:
-            event_data = db.child("Events").child(event['event_id']).get().val()
-            time_ago = (datetime.now() - datetime.strptime(event_data['start_time'], '%Y-%m-%d %H:%M:%S')).days
+            event_data = db.child("Events").child(event.val()['event_id']).get().val()
+            time_ago = (datetime.now() - datetime.strptime(event_data['start_date'] + ' ' + event_data['start_time'], '%Y-%m-%d %H:%M')).days
             if time_filter == 365:
                 if time_ago <= 365:
                     event_list.append(event_data)
@@ -1055,13 +1063,27 @@ def get_user_events_data_db(data):
             courses_type.append(event)
         elif event['type'] == 'breaks':
             breaks_type.append(event)
-    event_list = {
+    event_type_list = {
         'event': event_type,
         'availability': availability_type,
-        'courses': courses_type,
-        'breaks': breaks_type
+        'course': courses_type,
+        'break': breaks_type
     }
-    return {"data": event_list}
+    average_lengths = {}
+    for event_type, events in event_type_list.items():
+        total_length = 0
+        count = 0
+        for event in events:
+            total_length += (datetime.strptime(event['end_date'] + ' ' + event['end_time'], '%Y-%m-%d %H:%M') - datetime.strptime(event['start_date'] + ' ' + event['start_time'], '%Y-%m-%d %H:%M')).total_seconds() / 60
+            count += 1
+        if count > 0:
+            average_length = total_length / count
+            average_lengths[event_type] = average_length
+        else:
+            average_lengths[event_type] = 0
+
+    print(average_lengths)
+    return {"events": event_list, "event_types": event_type_list, "average_lengths": average_lengths}
 
 # Make sure you download the firebaseConfig.py file in google doc
 firebase = pyrebase.initialize_app(firebaseConfig)

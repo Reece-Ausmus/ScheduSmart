@@ -30,8 +30,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import SetupCourses from "./SetupCourses";
-import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
-import { useLocation } from 'react-router-dom';
+import {
+  red,
+  orange,
+  yellow,
+  green,
+  blue,
+  purple,
+  pink,
+} from "@mui/material/colors";
+import { useLocation } from "react-router-dom";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 // Google map
 const GOOGLE_MAPS_API_KEY = "AIzaSyBE_-PEMobIdPsVtpmFOrTm7u-CAB9QGRM";
@@ -48,11 +56,27 @@ function loadScript(src, position, id) {
 const autocompleteService = { current: null };
 const Colors = [
   { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
-  { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
-  { id: 2, value: { primary: yellow[300], secondary: yellow[200] }, label: "Yellow" },
-  { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
+  {
+    id: 1,
+    value: { primary: orange[300], secondary: orange[200] },
+    label: "Orange",
+  },
+  {
+    id: 2,
+    value: { primary: yellow[300], secondary: yellow[200] },
+    label: "Yellow",
+  },
+  {
+    id: 3,
+    value: { primary: green[200], secondary: green[100] },
+    label: "Green",
+  },
   { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
-  { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
+  {
+    id: 5,
+    value: { primary: purple[200], secondary: purple[100] },
+    label: "Purple",
+  },
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
 
@@ -536,6 +560,17 @@ export default function MainFrame() {
     };
 
     const handleCreateEvent = async () => {
+      let calendar = "";
+      if (eventType === "availability") {
+        calendar = calendarList.find(
+          (cal) => cal.name === "Availability"
+        )?.calendar_id;
+      } else {
+        calendar = calendarList.find(
+          (cal) => cal.name === eventCalendar
+        )?.calendar_id;
+      }
+      console.log(calendar);
       const new_event = {
         name: eventName,
         desc: eventDescription,
@@ -545,8 +580,7 @@ export default function MainFrame() {
         end_date: eventEndDate,
         conferencing_link: eventConferencingLink,
         location: eventLocation,
-        calendar: calendarList.find((cal) => cal.name === eventCalendar)
-          ?.calendar_id,
+        calendar: calendar,
         repetition_type: eventRepetitionType,
         repetition_unit: eventCustomFrequencyUnit,
         repetition_val: eventCustomFrequencyValue,
@@ -555,7 +589,7 @@ export default function MainFrame() {
         emails: eventEmailInvitations,
         type: eventType,
       };
-
+      console.log(new_event);
       const create_event_response = await send_request(
         "/create_event",
         new_event
@@ -948,7 +982,7 @@ export default function MainFrame() {
         }
       }
 
-      handleCancelClosestAvailable()
+      handleCancelClosestAvailable();
     };
 
     const handleCancelClosestAvailable = () => {

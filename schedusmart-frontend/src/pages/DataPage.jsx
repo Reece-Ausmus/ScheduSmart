@@ -43,7 +43,7 @@ const theme = createTheme({
   },
 });
 
-const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+const uData = [4000, 3000, 2000, 2780];
 const xLabels = [
   "Page A",
   "Page B",
@@ -60,11 +60,14 @@ export default function SimpleBarChart() {
     setTimeFilter(e.target.value);
   };
 
+  const [eventTypeData, setEventTypeData] = useState([0, 0, 0, 0]);
+  const [eventTypeAvg, setEventTypeAvg] = useState([0, 0, 0, 0]);
+
   // when time filter is updated, get new data
   useEffect(() => {
     const getEventData = async () => {
       const response = await fetch(flaskURL + "/get_user_events_data", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -77,9 +80,22 @@ export default function SimpleBarChart() {
       } else {
         switch (response.status) {
           case 201:
-            console.log("Event data retrieved successfully");
+            //console.log("Event data retrieved successfully");
             const eventDataResponse = await response.json();
-            console.log(eventDataResponse);
+            const eventTypes = eventDataResponse["event_types"];
+            const eventAvgs = eventDataResponse["average_lengths"];
+            setEventTypeData([
+              eventTypes["event"].length,
+              eventTypes["availability"].length,
+              eventTypes["course"].length,
+              eventTypes["break"].length,
+            ]);
+            setEventTypeAvg([
+              eventAvgs["event"],
+              eventAvgs["availability"],
+              eventAvgs["course"],
+              eventAvgs["break"],
+            ]);
             break;
           case 205:
             alert("Event Data not retrieved!");
@@ -97,36 +113,70 @@ export default function SimpleBarChart() {
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
-      <Box sx={{ minWidth: 120, maxWidth: 300 }}>
-        <Typography
-          component="h1"
-          variant="h5"
-          style={{ marginBottom: "20px", marginTop: "20px" }}
-        >
-          Data Dashboard
-        </Typography>
-        <FormControl fullWidth margin="normal">
-          <InputLabel id="timeFilterLabel">Time Period</InputLabel>
-          <Select
-            labelId="timeFilterLabel"
-            id="timeFilterSelect"
-            value={timeFilter}
-            label="Time Filter"
-            onChange={handleTimeFilterChange}
+      <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
+        <Box sx={{ minWidth: 120, maxWidth: 300 }}>
+          <Typography
+            component="h1"
+            variant="h5"
+            style={{ marginBottom: "20px", marginTop: "20px" }}
           >
-            <MenuItem value={0}>All</MenuItem>
-            <MenuItem value={7}>Past 7 Days</MenuItem>
-            <MenuItem value={30}>Past 30 Days</MenuItem>
-            <MenuItem value={365}>Past Year</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-      <BarChart
-        width={500}
-        height={300}
-        series={[{ data: uData, label: "uv", id: "uvId" }]}
-        xAxis={[{ data: xLabels, scaleType: "band" }]}
-      />
+            Data Dashboard
+          </Typography>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="timeFilterLabel">Time Period</InputLabel>
+            <Select
+              labelId="timeFilterLabel"
+              id="timeFilterSelect"
+              value={timeFilter}
+              label="Time Filter"
+              onChange={handleTimeFilterChange}
+            >
+              <MenuItem value={0}>All</MenuItem>
+              <MenuItem value={7}>Past 7 Days</MenuItem>
+              <MenuItem value={30}>Past 30 Days</MenuItem>
+              <MenuItem value={365}>Past Year</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Box sx={{ minWidth: 120, maxWidth: 500 }}>
+          <Typography
+            component="h2"
+            variant="h5"
+            style={{ marginBottom: "20px", marginTop: "20px" }}
+          >
+            Event Type Distribution
+          </Typography>
+          <BarChart
+            width={500}
+            height={300}
+            colors={[orange[500], orange[200]]}
+            series={[
+              {
+                data: eventTypeData,
+                label: "Number of Events",
+                id: "eventTypeId",
+
+                yAxisKey: "leftAxisId",
+              },
+              {
+                data: eventTypeAvg,
+                label: "Average Length (minutes)",
+                id: "avgTypeId",
+
+                yAxisKey: "rightAxisId",
+              },
+            ]}
+            xAxis={[
+              {
+                data: ["Event", "Availability", "Course", "Break"],
+                scaleType: "band",
+              },
+            ]}
+            yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
+            rightAxis="rightAxisId"
+          />
+        </Box>
+      </Container>
     </ThemeProvider>
   );
 }
