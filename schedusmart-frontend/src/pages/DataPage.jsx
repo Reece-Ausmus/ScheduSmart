@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { flaskURL, user_id } from "../config";
 import { ResponsiveChartContainer, BarPlot } from "@mui/x-charts";
 import { saveAs } from "file-saver";
 import Button from "@mui/material/Button";
@@ -44,7 +44,6 @@ const theme = createTheme({
 });
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
 const xLabels = [
   "Page A",
   "Page B",
@@ -60,6 +59,40 @@ export default function SimpleBarChart() {
   const handleTimeFilterChange = (e) => {
     setTimeFilter(e.target.value);
   };
+
+  // when time filter is updated, get new data
+  useEffect(() => {
+    const getEventData = async () => {
+      const response = await fetch(flaskURL + "/get_event_data", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: user_id, time_filter: timeFilter }),
+        credentials: "include",
+      });
+      if (!response.ok) {
+        alert("Something went wrong, refresh your website!");
+        return;
+      } else {
+        switch (response.status) {
+          case 201:
+            console.log("Event data retrieved successfully");
+            const eventDataResponse = await response.json();
+            console.log(eventDataResponse);
+            break;
+          case 205:
+            alert("Event Data not retrieved!");
+            break;
+          case 206:
+            alert("Missing information!");
+            break;
+        }
+      }
+    };
+
+    getEventData();
+  }, [timeFilter]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -91,10 +124,7 @@ export default function SimpleBarChart() {
       <BarChart
         width={500}
         height={300}
-        series={[
-          { data: pData, label: "pv", id: "pvId" },
-          { data: uData, label: "uv", id: "uvId" },
-        ]}
+        series={[{ data: uData, label: "uv", id: "uvId" }]}
         xAxis={[{ data: xLabels, scaleType: "band" }]}
       />
     </ThemeProvider>
