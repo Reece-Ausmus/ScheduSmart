@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import CssBaseline from '@mui/material/CssBaseline';
+import Checkbox from '@mui/material/Checkbox';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import Dashboard from "./Dashboard";
@@ -37,6 +38,7 @@ import Typography from "@mui/material/Typography";
 import Chatbox from "../components/New_chatbox"
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { useLocation } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
@@ -160,6 +162,8 @@ export default function Friendlist() {
             }
         }
         setConfirmationOpen(true);
+        getRequestList();
+        getfriendList();
     };
 
     // Implementation of request list 
@@ -171,18 +175,12 @@ export default function Friendlist() {
         setRequestOpen(false);
     };
     const [requestList, setRequestList] = useState([]);
-
+    const [FirstGetRequestList, setFirstGetRequestList] = useState(false);
     const getRequestList = async () => {
         const response = await send_request("/get_friends", { "user_id": userId });
         const request_list = response.request;
         setRequestList(request_list);
     };
-    useEffect(() => {
-        if (requestopen) {
-            getRequestList();
-        }
-    }, [requestopen, requestList]);
-
     const confirmRequest = async (friend, choice) => {
         console.log(choice);
         const response = await send_request("/confirm_friend", { "user_id": userId, "name": friend, "confirm": choice });
@@ -197,7 +195,40 @@ export default function Friendlist() {
                 alert("admit request not found");
             }
         }
+        handleRequestClose();
+        getRequestList();
+        getfriendList();
     }
+    const RedDot = () => (
+        <span
+            style={{
+                position: 'absolute',
+                top: 5,
+                right: 5,
+                backgroundColor: 'red',
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+            }}
+        />
+    );
+    const handlereddot = () => {
+        if (requestList.length !== 0) {
+            return <RedDot />;
+        }
+        return null;
+    };
+    useEffect(() => {
+        getRequestList();
+    }, []);
+
+    useEffect(() => {
+        if (requestopen && !FirstGetRequestList) {
+            getRequestList();
+            setFirstGetRequestList(true);
+        }
+        handlereddot();
+    }, [requestopen, requestList]);
 
     // Implementation of friend list 
     const [friendList, setFriendList] = useState([]);
@@ -205,6 +236,22 @@ export default function Friendlist() {
         const response = await send_request("/get_friends", { "user_id": userId });
         const friend_list = response.friend
         setFriendList(friend_list);
+    };
+    const [deleteMode, setDeleteMode] = useState(false);
+    const [selectedFriends, setSelectedFriends] = useState([]);
+    const handleDeleteButtonClick = () => {
+        setDeleteMode(true);
+    };
+    const handleFriendCheckboxChange = (name, checked) => {
+        if (checked) {
+            setSelectedFriends([...selectedFriends, name]);
+        } else {
+            setSelectedFriends(selectedFriends.filter((friend) => friend !== name));
+        }
+    };
+    const handleDeleteClick = async () => {
+        setSelectedFriends([]);
+        setDeleteMode(false);
     };
 
     //Implementation of last messages and avatar
@@ -221,19 +268,13 @@ export default function Friendlist() {
         '#ffeb3b', // Yellow
         '#00bcd4', // Cyan
     ];
-    const getRandomColor = () => {
-        const randomColorIndex = Math.floor(Math.random() * avatar_colors.length);
-        return avatar_colors[randomColorIndex];
-    };
     const handleLastMessage = async () => {
         const updatedFriendList = await Promise.all(friendList.map(async (friend) => {
             const fname = friend.name;
             const response = await send_request('/get_messages', { "user_id": userId, "name": fname, "start_point": start_point });
-            const lastMessageIndex = response.data.length - 1;
             if (response.data.length > 0) {
                 const lastMessageIndex = response.data.length - 1;
                 friend.message = response.data[lastMessageIndex].message;
-                friend.avatar_color = getRandomColor();
             }
             console.log(friend);
             return friend;
@@ -241,6 +282,7 @@ export default function Friendlist() {
         setFriendList(updatedFriendList);
     };
     useEffect(() => {
+        setLastMessageHandled(false);
         getfriendList();
     }, []);
 
@@ -311,19 +353,7 @@ export default function Friendlist() {
                     color="primary"
                     size="small">
                     <MessageIcon onClick={handleRequestClickOpen} />
-                    {requestList.length != 0 && (
-                        <span
-                            style={{
-                                position: 'absolute',
-                                top: 5,
-                                right: 5,
-                                backgroundColor: 'red',
-                                width: 10,
-                                height: 10,
-                                borderRadius: '50%',
-                            }}
-                        />
-                    )}
+                    {handlereddot()}
                 </Fab>
                 <Dialog
                     open={requestopen}
@@ -340,7 +370,6 @@ export default function Friendlist() {
                         <List sx={{ width: 500 }}>
                             {requestList.length > 0 ? (requestList.map(({ name, confirm, chatroom }, index) => (
                                 <ListItem key={name + index}>
-
                                     <ListItemText primary={`${name} wants to add you as a friend`} />
                                     <ListItemSecondaryAction>
                                         <IconButton edge="end" aria-label="accept" sx={{ color: 'green' }} onClick={() => confirmRequest(name, true)}>
@@ -358,17 +387,33 @@ export default function Friendlist() {
                         <Button onClick={handleRequestClose}>Back</Button>
                     </DialogActions>
                 </Dialog>
+                <Fab
+                    aria-label="friend request"
+                    color="primary"
+                    size="small">
+                    <DeleteIcon onClick={handleDeleteButtonClick} />
+                </Fab>
+                {deleteMode && <Button>Delete</Button>}
             </div>
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
-                <List sx={{ width: "40%" }}>
-                    {friendList.length > 0 ? friendList.map(({ name, confirm, message,avatar_color }, id) => (
+                <List sx={{ width: "70%" }}>
+                    {friendList.length > 0 ? friendList.map(({ name, confirm, message, avatar_color }, id) => (
                         <ListItemButton key={id + name} component={Link} to={`/friendlist/${name}/${id}`}>
+                            {/* {deleteMode && (
+                                <ListItemIcon>
+                                    <Checkbox
+                                        onChange={(e) => handleFriendCheckboxChange(name, e.target.checked)}
+                                        checked={selectedFriends.includes(name)}
+                                    />
+                                </ListItemIcon>
+                            )} */}
                             <ListItemAvatar>
-                                <Avatar sx={{ bgcolor: avatar_color}}>{name[0]}</Avatar>
+                                <Avatar sx={{ bgcolor: avatar_color }}>{name[0]}</Avatar>
                             </ListItemAvatar>
                             <ListItemText primary={name} secondary={message} />
-                        </ListItemButton>)) : <Typography variant="body1">No friends found.</Typography>}
+                        </ListItemButton>)) : <Typography variant="body1">No friends found.</Typography>
+                    }
                 </List>
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                     <BottomNavigation
