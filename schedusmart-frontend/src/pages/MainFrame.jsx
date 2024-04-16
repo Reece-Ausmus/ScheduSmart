@@ -98,6 +98,7 @@ const steps = [
   {
     target: "#timezone-select",
     content: "Update your timezone here.",
+    disablebeacon: false,
   },
 ];
 
@@ -1856,6 +1857,23 @@ export default function MainFrame() {
     );
   }
 
+  const [showTour, setShowTour] = useState(false);
+
+  useEffect(() => {
+    const hasCompletedTour = sessionStorage.getItem('hasCompletedTour');
+    if (!hasCompletedTour) {
+      setShowTour(true);
+    }
+  }, []);
+
+  const handleTourFinish = () => {
+    const hasCompletedTour = sessionStorage.getItem('hasCompletedTour');
+    if (!hasCompletedTour) {
+      sessionStorage.setItem('hasCompletedTour', 'true');
+    }
+    setShowTour(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div className="container">
@@ -1879,6 +1897,12 @@ export default function MainFrame() {
           showProgress={true}
           // user can skip the tours
           showSkipButton={true}
+          run={showTour}
+          callback={({ action }) => {
+            if (action === 'reset') {
+              handleTourFinish();
+            }
+          }}
         />
 
         <div>{Dashboard()}</div>
