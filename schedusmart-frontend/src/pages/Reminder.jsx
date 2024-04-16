@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -193,11 +193,12 @@ export default function Reminder(language) {
                 onChange={handleReminderOptionsChange}
                 style={{ minWidth: '120px' }}
               >
-                {reminderOptions.map((option) => (
-                  <MenuItem key={option.id} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
+                <MenuItem key={1} value={1}>
+                  {languageData.browserNoti}
+                </MenuItem>
+                <MenuItem key={2} value={2}>
+                  {languageData.email}
+                </MenuItem>
               </Select>
             </FormControl>
           </div>
