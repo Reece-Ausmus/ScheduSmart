@@ -1020,6 +1020,35 @@ def add_message(add_data):
     db.child("Chat_Room").child(chat_room).update({"counter": count})
     return {"message": "done"}
 
+def get_user_events_data_db(data):
+    user_id = data['user_id']
+    for calendar in db.child("User").child(user_id).child("Calendars").get().each():
+        calendar_id = calendar.val()['calendar_id']
+        events = db.child("Calendars").child(calendar_id).child("Events").get().each()
+        event_list = []
+        for event in events:
+            event_data = db.child("Events").child(event['event_id']).get().val()
+            event_list.append(event_data)
+    event_type = []
+    availability_type = []
+    courses_type = []
+    breaks_type = []
+    for event in event_list:
+        if event['type'] == 'event':
+            event_type.append(event)
+        elif event['type'] == 'availability':
+            availability_type.append(event)
+        elif event['type'] == 'courses':
+            courses_type.append(event)
+        elif event['type'] == 'breaks':
+            breaks_type.append(event)
+    event_list = {
+        'event': event_type,
+        'availability': availability_type,
+        'courses': courses_type,
+        'breaks': breaks_type
+    }
+    return {"data": event_list}
 
 # Make sure you download the firebaseConfig.py file in google doc
 firebase = pyrebase.initialize_app(firebaseConfig)

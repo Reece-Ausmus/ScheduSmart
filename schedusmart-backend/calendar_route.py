@@ -275,3 +275,15 @@ def get_done_events():
     response.status_code = 201
     
     return response
+
+@calendar.route("/get_user_events_data", methods=['GET'])
+def get_user_events_data():
+    data = request.get_json()
+    ret = get_user_events_data_db(data)
+    try:
+        response = jsonify(ret['data'])
+        response.status_code = 201
+    except:
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response

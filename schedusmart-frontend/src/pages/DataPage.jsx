@@ -63,7 +63,7 @@ export default function SimpleBarChart() {
   // when time filter is updated, get new data
   useEffect(() => {
     const getEventData = async () => {
-      const response = await fetch(flaskURL + "/get_event_data", {
+      const response = await fetch(flaskURL + "/get_user_events_data", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
