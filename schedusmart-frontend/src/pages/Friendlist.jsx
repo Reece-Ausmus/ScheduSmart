@@ -240,7 +240,7 @@ export default function Friendlist() {
     const [deleteMode, setDeleteMode] = useState(false);
     const [selectedFriends, setSelectedFriends] = useState([]);
     const handleDeleteButtonClick = () => {
-        setDeleteMode(true);
+        setDeleteMode(!deleteMode);
     };
     const handleFriendCheckboxChange = (name, checked) => {
         if (checked) {
@@ -250,9 +250,18 @@ export default function Friendlist() {
         }
     };
     const handleDeleteClick = async () => {
+        for (const friend of selectedFriends) {
+            const response = await send_request("/delete_friend", { "user_id": userId, "name": friend });
+            if (response.error !== undefined) {
+                if (response.error === "friend not found" || response.error === "friend not found: 1") {
+                    alert("friend not found");
+                }
+            }
+        }
         setSelectedFriends([]);
         setDeleteMode(false);
-    };
+        getfriendList();
+    }
 
     //Implementation of last messages and avatar
     const [value, setValue] = useState(0);
@@ -393,28 +402,32 @@ export default function Friendlist() {
                     size="small">
                     <DeleteIcon onClick={handleDeleteButtonClick} />
                 </Fab>
-                {deleteMode && <Button>Delete</Button>}
+                {deleteMode && <Button variant="contained" onClick={handleDeleteClick}>Delete</Button>}
             </div>
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
                 <List sx={{ width: "70%" }}>
                     {friendList.length > 0 ? friendList.map(({ name, confirm, message, avatar_color }, id) => (
-                        <ListItemButton key={id + name} component={Link} to={`/friendlist/${name}/${id}`}>
-                            {/* {deleteMode && (
+                        <ListItemButton key={id + name}>
+                            {deleteMode && (
                                 <ListItemIcon>
                                     <Checkbox
                                         onChange={(e) => handleFriendCheckboxChange(name, e.target.checked)}
                                         checked={selectedFriends.includes(name)}
                                     />
                                 </ListItemIcon>
-                            )} */}
+                            )}
                             <ListItemAvatar>
                                 <Avatar sx={{ bgcolor: avatar_color }}>{name[0]}</Avatar>
                             </ListItemAvatar>
                             <ListItemText primary={name} secondary={message} />
-                        </ListItemButton>)) : <Typography variant="body1">No friends found.</Typography>
-                    }
+                            <ListItemSecondaryAction>
+                                <Button component={Link} to={`/friendlist/${name}/${id}`}>Enter Chatbox</Button>
+                            </ListItemSecondaryAction>
+                        </ListItemButton>
+                    )) : <Typography variant="body1">No friends found.</Typography>}
                 </List>
+
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                     <BottomNavigation
                         showLabels
