@@ -57,6 +57,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Alert from '@mui/material/Alert';
 import dayjs from 'dayjs';
 import GPTChatBox from '../components/GPTChatBox.jsx'
+import languageLibrary from "../components/language.json";
 import "./TaskManager.css"
 import emailjs from '@emailjs/browser';
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
@@ -125,6 +126,10 @@ const handleCreateTaskCalendar = async () => {
   }
 };
 
+
+
+
+
 // valid file extension list
 const validExtensions = [
   "txt",
@@ -171,6 +176,8 @@ let userData = {};
 
 // create new task manager
 export default function TaskManager() {
+  const [language, setLanguage] = useState(0)
+  const languageData = languageLibrary[language][0].taskManager
   // const location = useLocation();
   // let Color;
   // if (location.state == null) {
@@ -209,6 +216,9 @@ export default function TaskManager() {
           const responseData = await response.json();
           const userId = responseData.user_id;
           userData = responseData; 
+          if (responseData.language !== null && responseData.language !== undefined) {
+            setLanguage(responseData.language)
+          }
           if (
             responseData.task_list !== null &&
             responseData.task_list !== undefined
@@ -248,11 +258,12 @@ export default function TaskManager() {
       }
     }
   };
-
   useEffect(() => {
     handleInfo();
     nextId = todoList.length;
   }, []);
+    
+
 
   // select sort option
   const [sortOptionTodo, setSortOptionTodo] = useState(0);
@@ -697,7 +708,7 @@ export default function TaskManager() {
                   size="small"
                 />
                 <FormControl sx={{ m: 1, width: 200 }} size="small">
-                  <InputLabel id="sorting">Sort</InputLabel>
+                  <InputLabel id="sorting">{languageData.sort}</InputLabel>
                   <Select
                     labelId="sorting"
                     id="sorting"
@@ -705,17 +716,17 @@ export default function TaskManager() {
                     label="sorting"
                     onChange={(e) => setSortOptionTodo(e.target.value)}
                   >
-                    <MenuItem value={0}>Sort By</MenuItem>
-                    <MenuItem value={1}>Earliest created</MenuItem>
-                    <MenuItem value={2}>Latest created</MenuItem>
-                    <MenuItem value={3}>Earliest due</MenuItem>
-                    <MenuItem value={4}>Latest due</MenuItem>
-                    <MenuItem value={5}>Largest workload</MenuItem>
-                    <MenuItem value={6}>Smallest workload</MenuItem>
+                    <MenuItem value={0}>{languageData.sortBy}</MenuItem>
+                    <MenuItem value={1}>{languageData.earlierCreated}</MenuItem>
+                    <MenuItem value={2}>{languageData.latestCreated}</MenuItem>
+                    <MenuItem value={3}>{languageData.earlierDue}</MenuItem>
+                    <MenuItem value={4}>{languageData.latestDue}</MenuItem>
+                    <MenuItem value={5}>{languageData.largestWorkLoead}</MenuItem>
+                    <MenuItem value={6}>{languageData.smallestWorkload}</MenuItem>
                   </Select>
                 </FormControl>
                 <FormControl sx={{ m: 1, width: 200 }} size="small">
-                  <InputLabel id="priority">Priority</InputLabel>
+                  <InputLabel id="priority">{languageData.priority}</InputLabel>
                   <Select
                     labelId="priority"
                     id="priority"
@@ -724,9 +735,9 @@ export default function TaskManager() {
                     onChange={(e) => setPrioOptionTodo(e.target.value)}
                   >
                     <MenuItem value={0}>...</MenuItem>
-                    <MenuItem value={1}>Important <StarRateIcon/></MenuItem>
-                    <MenuItem value={2}>Overdue <PriorityHighIcon/></MenuItem>
-                    <MenuItem value={3}>Time Sensitive <AccessAlarmsIcon/></MenuItem>
+                    <MenuItem value={1}>{languageData.important}<StarRateIcon/></MenuItem>
+                    <MenuItem value={2}>{languageData.overDue}<PriorityHighIcon/></MenuItem>
+                    <MenuItem value={3}>{languageData.timeSensitive}<AccessAlarmsIcon/></MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -734,7 +745,7 @@ export default function TaskManager() {
           </Grid>
 
           <dialog id="modal" style={{ background: theme.palette.secondary.main}}>
-            <DialogTitle style={{ color: "black" }}>Add tasks:</DialogTitle>
+            <DialogTitle style={{ color: "black" }}>{languageData.addTask}</DialogTitle>
             <DialogContent>
               <Grid
                 container
@@ -743,7 +754,7 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>Task Name:</DialogContentText>
+                  <DialogContentText>{languageData.taskName}</DialogContentText>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -761,7 +772,7 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>Workload:</DialogContentText>
+                  <DialogContentText>{languageData.workLoad}</DialogContentText>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -780,7 +791,7 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>Due Date:</DialogContentText>
+                  <DialogContentText>{languageData.dueDate}</DialogContentText>
                 </Grid>
                 <Grid item>
                   <input
@@ -806,7 +817,7 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>Description:</DialogContentText>
+                  <DialogContentText>{languageData.description}</DialogContentText>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -824,7 +835,7 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>Attachment:</DialogContentText>
+                  <DialogContentText>{languageData.attachment}</DialogContentText>
                 </Grid>
                 <Grid item>
                   <input
@@ -861,7 +872,7 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>Add subtask:</DialogContentText>
+                  <DialogContentText>{languageData.addSubTask}</DialogContentText>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -942,7 +953,7 @@ export default function TaskManager() {
                     alert("Error! Missing Information! Please try again!");
                   }
                 }}>
-              Add
+              {languageData.add}
             </Button>
             <Button 
             variant="contained"
@@ -956,7 +967,7 @@ export default function TaskManager() {
               setSubtaskList([]);
               setTaskFile("");
               document.getElementById("modal").close();
-            }}>Cancel </Button>              
+            }}>{languageData.cancel}</Button>              
             </DialogContent>
           </dialog>
 
@@ -970,6 +981,7 @@ export default function TaskManager() {
             onPriorityChange={handlePriorityChange}
             keyword={searchQueryTodo}
             userData={userData}
+            languageData={languageData}
           />
         </div>
 
@@ -982,7 +994,7 @@ export default function TaskManager() {
               gap: "10px",
             }}
           >
-            <h2 style={{ marginLeft: 0 }}>Completed</h2>
+            <h2 style={{ marginLeft: 0 }}>{languageData.Completed}</h2>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <TextField
                 type="search"
@@ -994,7 +1006,7 @@ export default function TaskManager() {
                 size="small"
               />
               <FormControl sx={{ m: 1, width: 200 }} size="small">
-                <InputLabel id="c_sorting">Sort</InputLabel>
+                <InputLabel id="c_sorting">{languageData.sort}</InputLabel>
                 <Select
                   labelId="c_sorting"
                   id="c_sorting"
@@ -1002,13 +1014,13 @@ export default function TaskManager() {
                   label="c_sorting"
                   onChange={(e) => setSortOptionCompleted(e.target.value)}
                 >
-                  <MenuItem value={0}>Sort By</MenuItem>
-                  <MenuItem value={1}>Earliest created</MenuItem>
-                  <MenuItem value={2}>Latest created</MenuItem>
-                  <MenuItem value={3}>Earliest due</MenuItem>
-                  <MenuItem value={4}>Latest due</MenuItem>
-                  <MenuItem value={5}>Largest workload</MenuItem>
-                  <MenuItem value={6}>Smallest workload</MenuItem>
+                  <MenuItem value={0}>{languageData.sort}</MenuItem>
+                  <MenuItem value={1}>{languageData.earliestCreated}</MenuItem>
+                  <MenuItem value={2}>{languageData.latestCreated}</MenuItem>
+                  <MenuItem value={3}>{languageData.earlierDue}</MenuItem>
+                  <MenuItem value={4}>{languageData.latestDue}</MenuItem>
+                  <MenuItem value={5}>{languageData.largestWorkLoead}</MenuItem>
+                  <MenuItem value={6}>{languageData.smallestWorkload}</MenuItem>
                 </Select>
               </FormControl>
             </div>
@@ -1019,6 +1031,7 @@ export default function TaskManager() {
             option={sortOptionCompleted}
             keyword={searchQueryCompleted}
             deleteFunction={deleteTaskForever}
+            languageData={languageData}
           />
         </div>
       </div>
@@ -1028,7 +1041,7 @@ export default function TaskManager() {
         style={{ marginTop: "20px" }}
       >
         {" "}
-        Save Tasks
+        {languageData.saveTask}
       </Button>
       <div className="GPTChatBox">{GPTChatBox(todoList)}</div>
     </ThemeProvider>
@@ -1070,7 +1083,7 @@ function TodoList({
   onPriorityChange,
   keyword,
   userData,
-}) {
+}, languageData) {
   const emailModal = document.querySelector("#emailModal")
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")
@@ -1288,7 +1301,7 @@ function TodoList({
   return (
     <>
     <dialog id="emailModal" style={{ background: "#f8c06c" }}>
-      <DialogTitle style={{ color: "black" }}>Email Task</DialogTitle>
+      <DialogTitle style={{ color: "black" }}>{languageData.emailTask}</DialogTitle>
       <DialogContent>
         <Grid
           container
@@ -1379,16 +1392,16 @@ function TodoList({
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>Progress</TableCell>
-          <TableCell>Task Information</TableCell>
-          <TableCell>Estimated Workload</TableCell>
-          <TableCell>Deadline</TableCell>
-          <TableCell>Attached File</TableCell>
-          <TableCell>Task Checklist</TableCell>
-          <TableCell>Actions</TableCell>
-          <TableCell>Tag</TableCell>
-          <TableCell>Complete?</TableCell>
+          <TableCell>{languageData.title}</TableCell>
+          <TableCell>{languageData.progress}</TableCell>
+          <TableCell>{languageData.taskInformation}</TableCell>
+          <TableCell>{languageData.estimatedWorkload}</TableCell>
+          <TableCell>{languageData.deadline}</TableCell>
+          <TableCell>{languageData.attachFile}</TableCell>
+          <TableCell>{languageData.taskCheckList}</TableCell>
+          <TableCell>{languageData.action}</TableCell>
+          <TableCell>{languageData.tag}</TableCell>
+          <TableCell>{languageData.complete}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -1401,14 +1414,14 @@ function TodoList({
                 value={progressValue(task.id) * 100}
               />
               <p style={{ align: "center" }}>
-                <small>Worktime: {task.time_allo} hour(s)</small>
+                <small>{languageData.workTime + " "} {task.time_allo} {languageData.hours}</small>
               </p>
             </TableCell>
             <TableCell>{task.desc}</TableCell>
-            <TableCell>{task.time} hour(s)</TableCell>
+            <TableCell>{task.time} {languageData.hours}</TableCell>
             <TableCell>{task.date}</TableCell>
             <TableCell>
-              <a href={get_link(task.file_url)}>Get Attached File!</a>
+              <a href={get_link(task.file_url)}>{languageData.getAttachFile}</a>
             </TableCell>
             <TableCell>
               {task.sub_tasks &&
@@ -1481,7 +1494,7 @@ function TodoList({
                       onPriorityChange(task.id, e.target.value)
                     }}
                   >
-                    <MenuItem value={0}>None</MenuItem>
+                    <MenuItem value={0}>{languageData.none}</MenuItem>
                     <MenuItem value={1}><StarRateIcon /></MenuItem>
                     <MenuItem value={2}><PriorityHighIcon /></MenuItem>
                     <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
@@ -1505,7 +1518,7 @@ function TodoList({
 }
 
 
-function CompletedList({ list, onToggle, option, keyword, deleteFunction }) {
+function CompletedList({ list, onToggle, option, keyword, deleteFunction, languageData}) {
   let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
@@ -1563,12 +1576,12 @@ function CompletedList({ list, onToggle, option, keyword, deleteFunction }) {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>Task Information</TableCell>
-          <TableCell>Deadline</TableCell>
-          <TableCell>Completed Time</TableCell>
-          <TableCell>Completed</TableCell>
-          <TableCell>Delete?</TableCell>
+          <TableCell>{languageData.title}</TableCell>
+          <TableCell>{languageData.taskInformation}</TableCell>
+          <TableCell>{languageData.deadline}</TableCell>
+          <TableCell>{languageData.CompletedTime}</TableCell>
+          <TableCell>{languageData.Completed}</TableCell>
+          <TableCell>{languageData.delete}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

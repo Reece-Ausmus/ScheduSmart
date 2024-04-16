@@ -57,9 +57,11 @@ export default function Settings() {
     { id: 1, value: 1, label: "中文" },
     { id: 2, value: 2, label: "Español" },
   ]);
-  const [language, setLanguage] = useState(1);
+  const [language, setLanguage] = useState(0);
   const handleLanguageOption = (e) => {
-    setLanguage(e.target.value)
+    setLanguage(e.target.value);
+    console.log(e.target.value)
+    send_request("/change_language", {"user_id": userId, "language": e.target.value})
   };
   const Colors = [
     { id: 0, value: {primary:red[500],secondary:red[400]}, label: languageData[language][0].setting.Red},
