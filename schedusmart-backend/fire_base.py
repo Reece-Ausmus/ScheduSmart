@@ -127,6 +127,7 @@ def get_user(response):
             "language": db.child("User").child(user_id).child('language').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
             'task_list': db.child("User").child(user_id).child('task_list').get().val(),
+            "chat_log": db.child("User").child(user_id).child('chat_log').get().val(),
             "return_status": 0
         }
         return data

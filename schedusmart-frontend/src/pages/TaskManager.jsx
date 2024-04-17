@@ -118,10 +118,6 @@ const handleCreateTaskCalendar = async () => {
   }
 };
 
-
-
-
-
 // valid file extension list
 const validExtensions = [
   "txt",
@@ -922,7 +918,7 @@ export default function TaskManager() {
                 variant="contained"    
                 id="closeModal"
                 style={{ marginRight: "10px" }}
-                onClick={() => {
+                onClick={ async () => {
                   if (subtaskList != [] && taskDate != "") {
                     setTodoList([
                       ...todoList,
@@ -941,6 +937,7 @@ export default function TaskManager() {
                         autoPrio: true, 
                       },
                     ]);
+                    saveTasks
                   } else {
                     alert("Error! Missing Information! Please try again!");
                   }

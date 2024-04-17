@@ -5,20 +5,19 @@ import { MainContainer, ChatContainer, MessageList, Message, MessageInput, Typin
 import GPT_API_KEY from "./gpt.api.config"
 
 
-export default function GPTChatBox(taskList, userId) {
+export default function GPTChatBox(taskList, userId, chatLog) {
 
   const API_KEY = GPT_API_KEY;
   const flaskURL = "http://127.0.0.1:5000";
  
   const [isExpand, setIsExpand] = useState(false);
   const [typing, setTyping] = useState(false)
-  const [messages, setMessages] = useState([
-    {
-      message: "Hello, I'm Tasky! What would you like help with today?",
-      sender: "ChatGPT",
-      direction: "incoming"
-    }
-  ])
+  const [tabLabel, setTabLabel] = useState("Open Tasky!")
+  const [messages, setMessages] = useState([{
+    message: "Hello, I'm Tasky! What would you like help with today?",
+    sender: "ChatGPT",
+    direction: "incoming"
+  },])
 
   const handleSend = async (message) => {
     const newMessage = {
@@ -26,7 +25,6 @@ export default function GPTChatBox(taskList, userId) {
       sender: "user",
       direction: "outgoing"
     }
-
     const newMessages = [...messages, newMessage]
 
     setMessages(newMessages)
@@ -36,11 +34,44 @@ export default function GPTChatBox(taskList, userId) {
     await processMessageToChatGPT(newMessages)
   }
 
-  const saveChat = async () => {
-    console.log(messages);
+  const updateChat = async () => {
+    const response = await fetch(flaskURL + "/user_data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+      }),
+      credentials: "include",
+    });
+    if (!response.ok) {
+      alert("Account Info Not Found. Please log-out and log-in again");
+    } else {
+      switch (response.status) {
+        case 201:
+          const responseData = await response.json();
+          if (
+            responseData.chat_log !== null &&
+            responseData.chat_log !== undefined
+          ) {
+            setMessages(chatLog)
+          }
+          break;
+        case 202:
+          alert("List Not Found");
+          break;
+        case 205:
+          alert("Failing to retrieve user data");
+          break;
+      }
+    }
+  }
+
+  const saveChat = async (chatMessages) => {
     const info = {
       user_id: userId,
-      chat_log: messages,
+      chat_log: chatMessages,
     };
     const response = await fetch(flaskURL + "/update_chat", {
       method: "POST",
@@ -116,20 +147,30 @@ export default function GPTChatBox(taskList, userId) {
           direction: "incoming"
         }]
       );
+      saveChat([...chatMessages, {
+        message: data.choices[0].message.content,
+        sender: "ChatGPT",
+        direction: "incoming"
+      }])
       setTyping(false)
-    }).then(saveChat)
+    })
   }
 
   return (
     <>
       <button
         className="expandButton"
-        onClick={() => {
-          setIsExpand(!isExpand);
-          console.log(isExpand);
+        onClick={ async () => {
+          setTabLabel("Loading...")
+          updateChat().then(() => {
+            setIsExpand(!isExpand);
+            console.log(isExpand);
+          }).then(() => {
+            setTabLabel(() => {return isExpand ? "Open Tasky!" : "Close Tasky."})
+          })
         }}
       >
-        {isExpand ? "Close Tasky." : "Open Tasky!"}
+        {tabLabel}
       </button>
       <div
         className="chat_box_container"
