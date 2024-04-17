@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,6 +15,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AppBar, IconButton, Menu, Toolbar } from "@mui/material";
 import { orange } from "@mui/material/colors";
+import send_request from "./requester.jsx";
 
 // To install the dependencies, run the following command in the terminal:
 // npm install --force inside of the frontend directory.
@@ -57,13 +58,13 @@ export default function SignIn() {
     if (!response.ok) {
       alert("something went wrong, refresh your website");
     } else {
-      localStorage.setItem('system_color', "1");
       switch (response.status) {
         case 201:
           console.log("sign-in account successfull");
           const responseData = await response.json();
           const userId = responseData.user_id;
           sessionStorage.setItem("user_id", userId);
+          localStorage.setItem('system_color', "1");
           window.location.href = "/calendar";
           window.location.href = "/calendar";
           break;

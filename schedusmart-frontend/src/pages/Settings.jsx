@@ -41,17 +41,15 @@ const Colors = [
 
 export default function Settings() {
   //initialized data load from db
-  useEffect(() => {
-    const fetchInitializeData = async () => {
-      let dataOfUser = await send_request("/user_data", {
-        "user_id": userId,
-      });
-      if (dataOfUser.language != undefined) {
-        setLanguage(dataOfUser.language);
-      }
-    };
-    fetchInitializeData();
-  }, [])
+  const navigate = useNavigate();
+  const fetchInitializeData = async () => {
+    let dataOfUser = await send_request("/user_data", {
+      "user_id": userId,
+    });
+    if (dataOfUser.language != undefined) {
+      setLanguage(dataOfUser.language);
+    }
+  };
   const [Languages] = useState([
     { id: 0, value: 0, label: "English" },
     { id: 1, value: 1, label: "中文" },
@@ -60,31 +58,22 @@ export default function Settings() {
   const [language, setLanguage] = useState(0);
   const handleLanguageOption = (e) => {
     setLanguage(e.target.value);
-    console.log(e.target.value)
     send_request("/change_language", {"user_id": userId, "language": e.target.value})
   };
-  const Colors = [
-    { id: 0, value: {primary:red[500],secondary:red[400]}, label: languageData[language][0].setting.Red},
-    { id: 1, value: {primary:orange[300],secondary:orange[200]}, label: languageData[language][0].setting.Orange},
-    { id: 2, value: {primary:yellow[300],secondary:yellow[200]}, label: languageData[language][0].setting.Yellow},
-    { id: 3, value: {primary:green[200],secondary:green[100]}, label: languageData[language][0].setting.Green},
-    { id: 4, value: {primary:blue[200],secondary:blue[100]}, label: languageData[language][0].setting.Blue},
-    { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: languageData[language][0].setting.Purple},
-    { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: languageData[language][0].setting.Pink },
-  ];
-
-  const [Color, setColor] = useState(() => { return parseInt(localStorage.getItem('system_color')) || 1; });
+  const [Color, setColor] = useState(() => { return (parseInt(localStorage.getItem('system_color'))?parseInt(localStorage.getItem('system_color')):1); });
   const getColorOption = async () => {
     const response = await send_request("/get_system_color", { "user_id": userId});
     setColor(response.type);
   };
   useEffect(() => {
     getColorOption();
-  }, []);
+    fetchInitializeData();
+  }, [])
   useEffect(() => {
     localStorage.setItem('system_color', Color.toString());
     navigate('/settings', { state:{color_choice:Color}});
   }, [Color]);
+
   const handleColorOption = async (Color) => {
     const response = await send_request("/change_system_color", { "user_id": userId, "color": Color });
     if (response.error != undefined) {
@@ -98,7 +87,6 @@ export default function Settings() {
       }
     }
   };
-  const navigate = useNavigate();
   const handleColorSelectChange = (e) => {
     setColor(e.target.value);
     handleColorOption(e.target.value);
@@ -114,6 +102,7 @@ export default function Settings() {
       },
     },
   });
+  
 
   return (
     <ThemeProvider theme={theme}>

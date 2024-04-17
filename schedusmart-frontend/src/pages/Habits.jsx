@@ -72,7 +72,7 @@ export default function Habits() {
   const location = useLocation();
   let Color;
   if (location.state == null) {
-    Color = localStorage.getItem('systemcolor');
+    Color = localStorage.getItem('system_color');
   }
   else {
     Color = location.state.color_choice;
