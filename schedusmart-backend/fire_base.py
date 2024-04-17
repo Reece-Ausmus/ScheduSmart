@@ -169,7 +169,8 @@ def create_account_by_username_and_password(receive_account):
             "last_name": receive_account['lastname'],
             "user_name": receive_account['username'],
             "email": receive_account['email'],
-            "language": 0
+            "language": 0,
+            "system_color":1
         }
 
         same_account_confirm = __look_for_same_user_name_or_email(data)
