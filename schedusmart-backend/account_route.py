@@ -443,8 +443,7 @@ def change_language():
     except KeyError:
         return jsonify({"error": "user_id is required"}), 201
     try:
-        if not language_data["language"]:
-            return jsonify({"error": "language field is required"}), 201
+        c = language_data["language"]
     except KeyError:
         return jsonify({"error": "language field is required"}), 201
     return jsonify(update_language(language_data)), 201
