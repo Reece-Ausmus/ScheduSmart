@@ -1537,30 +1537,6 @@ export default function MainFrame() {
             >
               {languageData[language][0].main_frame.weeks}
             </button>
-            <button
-              className="modeButton"
-              style={{
-                backgroundColor: selectMode == 3 ? "#cfcfcf" : "#2d2d2d",
-              }}
-              id="3"
-              onClick={() => {
-                setSelectMode(3);
-              }}
-            >
-              {languageData[language][0].main_frame.months}
-            </button>
-            <button
-              className="modeButton"
-              style={{
-                backgroundColor: selectMode == 4 ? "#cfcfcf" : "#2d2d2d",
-              }}
-              id="4"
-              onClick={() => {
-                setSelectMode(4);
-              }}
-            >
-              {languageData[language][0].main_frame.years}
-            </button>
           </div>
         </div>
       </div>

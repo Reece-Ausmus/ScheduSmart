@@ -168,8 +168,6 @@ export default function Calendar_Settings(language) {
               >
                 <MenuItem value={1}>{languageData.day}</MenuItem>
                 <MenuItem value={2}>{languageData.week}</MenuItem>
-                <MenuItem value={3}>{languageData.month}</MenuItem>
-                <MenuItem value={4}>{languageData.year}</MenuItem>
               </Select>
             </FormControl>
           </div>
