@@ -63,24 +63,24 @@ const theme = createTheme({
 });
 
 export default function Dashboard() {
-  // const location = useLocation();
-  // let Color;
-  // if (location.state == null) {
-  //   Color = localStorage.getItem('systemcolor');
-  // }
-  // else {
-  //   Color = location.state.color_choice;
-  // }
-  // const theme = createTheme({
-  //   palette: {
-  //     primary: {
-  //       main: Colors[Color].value.primary,
-  //     },
-  //     secondary: {
-  //       main: Colors[Color].value.secondary,
-  //     },
-  //   },
-  // });
+  const location = useLocation();
+  let Color;
+  if (location.state == null) {
+    Color = localStorage.getItem('system_color');
+  }
+  else {
+    Color = location.state.color_choice;
+  }
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+  });
 
   const [goToWelcome, setGoToWelcome] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);

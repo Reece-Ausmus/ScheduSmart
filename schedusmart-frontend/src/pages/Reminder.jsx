@@ -17,6 +17,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { styled } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
+import send_request from "./requester";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
@@ -29,35 +30,21 @@ const Colors = [
   { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
-const theme = createTheme({
-  palette: {
-    primary: orange,
-    secondary: {
-      main: "#ab5600",
-    },
-  },
-});
-export default function Reminder(language) {
-  const languageData = languageLibrary[language][0].Reminder;
-  // const location = useLocation();
-  // let Color;
-  // if (location.state == null) {
-  //   Color = localStorage.getItem('systemcolor');
-  // }
-  // else {
-  //   Color = location.state.color_choice;
-  // }
 
-  // const theme = createTheme({
-  //   palette: {
-  //     primary: {
-  //       main: Colors[Color].value.primary,
-  //     },
-  //     secondary: {
-  //       main: Colors[Color].value.secondary,
-  //     },
-  //   },
-  // });
+export default function Reminder(language,Color) {
+  const languageData = languageLibrary[language][0].Reminder;
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+  });
+
+  //Implementation of ISO switch
   const IOSSwitch = styled((props) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
   ))(({ theme }) => ({
@@ -109,9 +96,10 @@ export default function Reminder(language) {
     },
   }));
 
+  //Implementation of reminders settings
   const [remindersOn, setRemindersOn] = useState(false);
   const handleReminderChange = () => {
-    setRemindersOn((remindersOn) => !remindersOn);
+    setRemindersOn(!remindersOn);
   };
 
   const [timeOptions] = useState([
@@ -130,11 +118,17 @@ export default function Reminder(language) {
     { id: 1, label: languageData.browserNoti, value: 1 },
     { id: 2, label: languageData.email, value: 2 },
   ]);
-  const [selectReminderOptions, setReminderOptions] = useState(1)
+  const [selectReminderOptions, setReminderOptions] = useState(() => { return parseInt(localStorage.getItem('reminder_option')) || 1;});
+  useEffect(() => {
+    localStorage.setItem('reminder_option', selectReminderOptions.toString());
+  }, [selectReminderOptions]);
   const handleReminderOptionsChange = (e) => {
     setReminderOptions(parseInt(e.target.value));
+    updatereminderoption(parseInt(e.target.value));
   };
-
+  async function updatereminderoption(reminder_option){
+    const response = await send_request("/update_reminders_options", { "user_id": userId, "r_option":reminder_option})
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -173,7 +167,7 @@ export default function Reminder(language) {
               >
                 {timeOptions.map((option) => (
                   <MenuItem key={option.id} value={option.value}>
-                    {option.value} {languageData.ReminderMe}
+                    {option.value} {"minutes before"}
                   </MenuItem>
                 ))}
               </Select>

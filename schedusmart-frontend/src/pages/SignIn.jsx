@@ -57,6 +57,7 @@ export default function SignIn() {
     if (!response.ok) {
       alert("something went wrong, refresh your website");
     } else {
+      localStorage.setItem('system_color', "1");
       switch (response.status) {
         case 201:
           console.log("sign-in account successfull");

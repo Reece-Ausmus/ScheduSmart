@@ -30,14 +30,14 @@ const Colors = [
   { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
   { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
 ];
-const theme = createTheme({
-  palette: {
-    primary: orange,
-    secondary: {
-      main: "#ab5600",
-    },
-  },
-});
+// const theme = createTheme({
+//   palette: {
+//     primary: orange,
+//     secondary: {
+//       main: "#ab5600",
+//     },
+//   },
+// });
 
 export default function Settings() {
   //initialized data load from db
@@ -73,7 +73,7 @@ export default function Settings() {
     { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: languageData[language][0].setting.Pink },
   ];
 
-  const [Color, setColor] = useState(1);
+  const [Color, setColor] = useState(() => { return parseInt(localStorage.getItem('system_color')) || 1; });
   const getColorOption = async () => {
     const response = await send_request("/get_system_color", { "user_id": userId});
     setColor(response.type);
@@ -82,6 +82,7 @@ export default function Settings() {
     getColorOption();
   }, []);
   useEffect(() => {
+    localStorage.setItem('system_color', Color.toString());
     navigate('/settings', { state:{color_choice:Color}});
   }, [Color]);
   const handleColorOption = async (Color) => {
@@ -103,24 +104,24 @@ export default function Settings() {
     handleColorOption(e.target.value);
   };
 
-  // const theme = createTheme({
-  //   palette: {
-  //     primary: {
-  //       main: Colors[Color].value.primary,
-  //     },
-  //     secondary: {
-  //       main: Colors[Color].value.secondary,
-  //     },
-  //   },
-  // });
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+  });
 
   return (
     <ThemeProvider theme={theme}>
       <div>{Dashboard()}</div>
       <h1 style={{ color: theme.palette.primary.main }}>{languageData[language][0].setting.setting}</h1>
-      <div>{AccountInfo(language)}</div>
-      <div>{Calendar_Settings(language)}</div>
-      <div>{Reminder(language)}</div>
+      <div>{AccountInfo(language,Color)}</div>
+      <div>{Calendar_Settings(language,Color)}</div>
+      <div>{Reminder(language,Color)}</div>
       <Card>
         <CardHeader subheader={languageData[language][0].setting.UpdateLanguageSettings} title={languageData[language][0].setting.Language} />
         <Divider />
