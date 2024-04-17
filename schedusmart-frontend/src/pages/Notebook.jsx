@@ -180,7 +180,7 @@ export default function Notebook() {
                     type="text"
                     id="email"
                     value={email}
-                    onChange={(showDetails)}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="formgroup">
