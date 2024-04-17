@@ -186,6 +186,17 @@ def get_event():
         response.status_code = 201
     return response
 
+@calendar.route('/get_event_with_userid', methods=['POST'])
+def get_event_with_userid():
+    data = request.get_json()
+    ret = get_user_event(data)
+    if ret == 1:
+        response = jsonify({'error': 'fail to catch event details'})
+        response.status_code = 205
+    else:
+        response = jsonify(ret)
+        response.status_code = 201
+    return response
 
 @calendar.route('/update_task', methods=['POST'])
 def update_task_list():

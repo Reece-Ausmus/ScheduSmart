@@ -18,6 +18,7 @@ import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/co
 import { styled } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
 import send_request from "./requester";
+import EmailForm from "../components/Email";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
@@ -31,7 +32,7 @@ const Colors = [
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
 
-export default function Reminder(language,Color) {
+export default function Reminder(language, Color) {
   const languageData = languageLibrary[language][0].Reminder;
   const theme = createTheme({
     palette: {
@@ -98,9 +99,98 @@ export default function Reminder(language,Color) {
 
   //Implementation of reminders settings
   const [remindersOn, setRemindersOn] = useState(false);
+  const [Events, setEvents] = useState();
+  const [firstEvents, setFirstEvents] = useState();
   const handleReminderChange = () => {
-    setRemindersOn(!remindersOn);
+    setRemindersOn((prevRemindersOn) => {
+      const newRemindersOn = !prevRemindersOn;
+      console.log(newRemindersOn);
+      if (newRemindersOn) {
+        get_users_all_events();
+      }
+      return newRemindersOn;
+    });
   };
+
+  // compare dates and times
+  const compareDates = (d1, d2) => {
+    let date1 = new Date(d1).getTime();
+    let date2 = new Date(d2).getTime();
+
+    if (date1 < date2) {
+      return -1;
+    } else if (date1 > date2) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+  const compareTimes24 = (time1, time2) => {
+    const [hours1, minutes1] = time1.split(":").map(Number);
+    const [hours2, minutes2] = time2.split(":").map(Number);
+
+    if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
+      return -1;
+    } else if (hours1 > hours2 || (hours1 === hours2 && minutes1 > minutes2)) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+  const compareDatesAndTimes = (datetime1, datetime2) => {
+    const [date1, time1] = datetime1.split(" ");
+    const [date2, time2] = datetime2.split(" ");
+    const dateComparison = compareDates(date1, date2);
+    if (dateComparison !== 0) {
+      if (dateComparison == -1) {
+        console.log(`${datetime1} is less than ${datetime2}`);
+        return -1;
+      }
+      else if (dateComparison == -1) {
+        console.log(`${datetime1} is greater than ${datetime2}`);
+        return 1;
+      }
+    } else {
+      const timeComparison = compareTimes24(time1, time2);
+      if (timeComparison == -1) {
+        console.log(`${datetime1} is less than ${datetime2}`);
+        return -1;
+      }
+      else if (timeComparison == 1) {
+        console.log(`${datetime1} is greater than ${datetime2}`);
+        return 1;
+      }
+      else if (timeComparison == 0) {
+        console.log(`${datetime1} and ${datetime2} are equal`);
+        return 0;
+      }
+    }
+  };
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
+  
+  const currentDate = new Date();
+  const formattedDate = formatDate(currentDate);
+
+  useEffect(() => {
+    console.log(formattedDate); 
+  }, []);
+
+  const get_users_all_events = async () => {
+    const response = await send_request("/get_event_with_userid", { "user_id": userId })
+    const events = response.data;
+    console.log(events);
+    events.sort((a, b) => compareDatesAndTimes(`${a["start_date"]} ${a["start_time"]}`, `${b["start_date"]} ${b["start_time"]}`))
+    console.log(events);
+    setEvents(events);
+    setFirstEvents(events[0]);
+  }
 
   const [timeOptions] = useState([
     { id: 5, value: 5 },
@@ -118,7 +208,7 @@ export default function Reminder(language,Color) {
     { id: 1, label: languageData.browserNoti, value: 1 },
     { id: 2, label: languageData.email, value: 2 },
   ]);
-  const [selectReminderOptions, setReminderOptions] = useState(() => { return parseInt(localStorage.getItem('reminder_option')) || 1;});
+  const [selectReminderOptions, setReminderOptions] = useState(() => { return parseInt(localStorage.getItem('reminder_option')) || 1; });
   useEffect(() => {
     localStorage.setItem('reminder_option', selectReminderOptions.toString());
   }, [selectReminderOptions]);
@@ -126,8 +216,28 @@ export default function Reminder(language,Color) {
     setReminderOptions(parseInt(e.target.value));
     updatereminderoption(parseInt(e.target.value));
   };
-  async function updatereminderoption(reminder_option){
-    const response = await send_request("/update_reminders_options", { "user_id": userId, "r_option":reminder_option})
+  function handleSendEmail(event_R) {
+    let message = "Here are the reminders from Schedusmart:\n\n";
+
+    // const temp = events[i].title + ": " + events[i].content + "\n";
+    const row1 = "Events:"+event_R["name"]+"\n";
+    const row2 = "Description:"+event_R["desc"] + "\n";
+    const row3 = "Start_Time: "+event_R["start_date"] + " "+event_R["start_time"]+"\n";
+    const row4 = "End_Time: "+event_R["end_date"] + " "+event_R["end_time"]+"\n";
+    const row5 = "Location: "+event_R["location"]+"\n";
+    const row6 = "Confenrence link: "+event_R["confenrence_link"]+"\n";
+    message += row1+row2+row3+row4+row5;
+    console.log(message)
+    EmailForm(name, email, message);
+    handleShowEmailPopup()
+
+  }
+  async function updatereminderoption(reminder_option) {
+    console.log(reminder_option);
+    const response = await send_request("/update_reminders_options", { "user_id": userId, "r_option": reminder_option })
+    if (reminder_option == 2) {
+      handleSendEmail();
+    }
   }
 
   return (
@@ -175,7 +285,7 @@ export default function Reminder(language,Color) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
-            {languageData.howUwantbeNotified}
+              {languageData.howUwantbeNotified}
             </Typography>
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
               <InputLabel id="reminder_option">{languageData.Option}</InputLabel>
