@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./Notes.css";
 import EventCard from "../components/EventCard";
+import AddCard from "../components/AddingEvent";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { user_id } from "../config";
@@ -50,6 +51,9 @@ export default function Notebook() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [showDtailsPopup, setShowDetailsPopup] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [showCreate, setShowCreate] = useState(false);
 
 
   useEffect(() => {
@@ -109,6 +113,10 @@ export default function Notebook() {
     setShowDetailsPopup(!showDtailsPopup)
   }
 
+  function showCreating(){
+    setShowCreate(!showCreate)
+  }
+
   return (
     <ThemeProvider theme={theme}>
         <div className="main">
@@ -164,64 +172,118 @@ export default function Notebook() {
             </div>
           )
         }
-        
-        {flag &&
-        events.map((item, index) => {
-            return (
-            <EventCard
-                key={index}
-                id={index}
-                title={item.title}
-                content={item.content}
-                onDetails={() => showDetails(index)}
-            />
-            );
-        })}
 
-        {showDtailsPopup && (
-            <div className="popup">
-              <div className="popup-content">
-                <h2>
-                    Details
-                </h2>
-                <div className="formgroup">
-                  <label htmlFor="email">
-                    enter email address
-                  </label>
-                  <input
-                    type="text"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+        <div>
+          <div><h2>Meetings</h2></div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "10px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              {flag &&
+              events.map((item, index) => {
+                  return (
+                  <EventCard
+                      key={index}
+                      id={index}
+                      title={item.title}
+                      content={item.content}
+                      onDetails={() => showDetails(index)}
                   />
+                  );
+              })}
+
+              {showDtailsPopup && (
+                <div className="popup">
+                  <div className="popup-content">
+                    <h2>
+                        Details
+                    </h2>
+                    <div className="formgroup">
+                      <label htmlFor="email">
+                        enter email address
+                      </label>
+                      <input
+                        type="text"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                    <div className="formgroup">
+                      <label htmlFor="name">
+                        enter recepient name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+              
+                    <button
+                      className="formbutton fb2"
+                      onClick={showDetails}
+                    >
+                      close
+                    </button>
+                  </div>
                 </div>
-                <div className="formgroup">
-                  <label htmlFor="name">
-                    enter recepient name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
+              )}
+
+              <AddCard
+                onCreate={() => showCreating()}
+              />
+
+              {showCreate && (
+                <div className="popup">
+                  <div className="popup-content">
+                    <h2>
+                        Add Record
+                    </h2>
+                    <div className="formgroup">
+                      <label htmlFor="email">
+                        title
+                      </label>
+                      <input
+                        type="text"
+                        id="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+                    </div>
+                    <p>description</p>
+                    <div className="formgroup">
+                      <textarea
+                        type="text"
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        rows="10"
+                        cols="50"
+                      />
+                    </div>
+              
+                    <button
+                      className="formbutton fb2"
+                      onClick={showCreating}
+                    >
+                      close
+                    </button>
+                  </div>
                 </div>
-          
-                <button
-                  className="formbutton fb2"
-                  onClick={showDetails}
-                >
-                  close
-                </button>
-              </div>
+              )}
             </div>
-          )
+            
+          </div>
+        </div>
 
-        }
-
-        {!flag &&
-            <p>Nothing has been completed</p>
-        }
+     
 
         <ToastContainer autoClose={1000} />
         </div>
