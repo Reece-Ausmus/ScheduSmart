@@ -95,11 +95,7 @@ export default function Calendar(selectMode, e, d) {
       eventEndDate !== "" &&
       eventStartTime !== "" &&
       eventEndTime !== "" &&
-      eventConferencingLink !== "" &&
-      eventLocation !== "" &&
-      eventDescription !== "" &&
-      eventType !== "" &&
-      eventRepetitionType !== "none"
+      eventType !== ""
     ) {
       setShowUpdateEventPopup(true);
     }

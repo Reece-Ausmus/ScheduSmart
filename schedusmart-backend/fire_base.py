@@ -63,6 +63,7 @@
 #       ...
 #   ...
 
+from collections import defaultdict
 import pyrebase
 from firebaseConfig import firebaseConfig
 import secrets
@@ -1061,6 +1062,8 @@ def get_user_events_data_db(data):
                     event_list.append(event_data)
             else:
                 event_list.append(event_data)
+    
+    # Separate events into different types
     event_type = []
     availability_type = []
     courses_type = []
@@ -1080,6 +1083,8 @@ def get_user_events_data_db(data):
         'course': courses_type,
         'break': breaks_type
     }
+
+    # Calculate average length of each event type
     average_lengths = {}
     for event_type, events in event_type_list.items():
         total_length = 0
@@ -1093,8 +1098,36 @@ def get_user_events_data_db(data):
         else:
             average_lengths[event_type] = 0
 
-    print(average_lengths)
-    return {"events": event_list, "event_types": event_type_list, "average_lengths": average_lengths}
+    # Find the busiest time
+    busiest_time, busiest_count = find_busiest_time(event_list)
+    print(busiest_time.strftime('%H:%M'))
+
+    return {"events": event_list, 
+            "event_types": event_type_list, 
+            "average_lengths": average_lengths, 
+            "num_events": len(event_list), 
+            "busiest_time": busiest_time.strftime('%H:%M'),
+            'busiest_count': busiest_count}
+
+def find_busiest_time(events):
+    # Dictionary to hold count of events for each time interval
+    interval_counts = defaultdict(int)
+    
+    # Iterate over each event and increment counts for each time interval
+    for event in events:
+        start_time = datetime.strptime(event['start_time'], '%H:%M')
+        end_time = datetime.strptime(event['end_time'], '%H:%M')
+        # Round start and end times to nearest hour
+        #start_time = start_time.replace(minute=0)
+        #end_time = end_time.replace(minute=0)
+        while start_time < end_time:
+            interval_counts[start_time] += 1
+            start_time += timedelta(minutes=1)
+    
+    # Find the time interval with the maximum count
+    busiest_interval = max(interval_counts, key=interval_counts.get)
+    
+    return busiest_interval, interval_counts[busiest_interval]
 
 # Make sure you download the firebaseConfig.py file in google doc
 firebase = pyrebase.initialize_app(firebaseConfig)

@@ -1489,7 +1489,7 @@ export default function MainFrame() {
       setCurrentTime(moment(currentTime.subtract(1, "days")));
       updateToday(-1);
     });
-    console.log("here", languageData[language][0].main_frame.days);
+    //console.log("here", languageData[language][0].main_frame.days);
     return (
       <div>
         <h2 className="detailInfo">{currentTime.format("YYYY/MM/DD")}</h2>
@@ -1861,16 +1861,16 @@ export default function MainFrame() {
   const [showTour, setShowTour] = useState(false);
 
   useEffect(() => {
-    const hasCompletedTour = sessionStorage.getItem('hasCompletedTour');
+    const hasCompletedTour = sessionStorage.getItem("hasCompletedTour");
     if (!hasCompletedTour) {
       setShowTour(true);
     }
   }, []);
 
   const handleTourFinish = () => {
-    const hasCompletedTour = sessionStorage.getItem('hasCompletedTour');
+    const hasCompletedTour = sessionStorage.getItem("hasCompletedTour");
     if (!hasCompletedTour) {
-      sessionStorage.setItem('hasCompletedTour', 'true');
+      sessionStorage.setItem("hasCompletedTour", "true");
     }
     setShowTour(false);
   };
@@ -1900,7 +1900,7 @@ export default function MainFrame() {
           showSkipButton={true}
           run={showTour}
           callback={({ action }) => {
-            if (action === 'reset') {
+            if (action === "reset") {
               handleTourFinish();
             }
           }}
