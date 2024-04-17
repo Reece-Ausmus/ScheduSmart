@@ -5,10 +5,11 @@ import { MainContainer, ChatContainer, MessageList, Message, MessageInput, Typin
 import GPT_API_KEY from "./gpt.api.config"
 
 
-export default function GPTChatBox(taskList) {
+export default function GPTChatBox(taskList, userId) {
 
   const API_KEY = GPT_API_KEY;
-
+  const flaskURL = "http://127.0.0.1:5000";
+ 
   const [isExpand, setIsExpand] = useState(false);
   const [typing, setTyping] = useState(false)
   const [messages, setMessages] = useState([
@@ -34,6 +35,36 @@ export default function GPTChatBox(taskList) {
 
     await processMessageToChatGPT(newMessages)
   }
+
+  const saveChat = async () => {
+    console.log(messages);
+    const info = {
+      user_id: userId,
+      chat_log: messages,
+    };
+    const response = await fetch(flaskURL + "/update_chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(info),
+    });
+    if (!response.ok) {
+      alert("something went wrong, refresh your website");
+    } else {
+      switch (response.status) {
+        case 201:
+          console.log("Updated message list!");
+          break;
+        case 205:
+          console.log("Failed to save message list! Check Connection!");
+          break;
+        case 206:
+          console.log("Failed to save list! Missing info!");
+          break;
+      }
+    }
+  };
 
   async function processMessageToChatGPT(chatMessages) {
     let apiMessages = chatMessages.map((messageObject) => {
@@ -86,7 +117,7 @@ export default function GPTChatBox(taskList) {
         }]
       );
       setTyping(false)
-    })
+    }).then(saveChat)
   }
 
   return (
@@ -98,7 +129,7 @@ export default function GPTChatBox(taskList) {
           console.log(isExpand);
         }}
       >
-        {isExpand ? "Close Tasky :(" : "Open Tasky!"}
+        {isExpand ? "Close Tasky." : "Open Tasky!"}
       </button>
       <div
         className="chat_box_container"

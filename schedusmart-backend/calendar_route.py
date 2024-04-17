@@ -204,6 +204,24 @@ def update_task_list():
         response.status_code = 206
     return response
 
+@calendar.route('/update_chat', methods=['POST'])
+def update_chat_log():
+    receive_event = request.get_json()
+    try:
+        ret = update_chat(receive_event)
+        if ret == 1:
+            response = jsonify({'error': 'logs not updated'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
+
 
 @calendar.route('/mark_done', methods=['POST'])
 def mark_task_done():

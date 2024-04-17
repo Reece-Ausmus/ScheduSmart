@@ -136,7 +136,6 @@ def get_user(response):
             "return_status": 1
         }
 
-
 def update_user_info(receive_account):
     try:
         user_id = receive_account['user_id']
@@ -369,6 +368,16 @@ def update_task(task_info):
         db.child("User").child(user_id).update(data)
     except Exception as e:
         print("Failed to update tasks:", e)
+        return 1
+    return 0
+
+def update_chat(chat_info):
+    user_id = chat_info['user_id']
+    data = {'chat_log': chat_info['chat_log']}
+    try:
+        db.child("User").child(user_id).update(data)
+    except Exception as e:
+        print("Failed to update logs:", e)
         return 1
     return 0
 

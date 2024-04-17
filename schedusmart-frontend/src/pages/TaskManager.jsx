@@ -1035,7 +1035,7 @@ export default function TaskManager() {
         {" "}
         {languageData.saveTask}
       </Button>
-      <div className="GPTChatBox">{GPTChatBox(todoList)}</div>
+      <div className="GPTChatBox">{GPTChatBox(todoList, userId)}</div>
     </ThemeProvider>
   );
 }
@@ -1075,7 +1075,8 @@ function TodoList({
   onPriorityChange,
   keyword,
   userData,
-}, languageData) {
+  languageData,
+}) {
   const emailModal = document.querySelector("#emailModal")
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")
