@@ -60,6 +60,8 @@ export default function SimpleBarChart() {
     setTimeFilter(e.target.value);
   };
 
+  const [noEvents, setNoEvents] = useState(false);
+
   const [eventTypeData, setEventTypeData] = useState([0, 0, 0, 0]);
   const [eventTypeAvg, setEventTypeAvg] = useState([0, 0, 0, 0]);
 
@@ -82,6 +84,11 @@ export default function SimpleBarChart() {
           case 201:
             //console.log("Event data retrieved successfully");
             const eventDataResponse = await response.json();
+            const numEvents = eventDataResponse["num_events"];
+            if (numEvents === 0) {
+              setNoEvents(true);
+              return;
+            }
             const eventTypes = eventDataResponse["event_types"];
             const eventAvgs = eventDataResponse["average_lengths"];
             setEventTypeData([
@@ -138,44 +145,55 @@ export default function SimpleBarChart() {
             </Select>
           </FormControl>
         </Box>
-        <Box sx={{ minWidth: 120, maxWidth: 500 }}>
+        {noEvents && (
           <Typography
-            component="h2"
+            component="h1"
             variant="h5"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
-            Event Type Distribution
+            No events found
           </Typography>
-          <BarChart
-            width={500}
-            height={300}
-            colors={[orange[500], orange[200]]}
-            series={[
-              {
-                data: eventTypeData,
-                label: "Number of Events",
-                id: "eventTypeId",
+        )}
+        {!noEvents && (
+          <Box sx={{ minWidth: 120, maxWidth: 500 }}>
+            <Typography
+              component="h2"
+              variant="h5"
+              style={{ marginBottom: "20px", marginTop: "20px" }}
+            >
+              Event Type Distribution
+            </Typography>
+            <BarChart
+              width={500}
+              height={300}
+              colors={[orange[500], orange[200]]}
+              series={[
+                {
+                  data: eventTypeData,
+                  label: "Number of Events",
+                  id: "eventTypeId",
 
-                yAxisKey: "leftAxisId",
-              },
-              {
-                data: eventTypeAvg,
-                label: "Average Length (minutes)",
-                id: "avgTypeId",
+                  yAxisKey: "leftAxisId",
+                },
+                {
+                  data: eventTypeAvg,
+                  label: "Average Length (minutes)",
+                  id: "avgTypeId",
 
-                yAxisKey: "rightAxisId",
-              },
-            ]}
-            xAxis={[
-              {
-                data: ["Event", "Availability", "Course", "Break"],
-                scaleType: "band",
-              },
-            ]}
-            yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
-            rightAxis="rightAxisId"
-          />
-        </Box>
+                  yAxisKey: "rightAxisId",
+                },
+              ]}
+              xAxis={[
+                {
+                  data: ["Event", "Availability", "Course", "Break"],
+                  scaleType: "band",
+                },
+              ]}
+              yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
+              rightAxis="rightAxisId"
+            />
+          </Box>
+        )}
       </Container>
     </ThemeProvider>
   );
