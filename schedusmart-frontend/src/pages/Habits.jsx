@@ -216,6 +216,11 @@ export default function Habits() {
   };
 
   const saveEditedHabit = async () => {
+    if (editedItem.itemName.trim() === "" || editedItem.calories.trim() === "") {
+      alert("Item Name and Calories are required fields.");
+      return;
+    }
+    
     try {
       const response = await fetch(flaskURL + "/update_habit", {
         method: "POST",
