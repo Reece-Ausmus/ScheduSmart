@@ -44,7 +44,7 @@
         "close": "Close",
         "findClosestAvailable": "Find Closest Available",
         "findClosestAvailableTime": "Find Closest Available Time",
-        "amountOfTime": "Amount Of Time (time): ",
+        "amountOfTime": "Amount Of Time (min): ",
         "allTasksHaveBeenCompleted": "All tasks have been completed.",
         "task": "Task",
         "detail": "detail"

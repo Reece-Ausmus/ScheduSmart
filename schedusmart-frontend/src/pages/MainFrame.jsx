@@ -959,6 +959,7 @@ export default function MainFrame() {
           user_id: user_id,
           emails: [],
           type: eventType,
+          conferencing_link: "",
         };
 
         const create_event_response = await send_request(
@@ -969,8 +970,8 @@ export default function MainFrame() {
           alert(create_event_response["error"]);
         } else {
           console.log("Event created successfully");
-          new_event["event_id"] = create_event_response["event_id"];
-          setEvents([...events, new_event]);
+          //new_event["event_id"] = create_event_response["event_id"];
+          //setEvents([...events, new_event]);
         }
       }
 
