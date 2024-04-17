@@ -1558,11 +1558,16 @@ export default function MainFrame() {
   }
 
   function addMonthsToSpecificDate(date, a) {
-    const newDate = new Date(
-      date.getFullYear(),
-      date.getMonth() + a,
-      date.getDate() + 1
-    );
+    let adder = 0;
+    for (let i = 1; i <= a; i++) {
+      const lastDay = new Date(date.getFullYear(), date.getMonth() + i, 0);
+      const lastDayInt = Math.floor(lastDay.getDate());
+      adder += lastDayInt;
+    }
+    
+    console.log("adder", adder)
+
+    const newDate = new Date(date.getTime() + adder * 24 * 60 * 60 * 1000);
     return newDate;
   }
 
@@ -1570,7 +1575,7 @@ export default function MainFrame() {
     const newDate = new Date(
       date.getFullYear() + a,
       date.getMonth(),
-      date.getDate() + 1
+      date.getDate()
     );
     return newDate;
   }
@@ -1618,9 +1623,11 @@ export default function MainFrame() {
     const [hour2, min2] = event.end_time.split(":").map(Number);
 
     let firstStartDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
+    console.log("first1", firstStartDate)
     firstStartDate.setMinutes(
       firstStartDate.getMinutes() - firstStartDate.getTimezoneOffset()
     );
+    console.log("first2", firstStartDate)
     let firstEndDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
     firstEndDate.setMinutes(
       firstEndDate.getMinutes() - firstEndDate.getTimezoneOffset()
@@ -1630,7 +1637,6 @@ export default function MainFrame() {
     let endDate = addDaysToSpecificDate(firstEndDate, 0);
     let counter = 1; //Default will add 1
 
-    //console.log(event.repetition_type);
 
     if (event.repetition_type === "none") {
       eventArray.push({
@@ -1671,7 +1677,7 @@ export default function MainFrame() {
         counter += 7;
       }
     } else if (event.repetition_type === "monthly") {
-      while (compareDates(startDate, boundary) == -1) {
+      while (compareDates(startDate, boundary) == -1 && id < 5) {
         eventArray.push({
           id: id,
           fb_event_id: fb_event_id,
