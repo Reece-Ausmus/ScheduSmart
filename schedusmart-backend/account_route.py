@@ -447,3 +447,21 @@ def change_language():
     except KeyError:
         return jsonify({"error": "language field is required"}), 201
     return jsonify(update_language(language_data)), 201
+
+# This route is for updating reminders options
+@account.route('/update_reminders_options', methods=['POST'])
+def update_reminders_options():
+    info = request.get_json()
+    try:
+        ret = reminders_options_settings(info)
+        if ret == 1:
+            response = jsonify({'error': 'reminders options settings can not be changed'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response

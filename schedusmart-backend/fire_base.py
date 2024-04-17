@@ -730,6 +730,17 @@ def f_get_done_events(data):
 
     return {"data": event_list}
 
+def reminders_options_settings(info):
+    user_id = info['user_id']
+    r_option = info['r_option']
+    try:
+        db.child("User").child(user_id).child("reminder_option").set(r_option)
+        return 0
+    except Exception:
+        print("Failed to set the reminder option settings")
+        return 1
+
+
 
 ################################################### friend system ######################################################
 def __get_name(id):
