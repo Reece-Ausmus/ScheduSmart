@@ -11,10 +11,11 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
-import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { useLocation } from 'react-router-dom';
+import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
+import { parse } from "uuid";
 
 const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
 const userId = sessionStorage.getItem("user_id");
@@ -188,6 +189,14 @@ function GoalTracker({ habits }) {
         }
     };
 
+    const settings = {
+        width: 200,
+        height: 200,
+        valueMin: 0,
+        valueMax: dailyGoal,
+        value: caloriesConsumed - parseFloat(totalCaloriesBurned),
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
@@ -200,7 +209,7 @@ function GoalTracker({ habits }) {
                         caloriesConsumed: {caloriesConsumed}
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
-                        caloriesBurned: {caloriesBurned}
+                        caloriesBurned: {parseFloat(totalCaloriesBurned)}
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
                         dailyGoal: {dailyGoal}
@@ -211,52 +220,50 @@ function GoalTracker({ habits }) {
                     <Typography variant="subtitle2" gutterBottom>
                         Formula: cals consumed / dailygoal * 100
                     </Typography> */}
-                    <Box sx={{ position: "relative", display: "inline-flex" }}>
-                        <CircularProgress
-                            size={150}
-                            variant="determinate"
-                            value={Math.min((caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))), 1) * 100}
-                            sx={{
-                                color: (theme) =>
-                                    (caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) >= 1
-                                        ? theme.palette.success.main
-                                        : undefined,
-                            }}
-                        />
-                        <Box
-                            sx={{
-                                top: 0,
-                                left: 0,
-                                bottom: 0,
-                                right: 0,
+                    <Box sx={{ position: "relative", display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
+                        <Gauge
+                                {...settings}
+                                cornerRadius="50%"
+                                sx={(theme) => ({
+                                    [`& .${gaugeClasses.valueText}`]: {
+                                        // If remaining calories is <= 0, set font size to 30
+                                        fontSize: (dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)) <= 0 ? 25 : 37,
+                                        fontWeight: "bold",
+                                    },
+                                    [`& .${gaugeClasses.valueArc}`]: {
+                                        fill: (() => {
+                                            if ((dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)) <= 0) {
+                                                return '#2e7d32' // Arc is green if remaining calories is <= 0
+                                            } 
+                                        })(),
+                                    },
+                                    [`& .${gaugeClasses.referenceArc}`]: {
+                                        fill: theme.palette.text.disabled,
+                                    },
+                                })}
+                                text={(() => {
+                                    const remainingCalories = dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned);
+                                    if (remainingCalories <= 0) {
+                                        return "Complete!";
+                                    } else {
+                                        return `${remainingCalories}`;
+                                    }
+                                })()}
+                            />
+                        {(dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)) > 0 && (
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            style={{
+                                fontSize: "smaller",
                                 position: "absolute",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                flexDirection: "column",
+                                bottom: "35%", 
+                                left: "50%", 
+                                transform: "translate(-50%, 50%)", 
                             }}
                         >
-                            <Typography
-                                variant="h5"
-                                component="div"
-                                color="text.primary"
-                                style={{ fontWeight: "bold" }}
-                            >
-                                {(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) >= 1
-                                    ? "Complete!"
-                                    : dailyGoal - caloriesConsumed + parseFloat(totalCaloriesBurned)}
-                            </Typography>
-                            {(caloriesConsumed / (dailyGoal + parseFloat(totalCaloriesBurned))) < 1 && (
-                                <Typography
-                                    variant="body2"
-                                    component="div"
-                                    color="text.secondary"
-                                    style={{ fontSize: "smaller" }}
-                                >
-                                    Remaining
-                                </Typography>
-                            )}
-                        </Box>
+                            Remaining
+                        </Typography> )}
                     </Box>
                     <Typography
                         component="h2"
