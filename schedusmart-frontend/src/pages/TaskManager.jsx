@@ -620,7 +620,7 @@ export default function TaskManager() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div>{Dashboard()}</div>
+      <div>{Dashboard(language)}</div>
       <CssBaseline />
       <div>
         <div
@@ -630,7 +630,7 @@ export default function TaskManager() {
             justifyContent: "space-between",
           }}
         >
-          <h1 style={{ color: theme.palette.primary.main }}>Task List</h1>
+          <h1 style={{ color: theme.palette.primary.main }}>{languageData.taskList}</h1>
           <div
             style={{
               display: "flex",
@@ -640,7 +640,7 @@ export default function TaskManager() {
             }}
           >
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="f_format">Option</InputLabel>
+              <InputLabel id="f_format">{languageData.option}</InputLabel>
               <Select
                 labelId="f_forma"
                 id="f_forma"
@@ -654,7 +654,7 @@ export default function TaskManager() {
               </Select>
             </FormControl>
             <Button variant="contained" onClick={handleExport}>
-              Export as {selectedFormat.toUpperCase()}
+              {languageData.exportAs} {selectedFormat.toUpperCase()}
             </Button>
           </div>
         </div>
@@ -667,7 +667,7 @@ export default function TaskManager() {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <h2 style={{ margin: 0 }}>To Do</h2>
+                <h2 style={{ margin: 0 }}>{languageData.toDo}</h2>
                 <Fab
                   aria-label="add"
                   color="primary"

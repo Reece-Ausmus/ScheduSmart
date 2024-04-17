@@ -1913,12 +1913,12 @@ export default function MainFrame() {
           }}
         />
 
-        <div>{Dashboard()}</div>
+        <div>{Dashboard(language)}</div>
         {/* <Card variant="outlined" style={{ height: '100px' }}>
           <CardContent> */}
         <Box display="flex" justifyContent="space-between">
           <Weather />
-          <Timezone />
+          {Timezone(language)}
         </Box>
         {/* Parent container for CalendarList and calendar_container */}
         <div className="main-calendar-content">
@@ -1934,7 +1934,7 @@ export default function MainFrame() {
               <div>{calendarControlFlowButtonPackage()}</div>
             </div>
             <div className="main_calnedar_box">
-              {Calendar(selectMode, allEventsArray, currentTime)}
+              {Calendar(selectMode, allEventsArray, currentTime, language)}
             </div>
           </div>
         </div>
