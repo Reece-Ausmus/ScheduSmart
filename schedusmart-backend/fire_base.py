@@ -361,6 +361,30 @@ def f_get_events(calendar):
         print(f"fail to retrieve events data: \n{e}")
     return 1
 
+def get_user_event(data):
+    try: 
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        user_id = data['user_id']
+        calendar_id=[]
+        events=[]
+        calendars_snapshot=db.child("User").child(user_id).child("calendars").get()
+        calendars = calendars_snapshot.val()
+        for name in calendars.keys():
+            calendar_id.append(db.child("User").child(user_id).child("calendars").child(name).child("calendar_id").get().val())
+        events_id=db.child("Events").get().val()
+        for c_id in calendar_id:
+            for e_id in events_id.keys():
+                selected_calendar=db.child("Events").child(e_id).child("calendar").get().val()
+                if selected_calendar==c_id:
+                    event=db.child("Events").child(e_id).get().val()
+                    filtered_event = {key: value for key, value in event.items() if key in ["conferencing_link", "desc", "end_date", "end_time", "location", "name", "start_date", "start_time"]}
+                    events.append(filtered_event)
+        return {"data":events}
+    except Exception as e:
+        print("Failed to get event with userid:", e)
+    return 1
+
 
 def update_task(task_info):
     user_id = task_info['user_id']
