@@ -26,36 +26,19 @@ const Colors = [
   { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
-const theme = createTheme({
-  palette: {
-    primary: orange,
-    secondary: {
-      main: "#ab5600",
-    },
-  },
-});
 
-export default function Calendar_Settings(language) {
+export default function Calendar_Settings(language,Color) {
   const languageData = languageLibrary[language][0].calendar_settings;
-  // const location = useLocation();
-  // let Color;
-  // if (location.state == null) {
-  //   Color = localStorage.getItem('systemcolor');
-  // }
-  // else {
-  //   Color = location.state.color_choice;
-  // }
-
-  // const theme = createTheme({
-  //   palette: {
-  //     primary: {
-  //       main: Colors[Color].value.primary,
-  //     },
-  //     secondary: {
-  //       main: Colors[Color].value.secondary,
-  //     },
-  //   },
-  // });
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+  });
   // calendar virsualization settings
   const [showVirtual, setShowVirsual] = useState(() => { return parseInt(localStorage.getItem('showVirtual')) || 0; });
   useEffect(() => {
