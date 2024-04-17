@@ -729,7 +729,7 @@ def f_get_done_events(data):
                     'title': e['name'],
                     'content': e['desc']
                 })
-
+    
     return {"data": event_list}
 
 def reminders_options_settings(info):
