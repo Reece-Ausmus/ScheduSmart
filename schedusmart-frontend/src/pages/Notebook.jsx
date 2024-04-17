@@ -113,6 +113,44 @@ export default function Notebook() {
     setShowDetailsPopup(!showDtailsPopup)
   }
 
+  const handleAddRecord = async () => {
+    const calendar_id = sessionStorage.getItem("taskCalendarId");
+    const new_event = {
+      name: title,
+      desc: description,
+      start_time: "",
+      end_time: "12:30",
+      start_date: "",
+      end_date: "2024-01-01",
+      location: "",
+      calendar: calendar_id,
+      repetition_type: "none",
+      repetition_unit: "",
+      repetition_val: 1,
+      selected_days: [],
+      user_id: user_id,
+      emails: [],
+      type: "notebook",
+      conferencing_link: "",
+    };
+
+    const create_event_response = await send_request(
+      "/create_event",
+      new_event
+    );
+    if (create_event_response["error"] !== undefined) {
+      alert(create_event_response["error"]);
+    } else {
+      console.log("Event created successfully");
+
+      setEvents((prevVal) => {
+        return [...prevVal, {title: title, content: description}];
+      });
+    }
+
+    showCreating()
+  }
+
   function showCreating(){
     setShowCreate(!showCreate)
   }
@@ -268,6 +306,12 @@ export default function Notebook() {
                         cols="50"
                       />
                     </div>
+                    <button
+                      className="formbutton fb1"
+                      onClick={handleAddRecord}
+                    >
+                      send
+                    </button>
               
                     <button
                       className="formbutton fb2"
