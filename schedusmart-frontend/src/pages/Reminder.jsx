@@ -43,7 +43,6 @@ export default function Reminder(language, Color) {
   const [Username, SetUsername] = useState();
   const [Email, SetEmail] = useState();
   const GetUserData = async () => {
-    console.log("GetUserData");
     const response = await send_request("/user_data", { "user_id": userId });
     SetUsername(response.user_name);
     SetEmail(response.email);
@@ -124,7 +123,6 @@ export default function Reminder(language, Color) {
   const handleReminderChange = () => {
     setRemindersOn((prevRemindersOn) => {
       const newRemindersOn = !prevRemindersOn;
-      console.log(newRemindersOn);
       if (newRemindersOn) {
         get_users_all_events();
       }
@@ -138,10 +136,18 @@ export default function Reminder(language, Color) {
     { id: 30, value: 30 },
     { id: 60, value: 60 },
   ]);
-  const [selectedTimeOption, setSelectedTimeOption] = useState(10);
+  const [selectedTimeOption, setSelectedTimeOption] = useState(() => { return parseInt(localStorage.getItem('reminder_timeoption')) || 10; });
   const handleTimeSelectChange = (e) => {
     setSelectedTimeOption(parseInt(e.target.value));
+    updateremindertimeoption(parseInt(e.target.value));
+    get_users_all_events();
   };
+  useEffect(() => {
+    localStorage.setItem('reminder_timeoption', selectedTimeOption.toString());
+  }, [selectedTimeOption]);
+  async function updateremindertimeoption(reminder_timeoption) {
+    const response = await send_request("/update_reminders_timeoptions", { "user_id": userId, "r_timeoption": reminder_timeoption })
+  }
 
   const [reminderOptions] = useState([
     { id: 1, label: languageData.browserNoti, value: 1 },
@@ -157,7 +163,6 @@ export default function Reminder(language, Color) {
     get_users_all_events();
   };
   async function updatereminderoption(reminder_option) {
-    console.log(reminder_option);
     const response = await send_request("/update_reminders_options", { "user_id": userId, "r_option": reminder_option })
   }
 
@@ -192,29 +197,36 @@ export default function Reminder(language, Color) {
     const dateComparison = compareDates(date1, date2);
     if (dateComparison !== 0) {
       if (dateComparison == -1) {
-        // console.log(`${datetime1} is less than ${datetime2}`);
         return -1;
       }
       else if (dateComparison == -1) {
-        // console.log(`${datetime1} is greater than ${datetime2}`);
         return 1;
       }
     } else {
       const timeComparison = compareTimes24(time1, time2);
       if (timeComparison == -1) {
-        // console.log(`${datetime1} is less than ${datetime2}`);
         return -1;
       }
       else if (timeComparison == 1) {
-        console.log(`${datetime1} is greater than ${datetime2}`);
         return 1;
       }
       else if (timeComparison == 0) {
-        console.log(`${datetime1} and ${datetime2} are equal`);
         return 0;
       }
     }
   };
+  const subtractTimeOptionsFromDateTime = (datetime, timeOptions) => {
+    const [date, time] = datetime.split(' ');
+    const [hours, minutes] = time.split(':').map(Number); 
+    const totalMinutes = hours * 60 + minutes;
+    const newTotalMinutes = totalMinutes - timeOptions;
+    const newHours = (24 + Math.floor(newTotalMinutes / 60)) % 24; 
+    const newMinutes = (60 + newTotalMinutes % 60) % 60; 
+    const formattedHours = newHours.toString().padStart(2, '0');
+    const formattedMinutes = newMinutes.toString().padStart(2, '0');
+    return `${date} ${formattedHours}:${formattedMinutes}`;
+  };
+
   const formatDate = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -232,7 +244,6 @@ export default function Reminder(language, Color) {
     const response = await send_request("/get_event_with_userid", { "user_id": userId })
     const events = response.data;
     const sorted_events= events.sort((a, b) => compareDatesAndTimes(`${a["start_date"]} ${a["start_time"]}`, `${b["start_date"]} ${b["start_time"]}`))
-    console.log(sorted_events);
     setEvents(sorted_events);
     setFirstEvent(sorted_events[0]);
   }
@@ -250,7 +261,6 @@ export default function Reminder(language, Color) {
     }
   }
   useEffect(() => {
-    console.log(makeChoice);
     if (!makeChoice && Events!=undefined){
       choice(Events);
     }
@@ -266,8 +276,6 @@ export default function Reminder(language, Color) {
     setReminderPopOpen(false);
   };
   const handleBrowserReminder = (e) => {
-    console.log("start");
-    console.log(e);
     if (e!=undefined){
       return (
         <>
@@ -291,44 +299,37 @@ export default function Reminder(language, Color) {
   };
   useEffect(() => {
     if (reminderpopopen){
-      console.log("useEffect");
-      console.log("i===",index);
-      console.log(Events[index]);
       handleBrowserReminder(Events[index]);
     }
   }, [reminderpopopen,index]);
 
   let i=0;
   const BRAtTime = (event_R)=>{
-    console.log("run");
     const currentDate = new Date();
     const formattedDate = formatDate(currentDate);
     const time = `${event_R["start_date"]} ${event_R["start_time"]}`;
-    if (compareDatesAndTimes(time, formattedDate) == 0) {
+    let newTime = time;
+    if (selectedTimeOption!=0){
+       newTime = subtractTimeOptionsFromDateTime(time, selectedTimeOption);
+    }
+    if (compareDatesAndTimes(newTime, formattedDate) == 0) {
       handleReminderPopOpen(Events[i]);
       i+=1;
       setFirstEvent(Events[i])
       if (Events.length > i) {
-        console.log("i=",i);
-        // console.log(Events[i]);
         BRAtTime(Events[i]);
       }
       else {
         setIndex(i-1);
         return 0; //finish
       }
-    } else if (compareDatesAndTimes(time, formattedDate) == 1) {
-      console.log("3333333");
+    } else if (compareDatesAndTimes(newTime, formattedDate) == 1) {
       setTimeout(() => BRAtTime(event_R), 6000);
-      console.log("44444");
     }
-    else if (compareDatesAndTimes(time, formattedDate) == -1) {
-      // console.log("before",Events);
+    else if (compareDatesAndTimes(newTime, formattedDate) == -1) {
       i+=1;
-      console.log("i=",i);
       setFirstEvent(Events[i])
       if (Events.length > i) {
-        console.log(Events[i]);
         BRAtTime(Events[i]);
       }
     }
