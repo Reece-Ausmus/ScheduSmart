@@ -15,6 +15,7 @@ import { orange } from "@mui/material/colors";
 import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Gauge } from "@mui/x-charts/Gauge";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -65,6 +66,8 @@ export default function SimpleBarChart() {
   const [eventTypeData, setEventTypeData] = useState([0, 0, 0, 0]);
   const [eventTypeAvg, setEventTypeAvg] = useState([0, 0, 0, 0]);
 
+  const [busiestTime, setBusiestTime] = useState(0);
+
   // when time filter is updated, get new data
   useEffect(() => {
     const getEventData = async () => {
@@ -103,6 +106,13 @@ export default function SimpleBarChart() {
               eventAvgs["course"],
               eventAvgs["break"],
             ]);
+            const busiestCount = eventDataResponse["busiest_count"];
+            if (busiestCount > 0) {
+              const busiestTime = parseInt(
+                eventDataResponse["busiest_time"].replace(":", "")
+              );
+              setBusiestTime(busiestTime);
+            }
             break;
           case 205:
             alert("Event Data not retrieved!");
@@ -191,6 +201,20 @@ export default function SimpleBarChart() {
               ]}
               yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
               rightAxis="rightAxisId"
+            />
+            <Gauge
+              width={250}
+              height={200}
+              value={busiestTime}
+              valueMin={0}
+              valueMax={2359}
+              startAngle={-110}
+              endAngle={110}
+              text={`Busiest Time: ${Math.floor(busiestTime / 100)
+                .toString()
+                .padStart(2, "0")}:${(busiestTime % 100)
+                .toString()
+                .padStart(2, "0")}`}
             />
           </Box>
         )}

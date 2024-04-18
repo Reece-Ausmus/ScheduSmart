@@ -1052,14 +1052,69 @@ def get_user_events_data_db(data):
         for event in events:
             event_data = db.child("Events").child(event.val()['event_id']).get().val()
             time_ago = (datetime.now() - datetime.strptime(event_data['start_date'] + ' ' + event_data['start_time'], '%Y-%m-%d %H:%M')).days
+            if event_data['repetition_type'] != 'none':
+                start_date = datetime.strptime(event_data['start_date'], '%Y-%m-%d')
+                end_date = datetime.strptime(event_data['end_date'], '%Y-%m-%d')
+                repetition_type = event_data['repetition_type']
+                repetition_unit = event_data['repetition_unit']
+                repetition_val = event_data['repetition_val']
+                
+                if repetition_type == 'daily':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=1)
+                        
+                elif repetition_type == 'weekly':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=7)
+                        
+                elif repetition_type == 'monthly':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=30)
+                        
+                elif repetition_type == 'yearly':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=365)
+                        
+                elif repetition_type == 'custom':
+                    if repetition_unit == 'day':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(days=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(days=repetition_val)
+                            
+                    elif repetition_unit == 'week':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(weeks=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(weeks=repetition_val)
+                            
+                    elif repetition_unit == 'month':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(days=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(months=repetition_val)
+                            
+                    elif repetition_unit == 'year':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(days=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(years=repetition_val)
             if time_filter == 365:
-                if time_ago <= 365:
+                if time_ago <= 365 and time_ago >= 0:
                     event_list.append(event_data)
             elif time_filter == 30:
-                if time_ago <= 30:
+                if time_ago <= 30 and time_ago >= 0:
                     event_list.append(event_data)
             elif time_filter == 7:
-                if time_ago <= 7:
+                if time_ago <= 7 and time_ago >= 0:
                     event_list.append(event_data)
             else:
                 event_list.append(event_data)
@@ -1100,27 +1155,25 @@ def get_user_events_data_db(data):
             average_lengths[event_type] = 0
 
     # Find the busiest time
-    busiest_time, busiest_count = find_busiest_time(event_list)
-    print(busiest_time.strftime('%H:%M'))
+    busiest_time = datetime(1900, 1, 1, 0, 0)
+    busiest_count = 0
+    if len(event_list) > 0:
+        busiest_time, busiest_count = find_busiest_time(event_list)
 
     return {"events": event_list, 
             "event_types": event_type_list, 
             "average_lengths": average_lengths, 
-            "num_events": len(event_list), 
+            "num_events": len(event_list),
             "busiest_time": busiest_time.strftime('%H:%M'),
             'busiest_count': busiest_count}
 
 def find_busiest_time(events):
-    # Dictionary to hold count of events for each time interval
     interval_counts = defaultdict(int)
     
     # Iterate over each event and increment counts for each time interval
     for event in events:
         start_time = datetime.strptime(event['start_time'], '%H:%M')
         end_time = datetime.strptime(event['end_time'], '%H:%M')
-        # Round start and end times to nearest hour
-        #start_time = start_time.replace(minute=0)
-        #end_time = end_time.replace(minute=0)
         while start_time < end_time:
             interval_counts[start_time] += 1
             start_time += timedelta(minutes=1)
