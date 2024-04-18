@@ -396,6 +396,37 @@ def get_habits():
     except Exception as e:
         print("Failed to get habits:", e)
         return jsonify({'error': 'Failed to get habits'}), 500
+    
+# This route is for getting the highest habit ID
+@account.route('/get_highest_habit_id', methods=['POST'])
+def get_highest_habit_id():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's habits
+    user_habits_path = f"/Habits/{user_id}"
+
+    try:
+        # Get all habits for the user from the Firebase database
+        user_habits = db.child(user_habits_path).get()
+
+        # If the user has no habits, return an empty list
+        if not user_habits.val():
+            highest_id = 0
+        else:
+            # Get the highest habit ID
+            highest_id = max(int(habit_data.get('id', 0)) for habit_data in user_habits.val().values())
+
+        # Set the new habit ID to the highest habit ID + 1
+        new_habit_id = highest_id + 1
+
+        return jsonify({'highest_id': new_habit_id}), 200
+    except Exception as e:
+        print("Failed to get highest habit ID:", e)
+        return jsonify({'error': 'Failed to get highest habit ID'}), 500
 
 
 @account.route('/request_friend', methods=['POST'])
