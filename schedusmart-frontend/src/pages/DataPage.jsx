@@ -11,7 +11,6 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { orange } from "@mui/material/colors";
 import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -25,26 +24,43 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import Dashboard from "./Dashboard";
 import languageLibrary from "../components/language.json";
 import send_request from "./requester.jsx";
+import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
+import { useLocation } from 'react-router-dom';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: orange[500],
-    },
-    secondary: {
-      main: "#ab5600",
-    },
-  },
-  components: {
-    MuiBarChart: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "gray",
-        },
-      },
-    },
-  },
-});
+
+const Colors = [
+  { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
+  { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
+  { id: 2, value: { primary: yellow[300], secondary: yellow[200] }, label: "Yellow" },
+  { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
+  { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
+  { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
+  { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
+];
+
+
+
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: orange[500],
+//     },
+//     secondary: {
+//       main: "#ab5600",
+//     },
+//   },
+//   components: {
+//     MuiBarChart: {
+//       styleOverrides: {
+//         root: {
+//           backgroundColor: "gray",
+//         },
+//       },
+//     },
+//   },
+// });
+
+
 
 const uData = [4000, 3000, 2000, 2780];
 const xLabels = [
@@ -58,6 +74,33 @@ const xLabels = [
 ];
 
 export default function SimpleBarChart() {
+  const location = useLocation();
+let Color;
+if (location.state == null) {
+  Color = localStorage.getItem('system_color');
+}
+else {
+  Color = location.state.color_choice;
+}
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: Colors[Color].value.primary,
+    },
+    secondary: {
+      main: Colors[Color].value.secondary,
+    },
+  },
+  components: {
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "gray",
+        },
+      },
+    },
+  },
+});
   const [timeFilter, setTimeFilter] = useState(0);
   const handleTimeFilterChange = (e) => {
     setTimeFilter(e.target.value);
