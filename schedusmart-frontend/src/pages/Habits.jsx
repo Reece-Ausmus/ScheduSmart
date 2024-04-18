@@ -267,56 +267,80 @@ export default function Habits() {
 
   const addHabit = async () => {
     if (itemName.trim() !== "" && calories.trim() !== "") {
-      const newHabit = {
-        itemName: itemName.trim(),
-        id: habits.length + 1,
-        calories: parseFloat(calories),
-        carbs: parseFloat(carbs) || 0,
-        fat: parseFloat(fat) || 0,
-        protein: parseFloat(protein) || 0,
-        sodium: parseFloat(sodium) || 0,
-        sugar: parseFloat(sugar) || 0,
-      };
-  
-      try {
-        const response = await fetch(flaskURL + "/add_habit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            ...newHabit,
-          }),
-        });
-  
-        if (response.ok) {
-          const responseData = await response.json();
-          console.log(responseData.message); // Log success message
-          // Update habits state or perform any necessary actions
-          setHabits([...habits, newHabit]);
-          // Clear input fields and close dialog
-          setItemName("");
-          setCalories("");
-          setCarbs("");
-          setFat("");
-          setProtein("");
-          setSodium("");
-          setSugar("");
-          setOpenDialog(false);
-        } else {
-          const errorData = await response.json();
-          console.error("Error adding habit: ", errorData.error);
-          alert("Failed to add habit. Please try again.");
+        try {
+            // Fetch the highest habit ID from the Flask endpoint
+            const highestIdResponse = await fetch(`${flaskURL}/get_highest_habit_id`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                }),
+            });
+
+            if (highestIdResponse.ok) {
+                const highestIdData = await highestIdResponse.json();
+                // Get the highest ID from the response
+                const highestId = highestIdData.highest_id || 0;
+
+                // Set the ID of newHabit to the highest ID from the Flask endpoint + 1
+                const newHabit = {
+                    itemName: itemName.trim(),
+                    id: highestId,
+                    calories: parseFloat(calories),
+                    carbs: parseFloat(carbs) || 0,
+                    fat: parseFloat(fat) || 0,
+                    protein: parseFloat(protein) || 0,
+                    sodium: parseFloat(sodium) || 0,
+                    sugar: parseFloat(sugar) || 0,
+                };
+
+                // Add the new habit to the database
+                const response = await fetch(`${flaskURL}/add_habit`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        ...newHabit,
+                    }),
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log(responseData.message); // Log success message
+                    // Update habits state or perform any necessary actions
+                    setHabits([...habits, newHabit]);
+                    // Clear input fields and close dialog
+                    setItemName("");
+                    setCalories("");
+                    setCarbs("");
+                    setFat("");
+                    setProtein("");
+                    setSodium("");
+                    setSugar("");
+                    setOpenDialog(false);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Error adding habit: ", errorData.error);
+                    alert("Failed to add habit. Please try again.");
+                }
+            } else {
+                const errorData = await highestIdResponse.json();
+                console.error("Error fetching highest habit ID: ", errorData.error);
+                alert("Failed to fetch highest habit ID. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error adding habit: ", error);
+            alert("An error occurred while adding the habit.");
         }
-      } catch (error) {
-        console.error("Error adding habit: ", error);
-        alert("An error occurred while adding the habit.");
-      }
     } else {
-      alert("Item Name and Calories are required fields.");
+        alert("Item Name and Calories are required fields.");
     }
-  };
+};
+
   
 
 

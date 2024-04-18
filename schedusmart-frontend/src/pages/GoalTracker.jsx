@@ -16,6 +16,7 @@ import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/co
 import { useLocation } from 'react-router-dom';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import { parse } from "uuid";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
 const userId = sessionStorage.getItem("user_id");
@@ -146,38 +147,61 @@ function GoalTracker({ habits }) {
 
     const addExerciseEvent = async () => {
         if (eventName.trim() !== "" && caloriesBurned.trim() !== "") {
-            const newEvent = {
-                eventName: eventName.trim(), 
-                id: exerciseEvents.length + 1,
-                caloriesBurned: parseFloat(caloriesBurned),
-            };
-    
             try {
-                const response = await fetch(`${flaskURL}/add_exercise`, {
+                // Fetch the highest exercise ID from the Flask endpoint
+                const highestIdResponse = await fetch(`${flaskURL}/get_highest_exercise_id`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         user_id: userId,
-                        id: newEvent.id, 
-                        caloriesBurned: newEvent.caloriesBurned, 
-                        eventName: newEvent.eventName, 
                     }),
                 });
     
-                if (response.ok) {
-                    const responseData = await response.json();
-                    console.log(responseData.message);
+                if (highestIdResponse.ok) {
+                    const highestIdData = await highestIdResponse.json();
+                    // Get the highest ID from the response
+                    const highestId = highestIdData.highest_id || 0;
     
-                    setExerciseEvents([...exerciseEvents, newEvent]);
+                    // Set the ID of newEvent to the highest ID from the Flask endpoint + 1
+                    const newEvent = {
+                        eventName: eventName.trim(), 
+                        id: highestId,
+                        caloriesBurned: parseFloat(caloriesBurned),
+                    };
     
-                    setEventName("");
-                    setOpenDialog(false);
+                    // Add the new event to the database
+                    const response = await fetch(`${flaskURL}/add_exercise`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            user_id: userId,
+                            id: newEvent.id, 
+                            caloriesBurned: newEvent.caloriesBurned, 
+                            eventName: newEvent.eventName, 
+                        }),
+                    });
+    
+                    if (response.ok) {
+                        const responseData = await response.json();
+                        console.log(responseData.message);
+    
+                        setExerciseEvents([...exerciseEvents, newEvent]);
+    
+                        setEventName("");
+                        setOpenDialog(false);
+                    } else {
+                        const errorData = await response.json();
+                        console.error("Error adding exercise event: ", errorData.error);
+                        alert("Failed to add exercise event. Please try again.");
+                    }
                 } else {
-                    const errorData = await response.json();
-                    console.error("Error adding exercise event: ", errorData.error);
-                    alert("Failed to add exercise event. Please try again.");
+                    const errorData = await highestIdResponse.json();
+                    console.error("Error fetching highest exercise ID: ", errorData.error);
+                    alert("Failed to fetch highest exercise ID. Please try again.");
                 }
             } catch (error) {
                 console.error("Error adding exercise event: ", error);
@@ -187,6 +211,7 @@ function GoalTracker({ habits }) {
             alert("Workout Name and Calories Burned are required fields.");
         }
     };
+    
 
     useEffect(() => {
         // Check if the goal is completed whenever dailyGoal, caloriesConsumed, or totalCaloriesBurned changes
@@ -249,6 +274,29 @@ function GoalTracker({ habits }) {
         } catch (error) {
             console.error("Error setting calorie goal: ", error);
             alert("An error occurred while setting the calorie goal.");
+        }
+    };
+
+    const handleDeleteEvent = async (id) => {
+        try {
+            const response = await fetch(`${flaskURL}/delete_exercise`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    event_name: exerciseEvents.find((event) => event.id === id).eventName,
+                }),
+            });
+    
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log(responseData.message);
+            }
+        } catch (error) {
+            console.error("Error deleting exercise event: ", error);
+            alert("An error occurred while deleting the exercise event.");
         }
     };
 
@@ -486,7 +534,25 @@ function GoalTracker({ habits }) {
                     <div style={{ height: 400, width: "100%" }}>
                         <DataGrid
                             rows={exerciseEvents}
-                            columns={columns}
+                            columns={[...columns,
+                                {
+                                    field: "delete",
+                                    headerName: "Delete",
+                                    width: 100,
+                                    renderCell: (params) => (
+                                        <Button
+
+                                            onClick={() => {
+                                                handleDeleteEvent(params.row.id);
+                                                setExerciseEvents(
+                                                    exerciseEvents.filter((event) => event.id !== params.row.id),
+                                                );
+                                            }}
+                                        >
+                                            <DeleteIcon fontSize="small" />
+                                        </Button>
+                                    ),
+                                },]}
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                             disableSelectionOnClick
