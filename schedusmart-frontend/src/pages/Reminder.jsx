@@ -119,6 +119,7 @@ export default function Reminder(language, Color) {
   //Implementation of reminders settings
   const [remindersOn, setRemindersOn] = useState(false);
   const [Events, setEvents] = useState();
+  const [firstEvent,setFirstEvent] =useState();
   // let Events;
   const handleReminderChange = () => {
     setRemindersOn((prevRemindersOn) => {
@@ -230,11 +231,17 @@ export default function Reminder(language, Color) {
   const get_users_all_events = async () => {
     const response = await send_request("/get_event_with_userid", { "user_id": userId })
     const events = response.data;
-    events.sort((a, b) => compareDatesAndTimes(`${a["start_date"]} ${a["start_time"]}`, `${b["start_date"]} ${b["start_time"]}`))
-    console.log(events);
-    setEvents(events);
+    const sorted_events= events.sort((a, b) => compareDatesAndTimes(`${a["start_date"]} ${a["start_time"]}`, `${b["start_date"]} ${b["start_time"]}`))
+    console.log(sorted_events);
+    setEvents(sorted_events);
+    setFirstEvent(sorted_events[0]);
+  }
+
+  const [makeChoice, setMakechoice] =useState(false);
+  const[index,setIndex]=useState(0);
+  const choice = (events)=> {
     let option = localStorage.getItem('reminder_option');
-    console.log(option);
+    setMakechoice(true);
     if (option == 1) {
       BRAtTime(events[0]);
     }
@@ -242,33 +249,37 @@ export default function Reminder(language, Color) {
       sendEmailAtTime(events[0]);
     }
   }
-
+  useEffect(() => {
+    console.log(makeChoice);
+    if (!makeChoice && Events!=undefined){
+      choice(Events);
+    }
+  }, [Events,makeChoice]);
+  
 
   //browser reminders
   const [reminderpopopen, setReminderPopOpen] = useState(false);
-  // let reminderpopopen=false;
   const handleReminderPopOpen = () => {
     setReminderPopOpen(true);
-    // reminderpopopen=true;
   };
   const handleReminderPopClose = () => {
     setReminderPopOpen(false);
-    // reminderpopopen=false;
   };
-  const handleBrowserReminder = (event_R) => {
+  const handleBrowserReminder = (e) => {
     console.log("start");
-    if (event_R!=undefined){
+    console.log(e);
+    if (e!=undefined){
       return (
         <>
             <Dialog open={reminderpopopen}>
                 <DialogTitle>Here is the reminder from Schedusmart:</DialogTitle>
                 <DialogContent>
-                    <p>Events: {event_R["name"]}</p>
-                    <p>Description: {event_R["desc"]}</p>
-                    <p>Start_Time: {event_R["start_date"]}  {event_R["start_time"]}</p>
-                    <p>End_Time: {event_R["end_date"]} {event_R["end_time"]}</p>
-                    <p>Location: {event_R["location"]}</p>
-                    <p>Confenrence link: {event_R["confenrence_link"]}</p>
+                    <p>Events: {e["name"]}</p>
+                    <p>Description: {e["desc"]}</p>
+                    <p>Start_Time: {e["start_date"]}  {e["start_time"]}</p>
+                    <p>End_Time: {e["end_date"]} {e["end_time"]}</p>
+                    <p>Location: {e["location"]}</p>
+                    <p>Confenrence link: {e["confenrence_link"]}</p>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleReminderPopClose}>Close</Button>
@@ -281,37 +292,44 @@ export default function Reminder(language, Color) {
   useEffect(() => {
     if (reminderpopopen){
       console.log("useEffect");
-      handleBrowserReminder(Events[0]);
-      const remainingEvents = Events.slice(1);
-      setEvents(remainingEvents);
-      if (remainingEvents.length > 0) {
-        BRAtTime(remainingEvents[0]);
-      }
-      else {
-        return 0; //finish
-      }
+      console.log("i===",index);
+      console.log(Events[index]);
+      handleBrowserReminder(Events[index]);
     }
-  }, [reminderpopopen]);
-  
+  }, [reminderpopopen,index]);
+
+  let i=0;
   const BRAtTime = (event_R)=>{
     console.log("run");
     const currentDate = new Date();
     const formattedDate = formatDate(currentDate);
     const time = `${event_R["start_date"]} ${event_R["start_time"]}`;
     if (compareDatesAndTimes(time, formattedDate) == 0) {
-      handleReminderPopOpen(Events[0]);
+      handleReminderPopOpen(Events[i]);
+      i+=1;
+      setFirstEvent(Events[i])
+      if (Events.length > i) {
+        console.log("i=",i);
+        // console.log(Events[i]);
+        BRAtTime(Events[i]);
+      }
+      else {
+        setIndex(i-1);
+        return 0; //finish
+      }
     } else if (compareDatesAndTimes(time, formattedDate) == 1) {
       console.log("3333333");
       setTimeout(() => BRAtTime(event_R), 6000);
       console.log("44444");
     }
     else if (compareDatesAndTimes(time, formattedDate) == -1) {
-      console.log("before",Events);
-      const remainingEvents = Events.slice(1);
-      setEvents(remainingEvents);
-      console.log("after",Events);
-      if (remainingEvents.length > 0) {
-        BRAtTime(remainingEvents[0]);
+      // console.log("before",Events);
+      i+=1;
+      console.log("i=",i);
+      setFirstEvent(Events[i])
+      if (Events.length > i) {
+        console.log(Events[i]);
+        BRAtTime(Events[i]);
       }
     }
   }
@@ -351,6 +369,7 @@ export default function Reminder(language, Color) {
 
   return (
     <ThemeProvider theme={theme}>
+      {reminderpopopen && handleBrowserReminder(Events[index])}
       <Card>
         <CardHeader subheader={languageData.updateReminderSetting} title={languageData.Reminder} />
         <Divider />
@@ -369,7 +388,6 @@ export default function Reminder(language, Color) {
               }
               label={remindersOn ? 'On' : 'Off'}
             />
-            {reminderpopopen && handleBrowserReminder(Event[0])}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
