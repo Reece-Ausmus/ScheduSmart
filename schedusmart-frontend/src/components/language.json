@@ -51,7 +51,8 @@
         "unsaveEvent": "Unsaved Changes!",
         "updateEvent": "Update Event",
         "update": "Update",
-        "delete": "DELETE"
+        "delete": "DELETE",
+        "currentTemperature": "Current Temperature:"
       },
       "setting": {
         "setting": "setting",
@@ -166,12 +167,30 @@
         "CT": "Central Time (CT)",
         "MT": "Mountain Time (MT)",
         "PT": "Pacific Time (PT)"
+      },
+      "dataPage": {
+        "dataDashboard": "Data Dashboard",
+        "timePeriod": "Time Period",
+        "all": "All",
+        "past7Day": "Past 7 Days",
+        "past30Day": "Past 30 Days",
+        "pastYear": "Past Year",
+        "noEventFound": "No events found",
+        "eventTypeDistribution": "Event Type Distribution",
+        "numberOfEvent": "Number of Events",
+        "averageLength": "Average Length (minutes)",
+        "event": "Event",
+        "availability": "Availability",
+        "course": "course",
+        "break": "Break",
+        "businessTime": "Busiest Time: "
       }
     }
   ],
   [
     {
       "main_frame": {
+        "currentTemperature": "當前溫度：",
         "create_calendar": "創建日曆",
         "create_event": "創建事件",
         "create_avaliability": "創建休息時間",
@@ -328,19 +347,37 @@
         "signOut": "登出"
       }, 
       "timeZone": {
-        "currentTime": "當前時間：",
+        "currentTime": "時間：",
         "timeZone": "時區：",
         "selectTimeZone": "選擇時區",
         "ET": "東部時間 (ET)",
         "CT": "中部時間 (CT)",
         "MT": "山地時間 (MT)",
         "PT": "太平洋時間 (PT)"
+      }, 
+      "dataPage": {
+        "dataDashboard": "數據板",
+        "timePeriod": "時間段",
+        "all": "全部",
+        "past7Day": "過去 7 天",
+        "past30Day": "過去 30 天",
+        "pastYear": "過去一年",
+        "noEventFound": "未找到事件",
+        "eventTypeDistribution": "事件類型分佈",
+        "numberOfEvent": "事件數量",
+        "averageLength": "平均長度（分鐘）",
+        "event": "事件",
+        "availability": "可用",
+        "course": "課程",
+        "break": "休息",
+        "businessTime": "工作時間："
       }
     }
   ],
   [
     {
       "main_frame": {
+        "currentTemperature": "Temperatura actual:",
         "create_calendar": "Crear calendario",
         "create_event": "Crear evento",
         "create_avaliability": "Crear disponibilidad",
@@ -504,6 +541,23 @@
         "CT": "Tiempo Central (CT)",
         "MT": "Tiempo de Montaña (MT)",
         "PT": "Tiempo del Pacífico (PT)"
+      },
+      "dataPage": {
+        "dataDashboard": "Tablero de datos",
+        "timePeriod": "Período de tiempo",
+        "all": "Todo",
+        "past7Day": "Últimos 7 días",
+        "past30Day": "Últimos 30 días",
+        "pastYear": "Último año",
+        "noEventFound": "No se encontraron eventos",
+        "eventTypeDistribution": "Distribución de tipo de evento",
+        "numberOfEvent": "Número de eventos",
+        "averageLength": "Longitud promedio (minutos)",
+        "event": "Evento",
+        "availability": "Disponibilidad",
+        "course": "Curso",
+        "break": "Descanso",
+        "businessTime": "Hora de mayor afluencia: "
       }
     }
   ]

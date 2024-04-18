@@ -1917,7 +1917,7 @@ export default function MainFrame() {
         {/* <Card variant="outlined" style={{ height: '100px' }}>
           <CardContent> */}
         <Box display="flex" justifyContent="space-between">
-          <Weather />
+          {Weather(language)}
           {Timezone(language)}
         </Box>
         {/* Parent container for CalendarList and calendar_container */}
