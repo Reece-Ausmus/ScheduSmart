@@ -203,6 +203,11 @@
   z-index: 999;
 }
 
+.conferencing-link {
+  color: rgb(223, 118, 43);
+  text-decoration: underline;
+}
+
 /* .weather_container {
   float: left;
   right: 2%;

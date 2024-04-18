@@ -360,7 +360,11 @@ export default function Calendar(selectMode, e, d, language) {
           setEventEndDate(responseData["end_date"]);
           setEventStartTime(responseData["start_time"]);
           setEventEndTime(responseData["end_time"]);
-          setEventConferencingLink(responseData["conferencing_link"]);
+          let conferencingLink = responseData["conferencing_link"];
+          if (!conferencingLink.startsWith("http")) {
+            conferencingLink = "http://" + conferencingLink;
+          }
+          setEventConferencingLink(conferencingLink);
           setEventLocation(responseData["location"]);
           setEventDescription(responseData["desc"]);
           setEventType(responseData["type"]);
@@ -399,7 +403,9 @@ export default function Calendar(selectMode, e, d, language) {
       {showUpdateEventPopup && (
         <div className="popup">
           <div className="popup-content">
-            {unsavedChanges && <h2>{languageData[language][0].main_frame.unsaveEvent}</h2>}
+            {unsavedChanges && (
+              <h2>{languageData[language][0].main_frame.unsaveEvent}</h2>
+            )}
             <h2>{languageData[language][0].main_frame.updateEvent}</h2>
             <div>
               <div className="formgroup">
@@ -414,14 +420,18 @@ export default function Calendar(selectMode, e, d, language) {
                 />
               </div>
               <div className="formgroup">
-                <label htmlFor="eventStartDate">{languageData[language][0].main_frame.startDate}</label>
+                <label htmlFor="eventStartDate">
+                  {languageData[language][0].main_frame.startDate}
+                </label>
                 <input
                   type="date"
                   id="eventStartDate"
                   value={eventStartDate}
                   onChange={handleEventStartDateChange}
                 />
-                <label htmlFor="eventEndDate">{languageData[language][0].main_frame.end_date}</label>
+                <label htmlFor="eventEndDate">
+                  {languageData[language][0].main_frame.end_date}
+                </label>
                 <input
                   type="date"
                   id="eventEndDate"
@@ -430,14 +440,18 @@ export default function Calendar(selectMode, e, d, language) {
                 />
               </div>
               <div className="formgroup">
-                <label htmlFor="eventStartTime">{languageData[language][0].main_frame.startTime}</label>
+                <label htmlFor="eventStartTime">
+                  {languageData[language][0].main_frame.startTime}
+                </label>
                 <input
                   type="time"
                   id="eventStartTime"
                   value={eventStartTime}
                   onChange={handleEventStartTimeChange}
                 />
-                <label htmlFor="eventEndTime">{languageData[language][0].main_frame.endTime}</label>
+                <label htmlFor="eventEndTime">
+                  {languageData[language][0].main_frame.endTime}
+                </label>
                 <input
                   type="time"
                   id="eventEndTime"
@@ -448,18 +462,18 @@ export default function Calendar(selectMode, e, d, language) {
               {eventType === "event" && (
                 <div>
                   <div className="formgroup">
-                    <label htmlFor="eventLocation">{languageData[language][0].main_frame.eventLocation}</label>
+                    <label htmlFor="eventLocation">
+                      {languageData[language][0].main_frame.eventLocation}
+                    </label>
                     {renderLocationInput()}
                   </div>
                   {eventConferencingLink !== "" && (
                     <div className="formgroup">
                       <label htmlFor="eventConferencingLink">
-                      {
-                              languageData[language][0].main_frame
-                                .conferencingLink
-                            }
+                        {languageData[language][0].main_frame.conferencingLink}
                       </label>
                       <a
+                        className="conferencing-link"
                         href={eventConferencingLink}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -471,7 +485,9 @@ export default function Calendar(selectMode, e, d, language) {
                 </div>
               )}
               <div className="formgroup">
-                <label htmlFor="eventDescription">{languageData[language][0].main_frame.eventDescription}</label>
+                <label htmlFor="eventDescription">
+                  {languageData[language][0].main_frame.eventDescription}
+                </label>
                 <textarea
                   id="eventDescription"
                   value={eventDescription}
@@ -522,7 +538,9 @@ export default function Calendar(selectMode, e, d, language) {
                 </div>
                 {eventRepetitionType === "custom" && (
                   <div className="custom-repetition">
-                    <label htmlFor="customFrequency">{languageData[language][0].main_frame.repeatEvery}</label>
+                    <label htmlFor="customFrequency">
+                      {languageData[language][0].main_frame.repeatEvery}
+                    </label>
                     <input
                       type="number"
                       id="eventCustomFrequencyValue"
@@ -535,16 +553,24 @@ export default function Calendar(selectMode, e, d, language) {
                       value={eventCustomFrequencyUnit}
                       onChange={handleEventCustomFrequencyUnitChange}
                     >
-                      <option value="days">{languageData[language][0].main_frame.days}</option>
-                      <option value="weeks">{languageData[language][0].main_frame.weeks}</option>
-                      <option value="months">{languageData[language][0].main_frame.months}</option>
-                      <option value="years">{languageData[language][0].main_frame.years}</option>
+                      <option value="days">
+                        {languageData[language][0].main_frame.days}
+                      </option>
+                      <option value="weeks">
+                        {languageData[language][0].main_frame.weeks}
+                      </option>
+                      <option value="months">
+                        {languageData[language][0].main_frame.months}
+                      </option>
+                      <option value="years">
+                        {languageData[language][0].main_frame.years}
+                      </option>
                     </select>
                   </div>
                 )}
               </div>
               <button className="formbutton fb1" onClick={handleUpdateEvent}>
-              {languageData[language][0].main_frame.update}
+                {languageData[language][0].main_frame.update}
               </button>
               <button
                 className="formbutton fb2"
@@ -553,7 +579,7 @@ export default function Calendar(selectMode, e, d, language) {
                 {languageData[language][0].main_frame.cancel}
               </button>
               <button className="formbuttondelete" onClick={handleDeleteEvent}>
-              {languageData[language][0].main_frame.delete}
+                {languageData[language][0].main_frame.delete}
               </button>
             </div>
           </div>

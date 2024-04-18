@@ -430,6 +430,8 @@ def add_new_event(event_info):
         'emails': event_info['emails'],
         'type': event_info['type']
     }
+    if not data['conferencing_link'].startswith('http'):
+        data['conferencing_link'] = "http://" + data['conferencing_link']
     try:
         emails = data['emails']
         for email in emails:
