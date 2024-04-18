@@ -794,6 +794,16 @@ def reminders_options_settings(info):
         print("Failed to set the reminder option settings")
         return 1
 
+def reminders_timeoptions_settings(info):
+    user_id = info['user_id']
+    r_timeoption = info['r_timeoption']
+    try:
+        db.child("User").child(user_id).child("reminder_option").set(r_timeoption)
+        return 0
+    except Exception:
+        print("Failed to set the reminder option settings")
+        return 1
+
 
 
 ################################################### friend system ######################################################

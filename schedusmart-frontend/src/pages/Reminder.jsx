@@ -78,7 +78,7 @@ export default function Reminder(language, Color) {
         transform: 'translateX(16px)',
         color: '#fff',
         '& + .MuiSwitch-track': {
-          backgroundColor: theme.palette.mode === 'dark' ? '#EF6C00' : '#FFA726',
+          backgroundColor: theme.palette.mode === 'dark' ? theme.palette.primary.main : theme.palette.secondary.main,
           opacity: 1,
           border: 0,
         },
@@ -116,19 +116,25 @@ export default function Reminder(language, Color) {
   }));
 
   //Implementation of reminders settings
-  const [remindersOn, setRemindersOn] = useState(false);
   const [Events, setEvents] = useState();
   const [firstEvent,setFirstEvent] =useState();
-  // let Events;
+  const [remindersOn, setRemindersOn] = useState(() => {
+    const storedValue = localStorage.getItem('remindersOn');
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
   const handleReminderChange = () => {
     setRemindersOn((prevRemindersOn) => {
       const newRemindersOn = !prevRemindersOn;
+      localStorage.setItem('remindersOn', JSON.stringify(newRemindersOn));
       if (newRemindersOn) {
         get_users_all_events();
       }
       return newRemindersOn;
     });
   };
+  useEffect(() => {
+    localStorage.setItem('remindersOn', JSON.stringify(remindersOn));
+  }, [remindersOn]);
   const [timeOptions] = useState([
     { id: 5, value: 5 },
     { id: 10, value: 10 },
@@ -238,6 +244,10 @@ export default function Reminder(language, Color) {
 
   useEffect(() => {
     GetUserData();
+    if (remindersOn){
+      console.log("haha");
+      get_users_all_events();
+    }
   }, []);
 
   const get_users_all_events = async () => {
@@ -257,6 +267,7 @@ export default function Reminder(language, Color) {
       BRAtTime(events[0]);
     }
     else if (option == 2) {
+      console.log("enter");
       sendEmailAtTime(events[0]);
     }
   }
@@ -324,7 +335,7 @@ export default function Reminder(language, Color) {
         return 0; //finish
       }
     } else if (compareDatesAndTimes(newTime, formattedDate) == 1) {
-      setTimeout(() => BRAtTime(event_R), 6000);
+      setTimeout(() => BRAtTime(event_R), 10000);
     }
     else if (compareDatesAndTimes(newTime, formattedDate) == -1) {
       i+=1;
@@ -346,6 +357,7 @@ export default function Reminder(language, Color) {
     const row6 = "Confenrence link: " + event_R["confenrence_link"] + "\n";
     message += row1 + row2 + row3 + row4 + row5;
     console.log(message)
+    console.log(Username, Email);
     EmailForm(Username, Email, message);
   }
 
@@ -353,18 +365,30 @@ export default function Reminder(language, Color) {
     const currentDate = new Date();
     const formattedDate = formatDate(currentDate);
     const time = `${event_R["start_date"]} ${event_R["start_time"]}`;
-    if (compareDatesAndTimes(time, formattedDate) == 0) {
-      handleSendEmail(event_R);
-      const remainingEvents = Events.slice(1);
-      setEvents(remainingEvents);
-      if (remainingEvents.length > 0) {
-        sendEmailAtTime(remainingEvents[0]);
-      }
-    } else if (compareDatesAndTimes(time, formattedDate) == 1) {
-      setTimeout(() => sendEmailAtTime(event_R), 300000);
+    let newTime = time;
+    if (selectedTimeOption!=0){
+       newTime = subtractTimeOptionsFromDateTime(time, selectedTimeOption);
     }
-    else if (compareDatesAndTimes(time, formattedDate) == -1) {
-      return 0;
+    if (compareDatesAndTimes(newTime, formattedDate) == 0) {
+      handleSendEmail(Events[i]);
+      i+=1;
+      setFirstEvent(Events[i])
+      if (Events.length > i) {
+        sendEmailAtTime(Events[i]);
+      }
+      else {
+        setIndex(i-1);
+        return 0; //finish
+      }
+    } else if (compareDatesAndTimes(newTime, formattedDate) == 1) {
+      setTimeout(() => sendEmailAtTime(event_R), 10000);
+    }
+    else if (compareDatesAndTimes(newTime, formattedDate) == -1) {
+      i+=1;
+      setFirstEvent(Events[i])
+      if (Events.length > i) {
+        sendEmailAtTime(Events[i]);
+      }
     }
   }
 
