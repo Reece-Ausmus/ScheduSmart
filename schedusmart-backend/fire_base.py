@@ -677,6 +677,24 @@ def add_new_exercise(data):
         print("Failed to create exercise:", e)
         return 1
 
+# This function is used to create a new Goal list for the logged in user
+def add_new_goal(data):
+    user_id = data['user_id']
+    date = data['date']
+    goal_data = {
+        "dailyGoal": data['dailyGoal'], 
+        "status": data['status'],
+    }
+    # Construct the Firebase structure
+    goal_path = f"/Goals/{user_id}/{date}"
+
+    # Push the goal data to the Firebase database
+    try:
+        db.child(goal_path).set(goal_data)
+        return 0
+    except Exception as e:
+        print("Failed to create goal:", e)
+        return 1
 
 def find_closest_available_time(data):
     user_id = data['user_id']

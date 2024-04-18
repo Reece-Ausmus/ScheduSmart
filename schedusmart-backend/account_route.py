@@ -186,6 +186,54 @@ def get_exercises():
         print("Failed to get exercises:", e)
         return jsonify({'error': 'Failed to get exercises'}), 500
 
+# This route is for setting the daily calorie goal
+@account.route('/set_calorie_goal', methods=['POST'])
+def set_calorie_goal():
+    data = request.get_json()
+    try:
+        result = add_new_goal(data)
+        if result == 0:
+            response = jsonify({'message': 'Calorie goal set successfully'})
+            response.status_code = 201
+        else:
+            response = jsonify({'error': 'Failed to set calorie goal'})
+            response.status_code = 400
+    except Exception as e:
+        response = jsonify({'error': 'An error occured'})
+        response.status_code = 500
+    return response
+
+# This route is for getting the daily calorie goal
+@account.route('/get_calorie_goal', methods=['POST'])
+def get_calorie_goal():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's calorie goal
+    user_goal_path = f"/Goals/{user_id}"
+
+    try:
+        # Get the user's calorie goal from the Firebase database
+        user_goal = db.child(user_goal_path).get()
+
+        # If the user has no calorie goal, return an empty list
+        if not user_goal.val():
+            return jsonify({'goal': []}), 200
+
+        # Convert Firebase response to list of goals
+        goal_list = []
+        for date, goal_data in user_goal.val().items():
+            goal_data['date'] = date
+            goal_list.append(goal_data)
+
+        return jsonify({'goal': goal_list}), 200
+    except Exception as e:
+        print("Failed to get calorie goal:", e)
+        return jsonify({'error': 'Failed to get calorie goal'}), 500
+
 
 # This route is for adding habits
 @account.route('/add_habit', methods=['POST'])
