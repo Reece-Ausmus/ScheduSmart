@@ -125,6 +125,7 @@ def get_user(response):
             "user_id": user_id,
             "calendars": calendars,
             "language": db.child("User").child(user_id).child('language').get().val(),
+            "first_time": db.child("User").child(user_id).child('first_time').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
             'task_list': db.child("User").child(user_id).child('task_list').get().val(),
             "return_status": 0
@@ -170,7 +171,8 @@ def create_account_by_username_and_password(receive_account):
             "user_name": receive_account['username'],
             "email": receive_account['email'],
             "language": 0,
-            "system_color":1
+            "system_color":1,
+            "first_time": True
         }
 
         same_account_confirm = __look_for_same_user_name_or_email(data)
@@ -236,10 +238,15 @@ def login_account_with_email_and_password(receive_account):
 
         # 2FA CODE END ##########################################################################################
 
+        # get first_time info
+        first_time = db.child("User").child(user_id).child("first_time").get().val()
+        db.child("User").child(user_id).update({"first_time": False})
+        
         data = {
             "email": receive_account['email'],
             "password": receive_account['password'],
             "user_id": user_id,
+            "first_time": first_time,
             "return_status": 0
         }
         return data

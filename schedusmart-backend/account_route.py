@@ -35,7 +35,8 @@ def login():
     else:
         response = jsonify({
             'message': 'Done',
-            'user_id': data['user_id']
+            'user_id': data['user_id'],
+            'first_time': data['first_time']
         })
         response.status_code = 201
     return response
@@ -80,7 +81,8 @@ def user_data():
                 'location': data['location'],
                 'timezone': data['timezone'],
                 'task_list': data['task_list'],
-                'language': data['language']
+                'language': data['language'],
+                'first_time': data['first_time']
             })
             response.status_code = 201
     except:

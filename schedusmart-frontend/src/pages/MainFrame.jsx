@@ -1869,8 +1869,17 @@ export default function MainFrame() {
 
   useEffect(() => {
     const hasCompletedTour = sessionStorage.getItem("hasCompletedTour");
-    if (!hasCompletedTour) {
-      setShowTour(true);
+    const first_time = sessionStorage.getItem("first_time");
+    if(first_time == 'false') {
+      setShowTour(false);
+    }
+    if(first_time == 'true') {
+      if (!hasCompletedTour) {
+        setShowTour(true);
+      }
+      if (hasCompletedTour) {
+        setShowTour(false);
+      }
     }
   }, []);
 
