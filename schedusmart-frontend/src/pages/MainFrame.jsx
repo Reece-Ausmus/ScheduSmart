@@ -157,22 +157,11 @@ export default function MainFrame() {
         setLanguage(dataOfUser.language);
       }
       console.log("c", dataOfUser);
-<<<<<<< Updated upstream
-      if (
-        dataOfUser.system_color != undefined &&
-        dataOfUser.system_color != null
-      ) {
-        setColor(dataOfUser.system_color);
-        localStorage.setItem("system_color", dataOfUser.system_color);
-      } else {
-        localStorage.setItem("system_color", "1");
-=======
       if (dataOfUser.system_color != undefined && dataOfUser.system_color != null) {
         setColor(dataOfUser.system_color)
         sessionStorage.setItem('system_color', dataOfUser.system_color);
       } else {
         sessionStorage.setItem('system_color', "1");
->>>>>>> Stashed changes
       }
       const newCalendars = dataOfUser.calendars;
       const updatedCalendarList = [...calendarList];
