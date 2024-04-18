@@ -400,13 +400,6 @@ export default function MainFrame() {
                 );
               }}
             />
-            <Button
-              variant="contained"
-              style={{ marginLeft: "20px", height: "80%" }}
-              onClick={handleShowMap}
-            >
-              map
-            </Button>
             <Dialog
               open={showMap}
               onClose={() => setShowMap(false)}
