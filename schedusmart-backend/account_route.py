@@ -185,6 +185,60 @@ def get_exercises():
     except Exception as e:
         print("Failed to get exercises:", e)
         return jsonify({'error': 'Failed to get exercises'}), 500
+    
+# This route is for deleting exercises
+@account.route('/delete_exercise', methods=['POST'])
+def delete_exercise():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    event_name = data.get('event_name')
+
+    selected_exercise_id = data.get('id')
+
+    if not user_id or not event_name:
+        return jsonify({'error': 'User ID and exercise ID are required parameters'}), 400
+
+    # Construct the Firebase path to the exercise
+    exercise_path = f"/Exercise/{user_id}/{event_name}"
+    
+    # Delete the exercise from the Firebase database
+    try:
+        db.child(exercise_path).remove()    
+        return jsonify({'message': 'Exercise deleted successfully'}), 200
+    except Exception as e:
+        print("Failed to delete exercise:", e)
+        return jsonify({'error': 'Failed to delete exercise'}), 500
+
+@account.route('/get_highest_exercise_id', methods=['POST'])
+def get_highest_exercise_id():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's exercises
+    user_exercises_path = f"/Exercise/{user_id}"
+
+    try:
+        # Get all exercises for the user from the Firebase database
+        user_exercises = db.child(user_exercises_path).get()
+
+        # If the user has no exercises, return an empty list
+        if not user_exercises.val():
+            highest_id = 0
+        else:
+            # Get the highest exercise ID
+            highest_id = max(int(exercise_data.get('id', 0)) for exercise_data in user_exercises.val().values())
+
+        # Set the new event ID to the highest exercise ID + 1
+        new_event_id = highest_id + 1
+
+        return jsonify({'highest_id': new_event_id}), 200
+    except Exception as e:
+        print("Failed to get highest exercise ID:", e)
+        return jsonify({'error': 'Failed to get highest exercise ID'}), 500
+
 
 # This route is for setting the daily calorie goal
 @account.route('/set_calorie_goal', methods=['POST'])
