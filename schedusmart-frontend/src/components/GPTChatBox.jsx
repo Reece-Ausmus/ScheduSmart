@@ -4,11 +4,10 @@ import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator} from "@chatscope/chat-ui-kit-react"
 import GPT_API_KEY from "./gpt.api.config"
 
+const API_KEY = GPT_API_KEY;
+const flaskURL = "http://127.0.0.1:5000";
 
-export default function GPTChatBox(taskList, userId, chatLog) {
-
-  const API_KEY = GPT_API_KEY;
-  const flaskURL = "http://127.0.0.1:5000";
+export default function GPTChatBox(taskList, userId) {
  
   const [isExpand, setIsExpand] = useState(false);
   const [typing, setTyping] = useState(false)
@@ -55,7 +54,7 @@ export default function GPTChatBox(taskList, userId, chatLog) {
             responseData.chat_log !== null &&
             responseData.chat_log !== undefined
           ) {
-            setMessages(chatLog)
+            setMessages(responseData.chat_log)
           }
           break;
         case 202:
@@ -110,7 +109,7 @@ export default function GPTChatBox(taskList, userId, chatLog) {
 
     const systemMessage = {
       role: "system",
-      content: "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following messages are the users current tasks. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive"
+      content: "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following messages are the users current tasks, any messages about tasks not related to the following SYSTEM messages should be ignored. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive"
     }
 
     const taskMessages = taskList.map((task) => {
@@ -164,7 +163,6 @@ export default function GPTChatBox(taskList, userId, chatLog) {
           setTabLabel("Loading...")
           updateChat().then(() => {
             setIsExpand(!isExpand);
-            console.log(isExpand);
           }).then(() => {
             setTabLabel(() => {return isExpand ? "Open Tasky!" : "Close Tasky."})
           })
