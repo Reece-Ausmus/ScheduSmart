@@ -13,6 +13,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import EmailForm from "../components/Email";
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 const Colors = [
   { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
@@ -54,6 +59,8 @@ export default function Notebook() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [showCreate, setShowCreate] = useState(false);
+  const [value, setValue] = useState(0);
+
 
 
   useEffect(() => {
@@ -130,7 +137,7 @@ export default function Notebook() {
       selected_days: [],
       user_id: user_id,
       emails: [],
-      type: "notebook",
+      type: "notebook" + value,
       conferencing_link: "",
     };
 
@@ -155,22 +162,70 @@ export default function Notebook() {
     setShowCreate(!showCreate)
   }
 
-  return (
-    <ThemeProvider theme={theme}>
-        <div className="main">
-        <div>{Dashboard()}</div>
-        <div className="header">
-            <h1 style={{ color: theme.palette.primary.main }}>Notebook</h1>
-        </div>
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
+  function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 4 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+  
+  CustomTabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+  
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
+
+  const notebookContent = (value) => {
+    return(
+      <div>
         <div>
-            <Button variant="contained" onClick={handleShowEmailPopup}>send email</Button>
-        </div>
-        {showEmailPopup && (
+          {flag &&
+          events.map((item, index) => {
+            const type = 'notebook' + value;
+            console.log(type)
+            console.log(item.EventType)
+            if (type === item.EventType){
+              return (
+                <EventCard
+                    key={index}
+                    id={index}
+                    title={item.title}
+                    content={item.content}
+                    onDetails={() => showDetails(index)}
+                />
+              );
+            }
+          })}
+
+          {showDtailsPopup && (
             <div className="popup">
               <div className="popup-content">
                 <h2>
-                    Email Address
+                    Details
                 </h2>
                 <div className="formgroup">
                   <label htmlFor="email">
@@ -194,142 +249,155 @@ export default function Notebook() {
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
-                <button
-                  className="formbutton fb1"
-                  onClick={handleSendEmail}
-                >
-                  send
-                </button>
+          
                 <button
                   className="formbutton fb2"
-                  onClick={handleShowEmailPopup}
+                  onClick={showDetails}
                 >
-                  cancel
+                  close
                 </button>
               </div>
             </div>
-          )
-        }
+          )}
 
-        <div>
-          <div><h2>Meetings</h2></div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "10px",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              {flag &&
-              events.map((item, index) => {
-                  return (
-                  <EventCard
-                      key={index}
-                      id={index}
-                      title={item.title}
-                      content={item.content}
-                      onDetails={() => showDetails(index)}
+          <AddCard
+            onCreate={() => showCreating()}
+          />
+
+          {showCreate && (
+            <div className="popup">
+              <div className="popup-content">
+                <h2>
+                    Add Record
+                </h2>
+                <div className="formgroup">
+                  <label htmlFor="email">
+                    title
+                  </label>
+                  <input
+                    type="text"
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
-                  );
-              })}
-
-              {showDtailsPopup && (
-                <div className="popup">
-                  <div className="popup-content">
-                    <h2>
-                        Details
-                    </h2>
-                    <div className="formgroup">
-                      <label htmlFor="email">
-                        enter email address
-                      </label>
-                      <input
-                        type="text"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                    <div className="formgroup">
-                      <label htmlFor="name">
-                        enter recepient name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-              
-                    <button
-                      className="formbutton fb2"
-                      onClick={showDetails}
-                    >
-                      close
-                    </button>
-                  </div>
                 </div>
-              )}
-
-              <AddCard
-                onCreate={() => showCreating()}
-              />
-
-              {showCreate && (
-                <div className="popup">
-                  <div className="popup-content">
-                    <h2>
-                        Add Record
-                    </h2>
-                    <div className="formgroup">
-                      <label htmlFor="email">
-                        title
-                      </label>
-                      <input
-                        type="text"
-                        id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
-                    </div>
-                    <p>description</p>
-                    <div className="formgroup">
-                      <textarea
-                        type="text"
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows="10"
-                        cols="50"
-                      />
-                    </div>
-                    <button
-                      className="formbutton fb1"
-                      onClick={handleAddRecord}
-                    >
-                      send
-                    </button>
-              
-                    <button
-                      className="formbutton fb2"
-                      onClick={showCreating}
-                    >
-                      close
-                    </button>
-                  </div>
+                <p>description</p>
+                <div className="formgroup">
+                  <textarea
+                    type="text"
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows="10"
+                    cols="50"
+                  />
                 </div>
-              )}
+                <button
+                  className="formbutton fb1"
+                  onClick={handleAddRecord}
+                >
+                  send
+                </button>
+          
+                <button
+                  className="formbutton fb2"
+                  onClick={showCreating}
+                >
+                  close
+                </button>
+              </div>
             </div>
-            
-          </div>
+          )}
         </div>
-
-     
-
         <ToastContainer autoClose={1000} />
+      </div>
+          
+    );
+    
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+        <div className="main">
+          <div>{Dashboard()}</div>
+          <div className="header">
+            <h1 style={{ color: theme.palette.primary.main }}>Notebook</h1>
+          </div>
+
+          {/*send email*/}
+          <div>
+              <Button variant="contained" onClick={handleShowEmailPopup}>send email</Button>
+          </div>
+          {showEmailPopup && (
+              <div className="popup">
+                <div className="popup-content">
+                  <h2>
+                      Email Address
+                  </h2>
+                  <div className="formgroup">
+                    <label htmlFor="email">
+                      enter email address
+                    </label>
+                    <input
+                      type="text"
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="formgroup">
+                    <label htmlFor="name">
+                      enter recepient name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    className="formbutton fb1"
+                    onClick={handleSendEmail}
+                  >
+                    send
+                  </button>
+                  <button
+                    className="formbutton fb2"
+                    onClick={handleShowEmailPopup}
+                  >
+                    cancel
+                  </button>
+                </div>
+              </div>
+            )
+          }
+
+          {/*tab*/}
+          <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Meetins" {...a11yProps(0)} />
+                <Tab label="Assignments" {...a11yProps(1)} />
+                <Tab label="Extraordinary session" {...a11yProps(2)} />
+                <Tab label="Others" {...a11yProps(3)} />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={value} index={0}>
+              {notebookContent()}
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              Item Two
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={2}>
+              Item Three
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+              Others
+            </CustomTabPanel>
+          </Box>
+
+
         </div>
     </ThemeProvider>
   );

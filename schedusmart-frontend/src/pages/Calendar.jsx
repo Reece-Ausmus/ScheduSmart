@@ -585,7 +585,7 @@ export default function Calendar(selectMode, e, d, language) {
           </div>
         </div>
       )}
-      <div style={{ display: selectMode === 3 ? "block" : "none" }}>
+      {/*<div style={{ display: selectMode === 3 ? "block" : "none" }}>
         <div>
           <table className="month_table">
             <tr>
@@ -737,9 +737,9 @@ export default function Calendar(selectMode, e, d, language) {
             </tr>
           </table>
         </div>
-      </div>
+                </div>*/}
 
-      <div style={{ display: selectMode === 4 ? "block" : "none" }}>
+      {/*<div style={{ display: selectMode === 4 ? "block" : "none" }}>
         <table className="month_table">
           <tr className="MonthBoxFor4">
             <td className="MonthBoxFor4">January</td>
@@ -760,7 +760,7 @@ export default function Calendar(selectMode, e, d, language) {
             <td className="MonthBoxFor4">December</td>
           </tr>
         </table>
-      </div>
+              </div>*/}
     </div>
   );
 }

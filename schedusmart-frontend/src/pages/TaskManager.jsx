@@ -15,6 +15,7 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
 import StarRateIcon from '@mui/icons-material/StarRate';
+import Snackbar from '@mui/material/Snackbar';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Fab from "@mui/material/Fab";
 import Icon from "@mui/material/Icon";
@@ -22,6 +23,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import EventParser from "./EventParser";
@@ -55,6 +57,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import dayjs from 'dayjs';
 import GPTChatBox from '../components/GPTChatBox.jsx'
 import languageLibrary from "../components/language.json";
@@ -62,7 +65,6 @@ import "./TaskManager.css"
 import emailjs from '@emailjs/browser';
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { useLocation } from 'react-router-dom';
-
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 import { isCellExitEditModeKeys } from "@mui/x-data-grid/utils/keyboardUtils.js";
 
@@ -218,13 +220,10 @@ export default function TaskManager() {
                 ? temporaryCompleteList.push(task)
                 : temporaryToDoList.push(task);
             });
-            console.log("TodoList", temporaryToDoList);
-            console.log("CompleteList", temporaryCompleteList);
             setTodoList(temporaryToDoList);
             setCompletedList(temporaryCompleteList);
             nextId = todoList.length;
           }
-          console.log(userId);
           if (responseData.calendars == null) {
             handleCreateTaskCalendar().then(() => {
               calendarId = responseData.calendars["Tasks"].calendar_id;
@@ -236,6 +235,7 @@ export default function TaskManager() {
           } else {
             calendarId = responseData.calendars["Tasks"].calendar_id;
           }
+          console.log("Task Manager Loaded")
           break;
         case 202:
           alert("List Not Found");
@@ -1307,8 +1307,31 @@ function TodoList({
     return link;
   };
 
+  const [open, setOpen] = useState(true)
+
+  const getPriority = (priority) => {
+    switch(priority) {
+      case 1:
+        return "Important"
+      case 2: 
+        return "Overdue"
+      case 3:
+        return "Time Sensitive"
+    }
+  }
+
   return (
     <>
+    <Snackbar open={open} autoHideDuration={6000} onClose={() => {setOpen(false)}}>
+      <Alert severity="info" variant="filled" sx={{ width: '100%' }} onClose={() => {setOpen(false)}}>
+        <AlertTitle>The following tasks require your attention:</AlertTitle>
+        {sortedList.filter(task => task.priority !== 0).map((task) => (
+          <li>
+            {task.title} - {getPriority(task.priority)}
+          </li>
+        ))}
+      </Alert>
+    </Snackbar>
     <dialog id="emailModal" style={{ background: theme.palette.secondary.main }}>
       <DialogTitle style={{ color: "black" }}>{languageData.emailTask}</DialogTitle>
       <DialogContent>
@@ -1493,21 +1516,21 @@ function TodoList({
                 <SendIcon/>
               </Button>
             </TableCell>
-            <TableCell sx={{ m: 1, width: 200 }} size="small">
-                  <Select
-                    labelId="priority"
-                    id="priority"
-                    value={task.priority}
-                    label="priority"
-                    onChange={(e) => {
-                      onPriorityChange(task.id, e.target.value)
-                    }}
-                  >
-                    <MenuItem value={0}>{languageData.none}</MenuItem>
-                    <MenuItem value={1}><StarRateIcon /></MenuItem>
-                    <MenuItem value={2}><PriorityHighIcon /></MenuItem>
-                    <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
-                  </Select>
+            <TableCell sx={{ m: 1, width: 200 }} size="small" >
+              <Select
+                labelId="priority"
+                id="priority"
+                value={task.priority}
+                label="priority"
+                onChange={(e) => {
+                  onPriorityChange(task.id, e.target.value)
+                }}
+              >
+                <MenuItem value={0}>{languageData.none}</MenuItem>
+                <MenuItem value={1}><StarRateIcon /></MenuItem>
+                <MenuItem value={2}><PriorityHighIcon /></MenuItem>
+                <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
+              </Select>
             </TableCell>
             <TableCell>
               <Checkbox

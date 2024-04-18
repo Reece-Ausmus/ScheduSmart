@@ -1,5 +1,5 @@
 // space insufficient debug: docker system prune
-// comme
+
 pipeline {
   agent any
 
