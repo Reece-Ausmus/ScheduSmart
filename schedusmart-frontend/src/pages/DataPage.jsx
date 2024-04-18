@@ -68,6 +68,50 @@ export default function SimpleBarChart() {
 
   const [busiestTime, setBusiestTime] = useState(0);
 
+  const generateCSV = () => {
+    const timeFilterOptions = [
+      "All",
+      "Past 7 Days",
+      "Past 30 Days",
+      "Past Year",
+    ];
+    const timeFilterFormatted = timeFilterOptions[timeFilter];
+
+    const eventTypeLabels = ["Event", "Availability", "Course", "Break"];
+    const eventTypeDataFormatted = eventTypeData
+      .map((value, index) => ({
+        label: eventTypeLabels[index],
+        value: value,
+      }))
+      .map((obj) => `${obj.label}: ${obj.value}`);
+
+    const eventTypeAvgFormatted = eventTypeAvg
+      .map((value, index) => ({
+        label: eventTypeLabels[index],
+        value: value,
+      }))
+      .map((obj) => `${obj.label}: ${obj.value}`);
+
+    const busiestTimeFormatted = `${Math.floor(busiestTime / 100)
+      .toString()
+      .padStart(2, "0")}:${(busiestTime % 100).toString().padStart(2, "0")}`;
+
+    const csvData = [
+      ["Time Filter", timeFilterFormatted],
+      ["Event Type Data", ...eventTypeDataFormatted],
+      ["Event Type Averages (min)", ...eventTypeAvgFormatted],
+      ["Busiest Time", busiestTimeFormatted],
+    ];
+    const csvContent = csvData.map((row) => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    try {
+      saveAs(blob, "event-data.csv");
+    } catch (error) {
+      console.error("Error generating CSV:", error);
+      alert("An error occurred while generating the CSV.");
+    }
+  };
+
   // when time filter is updated, get new data
   useEffect(() => {
     const getEventData = async () => {
@@ -154,6 +198,9 @@ export default function SimpleBarChart() {
               <MenuItem value={365}>Past Year</MenuItem>
             </Select>
           </FormControl>
+          <Button variant="contained" onClick={generateCSV}>
+            Export as CSV
+          </Button>
         </Box>
         {noEvents && (
           <Typography
