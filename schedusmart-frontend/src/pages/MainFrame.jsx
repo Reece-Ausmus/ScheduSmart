@@ -119,12 +119,8 @@ const steps = [
 
 export default function MainFrame() {
   const location = useLocation();
-  let Color;
-  if (location.state == null) {
-    Color = localStorage.getItem("system_color");
-  } else {
-    Color = location.state.color_choice;
-  }
+  const [Color, setColor] = useState(1);
+
 
   const theme = createTheme({
     palette: {
@@ -160,6 +156,13 @@ export default function MainFrame() {
       console.log("data", dataOfUser);
       if (dataOfUser.language != undefined) {
         setLanguage(dataOfUser.language);
+      }
+      console.log("c", dataOfUser);
+      if (dataOfUser.system_color != undefined && dataOfUser.system_color != null) {
+        setColor(dataOfUser.system_color)
+        localStorage.setItem('system_color', dataOfUser.system_color);
+      } else {
+        localStorage.setItem('system_color', "1");
       }
       const newCalendars = dataOfUser.calendars;
       const updatedCalendarList = [...calendarList];

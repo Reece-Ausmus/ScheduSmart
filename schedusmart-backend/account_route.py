@@ -82,6 +82,7 @@ def user_data():
                 'task_list': data['task_list'],
                 'language': data['language'],
                 'chat_log': data['chat_log'],
+                'system_color':data['system_color'],
             })
             response.status_code = 201
     except:

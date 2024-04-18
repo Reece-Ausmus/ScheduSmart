@@ -24,7 +24,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Browser_reminder from '../components/Browser_reminder';
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
