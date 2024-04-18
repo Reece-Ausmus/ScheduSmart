@@ -55,11 +55,11 @@
         "currentTemperature": "Current Temperature:"
       },
       "setting": {
-        "setting": "setting",
+        "setting": "Settings",
         "Language": "Language",
         "UpdateLanguageSettings": "Update language settings",
         "UpdateSystemSettings": "Update system settings",
-        "system": "system",
+        "system": "System",
         "Color": "Color",
         "Option": "Option",
         "Red": "Red",
@@ -156,7 +156,7 @@
         "notes": "Notes",
         "noteBook": "Notebook",
         "taskManager": "Task manager",
-        "setting": "settings",
+        "setting": "Settings",
         "signOut": "Sign Out"
       },
       "timeZone": {
