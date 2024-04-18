@@ -281,11 +281,12 @@ function GoalTracker({ habits }) {
                     console.log("Today's goal not found in Firebase, setting to default 2000");
                     setDailyGoal(2000);
                 }
-
+                
                 const pastGoals = goals.filter(goal => goal.date !== dateString);
-                setPastStatus(pastGoals.map(goal => goal.status));
-                setPastDate(pastGoals.map(goal => goal.date));
-                setPastCalorieGoal(pastGoals.map(goal => goal.dailyGoal));
+                const sortedGoals = pastGoals.sort((a, b) => new Date(b.date) - new Date(a.date));
+                setPastStatus(sortedGoals.map(goal => goal.status));
+                setPastDate(sortedGoals.map(goal => goal.date));
+                setPastCalorieGoal(sortedGoals.map(goal => goal.dailyGoal));
 
 
             } else {
@@ -364,8 +365,8 @@ function GoalTracker({ habits }) {
                     </Typography> */}
                     <Box sx={{ position: "relative", display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
                         {/* Past goals rendering*/}
-                        {pastDate.length > 0 && (
-                            <>
+                        {pastDate.length > 0 && pastDate.map((date, index) => (
+                            <React.Fragment key={index}>
                                 <Gauge
                                     {...pastGoalSettings}
                                     cornerRadius="50%"
@@ -377,9 +378,9 @@ function GoalTracker({ habits }) {
                                         },
                                         [`& .${gaugeClasses.valueArc}`]: {
                                             fill: (() => {
-                                                if (pastStatus.includes("pass")) {
+                                                if (pastStatus[index].includes("pass")) {
                                                     return '#2e7d32'; // Arc is green if prior goal is met
-                                                } else if (pastStatus.includes("fail")) {
+                                                } else if (pastStatus[index].includes("fail")) {
                                                     return '#AA4A44'; // Arc is red if prior goal is not met
                                                 }
                                             })(),
@@ -389,7 +390,7 @@ function GoalTracker({ habits }) {
                                         },
                                     })}
                                     text={(() => {
-                                        if (pastStatus.includes("pass")) {
+                                        if (pastStatus[index].includes("pass")) {
                                             return "Complete!";
                                         } else {
                                             return "Failed";
@@ -398,8 +399,9 @@ function GoalTracker({ habits }) {
                                     style={{
                                         position: "absolute",
                                         bottom: "0%", 
-                                        left: "150%", 
+                                        left: `${150 + (index * 50)}%`, 
                                         right: "0%",
+                                        marginLeft: `${index * 200}px`, // Add horizontal spacing between gauges
                                     }}
                                 />
                                 <Typography
@@ -409,21 +411,17 @@ function GoalTracker({ habits }) {
                                     style={{
                                         position: "absolute",
                                         bottom: "-30%", 
-                                        left: "168%", 
+                                        left: `${168 + (index * 150)}%`, 
                                         width: "86%",
                                     }}
                                 >
                                     {/* Print all past dates in array */}
-                                    {pastDate.map((date) => {
-                                        return "Date: " + date + "\n";
-                                    })}
+                                    {date && `Date: ${date}\n`}
                                     {/* Print all past calorie goals in array on a new line */}
-                                    {pastCalorieGoal.map((goal) => {
-                                        return "Goal:  " + goal + " calories";
-                                    })}
+                                    {pastCalorieGoal[index] && `Goal: ${pastCalorieGoal[index]} calories`}
                                 </Typography>
-                            </>
-                        )}
+                            </React.Fragment>
+                        ))}
                         
                         <Gauge
                                 {...settings}
