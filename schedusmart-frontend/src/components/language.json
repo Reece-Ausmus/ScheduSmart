@@ -191,7 +191,7 @@
         "addNewItem": "Add new Item",
         "exportAsCSV": "Export as CSV",
         "editItem": "Edit item",
-        "calories": "Calories (kcal)",
+        "calories": " Calories (kcal)",
         "carbs": "Carbs (g)",
         "fat": "Fat (g)",
         "protein": "Protein (g)",
@@ -208,7 +208,7 @@
         "barChart": "Bar Chart",
 
         "dailyGoal": "Daily Goal: ",
-        "calorie": " calories",
+        "calorie": "calories",
         "remaininggoal": "Remaining = Goal - Food + Exercise",
         "remaining": "Remaining",
         "setGoal": "SET GOAL",
