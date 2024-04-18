@@ -164,6 +164,7 @@ let nextId = 0;
 let calendarId = 0;
 let userData = {};
 
+
 // create new task manager
 export default function TaskManager() {
   const [language, setLanguage] = useState(0)
@@ -1093,6 +1094,7 @@ function TodoList({
       },
     },
   });
+
   const emailModal = document.querySelector("#emailModal")
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")

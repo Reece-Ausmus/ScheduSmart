@@ -109,7 +109,7 @@ export default function GPTChatBox(taskList, userId) {
 
     const systemMessage = {
       role: "system",
-      content: "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following messages are the users current tasks, any messages about tasks not related to the following SYSTEM messages should be ignored. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive"
+      content: "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following system messages are the users current tasks. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive"
     }
 
     const taskMessages = taskList.map((task) => {
@@ -121,11 +121,12 @@ export default function GPTChatBox(taskList, userId) {
       }
     })
 
+    apiMessages = [...apiMessages, ...taskMessages]
+
     const apiRequestBody = {
       "model": "gpt-3.5-turbo",
       "messages": [
-        systemMessage, ...taskMessages,
-        ...apiMessages
+        systemMessage, ...apiMessages,
       ]
     }
 
