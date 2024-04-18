@@ -31,12 +31,12 @@ const Colors = [
     { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
   ];
 
-const columns = [
-    { field: "eventName", headerName: "Workout Name", width: 200 },
-    { field: "caloriesBurned", headerName: "Calories Burned", width: 200 },
-];
 
-function GoalTracker({ habits }) {
+function GoalTracker({ habits, languageData }) {
+    const columns = [
+        { field: "eventName", headerName: languageData.workoutName, width: 200 },
+        { field: "caloriesBurned", headerName: languageData.caloriesBurn, width: 200 },
+    ];
     const location = useLocation();
     let Color;
     if (location.state == null) {
@@ -391,10 +391,10 @@ function GoalTracker({ habits }) {
             <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
                 <div className="goal-tracker-container">
                     <Typography variant="h5">
-                        Daily Goal: {dailyGoal} calories
+                        {languageData.dailyGoal}{dailyGoal}{languageData.calories}
                     </Typography>
                     <Typography variant="subtitle2" gutterBottom>
-                        Remaining = Goal - Food + Exercise
+                        {languageData.remaininggoal}
                     </Typography>
                     {/* <Typography variant="subtitle2" gutterBottom>
                         caloriesConsumed: {caloriesConsumed}
@@ -512,7 +512,7 @@ function GoalTracker({ habits }) {
                                 transform: "translate(-50%, 50%)", 
                             }}
                         >
-                            Remaining
+                            {languageData.remaining}
                         </Typography> )}
                     </Box>
                     
@@ -521,14 +521,14 @@ function GoalTracker({ habits }) {
                         onClick={handleGoalDialogOpen} // Open the goal setting dialog
                         style={{ marginTop: "60px", marginLeft: "-150px" }}
                     >
-                        SET GOAL
+                        {languageData.setGoal}
                     </Button>
                     <Typography
                         component="h2"
                         variant="h5"
                         style={{ marginBottom: "20px", marginTop: "40px" }}
                     >
-                        Exercise Tracker
+                        {languageData.exerciseTracker}
                     </Typography>
                     <div style={{ marginBottom: "20px" }}></div>
                     <div style={{ height: 400, width: "100%" }}>
@@ -537,7 +537,7 @@ function GoalTracker({ habits }) {
                             columns={[...columns,
                                 {
                                     field: "delete",
-                                    headerName: "Delete",
+                                    headerName: languageData.delete,
                                     width: 100,
                                     renderCell: (params) => (
                                         <Button
@@ -564,22 +564,22 @@ function GoalTracker({ habits }) {
                             onClick={handleDialogOpen}
                             style={{ marginRight: "10px" }}
                         >
-                            Add Workout
+                            {languageData.addWorkout}
                         </Button>
                         <Button variant="contained" onClick={generateCSV}>
-                            Export as CSV
+                            {languageData.exportAsCSV}
                         </Button>
                     </div>
                 </div>
                 <Dialog open={openGoalDialog} onClose={handleGoalDialogClose}>
-                    <DialogTitle>Set Daily Goal</DialogTitle>
+                    <DialogTitle>{languageData.setDailyGoal}</DialogTitle>
                     <DialogContent>
                         {/* Form fields for setting daily goal */}
                         <TextField
                         required
                         autoFocus
                         margin="dense"
-                        label="Daily Goal (Calories)"
+                        label={languageData.dailyGoal + " (" + languageData.calorie+")"}
                         fullWidth
                         value={newDailyGoal}
                         onChange={(e) => {
@@ -596,20 +596,20 @@ function GoalTracker({ habits }) {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleGoalDialogClose} style={{ marginRight: "35px" }}>Cancel</Button>
+                        <Button onClick={handleGoalDialogClose} style={{ marginRight: "35px" }}>{languageData.cancel}</Button>
                         <Button variant="contained" onClick={handleSetGoal}>
-                            Confirm New Goal
+                        {languageData.confirmNewGoal}
                         </Button>
                     </DialogActions>
                 </Dialog>
                 <Dialog open={openDialog} onClose={handleDialogClose}>
-                    <DialogTitle>Add New Workout</DialogTitle>
+                    <DialogTitle>{languageData.addNewWorlout}</DialogTitle>
                     <DialogContent>
                         <TextField
                             required
                             autoFocus
                             margin="dense"
-                            label="Workout Name"
+                            label={languageData.workoutName}
                             fullWidth
                             value={eventName}
                             onChange={(e) => setEventName(e.target.value)}
@@ -617,7 +617,7 @@ function GoalTracker({ habits }) {
                         <TextField
                             required
                             margin="dense"
-                            label="Calories Burned"
+                            label={languageData.caloriesBurned}
                             type="number"
                             fullWidth
                             value={caloriesBurned}
@@ -633,9 +633,9 @@ function GoalTracker({ habits }) {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleDialogClose}>Cancel</Button>
+                        <Button onClick={handleDialogClose}>{languageData.cancel}</Button>
                         <Button variant="contained" onClick={addExerciseEvent}>
-                            Add
+                            {languageData.add}
                         </Button>
                     </DialogActions>
                 </Dialog>

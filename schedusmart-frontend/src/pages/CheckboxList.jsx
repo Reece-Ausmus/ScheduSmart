@@ -12,6 +12,7 @@ const CheckboxList = ({
   habits,
   selectedColumns,
   setSelectedColumns,
+  languageData
 }) => {
   const [chartData, setChartData] = useState([]);
   const [totalValues, setTotalValues] = useState({});
@@ -116,7 +117,7 @@ const CheckboxList = ({
         <div>
           {selectedColumns.map((column) => (
             <h3 key={column}>
-              Total {column}: {totalValues[column]} {getUnitForColumn(column)}
+              {languageData.total}{column}: {totalValues[column]} {getUnitForColumn(column)}
             </h3>
           ))}
         </div>
@@ -124,10 +125,10 @@ const CheckboxList = ({
           <Select
             value={chartType}
             onChange={handleChartTypeChange}
-            label="Chart Type"
+            label={languageData.chartType}
           >
-            <MenuItem value="line">Line Chart</MenuItem>
-            <MenuItem value="bar">Bar Chart</MenuItem>
+            <MenuItem value="line">{languageData.lineChart}</MenuItem>
+            <MenuItem value="bar">{languageData.barChart}</MenuItem>
           </Select>
           {columns.map(
             (column) =>

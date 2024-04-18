@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import languageData from "../components/language.json";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
 
-export default function Weather() {
+export default function Weather(lang) {
+  let language = 0;
+  if (lang != null && lang != undefined) {
+    language = lang;
+  }
+
   const handleInfo = async (event) => {
     const response = await fetch(flaskURL + "/user_data", {
       method: "POST",
@@ -63,7 +69,7 @@ export default function Weather() {
         <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
           {typeof weather.main !== "undefined" ? (
             <Typography variant="body1" id="weather-container">
-              The temperature in {weather.name} is {weather.main.temp} ℉.
+              {languageData[language][0].main_frame.currentTemperature} {weather.main.temp} ℉ {"("+ weather.name+")"}.
             </Typography>
           ) : (
             <Typography variant="body1">
