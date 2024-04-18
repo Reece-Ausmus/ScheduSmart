@@ -63,6 +63,7 @@ const Colors = [
 
 export default function DataPage() {
   const location = useLocation();
+<<<<<<< Updated upstream
   let Color;
   if (location.state == null) {
     Color = localStorage.getItem("system_color");
@@ -78,6 +79,19 @@ export default function DataPage() {
       secondary: {
         main: Colors[Color].value.secondary,
       },
+=======
+let Color;
+if (location.state == null) {
+  Color = sessionStorage.getItem('system_color');
+}
+else {
+  Color = location.state.color_choice;
+}
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: Colors[Color].value.primary,
+>>>>>>> Stashed changes
     },
     components: {
       MuiDataGrid: {

@@ -52,7 +52,7 @@ export default function Settings() {
     setLanguage(e.target.value);
     send_request("/change_language", {"user_id": userId, "language": e.target.value})
   };
-  const [Color, setColor] = useState(() => { return (parseInt(localStorage.getItem('system_color'))?parseInt(localStorage.getItem('system_color')):1); });
+  const [Color, setColor] = useState(() => { return (parseInt(sessionStorage.getItem('system_color'))?parseInt(sessionStorage.getItem('system_color')):1); });
   const getColorOption = async () => {
     const response = await send_request("/get_system_color", { "user_id": userId});
     setColor(response.type);
@@ -62,7 +62,7 @@ export default function Settings() {
     fetchInitializeData();
   }, [])
   useEffect(() => {
-    localStorage.setItem('system_color', Color.toString());
+    sessionStorage.setItem('system_color', Color.toString());
     navigate('/settings', { state:{color_choice:Color}});
   }, [Color]);
 

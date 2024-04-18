@@ -118,13 +118,13 @@ export default function Reminder(language, Color) {
   const [Events, setEvents] = useState();
   const [firstEvent,setFirstEvent] =useState();
   const [remindersOn, setRemindersOn] = useState(() => {
-    const storedValue = localStorage.getItem('remindersOn');
+    const storedValue = sessionStorage.getItem('remindersOn');
     return storedValue ? JSON.parse(storedValue) : false;
   });
   const handleReminderChange = () => {
     setRemindersOn((prevRemindersOn) => {
       const newRemindersOn = !prevRemindersOn;
-      localStorage.setItem('remindersOn', JSON.stringify(newRemindersOn));
+      sessionStorage.setItem('remindersOn', JSON.stringify(newRemindersOn));
       if (newRemindersOn) {
         get_users_all_events();
       }
@@ -132,7 +132,7 @@ export default function Reminder(language, Color) {
     });
   };
   useEffect(() => {
-    localStorage.setItem('remindersOn', JSON.stringify(remindersOn));
+    sessionStorage.setItem('remindersOn', JSON.stringify(remindersOn));
   }, [remindersOn]);
   const [timeOptions] = useState([
     { id: 5, value: 5 },
@@ -141,14 +141,16 @@ export default function Reminder(language, Color) {
     { id: 30, value: 30 },
     { id: 60, value: 60 },
   ]);
-  const [selectedTimeOption, setSelectedTimeOption] = useState(() => { return parseInt(localStorage.getItem('reminder_timeoption')) || 10; });
+  const [selectedTimeOption, setSelectedTimeOption] = useState(() => { return parseInt(sessionStorage.getItem('reminder_timeoption')) || 10; });
   const handleTimeSelectChange = (e) => {
     setSelectedTimeOption(parseInt(e.target.value));
     updateremindertimeoption(parseInt(e.target.value));
-    get_users_all_events();
+    if (remindersOn){
+      get_users_all_events();
+    }
   };
   useEffect(() => {
-    localStorage.setItem('reminder_timeoption', selectedTimeOption.toString());
+    sessionStorage.setItem('reminder_timeoption', selectedTimeOption.toString());
   }, [selectedTimeOption]);
   async function updateremindertimeoption(reminder_timeoption) {
     const response = await send_request("/update_reminders_timeoptions", { "user_id": userId, "r_timeoption": reminder_timeoption })
@@ -158,14 +160,16 @@ export default function Reminder(language, Color) {
     { id: 1, label: languageData.browserNoti, value: 1 },
     { id: 2, label: languageData.email, value: 2 },
   ]);
-  const [selectReminderOptions, setReminderOptions] = useState(() => { return parseInt(localStorage.getItem('reminder_option')) || 1; });
+  const [selectReminderOptions, setReminderOptions] = useState(() => { return parseInt(sessionStorage.getItem('reminder_option')) || 1; });
   useEffect(() => {
-    localStorage.setItem('reminder_option', selectReminderOptions.toString());
+    sessionStorage.setItem('reminder_option', selectReminderOptions.toString());
   }, [selectReminderOptions]);
   const handleReminderOptionsChange = (e) => {
     setReminderOptions(parseInt(e.target.value));
     updatereminderoption(parseInt(e.target.value));
-    get_users_all_events();
+    if (remindersOn){
+      get_users_all_events();
+    }
   };
   async function updatereminderoption(reminder_option) {
     const response = await send_request("/update_reminders_options", { "user_id": userId, "r_option": reminder_option })
@@ -260,7 +264,7 @@ export default function Reminder(language, Color) {
   const [makeChoice, setMakechoice] =useState(false);
   const[index,setIndex]=useState(0);
   const choice = (events)=> {
-    let option = localStorage.getItem('reminder_option');
+    let option = sessionStorage.getItem('reminder_option');
     setMakechoice(true);
     if (option == 1) {
       BRAtTime(events[0]);
