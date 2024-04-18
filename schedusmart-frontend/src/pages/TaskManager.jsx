@@ -1074,6 +1074,25 @@ function TodoList({
   userData,
   languageData,
 }) {
+  const location = useLocation();
+  let Color;
+  if (location.state == null) {
+    Color = localStorage.getItem('system_color');
+  }
+  else {
+    Color = location.state.color_choice;
+  }
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+  });
   const emailModal = document.querySelector("#emailModal")
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")
@@ -1290,7 +1309,7 @@ function TodoList({
 
   return (
     <>
-    <dialog id="emailModal" style={{ background: "#f8c06c" }}>
+    <dialog id="emailModal" style={{ background: theme.palette.secondary.main }}>
       <DialogTitle style={{ color: "black" }}>{languageData.emailTask}</DialogTitle>
       <DialogContent>
         <Grid

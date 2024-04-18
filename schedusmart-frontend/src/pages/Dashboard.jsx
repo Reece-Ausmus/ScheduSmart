@@ -69,7 +69,6 @@ export default function Dashboard(lang) {
     language = lang;
   }
   let languageData = languageLibrary[language][0].dashBoard;
-  console.log(languageData.data)
   const location = useLocation();
   let Color;
   if (location.state == null) {

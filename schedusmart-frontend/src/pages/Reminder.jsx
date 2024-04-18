@@ -19,6 +19,12 @@ import { styled } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
 import send_request from "./requester";
 import EmailForm from "../components/Email";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Browser_reminder from '../components/Browser_reminder';
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
@@ -33,7 +39,20 @@ const Colors = [
 ];
 
 export default function Reminder(language, Color) {
+  //get user data
+  const [Username, SetUsername] = useState();
+  const [Email, SetEmail] = useState();
+  const GetUserData = async () => {
+    console.log("GetUserData");
+    const response = await send_request("/user_data", { "user_id": userId });
+    SetUsername(response.user_name);
+    SetEmail(response.email);
+  }
+
+  //language settings
   const languageData = languageLibrary[language][0].Reminder;
+
+  //Theme
   const theme = createTheme({
     palette: {
       primary: {
@@ -100,7 +119,7 @@ export default function Reminder(language, Color) {
   //Implementation of reminders settings
   const [remindersOn, setRemindersOn] = useState(false);
   const [Events, setEvents] = useState();
-  const [firstEvents, setFirstEvents] = useState();
+  // let Events;
   const handleReminderChange = () => {
     setRemindersOn((prevRemindersOn) => {
       const newRemindersOn = !prevRemindersOn;
@@ -111,6 +130,35 @@ export default function Reminder(language, Color) {
       return newRemindersOn;
     });
   };
+  const [timeOptions] = useState([
+    { id: 5, value: 5 },
+    { id: 10, value: 10 },
+    { id: 15, value: 15 },
+    { id: 30, value: 30 },
+    { id: 60, value: 60 },
+  ]);
+  const [selectedTimeOption, setSelectedTimeOption] = useState(10);
+  const handleTimeSelectChange = (e) => {
+    setSelectedTimeOption(parseInt(e.target.value));
+  };
+
+  const [reminderOptions] = useState([
+    { id: 1, label: languageData.browserNoti, value: 1 },
+    { id: 2, label: languageData.email, value: 2 },
+  ]);
+  const [selectReminderOptions, setReminderOptions] = useState(() => { return parseInt(localStorage.getItem('reminder_option')) || 1; });
+  useEffect(() => {
+    localStorage.setItem('reminder_option', selectReminderOptions.toString());
+  }, [selectReminderOptions]);
+  const handleReminderOptionsChange = (e) => {
+    setReminderOptions(parseInt(e.target.value));
+    updatereminderoption(parseInt(e.target.value));
+    get_users_all_events();
+  };
+  async function updatereminderoption(reminder_option) {
+    console.log(reminder_option);
+    const response = await send_request("/update_reminders_options", { "user_id": userId, "r_option": reminder_option })
+  }
 
   // compare dates and times
   const compareDates = (d1, d2) => {
@@ -143,17 +191,17 @@ export default function Reminder(language, Color) {
     const dateComparison = compareDates(date1, date2);
     if (dateComparison !== 0) {
       if (dateComparison == -1) {
-        console.log(`${datetime1} is less than ${datetime2}`);
+        // console.log(`${datetime1} is less than ${datetime2}`);
         return -1;
       }
       else if (dateComparison == -1) {
-        console.log(`${datetime1} is greater than ${datetime2}`);
+        // console.log(`${datetime1} is greater than ${datetime2}`);
         return 1;
       }
     } else {
       const timeComparison = compareTimes24(time1, time2);
       if (timeComparison == -1) {
-        console.log(`${datetime1} is less than ${datetime2}`);
+        // console.log(`${datetime1} is less than ${datetime2}`);
         return -1;
       }
       else if (timeComparison == 1) {
@@ -174,69 +222,130 @@ export default function Reminder(language, Color) {
     const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
-  
-  const currentDate = new Date();
-  const formattedDate = formatDate(currentDate);
 
   useEffect(() => {
-    console.log(formattedDate); 
+    GetUserData();
   }, []);
 
   const get_users_all_events = async () => {
     const response = await send_request("/get_event_with_userid", { "user_id": userId })
     const events = response.data;
-    console.log(events);
     events.sort((a, b) => compareDatesAndTimes(`${a["start_date"]} ${a["start_time"]}`, `${b["start_date"]} ${b["start_time"]}`))
     console.log(events);
     setEvents(events);
-    setFirstEvents(events[0]);
+    let option = localStorage.getItem('reminder_option');
+    console.log(option);
+    if (option == 1) {
+      BRAtTime(events[0]);
+    }
+    else if (option == 2) {
+      sendEmailAtTime(events[0]);
+    }
   }
 
-  const [timeOptions] = useState([
-    { id: 5, value: 5 },
-    { id: 10, value: 10 },
-    { id: 15, value: 15 },
-    { id: 30, value: 30 },
-    { id: 60, value: 60 },
-  ]);
-  const [selectedTimeOption, setSelectedTimeOption] = useState(10);
-  const handleTimeSelectChange = (e) => {
-    setSelectedTimeOption(parseInt(e.target.value));
-  };
 
-  const [reminderOptions] = useState([
-    { id: 1, label: languageData.browserNoti, value: 1 },
-    { id: 2, label: languageData.email, value: 2 },
-  ]);
-  const [selectReminderOptions, setReminderOptions] = useState(() => { return parseInt(localStorage.getItem('reminder_option')) || 1; });
+  //browser reminders
+  const [reminderpopopen, setReminderPopOpen] = useState(false);
+  // let reminderpopopen=false;
+  const handleReminderPopOpen = () => {
+    setReminderPopOpen(true);
+    // reminderpopopen=true;
+  };
+  const handleReminderPopClose = () => {
+    setReminderPopOpen(false);
+    // reminderpopopen=false;
+  };
+  const handleBrowserReminder = (event_R) => {
+    console.log("start");
+    if (event_R!=undefined){
+      return (
+        <>
+            <Dialog open={reminderpopopen}>
+                <DialogTitle>Here is the reminder from Schedusmart:</DialogTitle>
+                <DialogContent>
+                    <p>Events: {event_R["name"]}</p>
+                    <p>Description: {event_R["desc"]}</p>
+                    <p>Start_Time: {event_R["start_date"]}  {event_R["start_time"]}</p>
+                    <p>End_Time: {event_R["end_date"]} {event_R["end_time"]}</p>
+                    <p>Location: {event_R["location"]}</p>
+                    <p>Confenrence link: {event_R["confenrence_link"]}</p>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleReminderPopClose}>Close</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+    }
+  };
   useEffect(() => {
-    localStorage.setItem('reminder_option', selectReminderOptions.toString());
-  }, [selectReminderOptions]);
-  const handleReminderOptionsChange = (e) => {
-    setReminderOptions(parseInt(e.target.value));
-    updatereminderoption(parseInt(e.target.value));
-  };
-  function handleSendEmail(event_R) {
-    let message = "Here are the reminders from Schedusmart:\n\n";
-
-    // const temp = events[i].title + ": " + events[i].content + "\n";
-    const row1 = "Events:"+event_R["name"]+"\n";
-    const row2 = "Description:"+event_R["desc"] + "\n";
-    const row3 = "Start_Time: "+event_R["start_date"] + " "+event_R["start_time"]+"\n";
-    const row4 = "End_Time: "+event_R["end_date"] + " "+event_R["end_time"]+"\n";
-    const row5 = "Location: "+event_R["location"]+"\n";
-    const row6 = "Confenrence link: "+event_R["confenrence_link"]+"\n";
-    message += row1+row2+row3+row4+row5;
-    console.log(message)
-    EmailForm(name, email, message);
-    handleShowEmailPopup()
-
+    if (reminderpopopen){
+      console.log("useEffect");
+      handleBrowserReminder(Events[0]);
+      const remainingEvents = Events.slice(1);
+      setEvents(remainingEvents);
+      if (remainingEvents.length > 0) {
+        BRAtTime(remainingEvents[0]);
+      }
+      else {
+        return 0; //finish
+      }
+    }
+  }, [reminderpopopen]);
+  
+  const BRAtTime = (event_R)=>{
+    console.log("run");
+    const currentDate = new Date();
+    const formattedDate = formatDate(currentDate);
+    const time = `${event_R["start_date"]} ${event_R["start_time"]}`;
+    if (compareDatesAndTimes(time, formattedDate) == 0) {
+      handleReminderPopOpen(Events[0]);
+    } else if (compareDatesAndTimes(time, formattedDate) == 1) {
+      console.log("3333333");
+      setTimeout(() => BRAtTime(event_R), 6000);
+      console.log("44444");
+    }
+    else if (compareDatesAndTimes(time, formattedDate) == -1) {
+      console.log("before",Events);
+      const remainingEvents = Events.slice(1);
+      setEvents(remainingEvents);
+      console.log("after",Events);
+      if (remainingEvents.length > 0) {
+        BRAtTime(remainingEvents[0]);
+      }
+    }
   }
-  async function updatereminderoption(reminder_option) {
-    console.log(reminder_option);
-    const response = await send_request("/update_reminders_options", { "user_id": userId, "r_option": reminder_option })
-    if (reminder_option == 2) {
-      handleSendEmail();
+
+  // email reminders
+  const handleSendEmail = (event_R) =>{
+    let message = "Here is the reminder from Schedusmart:\n\n";
+    const row1 = "Events:" + event_R["name"] + "\n";
+    const row2 = "Description:" + event_R["desc"] + "\n";
+    const row3 = "Start_Time: " + event_R["start_date"] + " " + event_R["start_time"] + "\n";
+    const row4 = "End_Time: " + event_R["end_date"] + " " + event_R["end_time"] + "\n";
+    const row5 = "Location: " + event_R["location"] + "\n";
+    const row6 = "Confenrence link: " + event_R["confenrence_link"] + "\n";
+    message += row1 + row2 + row3 + row4 + row5;
+    console.log(message)
+    EmailForm(Username, Email, message);
+  }
+
+  const sendEmailAtTime = (event_R) =>{
+    const currentDate = new Date();
+    const formattedDate = formatDate(currentDate);
+    const time = `${event_R["start_date"]} ${event_R["start_time"]}`;
+    if (compareDatesAndTimes(time, formattedDate) == 0) {
+      handleSendEmail(event_R);
+      const remainingEvents = Events.slice(1);
+      setEvents(remainingEvents);
+      if (remainingEvents.length > 0) {
+        sendEmailAtTime(remainingEvents[0]);
+      }
+    } else if (compareDatesAndTimes(time, formattedDate) == 1) {
+      setTimeout(() => sendEmailAtTime(event_R), 300000);
+    }
+    else if (compareDatesAndTimes(time, formattedDate) == -1) {
+      return 0;
     }
   }
 
@@ -260,6 +369,7 @@ export default function Reminder(language, Color) {
               }
               label={remindersOn ? 'On' : 'Off'}
             />
+            {reminderpopopen && handleBrowserReminder(Event[0])}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             <Typography variant="subtitle1" gutterBottom style={{ marginRight: '10px' }}>
@@ -308,9 +418,6 @@ export default function Reminder(language, Color) {
           </div>
         </CardContent>
         <Divider />
-        {/* <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button variant="contained">Save</Button>
-        </CardActions> */}
       </Card>
     </ThemeProvider>
   );
