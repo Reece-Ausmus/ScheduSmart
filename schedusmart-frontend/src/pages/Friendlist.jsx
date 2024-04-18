@@ -39,6 +39,7 @@ import Chatbox from "../components/New_chatbox"
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { useLocation } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
+import languageLibrary from "../components/language.json";
 
 // user_id to get user info
 const userId = sessionStorage.getItem("user_id");
@@ -79,6 +80,18 @@ ListItemLink.propTypes = {
 };
 
 export default function Friendlist() {
+    const [language, setLanguage] = useState(0);
+    const fetchInitializeData = async () => {
+      let dataOfUser = await send_request("/user_data", {
+        "user_id": userId,
+      });
+      if (dataOfUser.language != undefined) {
+        setLanguage(dataOfUser.language);
+      }
+    };
+
+    const languageData = languageLibrary[language][0].friendList
+
     const location = useLocation();
     let Color;
     if (location.state == null) {
@@ -123,7 +136,6 @@ export default function Friendlist() {
         setInvitationOpen(false);
     };
     const handleInvitationSubmit = async () => {
-        console.log("submit");
         const username = document.getElementById("username").value;
         const regex = /[\\"\s\'\\\x00-\x1F\x7F]/g;
         if (!username.localeCompare("")) {
@@ -174,7 +186,6 @@ export default function Friendlist() {
         setRequestList(request_list);
     };
     const confirmRequest = async (friend, choice) => {
-        console.log(choice);
         const response = await send_request("/confirm_friend", { "user_id": userId, "name": friend, "confirm": choice });
         if (response.error != undefined) {
             if (response.error == "request not found") {
@@ -212,6 +223,9 @@ export default function Friendlist() {
     };
     useEffect(() => {
         getRequestList();
+        fetchInitializeData();
+        setLastMessageHandled(false);
+        getfriendList();
     }, []);
 
     useEffect(() => {
@@ -277,15 +291,10 @@ export default function Friendlist() {
                 const lastMessageIndex = response.data.length - 1;
                 friend.message = response.data[lastMessageIndex].message;
             }
-            console.log(friend);
             return friend;
         }));
         setFriendList(updatedFriendList);
     };
-    useEffect(() => {
-        setLastMessageHandled(false);
-        getfriendList();
-    }, []);
 
     useEffect(() => {
         if (friendList && friendList.length > 0 && !lastMessageHandled) {
@@ -300,9 +309,9 @@ export default function Friendlist() {
 
     return (
         <ThemeProvider theme={theme}>
-            <div>{Dashboard()}</div>
+            <div>{Dashboard(language)}</div>
             <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                <h1 style={{ color: theme.palette.primary.main }}>Friend list</h1>
+                <h1 style={{ color: theme.palette.primary.main }}>{languageData.friendList}</h1>
                 <Fab
                     aria-label="add"
                     color="primary"
@@ -315,11 +324,10 @@ export default function Friendlist() {
                     PaperProps={{
                         component: 'form',
                     }}>
-                    <DialogTitle>Add friend</DialogTitle>
+                    <DialogTitle>{languageData.addFriend}</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            To add your friend in your list, please provide your friend's user name here. We
-                            will send an invitation after you click the "send inviation" button.
+                            {languageData.instruction}
                         </DialogContentText>
                         <Autocomplete
                             {...Props}
@@ -330,23 +338,23 @@ export default function Friendlist() {
                                     autoFocus
                                     required
                                     margin="dense"
-                                    label="User name"
+                                    label={languageData.userName}
                                     name="username"
                                     variant="standard" />
                             )} />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleInvitationSubmit}>Send invitation</Button>
-                        <Button onClick={handleInvitationClose}>Cancel</Button>
+                        <Button onClick={handleInvitationSubmit}>{languageData.sendInvitation}</Button>
+                        <Button onClick={handleInvitationClose}>{languageData.cancel}</Button>
                     </DialogActions>
                 </Dialog>
                 <Dialog open={confirmationOpen} onClose={handleConfirmationClose}>
-                    <DialogTitle>Confirmation</DialogTitle>
+                    <DialogTitle>{languageData.confirmation}</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>Your friend request has been sent.</DialogContentText>
+                        <DialogContentText>{languageData.notification}</DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleConfirmationClose}>Sure</Button>
+                        <Button onClick={handleConfirmationClose}>{languageData.sure}</Button>
                     </DialogActions>
                 </Dialog>
                 <Fab
@@ -366,12 +374,12 @@ export default function Friendlist() {
                             maxWidth: 'sm',
                         }
                     }}>
-                    <DialogTitle>Friend request</DialogTitle>
+                    <DialogTitle>{languageData.friendRequest}</DialogTitle>
                     <DialogContent>
                         <List sx={{ width: 500 }}>
                             {requestList.length > 0 ? (requestList.map(({ name, confirm, chatroom }, index) => (
                                 <ListItem key={name + index}>
-                                    <ListItemText primary={`${name} wants to add you as a friend`} />
+                                    <ListItemText primary={`${name}`+ languageData.wantToAdd} />
                                     <ListItemSecondaryAction>
                                         <IconButton edge="end" aria-label="accept" sx={{ color: 'green' }} onClick={() => confirmRequest(name, true)}>
                                             <CheckIcon />
@@ -381,11 +389,11 @@ export default function Friendlist() {
                                         </IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>
-                            ))) : <Typography variant="body1">No requests found.</Typography>}
+                            ))) : <Typography variant="body1">{languageData.noRequestsFound}</Typography>}
                         </List>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleRequestClose}>Back</Button>
+                        <Button onClick={handleRequestClose}>{languageData.back}</Button>
                     </DialogActions>
                 </Dialog>
                 <Fab
@@ -394,7 +402,7 @@ export default function Friendlist() {
                     size="small">
                     <DeleteIcon onClick={handleDeleteButtonClick} />
                 </Fab>
-                {deleteMode && <Button variant="contained" onClick={handleDeleteClick}>Delete</Button>}
+                {deleteMode && <Button variant="contained" onClick={handleDeleteClick}>{languageData.delete}</Button>}
             </div>
             <Box sx={{ pb: 7 }} ref={ref}>
                 <CssBaseline />
@@ -414,10 +422,10 @@ export default function Friendlist() {
                             </ListItemAvatar>
                             <ListItemText primary={name} secondary={message} />
                             <ListItemSecondaryAction>
-                                <Button component={Link} to={`/friendlist/${name}/${id}`}>Enter Chatbox</Button>
+                                <Button component={Link} to={`/friendlist/${name}/${id}`}>{languageData.enterChatbox}</Button>
                             </ListItemSecondaryAction>
                         </ListItemButton>
-                    )) : <Typography variant="body1">No friends found.</Typography>}
+                    )) : <Typography variant="body1">{languageData.noFriendsFound}</Typography>}
                 </List>
 
                 <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>

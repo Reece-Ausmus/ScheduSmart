@@ -201,7 +201,7 @@
         "add": "Add",
         "cancel": "cancel",
         "action": "Actions",
-        
+
         "total": "Total ",
         "chartType": "Chart Type",
         "lineChart": "Line Chart",
@@ -219,6 +219,25 @@
         "addNewWorkout": "Add New Workout",
         "workoutName": "Workout Name",
         "caloriesBurn": "Calories Burned",
+        "delete": "Delete"
+      },
+      "friendList": {
+        "friendList": "Friend list",
+        "addFriend": "Add friend",
+        "instruction": "To add your friend in your list, please provide your friend's user name here. We will send an invitation after you click the \"send inviation\" button.",
+        "sendInvitation": "Send invitation",
+        "cancel": "Cancel",
+        "confirmation": "Confirmation",
+        "notification": "Your friend request has been sent.",
+        "sure": "Sure",
+        "friendRequest": "Friend request",
+        "noRequestsFound": "No requests found.",
+        "back": "Back",
+        "noFriendsFound": "No friends found.",
+
+        "enterChatbox": "Enter Chatbox",
+        "userName": "User name",
+        "wantToAdd": " wants to add you as a friend",
         "delete": "Delete"
       }
     }
@@ -381,7 +400,7 @@
         "taskManager": "任務管理",
         "setting": "設定",
         "signOut": "登出"
-      }, 
+      },
       "timeZone": {
         "currentTime": "時間：",
         "timeZone": "時區：",
@@ -390,7 +409,7 @@
         "CT": "中部時間 (CT)",
         "MT": "山地時間 (MT)",
         "PT": "太平洋時間 (PT)"
-      }, 
+      },
       "dataPage": {
         "dataDashboard": "數據板",
         "timePeriod": "時間段",
@@ -409,7 +428,6 @@
         "businessTime": "工作時間："
       },
       "habit": {
-        
         "cancel": "取消",
         "itemName": "名稱",
         "dietTracker": "飲食追蹤器",
@@ -441,6 +459,24 @@
         "addNewWorkout": "新增運動項目",
         "workoutName": "名稱",
         "caloriesBurn": "消耗熱量",
+        "delete": "刪除"
+      },
+      "friendList": {
+        "friendList": "好友列表",
+        "addFriend": "添加好友",
+        "instruction": "要添加您的好友到列表中，請在此處提供您好友的用戶名。我們將在您點擊「發送邀請」後發送邀請函。",
+        "sendInvitation": "發送邀請",
+        "cancel": "取消",
+        "confirmation": "確認",
+        "notification": "您的好友邀請已發送。",
+        "sure": "確定",
+        "friendRequest": "好友請求",
+        "noRequestsFound": "未收到好友邀請",
+        "back": "返回",
+        "noFriendsFound": "未搜尋到好友",
+        "enterChatbox": "聊天室",
+        "userName": "用戶名",
+        "wantToAdd": " 想要將您加入好友",
         "delete": "刪除"
       }
     }
@@ -631,7 +667,7 @@
         "businessTime": "Hora de mayor afluencia: "
       },
       "habit": {
-        "cancel":"Cancelar",
+        "cancel": "Cancelar",
         "itemName": "Nombre",
         "dietTracker": "Rastreador de dieta",
         "addNewItem": "Agregar nuevo elemento",
@@ -662,6 +698,24 @@
         "addNewWorkout": "Agregar nuevo entrenamiento",
         "workoutName": "Nombre del entrenamiento",
         "caloriesBurn": "Calorías quemadas",
+        "delete": "Eliminar"
+      },
+      "friendList": {
+        "friendList": "Lista de amigos",
+        "addFriend": "Agregar amigo",
+        "instruction": "Para agregar a tu amigo a tu lista, por favor proporciona su nombre de usuario aquí. Enviaremos una invitación después de que hagas clic en el botón \"enviar invitación\".",
+        "sendInvitation": "Enviar invitación",
+        "cancel": "Cancelar",
+        "confirmation": "Confirmación",
+        "notification": "Tu solicitud de amistad ha sido enviada.",
+        "sure": "Seguro",
+        "friendRequest": "Solicitud de amistad",
+        "noRequestsFound": "No se encontraron solicitudes.",
+        "back": "Atrás",
+        "noFriendsFound": "No se encontraron amigos.",
+        "enterChatbox": "Entrar al chatbox",
+        "userName": "Nombre de usuario",
+        "wantToAdd": " quiere agregarte como amigo",
         "delete": "Eliminar"
       }
     }
