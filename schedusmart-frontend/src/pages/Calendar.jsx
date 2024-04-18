@@ -4,6 +4,7 @@ import "./MainFrame.css";
 import { useState, useRef, useEffect } from "react";
 import { flaskURL, user_id } from "../config";
 import { DayPilot, DayPilotCalendar } from "@daypilot/daypilot-lite-react";
+import languageData from "../components/language.json";
 import send_request from "./requester";
 import moment from "moment";
 import { red } from "@mui/material/colors";
@@ -21,7 +22,7 @@ function printerForMode3(date, lastDayInt) {
   return date > 0 && date <= lastDayInt ? date : null;
 }
 
-export default function Calendar(selectMode, e, d) {
+export default function Calendar(selectMode, e, d, language) {
   // BEGIN UPDATE EVENT STUFF
 
   const [eventId, setEventId] = useState("");
@@ -359,7 +360,11 @@ export default function Calendar(selectMode, e, d) {
           setEventEndDate(responseData["end_date"]);
           setEventStartTime(responseData["start_time"]);
           setEventEndTime(responseData["end_time"]);
-          setEventConferencingLink(responseData["conferencing_link"]);
+          let conferencingLink = responseData["conferencing_link"];
+          if (!conferencingLink.startsWith("http")) {
+            conferencingLink = "http://" + conferencingLink;
+          }
+          setEventConferencingLink(conferencingLink);
           setEventLocation(responseData["location"]);
           setEventDescription(responseData["desc"]);
           setEventType(responseData["type"]);
@@ -398,11 +403,15 @@ export default function Calendar(selectMode, e, d) {
       {showUpdateEventPopup && (
         <div className="popup">
           <div className="popup-content">
-            {unsavedChanges && <h2>Unsaved Changes!</h2>}
-            <h2>Update Event</h2>
+            {unsavedChanges && (
+              <h2>{languageData[language][0].main_frame.unsaveEvent}</h2>
+            )}
+            <h2>{languageData[language][0].main_frame.updateEvent}</h2>
             <div>
               <div className="formgroup">
-                <label htmlFor="eventName">Event Name:</label>
+                <label htmlFor="eventName">
+                  {languageData[language][0].main_frame.event_name}
+                </label>
                 <input
                   type="text"
                   id="eventName"
@@ -411,14 +420,18 @@ export default function Calendar(selectMode, e, d) {
                 />
               </div>
               <div className="formgroup">
-                <label htmlFor="eventStartDate">Start Date:</label>
+                <label htmlFor="eventStartDate">
+                  {languageData[language][0].main_frame.startDate}
+                </label>
                 <input
                   type="date"
                   id="eventStartDate"
                   value={eventStartDate}
                   onChange={handleEventStartDateChange}
                 />
-                <label htmlFor="eventEndDate">End Date:</label>
+                <label htmlFor="eventEndDate">
+                  {languageData[language][0].main_frame.end_date}
+                </label>
                 <input
                   type="date"
                   id="eventEndDate"
@@ -427,14 +440,18 @@ export default function Calendar(selectMode, e, d) {
                 />
               </div>
               <div className="formgroup">
-                <label htmlFor="eventStartTime">Start Time:</label>
+                <label htmlFor="eventStartTime">
+                  {languageData[language][0].main_frame.startTime}
+                </label>
                 <input
                   type="time"
                   id="eventStartTime"
                   value={eventStartTime}
                   onChange={handleEventStartTimeChange}
                 />
-                <label htmlFor="eventEndTime">End Time:</label>
+                <label htmlFor="eventEndTime">
+                  {languageData[language][0].main_frame.endTime}
+                </label>
                 <input
                   type="time"
                   id="eventEndTime"
@@ -445,15 +462,18 @@ export default function Calendar(selectMode, e, d) {
               {eventType === "event" && (
                 <div>
                   <div className="formgroup">
-                    <label htmlFor="eventLocation">Event Location:</label>
+                    <label htmlFor="eventLocation">
+                      {languageData[language][0].main_frame.eventLocation}
+                    </label>
                     {renderLocationInput()}
                   </div>
                   {eventConferencingLink !== "" && (
                     <div className="formgroup">
                       <label htmlFor="eventConferencingLink">
-                        Conferencing Link:
+                        {languageData[language][0].main_frame.conferencingLink}
                       </label>
                       <a
+                        className="conferencing-link"
                         href={eventConferencingLink}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -465,7 +485,9 @@ export default function Calendar(selectMode, e, d) {
                 </div>
               )}
               <div className="formgroup">
-                <label htmlFor="eventDescription">Event Description:</label>
+                <label htmlFor="eventDescription">
+                  {languageData[language][0].main_frame.eventDescription}
+                </label>
                 <textarea
                   id="eventDescription"
                   value={eventDescription}
@@ -475,48 +497,50 @@ export default function Calendar(selectMode, e, d) {
                 />
               </div>
               <div className="event-repetition-form">
-                <h2>Event Repetition</h2>
+                <h2>{languageData[language][0].main_frame.eventRepetition}</h2>
                 <div className="repetition-options">
                   <button
                     type="button"
                     onClick={() => handleEventRepetitionChange("none")}
                   >
-                    None
+                    {languageData[language][0].main_frame.none}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleEventRepetitionChange("daily")}
                   >
-                    Daily
+                    {languageData[language][0].main_frame.daily}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleEventRepetitionChange("weekly")}
                   >
-                    Weekly
+                    {languageData[language][0].main_frame.weekly}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleEventRepetitionChange("monthly")}
                   >
-                    Monthly
+                    {languageData[language][0].main_frame.monthly}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleEventRepetitionChange("yearly")}
                   >
-                    Yearly
+                    {languageData[language][0].main_frame.yearly}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleEventRepetitionChange("custom")}
                   >
-                    Custom
+                    {languageData[language][0].main_frame.custome}
                   </button>
                 </div>
                 {eventRepetitionType === "custom" && (
                   <div className="custom-repetition">
-                    <label htmlFor="customFrequency">Repeat every</label>
+                    <label htmlFor="customFrequency">
+                      {languageData[language][0].main_frame.repeatEvery}
+                    </label>
                     <input
                       type="number"
                       id="eventCustomFrequencyValue"
@@ -529,92 +553,38 @@ export default function Calendar(selectMode, e, d) {
                       value={eventCustomFrequencyUnit}
                       onChange={handleEventCustomFrequencyUnitChange}
                     >
-                      <option value="days">days</option>
-                      <option value="weeks">weeks</option>
-                      <option value="months">months</option>
-                      <option value="years">years</option>
+                      <option value="days">
+                        {languageData[language][0].main_frame.days}
+                      </option>
+                      <option value="weeks">
+                        {languageData[language][0].main_frame.weeks}
+                      </option>
+                      <option value="months">
+                        {languageData[language][0].main_frame.months}
+                      </option>
+                      <option value="years">
+                        {languageData[language][0].main_frame.years}
+                      </option>
                     </select>
-                    {eventCustomFrequencyUnit === "weeks" && (
-                      <div className="day-selector">
-                        <p>Select specific days:</p>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={eventSelectedDays.includes("sun")}
-                            onChange={() => handleEventDayToggle("sun")}
-                          />
-                          Sunday
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={eventSelectedDays.includes("mon")}
-                            onChange={() => handleEventDayToggle("mon")}
-                          />
-                          Monday
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={eventSelectedDays.includes("tues")}
-                            onChange={() => handleEventDayToggle("tues")}
-                          />
-                          Tuesday
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={eventSelectedDays.includes("wed")}
-                            onChange={() => handleEventDayToggle("wed")}
-                          />
-                          Wednesday
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={eventSelectedDays.includes("thur")}
-                            onChange={() => handleEventDayToggle("thur")}
-                          />
-                          Thursday
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={eventSelectedDays.includes("fri")}
-                            onChange={() => handleEventDayToggle("fri")}
-                          />
-                          Friday
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={eventSelectedDays.includes("sat")}
-                            onChange={() => handleEventDayToggle("sat")}
-                          />
-                          Saturday
-                        </label>
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
               <button className="formbutton fb1" onClick={handleUpdateEvent}>
-                Update
+                {languageData[language][0].main_frame.update}
               </button>
               <button
                 className="formbutton fb2"
                 onClick={toggleShowUpdateEventPopup}
               >
-                Cancel
+                {languageData[language][0].main_frame.cancel}
               </button>
               <button className="formbuttondelete" onClick={handleDeleteEvent}>
-                DELETE
+                {languageData[language][0].main_frame.delete}
               </button>
             </div>
           </div>
         </div>
       )}
-
       <div style={{ display: selectMode === 3 ? "block" : "none" }}>
         <div>
           <table className="month_table">

@@ -24,6 +24,8 @@ import Dashboard from "./Dashboard";
 import GoalTracker from "./GoalTracker";
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { useLocation } from 'react-router-dom';
+import languageLibrary from "../components/language.json";
+import send_request from "./requester.jsx";
 
 const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
 const userId = sessionStorage.getItem("user_id");
@@ -58,17 +60,30 @@ const Colors = [
 //   },
 // });
 
-const columns = [
-  { field: "itemName", headerName: "Item Name", width: 200 },
-  { field: "calories", headerName: "Calories (kcal)", width: 150 },
-  { field: "carbs", headerName: "Carbs (g)", width: 150 },
-  { field: "fat", headerName: "Fat (g)", width: 150 },
-  { field: "protein", headerName: "Protein (g)", width: 150 },
-  { field: "sodium", headerName: "Sodium (mg)", width: 150 },
-  { field: "sugar", headerName: "Sugar (g)", width: 150 },
-];
+
 
 export default function Habits() {
+  const [language, setLanguage] = useState(0);
+  const fetchInitializeData = async () => {
+    let dataOfUser = await send_request("/user_data", {
+      "user_id": userId,
+    });
+    if (dataOfUser.language != undefined) {
+      setLanguage(dataOfUser.language);
+    }
+  };
+  let languageData = languageLibrary[language][0].habit;
+
+  const columns = [
+    { field: "itemName", headerName: languageData.itemName, width: 200 },
+    { field: "calories", headerName: languageData.calories, width: 150 },
+    { field: "carbs", headerName: languageData.carbs, width: 150 },
+    { field: "fat", headerName: languageData.fat, width: 150 },
+    { field: "protein", headerName: languageData.protein, width: 150 },
+    { field: "sodium", headerName: languageData.sodium, width: 150 },
+    { field: "sugar", headerName: languageData.sugar, width: 150 },
+  ];
+
   const location = useLocation();
   let Color;
   if (location.state == null) {
@@ -141,7 +156,10 @@ export default function Habits() {
     };
 
     fetchData();
+    fetchInitializeData();
   }, []);
+
+
 
   const handleEditClick = (id) => {
     const itemToEdit = habits.find((habit) => habit.id.toString() === id);
@@ -205,8 +223,6 @@ export default function Habits() {
     }
 };
 
-  
-
   const handleDialogOpen = () => {
     setOpenDialog(true);
   };
@@ -216,7 +232,7 @@ export default function Habits() {
   };
 
   const saveEditedHabit = async () => {
-    if (editedItem.itemName.trim() === "" || editedItem.calories.trim() === "") {
+    if (editedItem.itemName === "" || editedItem.calories=== "") {
       alert("Item Name and Calories are required fields.");
       return;
     }
@@ -269,56 +285,80 @@ export default function Habits() {
 
   const addHabit = async () => {
     if (itemName.trim() !== "" && calories.trim() !== "") {
-      const newHabit = {
-        itemName: itemName.trim(),
-        id: habits.length + 1,
-        calories: parseFloat(calories),
-        carbs: parseFloat(carbs) || 0,
-        fat: parseFloat(fat) || 0,
-        protein: parseFloat(protein) || 0,
-        sodium: parseFloat(sodium) || 0,
-        sugar: parseFloat(sugar) || 0,
-      };
-  
-      try {
-        const response = await fetch(flaskURL + "/add_habit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            ...newHabit,
-          }),
-        });
-  
-        if (response.ok) {
-          const responseData = await response.json();
-          console.log(responseData.message); // Log success message
-          // Update habits state or perform any necessary actions
-          setHabits([...habits, newHabit]);
-          // Clear input fields and close dialog
-          setItemName("");
-          setCalories("");
-          setCarbs("");
-          setFat("");
-          setProtein("");
-          setSodium("");
-          setSugar("");
-          setOpenDialog(false);
-        } else {
-          const errorData = await response.json();
-          console.error("Error adding habit: ", errorData.error);
-          alert("Failed to add habit. Please try again.");
+        try {
+            // Fetch the highest habit ID from the Flask endpoint
+            const highestIdResponse = await fetch(`${flaskURL}/get_highest_habit_id`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                }),
+            });
+
+            if (highestIdResponse.ok) {
+                const highestIdData = await highestIdResponse.json();
+                // Get the highest ID from the response
+                const highestId = highestIdData.highest_id || 0;
+
+                // Set the ID of newHabit to the highest ID from the Flask endpoint + 1
+                const newHabit = {
+                    itemName: itemName.trim(),
+                    id: highestId,
+                    calories: parseFloat(calories),
+                    carbs: parseFloat(carbs) || 0,
+                    fat: parseFloat(fat) || 0,
+                    protein: parseFloat(protein) || 0,
+                    sodium: parseFloat(sodium) || 0,
+                    sugar: parseFloat(sugar) || 0,
+                };
+
+                // Add the new habit to the database
+                const response = await fetch(`${flaskURL}/add_habit`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        ...newHabit,
+                    }),
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log(responseData.message); // Log success message
+                    // Update habits state or perform any necessary actions
+                    setHabits([...habits, newHabit]);
+                    // Clear input fields and close dialog
+                    setItemName("");
+                    setCalories("");
+                    setCarbs("");
+                    setFat("");
+                    setProtein("");
+                    setSodium("");
+                    setSugar("");
+                    setOpenDialog(false);
+                } else {
+                    const errorData = await response.json();
+                    console.error("Error adding habit: ", errorData.error);
+                    alert("Failed to add habit. Please try again.");
+                }
+            } else {
+                const errorData = await highestIdResponse.json();
+                console.error("Error fetching highest habit ID: ", errorData.error);
+                alert("Failed to fetch highest habit ID. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error adding habit: ", error);
+            alert("An error occurred while adding the habit.");
         }
-      } catch (error) {
-        console.error("Error adding habit: ", error);
-        alert("An error occurred while adding the habit.");
-      }
     } else {
-      alert("Item Name and Calories are required fields.");
+        alert("Item Name and Calories are required fields.");
     }
-  };
+};
+
   
 
 
@@ -355,7 +395,7 @@ export default function Habits() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div>{Dashboard()}</div>
+      <div>{Dashboard(language)}</div>
       <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
         <div className="habits-container">
           <Typography
@@ -363,7 +403,7 @@ export default function Habits() {
             variant="h5"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
-            Diet Tracker
+            {languageData.dietTracker}
           </Typography>
           <div style={{ height: 400, width: "115%" }}>
             <DataGrid
@@ -376,7 +416,7 @@ export default function Habits() {
                 ...columns,
                 {
                   field: "actions",
-                  headerName: "Actions",
+                  headerName: languageData.action,
                   width: 150,
                   sortable: false,
                   disableColumnMenu: true,
@@ -403,10 +443,10 @@ export default function Habits() {
               onClick={handleDialogOpen}
               style={{ marginRight: "10px" }}
             >
-              Add new Item
+              {languageData.addNewItem}
             </Button>
             <Button variant="contained" onClick={generateCSV}>
-              Export as CSV
+              {languageData.exportAsCSV}
             </Button>
           </div>
           <CheckboxList
@@ -414,20 +454,22 @@ export default function Habits() {
             habits={habits}
             selectedColumns={selectedColumns}
             setSelectedColumns={setSelectedColumns}
+            languageData={languageData} 
           />
           <GoalTracker 
             columns={columns}
-            habits={habits} 
+            habits={habits}
+            languageData={languageData} 
           />
         </div>
         <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
-          <DialogTitle>Edit Item</DialogTitle>
+          <DialogTitle>{languageData.editItem}</DialogTitle>
           <DialogContent>
             <TextField
               required
               autoFocus
               margin="dense"
-              label="Item Name"
+              label={languageData.itemName}
               fullWidth
               value={editedItem.itemName || ""}
               onChange={(e) =>
@@ -437,7 +479,7 @@ export default function Habits() {
             <TextField
               required
               margin="dense"
-              label="Calories (kcal)"
+              label={languageData.calories}
               type="number"
               fullWidth
               value={editedItem.calories || ""}
@@ -455,7 +497,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Carbs (g)"
+              label={languageData.carbs}
               type="number"
               fullWidth
               value={editedItem.carbs || ""}
@@ -473,7 +515,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Fat (g)"
+              label={languageData.fat}
               type="number"
               fullWidth
               value={editedItem.fat || ""}
@@ -491,7 +533,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Protein (g)"
+              label={languageData.protein}
               type="number"
               fullWidth
               value={editedItem.protein || ""}
@@ -509,7 +551,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Sodium (mg)"
+              label={languageData.sodium}
               type="number"
               fullWidth
               value={editedItem.sodium || ""}
@@ -527,7 +569,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Sugar (g)"
+              label={languageData.sugar}
               type="number"
               fullWidth
               value={editedItem.sugar || ""}
@@ -547,19 +589,19 @@ export default function Habits() {
           <DialogActions>
             <Button onClick={handleEditDialogClose}>Cancel</Button>
             <Button variant="contained" onClick={saveEditedHabit}>
-              Save
+            {languageData.save}
             </Button>
           </DialogActions>
         </Dialog>
 
         <Dialog open={openDialog} onClose={handleDialogClose}>
-          <DialogTitle>Add New Item</DialogTitle>
+          <DialogTitle>{languageData.addNewItem}</DialogTitle>
           <DialogContent>
             <TextField
               required
               autoFocus
               margin="dense"
-              label="Item Name"
+              label={languageData.itemName}
               fullWidth
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
@@ -567,7 +609,7 @@ export default function Habits() {
             <TextField
               required
               margin="dense"
-              label="Calories (kcal)"
+              label={languageData.calories}
               type="number"
               fullWidth
               value={calories}
@@ -583,7 +625,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Carbs (g)"
+              label={languageData.carbs}
               type="number"
               fullWidth
               value={carbs}
@@ -599,7 +641,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Fat (g)"
+              label={languageData.fat}
               type="number"
               fullWidth
               value={fat}
@@ -615,7 +657,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Protein (g)"
+              label={languageData.protein}
               type="number"
               fullWidth
               value={protein}
@@ -631,7 +673,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Sodium (mg)"
+              label={languageData.sodium}
               type="number"
               fullWidth
               value={sodium}
@@ -647,7 +689,7 @@ export default function Habits() {
             />
             <TextField
               margin="dense"
-              label="Sugar (g)"
+              label={languageData.sugar}
               type="number"
               fullWidth
               value={sugar}
@@ -663,9 +705,9 @@ export default function Habits() {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleDialogClose}>Cancel</Button>
+            <Button onClick={handleDialogClose}>{languageData.cancel}</Button>
             <Button variant="contained" onClick={addHabit}>
-              Add
+            {languageData.add}
             </Button>
           </DialogActions>
         </Dialog>

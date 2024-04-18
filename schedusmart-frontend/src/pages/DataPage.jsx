@@ -15,6 +15,7 @@ import { orange } from "@mui/material/colors";
 import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Gauge } from "@mui/x-charts/Gauge";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -22,6 +23,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { BarChart } from "@mui/x-charts/BarChart";
 import Dashboard from "./Dashboard";
+import languageLibrary from "../components/language.json";
+import send_request from "./requester.jsx";
 
 const theme = createTheme({
   palette: {
@@ -65,6 +68,61 @@ export default function SimpleBarChart() {
   const [eventTypeData, setEventTypeData] = useState([0, 0, 0, 0]);
   const [eventTypeAvg, setEventTypeAvg] = useState([0, 0, 0, 0]);
 
+  const [busiestTime, setBusiestTime] = useState(0);
+  const [language, setLanguage] = useState(0);
+
+  const fetchInitializeData = async () => {
+    let dataOfUser = await send_request("/user_data", {
+      "user_id": user_id,
+    });
+    if (dataOfUser.language != undefined) {
+      setLanguage(dataOfUser.language);
+    }
+  };
+  const generateCSV = () => {
+    const timeFilterOptions = [
+      "All",
+      "Past 7 Days",
+      "Past 30 Days",
+      "Past Year",
+    ];
+    const timeFilterFormatted = timeFilterOptions[timeFilter];
+
+    const eventTypeLabels = ["Event", "Availability", "Course", "Break"];
+    const eventTypeDataFormatted = eventTypeData
+      .map((value, index) => ({
+        label: eventTypeLabels[index],
+        value: value,
+      }))
+      .map((obj) => `${obj.label}: ${obj.value}`);
+
+    const eventTypeAvgFormatted = eventTypeAvg
+      .map((value, index) => ({
+        label: eventTypeLabels[index],
+        value: value,
+      }))
+      .map((obj) => `${obj.label}: ${obj.value}`);
+
+    const busiestTimeFormatted = `${Math.floor(busiestTime / 100)
+      .toString()
+      .padStart(2, "0")}:${(busiestTime % 100).toString().padStart(2, "0")}`;
+
+    const csvData = [
+      ["Time Filter", timeFilterFormatted],
+      ["Event Type Data", ...eventTypeDataFormatted],
+      ["Event Type Averages (min)", ...eventTypeAvgFormatted],
+      ["Busiest Time", busiestTimeFormatted],
+    ];
+    const csvContent = csvData.map((row) => row.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    try {
+      saveAs(blob, "event-data.csv");
+    } catch (error) {
+      console.error("Error generating CSV:", error);
+      alert("An error occurred while generating the CSV.");
+    }
+  };
+
   // when time filter is updated, get new data
   useEffect(() => {
     const getEventData = async () => {
@@ -103,6 +161,13 @@ export default function SimpleBarChart() {
               eventAvgs["course"],
               eventAvgs["break"],
             ]);
+            const busiestCount = eventDataResponse["busiest_count"];
+            if (busiestCount > 0) {
+              const busiestTime = parseInt(
+                eventDataResponse["busiest_time"].replace(":", "")
+              );
+              setBusiestTime(busiestTime);
+            }
             break;
           case 205:
             alert("Event Data not retrieved!");
@@ -115,11 +180,12 @@ export default function SimpleBarChart() {
     };
 
     getEventData();
+    fetchInitializeData();
   }, [timeFilter]);
-
+  let languageData = languageLibrary[language][0].dataPage;
   return (
     <ThemeProvider theme={theme}>
-      <div>{Dashboard()}</div>
+      <div>{Dashboard(language)}</div>
       <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
         <Box sx={{ minWidth: 120, maxWidth: 300 }}>
           <Typography
@@ -127,10 +193,10 @@ export default function SimpleBarChart() {
             variant="h5"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
-            Data Dashboard
+            {languageData.dataDashboard}
           </Typography>
           <FormControl fullWidth margin="normal">
-            <InputLabel id="timeFilterLabel">Time Period</InputLabel>
+            <InputLabel id="timeFilterLabel">{languageData.timePeriod}</InputLabel>
             <Select
               labelId="timeFilterLabel"
               id="timeFilterSelect"
@@ -138,12 +204,15 @@ export default function SimpleBarChart() {
               label="Time Filter"
               onChange={handleTimeFilterChange}
             >
-              <MenuItem value={0}>All</MenuItem>
-              <MenuItem value={7}>Past 7 Days</MenuItem>
-              <MenuItem value={30}>Past 30 Days</MenuItem>
-              <MenuItem value={365}>Past Year</MenuItem>
+              <MenuItem value={0}>{languageData.all}</MenuItem>
+              <MenuItem value={7}>{languageData.past7Day}</MenuItem>
+              <MenuItem value={30}>{languageData.past30Day}</MenuItem>
+              <MenuItem value={365}>{languageData.pastYear}</MenuItem>
             </Select>
           </FormControl>
+          <Button variant="contained" onClick={generateCSV}>
+            Export as CSV
+          </Button>
         </Box>
         {noEvents && (
           <Typography
@@ -151,7 +220,7 @@ export default function SimpleBarChart() {
             variant="h5"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
-            No events found
+            {languageData.noEventFound}
           </Typography>
         )}
         {!noEvents && (
@@ -161,7 +230,7 @@ export default function SimpleBarChart() {
               variant="h5"
               style={{ marginBottom: "20px", marginTop: "20px" }}
             >
-              Event Type Distribution
+              {languageData.eventTypeDistribution}
             </Typography>
             <BarChart
               width={500}
@@ -170,14 +239,14 @@ export default function SimpleBarChart() {
               series={[
                 {
                   data: eventTypeData,
-                  label: "Number of Events",
+                  label: languageData.numberOfEvent,
                   id: "eventTypeId",
 
                   yAxisKey: "leftAxisId",
                 },
                 {
                   data: eventTypeAvg,
-                  label: "Average Length (minutes)",
+                  label: languageData.averageLength,
                   id: "avgTypeId",
 
                   yAxisKey: "rightAxisId",
@@ -185,12 +254,26 @@ export default function SimpleBarChart() {
               ]}
               xAxis={[
                 {
-                  data: ["Event", "Availability", "Course", "Break"],
+                  data: [languageData.event, languageData.availability, languageData.course, languageData.break],
                   scaleType: "band",
                 },
               ]}
               yAxis={[{ id: "leftAxisId" }, { id: "rightAxisId" }]}
               rightAxis="rightAxisId"
+            />
+            <Gauge
+              width={250}
+              height={200}
+              value={busiestTime}
+              valueMin={0}
+              valueMax={2359}
+              startAngle={-110}
+              endAngle={110}
+              text={languageData.businessTime + `${Math.floor(busiestTime / 100)
+                .toString()
+                .padStart(2, "0")}:${(busiestTime % 100)
+                .toString()
+                .padStart(2, "0")}`}
             />
           </Box>
         )}

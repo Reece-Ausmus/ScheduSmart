@@ -128,6 +128,7 @@ def get_user(response):
             "first_time": db.child("User").child(user_id).child('first_time').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
             'task_list': db.child("User").child(user_id).child('task_list').get().val(),
+            "chat_log": db.child("User").child(user_id).child('chat_log').get().val(),
             "return_status": 0
         }
         return data
@@ -136,7 +137,6 @@ def get_user(response):
             "error": "Cannot Find User",
             "return_status": 1
         }
-
 
 def update_user_info(receive_account):
     try:
@@ -368,6 +368,30 @@ def f_get_events(calendar):
         print(f"fail to retrieve events data: \n{e}")
     return 1
 
+def get_user_event(data):
+    try: 
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        user_id = data['user_id']
+        calendar_id=[]
+        events=[]
+        calendars_snapshot=db.child("User").child(user_id).child("calendars").get()
+        calendars = calendars_snapshot.val()
+        for name in calendars.keys():
+            calendar_id.append(db.child("User").child(user_id).child("calendars").child(name).child("calendar_id").get().val())
+        events_id=db.child("Events").get().val()
+        for c_id in calendar_id:
+            for e_id in events_id.keys():
+                selected_calendar=db.child("Events").child(e_id).child("calendar").get().val()
+                if selected_calendar==c_id:
+                    event=db.child("Events").child(e_id).get().val()
+                    filtered_event = {key: value for key, value in event.items() if key in ["conferencing_link", "desc", "end_date", "end_time", "location", "name", "start_date", "start_time"]}
+                    events.append(filtered_event)
+        return {"data":events}
+    except Exception as e:
+        print("Failed to get event with userid:", e)
+    return 1
+
 
 def update_task(task_info):
     user_id = task_info['user_id']
@@ -376,6 +400,16 @@ def update_task(task_info):
         db.child("User").child(user_id).update(data)
     except Exception as e:
         print("Failed to update tasks:", e)
+        return 1
+    return 0
+
+def update_chat(chat_info):
+    user_id = chat_info['user_id']
+    data = {'chat_log': chat_info['chat_log']}
+    try:
+        db.child("User").child(user_id).update(data)
+    except Exception as e:
+        print("Failed to update logs:", e)
         return 1
     return 0
 
@@ -403,6 +437,8 @@ def add_new_event(event_info):
         'emails': event_info['emails'],
         'type': event_info['type']
     }
+    if not data['conferencing_link'].startswith('http'):
+        data['conferencing_link'] = "http://" + data['conferencing_link']
     try:
         emails = data['emails']
         for email in emails:
@@ -650,6 +686,24 @@ def add_new_exercise(data):
         print("Failed to create exercise:", e)
         return 1
 
+# This function is used to create a new Goal list for the logged in user
+def add_new_goal(data):
+    user_id = data['user_id']
+    date = data['date']
+    goal_data = {
+        "dailyGoal": data['dailyGoal'], 
+        "status": data['status'],
+    }
+    # Construct the Firebase structure
+    goal_path = f"/Goals/{user_id}/{date}"
+
+    # Push the goal data to the Firebase database
+    try:
+        db.child(goal_path).set(goal_data)
+        return 0
+    except Exception as e:
+        print("Failed to create goal:", e)
+        return 1
 
 def find_closest_available_time(data):
     user_id = data['user_id']
@@ -744,6 +798,16 @@ def reminders_options_settings(info):
     r_option = info['r_option']
     try:
         db.child("User").child(user_id).child("reminder_option").set(r_option)
+        return 0
+    except Exception:
+        print("Failed to set the reminder option settings")
+        return 1
+
+def reminders_timeoptions_settings(info):
+    user_id = info['user_id']
+    r_timeoption = info['r_timeoption']
+    try:
+        db.child("User").child(user_id).child("reminder_option").set(r_timeoption)
         return 0
     except Exception:
         print("Failed to set the reminder option settings")
@@ -1059,14 +1123,69 @@ def get_user_events_data_db(data):
         for event in events:
             event_data = db.child("Events").child(event.val()['event_id']).get().val()
             time_ago = (datetime.now() - datetime.strptime(event_data['start_date'] + ' ' + event_data['start_time'], '%Y-%m-%d %H:%M')).days
+            if event_data['repetition_type'] != 'none':
+                start_date = datetime.strptime(event_data['start_date'], '%Y-%m-%d')
+                end_date = datetime.strptime(event_data['end_date'], '%Y-%m-%d')
+                repetition_type = event_data['repetition_type']
+                repetition_unit = event_data['repetition_unit']
+                repetition_val = event_data['repetition_val']
+                
+                if repetition_type == 'daily':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=1)
+                        
+                elif repetition_type == 'weekly':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=7)
+                        
+                elif repetition_type == 'monthly':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=30)
+                        
+                elif repetition_type == 'yearly':
+                    while start_date <= datetime.now():
+                        if start_date >= datetime.now() - timedelta(days=time_filter):
+                            event_list.append(event_data)
+                        start_date += timedelta(days=365)
+                        
+                elif repetition_type == 'custom':
+                    if repetition_unit == 'day':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(days=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(days=repetition_val)
+                            
+                    elif repetition_unit == 'week':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(weeks=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(weeks=repetition_val)
+                            
+                    elif repetition_unit == 'month':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(days=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(months=repetition_val)
+                            
+                    elif repetition_unit == 'year':
+                        while start_date <= datetime.now():
+                            if start_date >= datetime.now() - timedelta(days=time_filter*repetition_val):
+                                event_list.append(event_data)
+                            start_date += timedelta(years=repetition_val)
             if time_filter == 365:
-                if time_ago <= 365:
+                if time_ago <= 365 and time_ago >= 0:
                     event_list.append(event_data)
             elif time_filter == 30:
-                if time_ago <= 30:
+                if time_ago <= 30 and time_ago >= 0:
                     event_list.append(event_data)
             elif time_filter == 7:
-                if time_ago <= 7:
+                if time_ago <= 7 and time_ago >= 0:
                     event_list.append(event_data)
             else:
                 event_list.append(event_data)
@@ -1107,27 +1226,25 @@ def get_user_events_data_db(data):
             average_lengths[event_type] = 0
 
     # Find the busiest time
-    busiest_time, busiest_count = find_busiest_time(event_list)
-    print(busiest_time.strftime('%H:%M'))
+    busiest_time = datetime(1900, 1, 1, 0, 0)
+    busiest_count = 0
+    if len(event_list) > 0:
+        busiest_time, busiest_count = find_busiest_time(event_list)
 
     return {"events": event_list, 
             "event_types": event_type_list, 
             "average_lengths": average_lengths, 
-            "num_events": len(event_list), 
+            "num_events": len(event_list),
             "busiest_time": busiest_time.strftime('%H:%M'),
             'busiest_count': busiest_count}
 
 def find_busiest_time(events):
-    # Dictionary to hold count of events for each time interval
     interval_counts = defaultdict(int)
     
     # Iterate over each event and increment counts for each time interval
     for event in events:
         start_time = datetime.strptime(event['start_time'], '%H:%M')
         end_time = datetime.strptime(event['end_time'], '%H:%M')
-        # Round start and end times to nearest hour
-        #start_time = start_time.replace(minute=0)
-        #end_time = end_time.replace(minute=0)
         while start_time < end_time:
             interval_counts[start_time] += 1
             start_time += timedelta(minutes=1)
