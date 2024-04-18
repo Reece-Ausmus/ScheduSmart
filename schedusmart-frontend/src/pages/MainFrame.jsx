@@ -121,9 +121,8 @@ export default function MainFrame() {
   const location = useLocation();
   let Color;
   if (location.state == null) {
-    Color = localStorage.getItem('system_color');
-  }
-  else {
+    Color = localStorage.getItem("system_color");
+  } else {
     Color = location.state.color_choice;
   }
 
@@ -486,6 +485,9 @@ export default function MainFrame() {
     };
 
     const handleEventRepetitionChange = (type) => {
+      if (type === "custom" || type === "custome") {
+        setEventCustomFrequencyUnit("days");
+      }
       setEventRepetitionType(type);
     };
 
@@ -1565,8 +1567,8 @@ export default function MainFrame() {
       const lastDayInt = Math.floor(lastDay.getDate());
       adder += lastDayInt;
     }
-    
-    console.log("adder", adder)
+
+    console.log("adder", adder);
 
     const newDate = new Date(date.getTime() + adder * 24 * 60 * 60 * 1000);
     return newDate;
@@ -1624,11 +1626,11 @@ export default function MainFrame() {
     const [hour2, min2] = event.end_time.split(":").map(Number);
 
     let firstStartDate = new Date(year1, month1 - 1, day1, hour1, min1, 0);
-    console.log("first1", firstStartDate)
+    console.log("first1", firstStartDate);
     firstStartDate.setMinutes(
       firstStartDate.getMinutes() - firstStartDate.getTimezoneOffset()
     );
-    console.log("first2", firstStartDate)
+    console.log("first2", firstStartDate);
     let firstEndDate = new Date(year2, month2 - 1, day2, hour2, min2, 0);
     firstEndDate.setMinutes(
       firstEndDate.getMinutes() - firstEndDate.getTimezoneOffset()
@@ -1637,7 +1639,6 @@ export default function MainFrame() {
     let startDate = addDaysToSpecificDate(firstStartDate, 0);
     let endDate = addDaysToSpecificDate(firstEndDate, 0);
     let counter = 1; //Default will add 1
-
 
     if (event.repetition_type === "none") {
       eventArray.push({
