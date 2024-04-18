@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import languageLibrary from "../components/language.json";
 import Select from "@mui/material/Select";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,14 +11,23 @@ import CardContent from "@mui/material/CardContent";
 const flaskURL = "http://127.0.0.1:5000"; // Update with your backend URL
 const userId = sessionStorage.getItem("user_id");
 
-const timezoneOptions = [
-  { value: "America/New_York", label: "Eastern Time (ET)" },
-  { value: "America/Chicago", label: "Central Time (CT)" },
-  { value: "America/Denver", label: "Mountain Time (MT)" },
-  { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
-];
 
-export default function TimezoneConverter() {
+
+export default function TimezoneConverter(lang) {
+  let language = 0;
+  if (lang != undefined && lang != null) {
+    language = lang;
+  }
+
+  let languageData = languageLibrary[language][0].timeZone;
+
+  const timezoneOptions = [
+    { value: "America/New_York", label: languageData.ET },
+    { value: "America/Chicago", label: languageData.CT },
+    { value: "America/Denver", label: languageData.MT },
+    { value: "America/Los_Angeles", label: languageData.PT },
+  ];
+
   const [selectedTimezone, setSelectedTimezone] = useState("");
   const [currentTime, setCurrentTime] = useState("");
 
@@ -120,10 +130,10 @@ export default function TimezoneConverter() {
         style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}
       >
         <Typography variant="body1" style={{ marginLeft: "10px" }}>
-          Current Time: {currentTime}
+          {languageData.currentTime}{currentTime}
         </Typography>
         <Typography variant="body1" style={{ marginLeft: "10px" }}>
-          Time zone:
+          {languageData.timeZone}
         </Typography>
         <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
           <Select
@@ -133,7 +143,7 @@ export default function TimezoneConverter() {
             onChange={handleTimezoneChange}
           >
             <MenuItem value="" disabled>
-              Select Timezone
+              {languageData.selectTimeZone}
             </MenuItem>
             {timezoneOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>

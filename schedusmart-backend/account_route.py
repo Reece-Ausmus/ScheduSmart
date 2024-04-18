@@ -80,7 +80,8 @@ def user_data():
                 'location': data['location'],
                 'timezone': data['timezone'],
                 'task_list': data['task_list'],
-                'language': data['language']
+                'language': data['language'],
+                'chat_log': data['chat_log'],
             })
             response.status_code = 201
     except:
@@ -184,6 +185,108 @@ def get_exercises():
     except Exception as e:
         print("Failed to get exercises:", e)
         return jsonify({'error': 'Failed to get exercises'}), 500
+    
+# This route is for deleting exercises
+@account.route('/delete_exercise', methods=['POST'])
+def delete_exercise():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    event_name = data.get('event_name')
+
+    selected_exercise_id = data.get('id')
+
+    if not user_id or not event_name:
+        return jsonify({'error': 'User ID and exercise ID are required parameters'}), 400
+
+    # Construct the Firebase path to the exercise
+    exercise_path = f"/Exercise/{user_id}/{event_name}"
+    
+    # Delete the exercise from the Firebase database
+    try:
+        db.child(exercise_path).remove()    
+        return jsonify({'message': 'Exercise deleted successfully'}), 200
+    except Exception as e:
+        print("Failed to delete exercise:", e)
+        return jsonify({'error': 'Failed to delete exercise'}), 500
+
+@account.route('/get_highest_exercise_id', methods=['POST'])
+def get_highest_exercise_id():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's exercises
+    user_exercises_path = f"/Exercise/{user_id}"
+
+    try:
+        # Get all exercises for the user from the Firebase database
+        user_exercises = db.child(user_exercises_path).get()
+
+        # If the user has no exercises, return an empty list
+        if not user_exercises.val():
+            highest_id = 0
+        else:
+            # Get the highest exercise ID
+            highest_id = max(int(exercise_data.get('id', 0)) for exercise_data in user_exercises.val().values())
+
+        # Set the new event ID to the highest exercise ID + 1
+        new_event_id = highest_id + 1
+
+        return jsonify({'highest_id': new_event_id}), 200
+    except Exception as e:
+        print("Failed to get highest exercise ID:", e)
+        return jsonify({'error': 'Failed to get highest exercise ID'}), 500
+
+
+# This route is for setting the daily calorie goal
+@account.route('/set_calorie_goal', methods=['POST'])
+def set_calorie_goal():
+    data = request.get_json()
+    try:
+        result = add_new_goal(data)
+        if result == 0:
+            response = jsonify({'message': 'Calorie goal set successfully'})
+            response.status_code = 201
+        else:
+            response = jsonify({'error': 'Failed to set calorie goal'})
+            response.status_code = 400
+    except Exception as e:
+        response = jsonify({'error': 'An error occured'})
+        response.status_code = 500
+    return response
+
+# This route is for getting the daily calorie goal
+@account.route('/get_calorie_goal', methods=['POST'])
+def get_calorie_goal():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's calorie goal
+    user_goal_path = f"/Goals/{user_id}"
+
+    try:
+        # Get the user's calorie goal from the Firebase database
+        user_goal = db.child(user_goal_path).get()
+
+        # If the user has no calorie goal, return an empty list
+        if not user_goal.val():
+            return jsonify({'goal': []}), 200
+
+        # Convert Firebase response to list of goals
+        goal_list = []
+        for date, goal_data in user_goal.val().items():
+            goal_data['date'] = date
+            goal_list.append(goal_data)
+
+        return jsonify({'goal': goal_list}), 200
+    except Exception as e:
+        print("Failed to get calorie goal:", e)
+        return jsonify({'error': 'Failed to get calorie goal'}), 500
 
 
 # This route is for adding habits
@@ -293,6 +396,37 @@ def get_habits():
     except Exception as e:
         print("Failed to get habits:", e)
         return jsonify({'error': 'Failed to get habits'}), 500
+    
+# This route is for getting the highest habit ID
+@account.route('/get_highest_habit_id', methods=['POST'])
+def get_highest_habit_id():
+    data = request.get_json()
+    user_id = data.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+
+    # Construct the Firebase path to the user's habits
+    user_habits_path = f"/Habits/{user_id}"
+
+    try:
+        # Get all habits for the user from the Firebase database
+        user_habits = db.child(user_habits_path).get()
+
+        # If the user has no habits, return an empty list
+        if not user_habits.val():
+            highest_id = 0
+        else:
+            # Get the highest habit ID
+            highest_id = max(int(habit_data.get('id', 0)) for habit_data in user_habits.val().values())
+
+        # Set the new habit ID to the highest habit ID + 1
+        new_habit_id = highest_id + 1
+
+        return jsonify({'highest_id': new_habit_id}), 200
+    except Exception as e:
+        print("Failed to get highest habit ID:", e)
+        return jsonify({'error': 'Failed to get highest habit ID'}), 500
 
 
 @account.route('/request_friend', methods=['POST'])
@@ -454,6 +588,23 @@ def update_reminders_options():
     info = request.get_json()
     try:
         ret = reminders_options_settings(info)
+        if ret == 1:
+            response = jsonify({'error': 'reminders options settings can not be changed'})
+            response.status_code = 205
+        else:
+            response = jsonify({'message': 'Done'})
+            response.status_code = 201
+    except:
+        traceback.print_exc()
+        response = jsonify({'error': 'missing information'})
+        response.status_code = 206
+    return response
+
+@account.route('/update_reminders_timeoptions', methods=['POST'])
+def update_reminders_timeoptions():
+    info = request.get_json()
+    try:
+        ret = reminders_timeoptions_settings(info)
         if ret == 1:
             response = jsonify({'error': 'reminders options settings can not be changed'})
             response.status_code = 205

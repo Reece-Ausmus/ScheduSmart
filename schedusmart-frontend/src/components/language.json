@@ -44,10 +44,14 @@
         "close": "Close",
         "findClosestAvailable": "Find Closest Available",
         "findClosestAvailableTime": "Find Closest Available Time",
-        "amountOfTime": "Amount Of Time (time): ",
+        "amountOfTime": "Amount Of Time (min): ",
         "allTasksHaveBeenCompleted": "All tasks have been completed.",
         "task": "Task",
-        "detail": "detail"
+        "detail": "detail",
+        "unsaveEvent": "Unsaved Changes!",
+        "updateEvent": "Update Event",
+        "update": "Update",
+        "delete": "DELETE"
       },
       "setting": {
         "setting": "setting",
@@ -95,8 +99,9 @@
         "Option": "Option",
         "browserNoti": "Browser notification",
         "email": "Email"
-      }, 
+      },
       "taskManager": {
+        "taskList": "Task List",
         "sort": "Sort",
         "sortBy": "Sort By",
         "earliestCreated": "Earliest created",
@@ -134,11 +139,33 @@
         "workTime": "Worktime: ",
         "hours": "hour(s)",
         "getAttachFile": "Get Attached File!",
-        "none":"None",
+        "none": "None",
         "Deadline": "Deadline",
         "CompletedTime": "Completed Time",
         "Completed": "Completed",
-        "delete": "Delete?"
+        "delete": "Delete?",
+        "option": "Option",
+        "exportAs": "Export as",
+        "toDo": "To Do"
+      },
+      "dashBoard": {
+        "data": "Data",
+        "habits": "Habits",
+        "friendlist": "Friendlist",
+        "notes": "Notes",
+        "noteBook": "Notebook",
+        "taskManager": "Task manager",
+        "setting": "settings",
+        "signOut": "Sign Out"
+      },
+      "timeZone": {
+        "currentTime": "Current Time: ",
+        "timeZone": "Time zone:",
+        "selectTimeZone": "Select Timezone",
+        "ET": "Eastern Time (ET)",
+        "CT": "Central Time (CT)",
+        "MT": "Mountain Time (MT)",
+        "PT": "Pacific Time (PT)"
       }
     }
   ],
@@ -190,7 +217,11 @@
         "amountOfTime": "時間: ",
         "allTasksHaveBeenCompleted": "所有任務已完成。",
         "task": "任務",
-        "detail": "詳細資料"
+        "detail": "詳細資料",
+        "unsaveEvent": "未保存更改！",
+        "updateEvent": "更新事件",
+        "update": "更新",
+        "delete": "刪除"
       },
       "setting": {
         "setting": "設定",
@@ -237,10 +268,11 @@
         "howUwantbeNotified": "您想如何收到通知？",
         "Option": "選項",
         "browserNoti": "瀏覽器通知",
-        "email": "電子郵件" 
+        "email": "電子郵件"
       },
       "taskManager": {
-        "add":"新增",
+        "taskList": "工作列",
+        "add": "新增",
         "sort": "排序",
         "sortBy": "排序方式",
         "earliestCreated": "最早創建",
@@ -280,7 +312,29 @@
         "Deadline": "截止日期",
         "CompletedTime": "完成時間",
         "Completed": "已完成",
-        "delete": "刪除"
+        "delete": "刪除",
+        "option": "選項",
+        "exportAs": "匯出為",
+        "toDo": "待辦事項"
+      },
+      "dashBoard": {
+        "data": "數據",
+        "habits": "習慣",
+        "friendlist": "好友",
+        "notes": "筆記",
+        "noteBook": "筆記本",
+        "taskManager": "任務管理",
+        "setting": "設定",
+        "signOut": "登出"
+      }, 
+      "timeZone": {
+        "currentTime": "當前時間：",
+        "timeZone": "時區：",
+        "selectTimeZone": "選擇時區",
+        "ET": "東部時間 (ET)",
+        "CT": "中部時間 (CT)",
+        "MT": "山地時間 (MT)",
+        "PT": "太平洋時間 (PT)"
       }
     }
   ],
@@ -332,7 +386,11 @@
         "amountOfTime": "Cantidad de tiempo (tiempo): ",
         "allTasksHaveBeenCompleted": "Se han completado todas las tareas.",
         "task": "Tarea",
-        "detail": "Detalle"
+        "detail": "Detalle",
+        "unsaveEvent": "¡Cambios no guardados!",
+        "updateEvent": "Actualizar evento",
+        "update": "Actualizar",
+        "delete": "Eliminar"
       },
       "setting": {
         "setting": "ajustes",
@@ -382,6 +440,7 @@
         "email": "Correo electrónico"
       },
       "taskManager": {
+        "taskList": "lista de tareas",
         "add": "agregar",
         "sort": "Ordenar",
         "sortBy": "Ordenar por",
@@ -422,7 +481,29 @@
         "Deadline": "Fecha límite",
         "CompletedTime": "Hora de finalización",
         "Completed": "Completado",
-        "delete": "Eliminar?"
+        "delete": "Eliminar?",
+        "option": "Opción",
+        "exportAs": "Exportar como",
+        "toDo": "Hacer"
+      },
+      "dashBoard": {
+        "data": "Datos",
+        "habits": "Hábitos",
+        "friendlist": "Lista de amigos",
+        "notes": "Notas",
+        "noteBook": "Cuaderno de apuntes",
+        "taskManager": "Gestor de tareas",
+        "setting": "Ajustes",
+        "signOut": "Cerrar sesión"
+      },
+      "timeZone": {
+        "currentTime": "Hora actual: ",
+        "timeZone": "Zona horaria:",
+        "selectTimeZone": "Seleccionar Zona Horaria",
+        "ET": "Tiempo del Este (ET)",
+        "CT": "Tiempo Central (CT)",
+        "MT": "Tiempo de Montaña (MT)",
+        "PT": "Tiempo del Pacífico (PT)"
       }
     }
   ]

@@ -118,10 +118,6 @@ const handleCreateTaskCalendar = async () => {
   }
 };
 
-
-
-
-
 // valid file extension list
 const validExtensions = [
   "txt",
@@ -620,7 +616,7 @@ export default function TaskManager() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div>{Dashboard()}</div>
+      <div>{Dashboard(language)}</div>
       <CssBaseline />
       <div>
         <div
@@ -630,7 +626,7 @@ export default function TaskManager() {
             justifyContent: "space-between",
           }}
         >
-          <h1 style={{ color: theme.palette.primary.main }}>Task List</h1>
+          <h1 style={{ color: theme.palette.primary.main }}>{languageData.taskList}</h1>
           <div
             style={{
               display: "flex",
@@ -640,7 +636,7 @@ export default function TaskManager() {
             }}
           >
             <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-              <InputLabel id="f_format">Option</InputLabel>
+              <InputLabel id="f_format">{languageData.option}</InputLabel>
               <Select
                 labelId="f_forma"
                 id="f_forma"
@@ -654,7 +650,7 @@ export default function TaskManager() {
               </Select>
             </FormControl>
             <Button variant="contained" onClick={handleExport}>
-              Export as {selectedFormat.toUpperCase()}
+              {languageData.exportAs} {selectedFormat.toUpperCase()}
             </Button>
           </div>
         </div>
@@ -667,7 +663,7 @@ export default function TaskManager() {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
-                <h2 style={{ margin: 0 }}>To Do</h2>
+                <h2 style={{ margin: 0 }}>{languageData.toDo}</h2>
                 <Fab
                   aria-label="add"
                   color="primary"
@@ -922,7 +918,7 @@ export default function TaskManager() {
                 variant="contained"    
                 id="closeModal"
                 style={{ marginRight: "10px" }}
-                onClick={() => {
+                onClick={ async () => {
                   if (subtaskList != [] && taskDate != "") {
                     setTodoList([
                       ...todoList,
@@ -941,6 +937,7 @@ export default function TaskManager() {
                         autoPrio: true, 
                       },
                     ]);
+                    saveTasks
                   } else {
                     alert("Error! Missing Information! Please try again!");
                   }
@@ -1035,7 +1032,7 @@ export default function TaskManager() {
         {" "}
         {languageData.saveTask}
       </Button>
-      <div className="GPTChatBox">{GPTChatBox(todoList)}</div>
+      <div className="GPTChatBox">{GPTChatBox(todoList, userId)}</div>
     </ThemeProvider>
   );
 }
@@ -1075,7 +1072,27 @@ function TodoList({
   onPriorityChange,
   keyword,
   userData,
-}, languageData) {
+  languageData,
+}) {
+  const location = useLocation();
+  let Color;
+  if (location.state == null) {
+    Color = localStorage.getItem('system_color');
+  }
+  else {
+    Color = location.state.color_choice;
+  }
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+  });
   const emailModal = document.querySelector("#emailModal")
   const openEmailModal = document.querySelector("#openEmailModal")
   const closeEmailModal = document.querySelector("#closeEmailModal")
@@ -1292,7 +1309,7 @@ function TodoList({
 
   return (
     <>
-    <dialog id="emailModal" style={{ background: "#f8c06c" }}>
+    <dialog id="emailModal" style={{ background: theme.palette.secondary.main }}>
       <DialogTitle style={{ color: "black" }}>{languageData.emailTask}</DialogTitle>
       <DialogContent>
         <Grid

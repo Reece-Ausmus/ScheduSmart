@@ -26,6 +26,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import send_request from "./requester.jsx";
 import {useLocation} from 'react-router-dom';
+import languageLibrary from "../components/language.json";
 
 const userId = sessionStorage.getItem("user_id");
 const Colors = [
@@ -62,7 +63,12 @@ const theme = createTheme({
   },
 });
 
-export default function Dashboard() {
+export default function Dashboard(lang) {
+  let language = 0;
+  if (lang != undefined && lang != null) {
+    language = lang;
+  }
+  let languageData = languageLibrary[language][0].dashBoard;
   const location = useLocation();
   let Color;
   if (location.state == null) {
@@ -120,22 +126,22 @@ export default function Dashboard() {
               <CalendarMonthIcon sx={{ marginRight: 1 }} />
             </Button>
             <Button color="inherit" href="./datapage" id="datapage-button">
-              Data
+              {languageData.data}
             </Button>
             <Button color="inherit" href="./habits" id="habits-button">
-              Habits
+              {languageData.habits}
             </Button>
             <Button color="inherit" href="./friendlist" id="friendlist">
-              Friendlist
+              {languageData.friendlist}
             </Button>
             <Button color="inherit" href="./notes" id="notes-button">
-              Notes
+            {languageData.notes}
             </Button>
             <Button color="inherit" href="./notebook" id="notes-button">
-              Notebook
+            {languageData.noteBook}
             </Button>
             <Button color="inherit" href="./taskmanager" id="task-manager">
-              Task manager
+            {languageData.taskManager}
             </Button>
             <IconButton
               color="inherit"
@@ -158,9 +164,9 @@ export default function Dashboard() {
                 href="./settings"
                 onClick={handleMenuClose}
               >
-                Settings
+                {languageData.setting}
               </MenuItem>
-              <MenuItem onClick={handleConfirmClick}>Sign Out</MenuItem>
+              <MenuItem onClick={handleConfirmClick}>{languageData.signOut}</MenuItem>
             </Menu>
           </div>
         </Toolbar>

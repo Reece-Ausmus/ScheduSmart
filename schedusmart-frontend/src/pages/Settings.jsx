@@ -30,14 +30,6 @@ const Colors = [
   { id: 5, value: {primary:purple[200],secondary:purple[100]}, label: "Purple" },
   { id: 6, value: {primary:pink[200],secondary:pink[100]}, label: "Pink" },
 ];
-// const theme = createTheme({
-//   palette: {
-//     primary: orange,
-//     secondary: {
-//       main: "#ab5600",
-//     },
-//   },
-// });
 
 export default function Settings() {
   //initialized data load from db
@@ -106,7 +98,7 @@ export default function Settings() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div>{Dashboard()}</div>
+      <div>{Dashboard(language)}</div>
       <h1 style={{ color: theme.palette.primary.main }}>{languageData[language][0].setting.setting}</h1>
       <div>{AccountInfo(language,Color)}</div>
       <div>{Calendar_Settings(language,Color)}</div>

@@ -127,6 +127,7 @@ def get_user(response):
             "language": db.child("User").child(user_id).child('language').get().val(),
             "location": db.child("User").child(user_id).child('location').get().val(),
             'task_list': db.child("User").child(user_id).child('task_list').get().val(),
+            "chat_log": db.child("User").child(user_id).child('chat_log').get().val(),
             "return_status": 0
         }
         return data
@@ -135,7 +136,6 @@ def get_user(response):
             "error": "Cannot Find User",
             "return_status": 1
         }
-
 
 def update_user_info(receive_account):
     try:
@@ -361,6 +361,30 @@ def f_get_events(calendar):
         print(f"fail to retrieve events data: \n{e}")
     return 1
 
+def get_user_event(data):
+    try: 
+        if data['user_id'] is None:
+            raise Exception("User ID is None")
+        user_id = data['user_id']
+        calendar_id=[]
+        events=[]
+        calendars_snapshot=db.child("User").child(user_id).child("calendars").get()
+        calendars = calendars_snapshot.val()
+        for name in calendars.keys():
+            calendar_id.append(db.child("User").child(user_id).child("calendars").child(name).child("calendar_id").get().val())
+        events_id=db.child("Events").get().val()
+        for c_id in calendar_id:
+            for e_id in events_id.keys():
+                selected_calendar=db.child("Events").child(e_id).child("calendar").get().val()
+                if selected_calendar==c_id:
+                    event=db.child("Events").child(e_id).get().val()
+                    filtered_event = {key: value for key, value in event.items() if key in ["conferencing_link", "desc", "end_date", "end_time", "location", "name", "start_date", "start_time"]}
+                    events.append(filtered_event)
+        return {"data":events}
+    except Exception as e:
+        print("Failed to get event with userid:", e)
+    return 1
+
 
 def update_task(task_info):
     user_id = task_info['user_id']
@@ -369,6 +393,16 @@ def update_task(task_info):
         db.child("User").child(user_id).update(data)
     except Exception as e:
         print("Failed to update tasks:", e)
+        return 1
+    return 0
+
+def update_chat(chat_info):
+    user_id = chat_info['user_id']
+    data = {'chat_log': chat_info['chat_log']}
+    try:
+        db.child("User").child(user_id).update(data)
+    except Exception as e:
+        print("Failed to update logs:", e)
         return 1
     return 0
 
@@ -643,6 +677,24 @@ def add_new_exercise(data):
         print("Failed to create exercise:", e)
         return 1
 
+# This function is used to create a new Goal list for the logged in user
+def add_new_goal(data):
+    user_id = data['user_id']
+    date = data['date']
+    goal_data = {
+        "dailyGoal": data['dailyGoal'], 
+        "status": data['status'],
+    }
+    # Construct the Firebase structure
+    goal_path = f"/Goals/{user_id}/{date}"
+
+    # Push the goal data to the Firebase database
+    try:
+        db.child(goal_path).set(goal_data)
+        return 0
+    except Exception as e:
+        print("Failed to create goal:", e)
+        return 1
 
 def find_closest_available_time(data):
     user_id = data['user_id']
@@ -729,7 +781,7 @@ def f_get_done_events(data):
                     'title': e['name'],
                     'content': e['desc']
                 })
-
+    
     return {"data": event_list}
 
 def reminders_options_settings(info):
@@ -737,6 +789,16 @@ def reminders_options_settings(info):
     r_option = info['r_option']
     try:
         db.child("User").child(user_id).child("reminder_option").set(r_option)
+        return 0
+    except Exception:
+        print("Failed to set the reminder option settings")
+        return 1
+
+def reminders_timeoptions_settings(info):
+    user_id = info['user_id']
+    r_timeoption = info['r_timeoption']
+    try:
+        db.child("User").child(user_id).child("reminder_option").set(r_timeoption)
         return 0
     except Exception:
         print("Failed to set the reminder option settings")
