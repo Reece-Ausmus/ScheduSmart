@@ -187,7 +187,7 @@
       },
       "habit": {
         "dietTracker": "Diet Tracker",
-        "itemName": "itemName",
+        "itemName": "Item Name",
         "addNewItem": "Add new Item",
         "exportAsCSV": "Export as CSV",
         "editItem": "Edit item",
