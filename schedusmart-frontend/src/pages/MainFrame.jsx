@@ -121,7 +121,6 @@ export default function MainFrame() {
   const location = useLocation();
   const [Color, setColor] = useState(1);
 
-
   const theme = createTheme({
     palette: {
       primary: {
@@ -158,11 +157,14 @@ export default function MainFrame() {
         setLanguage(dataOfUser.language);
       }
       console.log("c", dataOfUser);
-      if (dataOfUser.system_color != undefined && dataOfUser.system_color != null) {
-        setColor(dataOfUser.system_color)
-        localStorage.setItem('system_color', dataOfUser.system_color);
+      if (
+        dataOfUser.system_color != undefined &&
+        dataOfUser.system_color != null
+      ) {
+        setColor(dataOfUser.system_color);
+        localStorage.setItem("system_color", dataOfUser.system_color);
       } else {
-        localStorage.setItem('system_color', "1");
+        localStorage.setItem("system_color", "1");
       }
       const newCalendars = dataOfUser.calendars;
       const updatedCalendarList = [...calendarList];
@@ -1135,11 +1137,12 @@ export default function MainFrame() {
                           </label>
                           <select
                             id="eventCalendar"
+                            key="eventCalendar"
                             value={eventCalendar}
                             onChange={handleEventCalendarChange}
                             className="calendar_option"
                           >
-                            <option value="">
+                            <option key="needakeydummy" value="">
                               {
                                 languageData[language][0].main_frame
                                   .selectCalendar
@@ -1867,10 +1870,10 @@ export default function MainFrame() {
   useEffect(() => {
     const hasCompletedTour = sessionStorage.getItem("hasCompletedTour");
     const first_time = sessionStorage.getItem("first_time");
-    if(first_time == 'false') {
+    if (first_time == "false") {
       setShowTour(false);
     }
-    if(first_time == 'true') {
+    if (first_time == "true") {
       if (!hasCompletedTour) {
         setShowTour(true);
       }
