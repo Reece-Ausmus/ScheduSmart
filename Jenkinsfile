@@ -6,15 +6,17 @@ pipeline {
     stage('Build') {
       environment {
         GPT_API = credentials('GPT_API_CONFIG_FILE')
-        //FIREBASE_CONFIG = credentials('FIREBASE_CONFIG')
+        FIREBASE_CONFIG = credentials('FIREBASE_CONFIG')
       }
       steps {
         sh 'echo Build'
         sh 'docker-compose build --no-cache'
         //sh 'cat $GPT_API'
         //sh 'cat $FIREBASE_CONFIG'
+        sh 'chown -R root:jenkins ./schedusmart-frontend/src/components'
         sh 'cp $GPT_API ./schedusmart-frontend/src/components/gpt.api.config'
-        //sh 'cp $FIREBASE_CONFIG ./schedusmart-backend/firebaseConfig.py'
+        sh 'chown -R root:jenkins ./schedusmart-backend'
+        sh 'cp $FIREBASE_CONFIG ./schedusmart-backend/firebaseConfig.py'
 
         dir("schedusmart-frontend"){
           sh 'npm install --force'
