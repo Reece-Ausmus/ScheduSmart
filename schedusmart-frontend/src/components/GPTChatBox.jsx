@@ -9,6 +9,7 @@ const flaskURL = "http://127.0.0.1:5000";
 
 export default function GPTChatBox(taskList, userId) {
  
+  const language = 0;
   const [isExpand, setIsExpand] = useState(false);
   const [typing, setTyping] = useState(false)
   const [tabLabel, setTabLabel] = useState("Open Tasky!")
@@ -112,6 +113,20 @@ export default function GPTChatBox(taskList, userId) {
       content: "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following system messages are the users current tasks. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive"
     }
 
+    let langMessage = ""
+    if (language == 0) {
+      langMessage = "SPEAK IN ENGLISH"
+    } else if (language == 1) {
+      langMessage = "SPEAK IN CHINESE"
+    } else if (language == 2) {
+      langMessage = "SPEAK IN SPANISH"
+    }
+
+    const languageMessage = {
+      role: "system",
+      content: langMessage,
+    }
+
     const taskMessages = taskList.map((task) => {
       let content = JSON.stringify(task)
 
@@ -121,12 +136,10 @@ export default function GPTChatBox(taskList, userId) {
       }
     })
 
-    apiMessages = [...apiMessages, ...taskMessages]
-
     const apiRequestBody = {
       "model": "gpt-3.5-turbo",
       "messages": [
-        systemMessage, ...apiMessages,
+        systemMessage, ...taskMessages, ...apiMessages, languageMessage
       ]
     }
 
