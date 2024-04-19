@@ -1201,9 +1201,9 @@ def get_user_events_data_db(data):
             event_type.append(event)
         elif event['type'] == 'availability':
             availability_type.append(event)
-        elif event['type'] == 'courses':
+        elif event['type'] == 'course':
             courses_type.append(event)
-        elif event['type'] == 'breaks':
+        elif event['type'] == 'break':
             breaks_type.append(event)
     event_type_list = {
         'event': event_type,

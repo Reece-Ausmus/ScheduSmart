@@ -126,7 +126,7 @@ const steps = [
     target: "#change-calendar",
     content: "Update your calendar view here.",
     disablebeacon: false,
-  }
+  },
 ];
 
 export default function MainFrame() {
@@ -232,7 +232,7 @@ export default function MainFrame() {
         setLocationSettings(dataOfDefaultsettings.type);
       };
       fetchDefaultsettings();
-    }, []);
+    }, [user_id]);
 
     const [value, setValue] = useState(null);
     const [inputValue, setInputValue] = useState("");
@@ -264,7 +264,7 @@ export default function MainFrame() {
 
       loaded.current = true;
     }
-    const fetch = useMemo(
+    const f = useMemo(
       () =>
         debounce((request, callback) => {
           if (autocompleteService.current) {
@@ -313,7 +313,7 @@ export default function MainFrame() {
       return () => {
         active = false;
       };
-    }, [eventLocation, inputValue, fetch]);
+    }, [eventLocation, inputValue, f]);
 
     // const fetchPlaceDetails = (placeId) => {
     //   fetch(`https://maps.googleapis.com/maps/api/js?place_id=${placeId}&fields=geometry&key=${GOOGLE_MAPS_API_KEY}`)
@@ -726,7 +726,7 @@ export default function MainFrame() {
     };
 
     const handleSeeInvitationsOpen = () => {
-      get_invitations();
+      getInvitations();
       toggleSeeInvitationsPopup();
     };
 
@@ -738,7 +738,8 @@ export default function MainFrame() {
       setShowSeeInvitationsPopup(!showSeeInvitationsPopup);
     };
 
-    const get_invitations = async () => {
+    const getInvitations = async () => {
+      console.log(flaskURL + "/get_invitations");
       const response = await fetch(flaskURL + "/get_invitations", {
         method: "POST",
         headers: {
@@ -756,6 +757,7 @@ export default function MainFrame() {
             console.log("Invitations retrieved successfully");
             const responseData = await response.json();
             const new_invitations = responseData["invitations"];
+            console.log(new_invitations);
             const updatedInvitations = Object.entries(new_invitations).map(
               ([event_id, { status, event_info }]) => ({
                 event_id,
@@ -763,6 +765,7 @@ export default function MainFrame() {
                 ...event_info,
               })
             );
+            console.log(updatedInvitations);
             const uniqueInvitations = updatedInvitations.filter(
               (invitation) =>
                 !invitations.some((inv) => inv.event_id === invitation.event_id)
@@ -1367,24 +1370,24 @@ export default function MainFrame() {
                         }
                       })
                       .map((invitation) => (
-                        <div key={invitation.id}>
+                        <div key={invitation.event_id}>
                           <h3>{invitation.name}</h3>
-                          <p>{invitation.description}</p>
+                          <p>{invitation.desc}</p>
                           <p>
                             {languageData[language][0].main_frame.startDate +
-                              invitation.startDate}
+                              invitation.start_date}
                           </p>
                           <p>
                             {languageData[language][0].main_frame.end_date +
-                              invitation.endDate}
+                              invitation.end_date}
                           </p>
                           <p>
                             {languageData[language][0].main_frame.startTime +
-                              invitation.startTime}
+                              invitation.start_time}
                           </p>
                           <p>
                             {languageData[language][0].main_frame.endTime +
-                              invitation.endTime}
+                              invitation.end_time}
                           </p>
                           <p>
                             {languageData[language][0].main_frame.status +

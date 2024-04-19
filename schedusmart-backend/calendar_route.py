@@ -36,14 +36,14 @@ def create_event():
         ret = add_new_event(receive_event)
         if ret['response_status'] == 1:
             response = jsonify({'error': 'event not created'})
-            response.status_code = 201
+            response.status_code = 205
         else:
             response = jsonify({'message': 'Done', "even_id": ret['event_id']})
             response.status_code = 201
     except:
         traceback.print_exc()
         response = jsonify({'error': 'missing information'})
-        response.status_code = 201
+        response.status_code = 206
     return response
 
 
