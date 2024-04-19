@@ -490,9 +490,9 @@ export default function Friendlist() {
                   </ListItemIcon>
                 )}
                 <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: avatar_color }}>{name[0]}</Avatar>
+                  <Avatar sx={{ bgcolor: avatar_color }}>{name ? name[0] : "d"}</Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={name} secondary={message} />
+                <ListItemText primary={name ? name : "delete account"} secondary={message} />
                 <ListItemSecondaryAction>
                   <Button component={Link} to={`/friendlist/${name}/${id}`}>
                     {languageData.enterChatbox}
