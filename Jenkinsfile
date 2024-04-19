@@ -14,7 +14,7 @@ pipeline {
         sh 'cat $FIREBASE_CONFIG'
         sh 'rm ./schedusmart-frontend/src/components/gpt.api.config.js'
         sh 'cp $GPT_API ./schedusmart-frontend/src/components/gpt.api.config.js'
-        sh 'rm ./schedusmart-backend/firebaseConfig.p'
+        sh 'rm ./schedusmart-backend/firebaseConfig.py'
         sh 'cp $FIREBASE_CONFIG ./schedusmart-backend/firebaseConfig.py'
 
         dir("schedusmart-frontend"){
