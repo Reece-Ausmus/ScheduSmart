@@ -72,6 +72,11 @@
       },
       "AccountInfo": {
         "updateAccountInformation": "Update account information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "userName": "Username",
+        "email": "Email",
+        "location": "Location",
         "Profile": "Profile",
         "update": "confirm update",
         "reset": "reset"
@@ -334,6 +339,11 @@
       },
       "AccountInfo": {
         "updateAccountInformation": "更新帳戶資訊",
+        "firstName": "名 ",
+        "lastName": "姓",
+        "userName": "用戶名",
+        "email": "電子郵件",
+        "location": "位置",
         "Profile": "個人資料",
         "update": "確認",
         "reset": "重設"
@@ -592,6 +602,11 @@
       },
       "AccountInfo": {
         "updateAccountInformation": "Actualizar la información de la cuenta",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "userName": "Nombre de usuario",
+        "email": "Correo electrónico",
+        "location": "Ubicación",
         "Profile": "Perfil",
         "update": "confirmar actualización",
         "reset": "reiniciar"

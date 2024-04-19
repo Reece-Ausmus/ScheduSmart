@@ -117,15 +117,15 @@ export default function GPTChatBox(taskList, userId, language) {
     let defaultSetup =
       "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following system messages are the users current tasks. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive";
     let languageSetting = "";
-    if (language == 0) {
-      languageSetting = "SPEAK IN SPANISH ";
+    if (language == 2) {
+      languageSetting = "SPEAK IN SPANISH ONLY";
     } else if (language == 1) {
-      languageSetting = "SPEAK IN CHINESE ";
+      languageSetting = "SPEAK IN CHINESE ONLY";
     } else {
-      languageSetting = "SPEAK IN ENGLISH ";
+      languageSetting = "SPEAK IN ENGLISH ONLY";
     }
     defaultSetup = languageSetting + defaultSetup;
-
+    console.log(defaultSetup);
     const systemMessage = {
       role: "system",
       content: defaultSetup,

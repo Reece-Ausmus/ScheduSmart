@@ -57,7 +57,7 @@ export default function Welcome() {
               fontSize: 'clamp(3.5rem, 10vw, 4rem)',
             }}
           >
-            Welcome to&nbsp;
+            Welcome to Schedusmart!
             <Typography
               component="span"
               variant="h1"
@@ -66,7 +66,7 @@ export default function Welcome() {
                 color: (theme) =>
                   theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
               }}
-            >Schedusmart!
+            >
             </Typography>
           </Typography>
           <Typography
