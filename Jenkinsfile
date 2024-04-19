@@ -4,9 +4,14 @@ pipeline {
 
   stages {
     stage('Build') {
+      environment {
+        GPT_API = credentials('GPT_API_CONFIG_FILE')
+      }
       steps {
         sh 'echo Build'
         sh 'docker-compose build --no-cache'
+        sh 'cat $GPT_API'
+        sh 'cp $GPT_API ./schedusmart-frontend/src/components'
 
         dir("schedusmart-frontend"){
           sh 'npm install --force'
