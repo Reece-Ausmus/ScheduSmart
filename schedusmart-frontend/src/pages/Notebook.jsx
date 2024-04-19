@@ -199,17 +199,13 @@ export default function Notebook() {
     };
   }
 
-  const notebookContent = (value) => {
+  const notebookContent = () => {
     return(
       <div>
         <div>
           {flag &&
           events.map((item, index) => {
-            const type = 'notebook' + value;
-            console.log(type)
-            console.log(item.EventType)
-            if (type === item.EventType){
-              return (
+            return (
               <EventCard
                 key={index}
                 id={index}
@@ -218,7 +214,6 @@ export default function Notebook() {
                 onDetails={() => showDetails(index)}
             />
             );
-}
           })}
 
           {showDtailsPopup && (
@@ -373,7 +368,7 @@ export default function Notebook() {
             )
           }
 
-        {/*tab*/}
+        {/*tab*
         <Box sx={{ width: '100%' }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -395,7 +390,8 @@ export default function Notebook() {
             <CustomTabPanel value={value} index={3}>
               Others
             </CustomTabPanel>
-          </Box>
+        </Box>*/}
+        {notebookContent()}
           
 
         </div>

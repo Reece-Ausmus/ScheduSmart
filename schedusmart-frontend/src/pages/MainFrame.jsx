@@ -87,20 +87,28 @@ const steps = [
     disableBeacon: true, // automate to start the tours
   },
   {
-    target: "#change-calendar",
-    content: "Update your calendar view here.",
-  },
-  {
     target: "#weather-container",
     content: "The current weather. Location can be changed in settings.",
+  },
+  {
+    target: "#datapage-button",
+    content: "View your calendar usage here.",
   },
   {
     target: "#habits-button",
     content: "Track your calories and health here.",
   },
   {
+    target: "#friendlist",
+    content: "Contact with your friend here.",
+  },
+  {
     target: "#notes-button",
     content: "Keep track of your notes here.",
+  },
+  {
+    target: "#notebook-button",
+    content: "Record something on your notebook here.",
   },
   {
     target: "#task-manager",
@@ -113,8 +121,12 @@ const steps = [
   {
     target: "#timezone-select",
     content: "Update your timezone here.",
-    disablebeacon: false,
   },
+  {
+    target: "#change-calendar",
+    content: "Update your calendar view here.",
+    disablebeacon: false,
+  }
 ];
 
 export default function MainFrame() {

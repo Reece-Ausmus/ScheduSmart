@@ -137,7 +137,7 @@ export default function Dashboard(lang) {
             <Button color="inherit" href="./notes" id="notes-button">
             {languageData.notes}
             </Button>
-            <Button color="inherit" href="./notebook" id="notes-button">
+            <Button color="inherit" href="./notebook" id="notebook-button">
             {languageData.noteBook}
             </Button>
             <Button color="inherit" href="./taskmanager" id="task-manager">
