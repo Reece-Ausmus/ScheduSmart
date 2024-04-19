@@ -11,13 +11,9 @@ pipeline {
       steps {
         sh 'echo Build'
         //sh 'docker-compose build --no-cache'
-        //sh 'cat $GPT_API'
-        //sh 'cat $FIREBASE_CONFIG'
-        //sh 'chown -R root:jenkins ./schedusmart-frontend/src/components'
-        sh 'ls -l ./schedusmart-frontend/src/components'
-        sh 'rm ./schedusmart-frontend/src/components/gpt.api.config'
-        sh 'ls -l $GPT_API'
-        sh 'cp $GPT_API ./schedusmart-frontend/src/components/gpt.api.config'
+        sh 'cat $FIREBASE_CONFIG'
+        //sh 'rm ./schedusmart-frontend/src/components/gpt.api.config.js'
+        sh 'cp $GPT_API ./schedusmart-frontend/src/components/gpt.api.config.js'
         //sh 'chown -R root:jenkins ./schedusmart-backend'
         sh 'cp $FIREBASE_CONFIG ./schedusmart-backend/firebaseConfig.py'
 
@@ -42,6 +38,7 @@ pipeline {
             sh 'pytest'
           }
 
+          sh 'docker-compose build --no-cache'
           sh 'docker-compose up -d'
           sh 'docker-compose down'
         }
