@@ -239,6 +239,11 @@
         "userName": "User name",
         "wantToAdd": " wants to add you as a friend",
         "delete": "Delete"
+      },
+      "Notes": {
+        "Notes": "Notes",
+        "Title": "Title",
+        "TakeANote": "Take a note..."
       }
     }
   ],
@@ -478,6 +483,11 @@
         "userName": "用戶名",
         "wantToAdd": " 想要將您加入好友",
         "delete": "刪除"
+      },
+      "Notes": {
+        "Notes": "備註",
+        "Title": "標題",
+        "TakeANote": "請輸入備註..."
       }
     }
   ],
@@ -717,6 +727,11 @@
         "userName": "Nombre de usuario",
         "wantToAdd": " quiere agregarte como amigo",
         "delete": "Eliminar"
+      },
+      "Notes": {
+        "Notes": "Notas",
+        "Title": "Título",
+        "TakeANote": "Tome una nota..."
       }
     }
   ]

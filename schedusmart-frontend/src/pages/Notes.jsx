@@ -1,5 +1,5 @@
 // This is a page to realize taking notes function
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import "./Notes.css";
 import AddIcon from "@material-ui/icons/Add";
 import NoteCard from "../components/NoteCard";
@@ -10,6 +10,10 @@ import Dashboard from "./Dashboard";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
 import { useLocation } from 'react-router-dom';
+import send_request from "./requester.jsx";
+import languageLibrary from "../components/language.json";
+
+const userId = sessionStorage.getItem("user_id");
 
 const Colors = [
   { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
@@ -22,6 +26,20 @@ const Colors = [
 ];
 
 export default function Notes() {
+  const [language, setLanguage] = useState(0);
+  const fetchInitializeData = async () => {
+    let dataOfUser = await send_request("/user_data", {
+      user_id: userId,
+    });
+    if (dataOfUser.language != undefined) {
+      setLanguage(dataOfUser.language);
+    }
+  };
+  useEffect(() => {
+    fetchInitializeData();
+  }, []);
+
+  let languageData = languageLibrary[language][0].Notes;
   const location = useLocation();
   let Color;
   if (location.state == null) {
@@ -106,9 +124,9 @@ export default function Notes() {
   return (
     <ThemeProvider theme={theme}>
       <div className="main">
-        <div>{Dashboard()}</div>
+        <div>{Dashboard(language)}</div>
         <div className="header">
-          <h1 style={{ color: theme.palette.primary.main }}>Notes</h1>
+          <h1 style={{ color: theme.palette.primary.main }}>{languageData.Notes}</h1>
         </div>
 
         <div>
@@ -117,14 +135,14 @@ export default function Notes() {
               name="title"
               onChange={handleChange}
               value={note.title}
-              placeholder="Title"
+              placeholder={languageData.Title}
               type="text"
             />
             <textarea
               name="content"
               onChange={handleChange}
               value={note.content}
-              placeholder="Take a note..."
+              placeholder={languageData.TakeANote}
               rows={3}
               type="text"
             />
