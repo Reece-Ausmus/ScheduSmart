@@ -124,3 +124,50 @@ def test_update_account_info(client):
     data["location"] = 'West Lafayette'
     response = client.post('/update_account_info', headers=headers, data=json.dumps(data))
     
+
+# Sprint 1 User Story #11: change language (change language from English to 中文)
+def test_change_language(client):
+    headers = {
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+    }
+
+    data = {
+        "user_id": "UmkEPUjA7xfopiibKSCPpQDIpV42",
+    }
+
+    response = client.post('/user_data', headers=headers, data=json.dumps(data))
+    assert response.status_code == 201
+    origin_language = response.json["language"]
+    
+    changed_language = (origin_language + 1) % 3
+    response = client.post('/change_language', headers=headers, data=json.dumps({"user_id": data["user_id"], "language": changed_language}))
+    assert response.status_code == 201
+
+    # check if location has been changed successfully
+    response = client.post('/user_data', headers=headers, data=json.dumps(data))
+    assert changed_language == response.json["language"]
+
+
+  # Sprint 1 User Story #11: change language (change language from English to 中文)
+def test_change_system_color(client):
+    headers = {
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+    }
+
+    data = {
+        "user_id": "UmkEPUjA7xfopiibKSCPpQDIpV42",
+    }
+
+    response = client.post('/user_data', headers=headers, data=json.dumps(data))
+    assert response.status_code == 201
+    origin_color = response.json["system_color"]
+    
+    changed_color = (origin_color + 1) % 7
+    response = client.post('/change_system_color', headers=headers, data=json.dumps({"user_id": data["user_id"], "color": changed_color}))
+    assert response.status_code == 201
+
+    # check if location has been changed successfully
+    response = client.post('/user_data', headers=headers, data=json.dumps(data))
+    assert changed_color == response.json["system_color"]  
