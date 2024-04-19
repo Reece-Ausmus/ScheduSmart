@@ -55,11 +55,11 @@
         "currentTemperature": "Current Temperature:"
       },
       "setting": {
-        "setting": "setting",
+        "setting": "Settings",
         "Language": "Language",
         "UpdateLanguageSettings": "Update language settings",
         "UpdateSystemSettings": "Update system settings",
-        "system": "system",
+        "system": "System",
         "Color": "Color",
         "Option": "Option",
         "Red": "Red",
@@ -156,7 +156,7 @@
         "notes": "Notes",
         "noteBook": "Notebook",
         "taskManager": "Task manager",
-        "setting": "settings",
+        "setting": "Settings",
         "signOut": "Sign Out"
       },
       "timeZone": {
@@ -239,6 +239,25 @@
         "userName": "User name",
         "wantToAdd": " wants to add you as a friend",
         "delete": "Delete"
+      },
+      "Notes": {
+        "Notes": "Notes",
+        "Title": "Title",
+        "TakeANote": "Take a note..."
+      },
+      "noteBook": {
+        "details": "Details",
+        "enterEmailAddress": "enter email address",
+        "enterRecepientName": "enter recepient name",
+        "close": "close",
+        "addRecord": "Add Record",
+        "title": "title",
+        "description": "description",
+        "send": "send",
+        "notebook": "Notebook",
+        "sendEmail": "send email",
+        "emailAddress": "Email Address",
+        "cancel": "cancel"
       }
     }
   ],
@@ -478,6 +497,25 @@
         "userName": "用戶名",
         "wantToAdd": " 想要將您加入好友",
         "delete": "刪除"
+      },
+      "Notes": {
+        "Notes": "備註",
+        "Title": "標題",
+        "TakeANote": "請輸入備註..."
+      },
+      "noteBook": {
+        "details": "詳細",
+        "enterEmailAddress": "輸入電郵地址",
+        "enterRecepientName": "輸入收件人名稱",
+        "close": "關閉",
+        "addRecord": "新增記錄",
+        "title": "標題",
+        "description": "描述",
+        "send": "傳送",
+        "notebook": "筆記簿",
+        "sendEmail": "傳送電郵",
+        "emailAddress": "電郵地址",
+        "cancel": "取消"
       }
     }
   ],
@@ -717,6 +755,25 @@
         "userName": "Nombre de usuario",
         "wantToAdd": " quiere agregarte como amigo",
         "delete": "Eliminar"
+      },
+      "Notes": {
+        "Notes": "Notas",
+        "Title": "Título",
+        "TakeANote": "Tome una nota..."
+      },
+      "noteBook": {
+        "details": "Detalles",
+        "enterEmailAddress": "ingrese dirección de correo electrónico",
+        "enterRecepientName": "ingrese nombre del destinatario",
+        "close": "cerrar",
+        "addRecord": "Agregar Registro",
+        "title": "título",
+        "description": "descripción",
+        "send": "enviar",
+        "notebook": "Cuaderno",
+        "sendEmail": "enviar correo electrónico",
+        "emailAddress": "Dirección de correo electrónico",
+        "cancel": "cancelar"
       }
     }
   ]

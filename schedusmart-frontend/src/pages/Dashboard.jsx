@@ -72,7 +72,7 @@ export default function Dashboard(lang) {
   const location = useLocation();
   let Color;
   if (location.state == null) {
-    Color = localStorage.getItem('system_color');
+    Color = sessionStorage.getItem('system_color');
   }
   else {
     Color = location.state.color_choice;
@@ -137,7 +137,7 @@ export default function Dashboard(lang) {
             <Button color="inherit" href="./notes" id="notes-button">
             {languageData.notes}
             </Button>
-            <Button color="inherit" href="./notebook" id="notes-button">
+            <Button color="inherit" href="./notebook" id="notebook-button">
             {languageData.noteBook}
             </Button>
             <Button color="inherit" href="./taskmanager" id="task-manager">
@@ -166,7 +166,8 @@ export default function Dashboard(lang) {
               >
                 {languageData.setting}
               </MenuItem>
-              <MenuItem onClick={handleConfirmClick}>{languageData.signOut}</MenuItem>
+              <MenuItem component="a"
+                href="./welcome" onClick={handleConfirmClick}>{languageData.signOut}</MenuItem>
             </Menu>
           </div>
         </Toolbar>

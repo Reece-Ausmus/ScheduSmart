@@ -87,20 +87,28 @@ const steps = [
     disableBeacon: true, // automate to start the tours
   },
   {
-    target: "#change-calendar",
-    content: "Update your calendar view here.",
-  },
-  {
     target: "#weather-container",
     content: "The current weather. Location can be changed in settings.",
+  },
+  {
+    target: "#datapage-button",
+    content: "View your calendar usage here.",
   },
   {
     target: "#habits-button",
     content: "Track your calories and health here.",
   },
   {
+    target: "#friendlist",
+    content: "Contact with your friend here.",
+  },
+  {
     target: "#notes-button",
     content: "Keep track of your notes here.",
+  },
+  {
+    target: "#notebook-button",
+    content: "Record something on your notebook here.",
   },
   {
     target: "#task-manager",
@@ -113,14 +121,17 @@ const steps = [
   {
     target: "#timezone-select",
     content: "Update your timezone here.",
-    disablebeacon: false,
   },
+  {
+    target: "#change-calendar",
+    content: "Update your calendar view here.",
+    disablebeacon: false,
+  }
 ];
 
 export default function MainFrame() {
   const location = useLocation();
   const [Color, setColor] = useState(1);
-
 
   const theme = createTheme({
     palette: {
@@ -158,11 +169,14 @@ export default function MainFrame() {
         setLanguage(dataOfUser.language);
       }
       console.log("c", dataOfUser);
-      if (dataOfUser.system_color != undefined && dataOfUser.system_color != null) {
-        setColor(dataOfUser.system_color)
-        localStorage.setItem('system_color', dataOfUser.system_color);
+      if (
+        dataOfUser.system_color != undefined &&
+        dataOfUser.system_color != null
+      ) {
+        setColor(dataOfUser.system_color);
+        sessionStorage.setItem("system_color", dataOfUser.system_color);
       } else {
-        localStorage.setItem('system_color', "1");
+        sessionStorage.setItem("system_color", "1");
       }
       const newCalendars = dataOfUser.calendars;
       const updatedCalendarList = [...calendarList];
@@ -400,14 +414,7 @@ export default function MainFrame() {
                 );
               }}
             />
-            <Button
-              variant="contained"
-              style={{ marginLeft: "20px", height: "80%" }}
-              onClick={handleShowMap}
-            >
-              map
-            </Button>
-            <Dialog
+            {/* <Dialog
               open={showMap}
               onClose={() => setShowMap(false)}
               PaperProps={{
@@ -434,7 +441,7 @@ export default function MainFrame() {
               <DialogActions>
                 <Button onClick={() => setShowMap(false)}>Close</Button>
               </DialogActions>
-            </Dialog>
+            </Dialog> */}
           </div>
         );
       }
@@ -1142,11 +1149,12 @@ export default function MainFrame() {
                           </label>
                           <select
                             id="eventCalendar"
+                            key="eventCalendar"
                             value={eventCalendar}
                             onChange={handleEventCalendarChange}
                             className="calendar_option"
                           >
-                            <option value="">
+                            <option key="needakeydummy" value="">
                               {
                                 languageData[language][0].main_frame
                                   .selectCalendar
@@ -1874,10 +1882,10 @@ export default function MainFrame() {
   useEffect(() => {
     const hasCompletedTour = sessionStorage.getItem("hasCompletedTour");
     const first_time = sessionStorage.getItem("first_time");
-    if(first_time == 'false') {
+    if (first_time == "false") {
       setShowTour(false);
     }
-    if(first_time == 'true') {
+    if (first_time == "true") {
       if (!hasCompletedTour) {
         setShowTour(true);
       }

@@ -21,7 +21,7 @@ const Chatbox = () => {
     const location = useLocation();
     let Color;
     if (location.state == null) {
-      Color = localStorage.getItem('system_color');
+      Color = sessionStorage.getItem('system_color');
     }
     else {
       Color = location.state.color_choice;
@@ -43,9 +43,10 @@ const Chatbox = () => {
     // handle get messages
     let start_point = 0;
     const getMessages = async () => {
-        const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": start_point });
+        console.log("length", messages.length)
+        const response = await send_request("/get_messages", { "user_id": userId, "name": fname, "start_point": messages.length });
         const message_history = response.data;
-        setMessages(message_history);
+        setMessages([...message_history]);
     }
     // handle send messgaes
     const handleSendMessage = async () => {
@@ -72,8 +73,12 @@ const Chatbox = () => {
     }, [messages]);
 
     useEffect(() => {
-        getMessages();
-        renderMessages(messages);
+        const interval = setInterval(() => {
+            getMessages();
+            renderMessages(messages);
+        }, 1000);
+        // Clear the interval on component unmount
+        return () => clearInterval(interval);
     }, [])
 
     const renderMessages = (messages) => {

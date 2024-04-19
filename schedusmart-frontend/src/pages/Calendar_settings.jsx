@@ -40,9 +40,9 @@ export default function Calendar_Settings(language,Color) {
     },
   });
   // calendar virsualization settings
-  const [showVirtual, setShowVirsual] = useState(() => { return parseInt(localStorage.getItem('showVirtual')) || 0; });
+  const [showVirtual, setShowVirsual] = useState(() => { return parseInt(sessionStorage.getItem('showVirtual')) || 1; });
   useEffect(() => {
-    localStorage.setItem('showVirtual', showVirtual.toString());
+    sessionStorage.setItem('showVirtual', showVirtual.toString());
   }, [showVirtual]);
 
   const handleVirtualSelectChange = (e) => {
@@ -85,11 +85,11 @@ export default function Calendar_Settings(language,Color) {
 
   // location input settings
   const [locationMode, setLocationMode] = useState(() => {
-    return localStorage.getItem('locationMode') || "text";
+    return sessionStorage.getItem('locationMode') || "text";
   });
 
   useEffect(() => {
-    localStorage.setItem('locationMode', locationMode);
+    sessionStorage.setItem('locationMode', locationMode);
   }, [locationMode]);
 
   const handleLocationSelectChange = (e) => {

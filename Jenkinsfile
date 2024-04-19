@@ -1,20 +1,28 @@
 // space insufficient debug: docker system prune
-
 pipeline {
   agent any
 
   stages {
     stage('Build') {
+      environment {
+        GPT_API = credentials('GPT_API_CONFIG_FILE')
+        FIREBASE_CONFIG = credentials('FIREBASE_CONFIG')
+      }
       steps {
         sh 'echo Build'
-        sh 'docker-compose build --no-cache'
+        //sh 'docker-compose build --no-cache'
+        sh 'cat $FIREBASE_CONFIG'
+        sh 'rm ./schedusmart-frontend/src/components/gpt.api.config.js'
+        sh 'cp $GPT_API ./schedusmart-frontend/src/components/gpt.api.config.js'
+        sh 'rm ./schedusmart-backend/firebaseConfig.py'
+        sh 'cp $FIREBASE_CONFIG ./schedusmart-backend/firebaseConfig.py'
 
         dir("schedusmart-frontend"){
           sh 'npm install --force'
         }
-        //dir("schedusmart-backend"){
-        //  sh 'pip install -r requirements.txt'
-        //}
+        dir("schedusmart-backend"){
+          sh 'pip install -r requirements.txt'
+        }
       }
     }
     stage('Test') {
@@ -22,10 +30,15 @@ pipeline {
         sh 'echo Test'
 
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-           dir("schedusmart-frontend"){
+          dir("schedusmart-frontend"){
             sh 'npm run test'
           }
 
+          dir("schedusmart-backend"){
+            sh 'pytest'
+          }
+
+          sh 'docker-compose build --no-cache'
           sh 'docker-compose up -d'
           sh 'docker-compose down'
         }
