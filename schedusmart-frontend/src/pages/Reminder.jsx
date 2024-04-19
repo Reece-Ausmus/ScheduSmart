@@ -145,6 +145,7 @@ export default function Reminder(language, Color) {
   const handleTimeSelectChange = (e) => {
     setSelectedTimeOption(parseInt(e.target.value));
     updateremindertimeoption(parseInt(e.target.value));
+    setMakechoice(false);
     if (remindersOn){
       get_users_all_events();
     }
@@ -167,6 +168,7 @@ export default function Reminder(language, Color) {
   const handleReminderOptionsChange = (e) => {
     setReminderOptions(parseInt(e.target.value));
     updatereminderoption(parseInt(e.target.value));
+    setMakechoice(false);
     if (remindersOn){
       get_users_all_events();
     }
@@ -356,9 +358,7 @@ export default function Reminder(language, Color) {
     const row4 = "End_Time: " + event_R["end_date"] + " " + event_R["end_time"] + "\n";
     const row5 = "Location: " + event_R["location"] + "\n";
     const row6 = "Confenrence link: " + event_R["confenrence_link"] + "\n";
-    message += row1 + row2 + row3 + row4 + row5;
-    console.log(message)
-    console.log(Username, Email);
+    message += row1 + row2 + row3 + row4 + row5 + row6;
     EmailForm(Username, Email, message);
   }
 

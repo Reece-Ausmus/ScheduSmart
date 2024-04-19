@@ -40,7 +40,7 @@ export default function Calendar_Settings(language,Color) {
     },
   });
   // calendar virsualization settings
-  const [showVirtual, setShowVirsual] = useState(() => { return parseInt(sessionStorage.getItem('showVirtual')) || 0; });
+  const [showVirtual, setShowVirsual] = useState(() => { return parseInt(sessionStorage.getItem('showVirtual')) || 1; });
   useEffect(() => {
     sessionStorage.setItem('showVirtual', showVirtual.toString());
   }, [showVirtual]);

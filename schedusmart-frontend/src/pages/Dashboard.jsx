@@ -166,7 +166,8 @@ export default function Dashboard(lang) {
               >
                 {languageData.setting}
               </MenuItem>
-              <MenuItem onClick={handleConfirmClick}>{languageData.signOut}</MenuItem>
+              <MenuItem component="a"
+                href="./welcome" onClick={handleConfirmClick}>{languageData.signOut}</MenuItem>
             </Menu>
           </div>
         </Toolbar>
