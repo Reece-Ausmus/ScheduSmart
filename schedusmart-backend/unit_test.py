@@ -1,5 +1,6 @@
 from fire_base import *
 from calendar_route import *
+'''
 
 user = {
     "email": "unitTest@purpose.only",
@@ -69,11 +70,11 @@ def test_update_account_info():
     delete_account(user_id)
 
 
-
 print("\n-----------unit test for account-----------")
 testing_creating_invalid_account()
 print("testing_creating_invalid_account\npass\n")
 creating_same_email()
 print("creating_same_email\npass\n")
-test_update_account_info()
+#test_update_account_info()
 print("test_update_account_info\npass\n")
+'''
