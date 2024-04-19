@@ -11,9 +11,9 @@ pipeline {
         dir("schedusmart-frontend"){
           sh 'npm install --force'
         }
-        //dir("schedusmart-backend"){
-        //  sh 'pip install -r requirements.txt'
-        //}
+        dir("schedusmart-backend"){
+          sh 'pip install -r requirements.txt'
+        }
       }
     }
     stage('Test') {
@@ -21,8 +21,12 @@ pipeline {
         sh 'echo Test'
 
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-           dir("schedusmart-frontend"){
+          dir("schedusmart-frontend"){
             sh 'npm run test'
+          }
+
+          dir("schedusmart-backend"){
+            sh 'pytest'
           }
 
           sh 'docker-compose up -d'
