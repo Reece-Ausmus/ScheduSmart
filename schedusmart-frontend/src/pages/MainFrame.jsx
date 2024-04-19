@@ -119,12 +119,7 @@ const steps = [
 
 export default function MainFrame() {
   const location = useLocation();
-  let Color;
-  if (location.state == null) {
-    Color = localStorage.getItem("system_color");
-  } else {
-    Color = location.state.color_choice;
-  }
+  const [Color, setColor] = useState(1);
 
   const theme = createTheme({
     palette: {
@@ -160,6 +155,16 @@ export default function MainFrame() {
       console.log("data", dataOfUser);
       if (dataOfUser.language != undefined) {
         setLanguage(dataOfUser.language);
+      }
+      console.log("c", dataOfUser);
+      if (
+        dataOfUser.system_color != undefined &&
+        dataOfUser.system_color != null
+      ) {
+        setColor(dataOfUser.system_color);
+        sessionStorage.setItem("system_color", dataOfUser.system_color);
+      } else {
+        sessionStorage.setItem("system_color", "1");
       }
       const newCalendars = dataOfUser.calendars;
       const updatedCalendarList = [...calendarList];
@@ -397,14 +402,7 @@ export default function MainFrame() {
                 );
               }}
             />
-            <Button
-              variant="contained"
-              style={{ marginLeft: "20px", height: "80%" }}
-              onClick={handleShowMap}
-            >
-              map
-            </Button>
-            <Dialog
+            {/* <Dialog
               open={showMap}
               onClose={() => setShowMap(false)}
               PaperProps={{
@@ -431,7 +429,7 @@ export default function MainFrame() {
               <DialogActions>
                 <Button onClick={() => setShowMap(false)}>Close</Button>
               </DialogActions>
-            </Dialog>
+            </Dialog> */}
           </div>
         );
       }
@@ -1139,11 +1137,12 @@ export default function MainFrame() {
                           </label>
                           <select
                             id="eventCalendar"
+                            key="eventCalendar"
                             value={eventCalendar}
                             onChange={handleEventCalendarChange}
                             className="calendar_option"
                           >
-                            <option value="">
+                            <option key="needakeydummy" value="">
                               {
                                 languageData[language][0].main_frame
                                   .selectCalendar
@@ -1871,10 +1870,10 @@ export default function MainFrame() {
   useEffect(() => {
     const hasCompletedTour = sessionStorage.getItem("hasCompletedTour");
     const first_time = sessionStorage.getItem("first_time");
-    if(first_time == 'false') {
+    if (first_time == "false") {
       setShowTour(false);
     }
-    if(first_time == 'true') {
+    if (first_time == "true") {
       if (!hasCompletedTour) {
         setShowTour(true);
       }

@@ -11,7 +11,6 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { orange } from "@mui/material/colors";
 import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -25,39 +24,72 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import Dashboard from "./Dashboard";
 import languageLibrary from "../components/language.json";
 import send_request from "./requester.jsx";
+import {
+  red,
+  orange,
+  yellow,
+  green,
+  blue,
+  purple,
+  pink,
+} from "@mui/material/colors";
+import { useLocation } from "react-router-dom";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: orange[500],
-    },
-    secondary: {
-      main: "#ab5600",
-    },
+const Colors = [
+  { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
+  {
+    id: 1,
+    value: { primary: orange[300], secondary: orange[200] },
+    label: "Orange",
   },
-  components: {
-    MuiBarChart: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "gray",
+  {
+    id: 2,
+    value: { primary: yellow[300], secondary: yellow[200] },
+    label: "Yellow",
+  },
+  {
+    id: 3,
+    value: { primary: green[200], secondary: green[100] },
+    label: "Green",
+  },
+  { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
+  {
+    id: 5,
+    value: { primary: purple[200], secondary: purple[100] },
+    label: "Purple",
+  },
+  { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
+];
+
+export default function DataPage() {
+  const location = useLocation();
+  let Color;
+  if (location.state == null) {
+    Color = sessionStorage.getItem("system_color");
+  } else {
+    Color = location.state.color_choice;
+  }
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
+      },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+    components: {
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "gray",
+          },
         },
       },
     },
-  },
-});
+  });
 
-const uData = [4000, 3000, 2000, 2780];
-const xLabels = [
-  "Page A",
-  "Page B",
-  "Page C",
-  "Page D",
-  "Page E",
-  "Page F",
-  "Page G",
-];
-
-export default function SimpleBarChart() {
   const [timeFilter, setTimeFilter] = useState(0);
   const handleTimeFilterChange = (e) => {
     setTimeFilter(e.target.value);
@@ -73,7 +105,7 @@ export default function SimpleBarChart() {
 
   const fetchInitializeData = async () => {
     let dataOfUser = await send_request("/user_data", {
-      "user_id": user_id,
+      user_id: user_id,
     });
     if (dataOfUser.language != undefined) {
       setLanguage(dataOfUser.language);
@@ -189,14 +221,16 @@ export default function SimpleBarChart() {
       <Container component="main" maxWidth="lg" style={{ marginLeft: "0px" }}>
         <Box sx={{ minWidth: 120, maxWidth: 300 }}>
           <Typography
-            component="h1"
+            component="h2"
             variant="h5"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
             {languageData.dataDashboard}
           </Typography>
           <FormControl fullWidth margin="normal">
-            <InputLabel id="timeFilterLabel">{languageData.timePeriod}</InputLabel>
+            <InputLabel id="timeFilterLabel">
+              {languageData.timePeriod}
+            </InputLabel>
             <Select
               labelId="timeFilterLabel"
               id="timeFilterSelect"
@@ -216,7 +250,7 @@ export default function SimpleBarChart() {
         </Box>
         {noEvents && (
           <Typography
-            component="h1"
+            component="h2"
             variant="h5"
             style={{ marginBottom: "20px", marginTop: "20px" }}
           >
@@ -235,7 +269,10 @@ export default function SimpleBarChart() {
             <BarChart
               width={500}
               height={300}
-              colors={[orange[500], orange[200]]}
+              colors={[
+                Colors[Color].value.primary,
+                Colors[Color].value.secondary,
+              ]}
               series={[
                 {
                   data: eventTypeData,
@@ -254,7 +291,12 @@ export default function SimpleBarChart() {
               ]}
               xAxis={[
                 {
-                  data: [languageData.event, languageData.availability, languageData.course, languageData.break],
+                  data: [
+                    languageData.event,
+                    languageData.availability,
+                    languageData.course,
+                    languageData.break,
+                  ],
                   scaleType: "band",
                 },
               ]}
@@ -269,11 +311,16 @@ export default function SimpleBarChart() {
               valueMax={2359}
               startAngle={-110}
               endAngle={110}
-              text={languageData.businessTime + `${Math.floor(busiestTime / 100)
-                .toString()
-                .padStart(2, "0")}:${(busiestTime % 100)
-                .toString()
-                .padStart(2, "0")}`}
+              text={
+                languageData.businessTime +
+                `${(Math.floor(busiestTime / 100) % 12 || 12)
+                  .toString()
+                  .padStart(2, "0")}:${(busiestTime % 100)
+                  .toString()
+                  .padStart(2, "0")}${
+                  Math.floor(busiestTime / 100) >= 12 ? " PM" : " AM"
+                }`
+              }
             />
           </Box>
         )}

@@ -82,6 +82,8 @@ def user_data():
                 'timezone': data['timezone'],
                 'task_list': data['task_list'],
                 'language': data['language'],
+                'chat_log': data['chat_log'],
+                'system_color':data['system_color'],
                 'first_time': data['first_time'],
                 'chat_log': data['chat_log']
             })

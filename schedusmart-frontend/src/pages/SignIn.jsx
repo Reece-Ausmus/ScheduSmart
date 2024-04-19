@@ -65,7 +65,7 @@ export default function SignIn() {
           const userId = responseData.user_id;
           sessionStorage.setItem("user_id", userId);
           sessionStorage.setItem("first_time", responseData.first_time);
-          localStorage.setItem('system_color', "1");
+          sessionStorage.setItem('system_color', "1");
           window.location.href = "/calendar";
           window.location.href = "/calendar";
           break;
