@@ -7,8 +7,7 @@ import GPT_API_KEY from "./gpt.api.config"
 const API_KEY = GPT_API_KEY;
 const flaskURL = "http://127.0.0.1:5000";
 
-export default function GPTChatBox(taskList, userId) {
- 
+export default function GPTChatBox(taskList, userId, language) {
   const [isExpand, setIsExpand] = useState(false);
   const [typing, setTyping] = useState(false)
   const [tabLabel, setTabLabel] = useState("Open Tasky!")
@@ -106,10 +105,22 @@ export default function GPTChatBox(taskList, userId) {
       }
       return { role: role, content: messageObject.message }
     });
+    let defaultSetup = "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following system messages are the users current tasks. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive";
+    let languageSetting = "";
+    if (language == 0) {
+      languageSetting = "SPEAK IN SPANISH ";
+    } else if (language == 1) {
+      languageSetting = "SPEAK IN CHINESE ";
+    } else {
+      languageSetting = "SPEAK IN ENGLISH ";
+    }
+    defaultSetup = languageSetting + defaultSetup;
+
+    console.log("I'm here", defaultSetup)
 
     const systemMessage = {
       role: "system",
-      content: "You are Tasky, a Task Manager assistant. Help the user manage their tasks and nothing more. You cannot change or alter the tasks in anyway. The following system messages are the users current tasks. Priority levels have the following meanings: 0 is unprioritized, 1 is important, 2 is Overdue, 3 is time-sensitive"
+      content: defaultSetup
     }
 
     const taskMessages = taskList.map((task) => {

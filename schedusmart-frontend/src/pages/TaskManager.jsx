@@ -1033,7 +1033,7 @@ export default function TaskManager() {
         {" "}
         {languageData.saveTask}
       </Button>
-      <div className="GPTChatBox">{GPTChatBox(todoList, userId)}</div>
+      <div className="GPTChatBox">{GPTChatBox(todoList, userId, language)}</div>
     </ThemeProvider>
   );
 }
