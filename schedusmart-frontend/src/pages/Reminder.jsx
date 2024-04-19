@@ -248,7 +248,6 @@ export default function Reminder(language, Color) {
   useEffect(() => {
     GetUserData();
     if (remindersOn){
-      console.log("haha");
       get_users_all_events();
     }
   }, []);
@@ -270,7 +269,6 @@ export default function Reminder(language, Color) {
       BRAtTime(events[0]);
     }
     else if (option == 2) {
-      console.log("enter");
       sendEmailAtTime(events[0]);
     }
   }
@@ -433,7 +431,7 @@ export default function Reminder(language, Color) {
               >
                 {timeOptions.map((option) => (
                   <MenuItem key={option.id} value={option.value}>
-                    {option.value} {"minutes before"}
+                    {option.value} {languageData.minutesBefore}
                   </MenuItem>
                 ))}
               </Select>

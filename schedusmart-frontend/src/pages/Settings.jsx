@@ -29,31 +29,6 @@ import { useNavigate } from "react-router-dom";
 
 const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
-const Colors = [
-  { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
-  {
-    id: 1,
-    value: { primary: orange[300], secondary: orange[200] },
-    label: "Orange",
-  },
-  {
-    id: 2,
-    value: { primary: yellow[300], secondary: yellow[200] },
-    label: "Yellow",
-  },
-  {
-    id: 3,
-    value: { primary: green[200], secondary: green[100] },
-    label: "Green",
-  },
-  { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
-  {
-    id: 5,
-    value: { primary: purple[200], secondary: purple[100] },
-    label: "Purple",
-  },
-  { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
-];
 
 export default function Settings() {
   //initialized data load from db
@@ -79,6 +54,43 @@ export default function Settings() {
       language: e.target.value,
     });
   };
+  const Colors = [
+    {
+      id: 0,
+      value: { primary: red[500], secondary: red[400] },
+      label: languageData[language][0].setting.Red,
+    },
+    {
+      id: 1,
+      value: { primary: orange[300], secondary: orange[200] },
+      label: languageData[language][0].setting.Orange,
+    },
+    {
+      id: 2,
+      value: { primary: yellow[300], secondary: yellow[200] },
+      label: languageData[language][0].setting.Yellow,
+    },
+    {
+      id: 3,
+      value: { primary: green[200], secondary: green[100] },
+      label: languageData[language][0].setting.Green,
+    },
+    {
+      id: 4,
+      value: { primary: blue[200], secondary: blue[100] },
+      label: languageData[language][0].setting.Blue,
+    },
+    {
+      id: 5,
+      value: { primary: purple[200], secondary: purple[100] },
+      label: languageData[language][0].setting.Purple,
+    },
+    {
+      id: 6,
+      value: { primary: pink[200], secondary: pink[100] },
+      label: languageData[language][0].setting.Pink,
+    },
+  ];
   const [Color, setColor] = useState(() => {
     return parseInt(sessionStorage.getItem("system_color"))
       ? parseInt(sessionStorage.getItem("system_color"))
