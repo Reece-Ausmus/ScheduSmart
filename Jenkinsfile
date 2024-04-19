@@ -14,7 +14,7 @@ pipeline {
         //sh 'cat $GPT_API'
         //sh 'cat $FIREBASE_CONFIG'
         //sh 'chown -R root:jenkins ./schedusmart-frontend/src/components'
-        sh 'ls -l'
+        sh 'whoami'
         sh 'sudo cp $GPT_API ./schedusmart-frontend/src/components/gpt.api.config'
         //sh 'chown -R root:jenkins ./schedusmart-backend'
         sh 'sudo cp $FIREBASE_CONFIG ./schedusmart-backend/firebaseConfig.py'
