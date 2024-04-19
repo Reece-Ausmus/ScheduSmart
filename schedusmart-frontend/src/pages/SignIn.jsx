@@ -131,6 +131,7 @@ export default function SignIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              data-testid="test1"
               autoFocus
             />
             <TextField
@@ -141,6 +142,7 @@ export default function SignIn() {
               label="Password"
               type="password"
               id="password"
+              data-testid="test2"
               autoComplete="current-password"
             />
             <Button

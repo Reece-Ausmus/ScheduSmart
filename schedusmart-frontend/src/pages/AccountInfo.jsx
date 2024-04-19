@@ -180,7 +180,7 @@ const theme = createTheme({
           </CardContent>
           <Divider />
           <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button  variant="contained" onClick={handleInfo}>{languageData.reset}</Button>
+            <Button data-testid="test1"  variant="contained" onClick={handleInfo}>{languageData.reset}</Button>
             <Button  variant="contained" onClick={updateInfo}>{languageData.update}</Button>
           </CardActions>
         </Card>
