@@ -18,6 +18,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import languageLibrary from "../components/language.json";
 
 const Colors = [
   { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
@@ -60,41 +61,33 @@ export default function Notebook() {
   const [description, setDescription] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [value, setValue] = useState(0);
+  const [language, setLanguage] = useState(0);
 
-
+  const fetchInitializeData = async () => {
+    let dataOfUser = await send_request("/user_data", {
+      user_id: user_id,
+    });
+    if (dataOfUser.language != undefined) {
+      setLanguage(dataOfUser.language);
+    }
+  };
+  let languageData = languageLibrary[language][0].noteBook;
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-
-        const user_info = {
-            user_id: user_id,
-        };
-
-        const response = await send_request("/get_done_events", user_info);
-
+        const response = await send_request("/get_done_events", {user_id: user_id});
         console.log(response)
-
-        if (response.data == undefined){
-            console.log("Something went wrong!")
-
+        if (response.data != undefined && response.data.length != 0) {
+          setFlag(true);
+          setEvents(response.data);
         }
-        else{
-            console.log("get done events!")
-
-            if (response.data.length != 0){
-
-                setFlag(true);
-                setEvents(response.data);
-            }
-        }
-
       } catch (e) {
-        console.log(e);
       }
     };
 
     fetchEvents();
+    fetchInitializeData();
   }, []);
 
   function handleShowEmailPopup(){
@@ -220,11 +213,11 @@ export default function Notebook() {
             <div className="popup">
               <div className="popup-content">
                 <h2>
-                    Details
+                    {languageData.details}
                 </h2>
                 <div className="formgroup">
                   <label htmlFor="email">
-                    enter email address
+                  {languageData.enterEmailAddress}
                   </label>
                   <input
                     type="text"
@@ -235,7 +228,7 @@ export default function Notebook() {
                 </div>
                 <div className="formgroup">
                   <label htmlFor="name">
-                    enter recepient name
+                  {languageData.enterRecepientName}
                   </label>
                   <input
                     type="text"
@@ -249,7 +242,7 @@ export default function Notebook() {
                   className="formbutton fb2"
                   onClick={showDetails}
                 >
-                  close
+                  {languageData.close}
                 </button>
               </div>
             </div>
@@ -263,11 +256,11 @@ export default function Notebook() {
             <div className="popup">
               <div className="popup-content">
                 <h2>
-                    Add Record
+                {languageData.addRecord}
                 </h2>
                 <div className="formgroup">
                   <label htmlFor="email">
-                    title
+                  {languageData.title}
                   </label>
                   <input
                     type="text"
@@ -276,7 +269,7 @@ export default function Notebook() {
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </div>
-                <p>description</p>
+                <p>{languageData.description}</p>
                 <div className="formgroup">
                   <textarea
                     type="text"
@@ -291,14 +284,14 @@ export default function Notebook() {
                   className="formbutton fb1"
                   onClick={handleAddRecord}
                 >
-                  send
+                  {languageData.send}
                 </button>
           
                 <button
                   className="formbutton fb2"
                   onClick={showCreating}
                 >
-                  close
+                  {languageData.close}
                 </button>
               </div>
             </div>
@@ -314,24 +307,24 @@ export default function Notebook() {
   return (
     <ThemeProvider theme={theme}>
         <div className="main">
-          <div>{Dashboard()}</div>
+          <div>{Dashboard(language)}</div>
           <div className="header">
-            <h1 style={{ color: theme.palette.primary.main }}>Notebook</h1>
+            <h1 style={{ color: theme.palette.primary.main }}>{languageData.notebook}</h1>
           </div>
 
           {/*send email*/}
           <div>
-              <Button variant="contained" onClick={handleShowEmailPopup}>send email</Button>
+              <Button variant="contained" onClick={handleShowEmailPopup}>{languageData.sendEmail}</Button>
           </div>
           {showEmailPopup && (
               <div className="popup">
                 <div className="popup-content">
                   <h2>
-                      Email Address
+                    {languageData.emailAddress}
                   </h2>
                   <div className="formgroup">
                     <label htmlFor="email">
-                      enter email address
+                    {languageData.enterEmailAddress}
                     </label>
                     <input
                       type="text"
@@ -342,7 +335,7 @@ export default function Notebook() {
                   </div>
                   <div className="formgroup">
                     <label htmlFor="name">
-                      enter recepient name
+                    {languageData.enterRecepientName}
                     </label>
                     <input
                       type="text"
@@ -355,13 +348,13 @@ export default function Notebook() {
                     className="formbutton fb1"
                     onClick={handleSendEmail}
                   >
-                    send
+                    {languageData.send}
                   </button>
                   <button
                     className="formbutton fb2"
                     onClick={handleShowEmailPopup}
                   >
-                    cancel
+                    {languageData.cancel}
                   </button>
                 </div>
               </div>
