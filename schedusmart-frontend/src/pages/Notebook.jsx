@@ -83,7 +83,7 @@ export default function Notebook() {
             console.log("get done events!")
 
             if (response.data.length != 0){
-            
+
                 setFlag(true);
                 setEvents(response.data);
             }
@@ -210,15 +210,15 @@ export default function Notebook() {
             console.log(item.EventType)
             if (type === item.EventType){
               return (
-                <EventCard
-                    key={index}
-                    id={index}
-                    title={item.title}
-                    content={item.content}
-                    onDetails={() => showDetails(index)}
-                />
-              );
-            }
+              <EventCard
+                key={index}
+                id={index}
+                title={item.title}
+                content={item.content}
+                onDetails={() => showDetails(index)}
+            />
+            );
+}
           })}
 
           {showDtailsPopup && (
@@ -373,13 +373,13 @@ export default function Notebook() {
             )
           }
 
-          {/*tab*/}
-          <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab label="Meetins" {...a11yProps(0)} />
-                <Tab label="Assignments" {...a11yProps(1)} />
-                <Tab label="Extraordinary session" {...a11yProps(2)} />
+        {/*tab*/}
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab label="Meetins" {...a11yProps(0)} />
+              <Tab label="Assignments" {...a11yProps(1)} />
+              <Tab label="Extraordinary session" {...a11yProps(2)} />
                 <Tab label="Others" {...a11yProps(3)} />
               </Tabs>
             </Box>
@@ -396,7 +396,7 @@ export default function Notebook() {
               Others
             </CustomTabPanel>
           </Box>
-
+          
 
         </div>
     </ThemeProvider>

@@ -1,5 +1,4 @@
 // space insufficient debug: docker system prune
-
 pipeline {
   agent any
 
