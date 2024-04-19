@@ -79,3 +79,48 @@ def test_invalid_login(client):
     assert response.status_code == 205
 
 
+# Sprint 1 User Story #3: account info
+def test_valid_user_data(client):
+    headers = {
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+    }
+
+    data = {
+         "user_id": "UmkEPUjA7xfopiibKSCPpQDIpV42",
+    }
+
+    response = client.post('/user_data', headers=headers, data=json.dumps(data))
+    assert response.status_code == 201
+
+
+# Sprint 1 User Story #3: update account info (change location from West Lafayette to Taipei)
+def test_update_account_info(client):
+    headers = {
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+    }
+
+    data = {
+        "user_id": "UmkEPUjA7xfopiibKSCPpQDIpV42",
+        "first_name": 'Cassie',
+        "last_name": 'Chang',
+        "user_name": 'cassie0206',
+        "email": 'cassie610512@gmail.com',
+        "location": 'Taipei',
+    }
+
+    response = client.post('/user_data', headers=headers, data=json.dumps({"user_id": data["user_id"]}))
+    assert response.json["location"] == 'West Lafayette'
+
+    response = client.post('/update_account_info', headers=headers, data=json.dumps(data))
+    assert response.status_code == 201
+
+    # check if location has been changed successfully
+    response = client.post('/user_data', headers=headers, data=json.dumps({"user_id": data["user_id"]}))
+    assert response.json["location"] == 'Taipei'
+
+    # resume for next test
+    data["location"] = 'West Lafayette'
+    response = client.post('/update_account_info', headers=headers, data=json.dumps(data))
+    
