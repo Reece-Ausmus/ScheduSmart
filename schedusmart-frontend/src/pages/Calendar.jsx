@@ -86,9 +86,6 @@ export default function Calendar(selectMode, e, d, language) {
     if (LocationSettings === undefined) {
       setLocationSettings("text");
     }
-    if (unsavedChanges === undefined) {
-      setUnsavedChanges(false);
-    }
 
     if (
       eventName !== "" &&
@@ -100,7 +97,6 @@ export default function Calendar(selectMode, e, d, language) {
     ) {
       setShowUpdateEventPopup(true);
     }
-    setUnsavedChanges(true);
   }, [
     eventName,
     eventStartDate,
@@ -152,22 +148,27 @@ export default function Calendar(selectMode, e, d, language) {
 
   const handleEventNameChange = (e) => {
     setEventName(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventStartDateChange = (e) => {
     setEventStartDate(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventEndDateChange = (e) => {
     setEventEndDate(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventStartTimeChange = (e) => {
     setEventStartTime(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventEndTimeChange = (e) => {
     setEventEndTime(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventConferencingLinkChange = (e) => {
@@ -176,23 +177,28 @@ export default function Calendar(selectMode, e, d, language) {
 
   const handleEventLocationChange = (e) => {
     setEventLocation(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventDescriptionChange = (e) => {
     setEventDescription(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventRepetitionChange = (type) => {
     setEventRepetitionType(type);
+    setUnsavedChanges(true);
   };
 
   const handleEventCustomFrequencyValueChange = (intVal) => {
     const value = parseInt(intVal.target.value, 10);
     setEventCustomFrequencyValue(value);
+    setUnsavedChanges(true);
   };
 
   const handleEventCustomFrequencyUnitChange = (e) => {
     setEventCustomFrequencyUnit(e.target.value);
+    setUnsavedChanges(true);
   };
 
   const handleEventDayToggle = (day) => {
