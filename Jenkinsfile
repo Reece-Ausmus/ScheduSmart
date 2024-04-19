@@ -10,8 +10,7 @@ pipeline {
       steps {
         sh 'echo Build'
         sh 'docker-compose build --no-cache'
-        sh 'cat $GPT_API'
-        sh 'cp $GPT_API ./schedusmart-frontend/src/components'
+        sh 'cp $GPT_API ./schedusmart-frontend/src/components/gpt.api.config'
 
         dir("schedusmart-frontend"){
           sh 'npm install --force'
