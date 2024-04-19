@@ -10,29 +10,29 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import InputLabel from "@mui/material/InputLabel";
-import StarRateIcon from '@mui/icons-material/StarRate';
-import Snackbar from '@mui/material/Snackbar';
+import StarRateIcon from "@mui/icons-material/StarRate";
+import Snackbar from "@mui/material/Snackbar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Fab from "@mui/material/Fab";
 import Icon from "@mui/material/Icon";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import EventParser from "./EventParser";
-import SendIcon from '@mui/icons-material/Send';
+import SendIcon from "@mui/icons-material/Send";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
-import AccessAlarmsIcon from '@mui/icons-material/AccessAlarms';
+import AccessAlarmsIcon from "@mui/icons-material/AccessAlarms";
 import Box from "@mui/material/Box";
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import {
   Table,
   TableHead,
@@ -51,20 +51,28 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dashboard from "./Dashboard";
-import moment from "moment"
-import { DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import dayjs from 'dayjs';
-import GPTChatBox from '../components/GPTChatBox.jsx'
+import moment from "moment";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import dayjs from "dayjs";
+import GPTChatBox from "../components/GPTChatBox.jsx";
 import languageLibrary from "../components/language.json";
-import "./TaskManager.css"
-import emailjs from '@emailjs/browser';
-import { red, orange, yellow, green, blue, purple, pink } from "@mui/material/colors";
-import { useLocation } from 'react-router-dom';
+import "./TaskManager.css";
+import emailjs from "@emailjs/browser";
+import {
+  red,
+  orange,
+  yellow,
+  green,
+  blue,
+  purple,
+  pink,
+} from "@mui/material/colors";
+import { useLocation } from "react-router-dom";
 import { FreeBreakfastOutlined } from "@material-ui/icons";
 import { isCellExitEditModeKeys } from "@mui/x-data-grid/utils/keyboardUtils.js";
 
@@ -75,11 +83,27 @@ const flaskURL = "http://127.0.0.1:5000";
 const userId = sessionStorage.getItem("user_id");
 const Colors = [
   { id: 0, value: { primary: red[500], secondary: red[400] }, label: "Red" },
-  { id: 1, value: { primary: orange[300], secondary: orange[200] }, label: "Orange" },
-  { id: 2, value: { primary: yellow[300], secondary: yellow[200] }, label: "Yellow" },
-  { id: 3, value: { primary: green[200], secondary: green[100] }, label: "Green" },
+  {
+    id: 1,
+    value: { primary: orange[300], secondary: orange[200] },
+    label: "Orange",
+  },
+  {
+    id: 2,
+    value: { primary: yellow[300], secondary: yellow[200] },
+    label: "Yellow",
+  },
+  {
+    id: 3,
+    value: { primary: green[200], secondary: green[100] },
+    label: "Green",
+  },
   { id: 4, value: { primary: blue[200], secondary: blue[100] }, label: "Blue" },
-  { id: 5, value: { primary: purple[200], secondary: purple[100] }, label: "Purple" },
+  {
+    id: 5,
+    value: { primary: purple[200], secondary: purple[100] },
+    label: "Purple",
+  },
   { id: 6, value: { primary: pink[200], secondary: pink[100] }, label: "Pink" },
 ];
 
@@ -154,27 +178,21 @@ const validExtensions = [
   "pdf",
 ];
 
-const tagList = [
-  "Important",
-  "Time-Sensitive",
-  "Overdue",
-];
+const tagList = ["Important", "Time-Sensitive", "Overdue"];
 
 let nextId = 0;
 let calendarId = 0;
 let userData = {};
 
-
 // create new task manager
 export default function TaskManager() {
-  const [language, setLanguage] = useState(0)
-  const languageData = languageLibrary[language][0].taskManager
+  const [language, setLanguage] = useState(0);
+  const languageData = languageLibrary[language][0].taskManager;
   const location = useLocation();
   let Color;
   if (location.state == null) {
-    Color = sessionStorage.getItem('system_color');
-  }
-  else {
+    Color = sessionStorage.getItem("system_color");
+  } else {
     Color = location.state.color_choice;
   }
 
@@ -206,9 +224,12 @@ export default function TaskManager() {
         case 201:
           const responseData = await response.json();
           const userId = responseData.user_id;
-          userData = responseData; 
-          if (responseData.language !== null && responseData.language !== undefined) {
-            setLanguage(responseData.language)
+          userData = responseData;
+          if (
+            responseData.language !== null &&
+            responseData.language !== undefined
+          ) {
+            setLanguage(responseData.language);
           }
           if (
             responseData.task_list !== null &&
@@ -236,7 +257,7 @@ export default function TaskManager() {
           } else {
             calendarId = responseData.calendars["Tasks"].calendar_id;
           }
-          console.log("Task Manager Loaded")
+          console.log("Task Manager Loaded");
           break;
         case 202:
           alert("List Not Found");
@@ -251,8 +272,6 @@ export default function TaskManager() {
     handleInfo();
     nextId = todoList.length;
   }, []);
-    
-
 
   // select sort option
   const [sortOptionTodo, setSortOptionTodo] = useState(0);
@@ -369,7 +388,7 @@ export default function TaskManager() {
   };
 
   function updatePriority() {
-      let mapped = todoList.map((task) => {
+    let mapped = todoList.map((task) => {
       const [year, month, day] = task.date.split("-").map(Number);
       let last_workday = new Date(year, month - 1, day - 1);
       const today = new Date();
@@ -379,22 +398,22 @@ export default function TaskManager() {
 
       if (task.autoPrio == true) {
         if (days_diff == 0) {
-          task.priority = 3; 
+          task.priority = 3;
         } else if (days_diff < 0) {
-          task.priority = 2; 
+          task.priority = 2;
         } else if (task.time > 8) {
-          task.priority = 1; 
+          task.priority = 1;
         }
       }
 
-      return task; 
-    })
+      return task;
+    });
 
-    setTodoList(mapped)
+    setTodoList(mapped);
   }
 
   useEffect(() => {
-    updatePriority()
+    updatePriority();
   }, [todoList]);
 
   const filterCompleted = (e) => {
@@ -573,7 +592,7 @@ export default function TaskManager() {
     const updatedList = completedList.filter((item) => item.id !== id);
 
     setCompletedList(updatedList);
-  }
+  };
 
   //handle dialog
   const [open, setOpen] = React.useState(false);
@@ -587,32 +606,32 @@ export default function TaskManager() {
   };
 
   function handleRemoveSubtask(id) {
-    const newList = subtaskList.filter((item) => item.id !== id)
+    const newList = subtaskList.filter((item) => item.id !== id);
 
-    setSubtaskList(newList)
+    setSubtaskList(newList);
   }
 
   function handleEditSubtask(id, name) {
     const mapped = subtaskList.map((item) => {
       if (item.id == id) {
-        item = { ...item, name: name }
+        item = { ...item, name: name };
       }
 
       return item;
-    })
+    });
 
-    setSubtaskList(mapped)
+    setSubtaskList(mapped);
   }
 
   function handlePriorityChange(id, priority) {
     const mapped = todoList.map((item) => {
       if (item.id == id) {
-        item = {...item, priority: priority, autoPrio: false}
+        item = { ...item, priority: priority, autoPrio: false };
       }
       return item;
-    })
+    });
 
-    setTodoList(mapped)
+    setTodoList(mapped);
   }
 
   return (
@@ -627,7 +646,9 @@ export default function TaskManager() {
             justifyContent: "space-between",
           }}
         >
-          <h1 style={{ color: theme.palette.primary.main }}>{languageData.taskList}</h1>
+          <h1 style={{ color: theme.palette.primary.main }}>
+            {languageData.taskList}
+          </h1>
           <div
             style={{
               display: "flex",
@@ -710,8 +731,12 @@ export default function TaskManager() {
                     <MenuItem value={2}>{languageData.latestCreated}</MenuItem>
                     <MenuItem value={3}>{languageData.earlierDue}</MenuItem>
                     <MenuItem value={4}>{languageData.latestDue}</MenuItem>
-                    <MenuItem value={5}>{languageData.largestWorkLoead}</MenuItem>
-                    <MenuItem value={6}>{languageData.smallestWorkload}</MenuItem>
+                    <MenuItem value={5}>
+                      {languageData.largestWorkLoead}
+                    </MenuItem>
+                    <MenuItem value={6}>
+                      {languageData.smallestWorkload}
+                    </MenuItem>
                   </Select>
                 </FormControl>
                 <FormControl sx={{ m: 1, width: 200 }} size="small">
@@ -724,17 +749,31 @@ export default function TaskManager() {
                     onChange={(e) => setPrioOptionTodo(e.target.value)}
                   >
                     <MenuItem value={0}>...</MenuItem>
-                    <MenuItem value={1}>{languageData.important}<StarRateIcon/></MenuItem>
-                    <MenuItem value={2}>{languageData.overDue}<PriorityHighIcon/></MenuItem>
-                    <MenuItem value={3}>{languageData.timeSensitive}<AccessAlarmsIcon/></MenuItem>
+                    <MenuItem value={1}>
+                      {languageData.important}
+                      <StarRateIcon />
+                    </MenuItem>
+                    <MenuItem value={2}>
+                      {languageData.overDue}
+                      <PriorityHighIcon />
+                    </MenuItem>
+                    <MenuItem value={3}>
+                      {languageData.timeSensitive}
+                      <AccessAlarmsIcon />
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </div>
             </Grid>
           </Grid>
 
-          <dialog id="modal" style={{ background: theme.palette.secondary.main}}>
-            <DialogTitle style={{ color: "black" }}>{languageData.addTask}</DialogTitle>
+          <dialog
+            id="modal"
+            style={{ background: theme.palette.secondary.main }}
+          >
+            <DialogTitle style={{ color: "black" }}>
+              {languageData.addTask}
+            </DialogTitle>
             <DialogContent>
               <Grid
                 container
@@ -806,7 +845,9 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>{languageData.description}</DialogContentText>
+                  <DialogContentText>
+                    {languageData.description}
+                  </DialogContentText>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -824,7 +865,9 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>{languageData.attachment}</DialogContentText>
+                  <DialogContentText>
+                    {languageData.attachment}
+                  </DialogContentText>
                 </Grid>
                 <Grid item>
                   <input
@@ -839,8 +882,9 @@ export default function TaskManager() {
                       });
                       if (valid) {
                         setFile(event.target.files[0]);
-                        let ref_url = `files/${event.target.files[0].name + v4()
-                          }`;
+                        let ref_url = `files/${
+                          event.target.files[0].name + v4()
+                        }`;
                         const fileRef = ref(storage, ref_url);
                         uploadFile(fileRef, event.target.files[0]);
                         setTaskFile(fileRef.name);
@@ -861,7 +905,9 @@ export default function TaskManager() {
                 style={{ marginBottom: "15px" }}
               >
                 <Grid item>
-                  <DialogContentText>{languageData.addSubTask}</DialogContentText>
+                  <DialogContentText>
+                    {languageData.addSubTask}
+                  </DialogContentText>
                 </Grid>
                 <Grid item>
                   <TextField
@@ -884,7 +930,7 @@ export default function TaskManager() {
                           comp: false,
                         },
                       ]);
-                      setSubtaskDesc('');
+                      setSubtaskDesc("");
                     }}
                   >
                     <AddIcon />
@@ -897,16 +943,18 @@ export default function TaskManager() {
                     <TextField
                       type="text"
                       size="small"
-                      style={{ marginBottom: '10px' }}
+                      style={{ marginBottom: "10px" }}
                       value={subtask.name}
-                      onChange={(e) => { handleEditSubtask(subtask.id, e.target.value) }}
+                      onChange={(e) => {
+                        handleEditSubtask(subtask.id, e.target.value);
+                      }}
                     />
-                    {'  '}
+                    {"  "}
                     <Fab
                       color="primary"
                       size="small"
                       onClick={() => {
-                        handleRemoveSubtask(subtask.id)
+                        handleRemoveSubtask(subtask.id);
                       }}
                     >
                       <DeleteIcon />
@@ -915,11 +963,11 @@ export default function TaskManager() {
                 ))}
               </ol>
 
-              <Button 
-                variant="contained"    
+              <Button
+                variant="contained"
                 id="closeModal"
                 style={{ marginRight: "10px" }}
-                onClick={ async () => {
+                onClick={async () => {
                   if (subtaskList != [] && taskDate != "") {
                     setTodoList([
                       ...todoList,
@@ -934,30 +982,34 @@ export default function TaskManager() {
                         file_url: taskFile,
                         scheduled: false,
                         time_allo: 0,
-                        priority: 0, 
-                        autoPrio: true, 
+                        priority: 0,
+                        autoPrio: true,
                       },
                     ]);
-                    saveTasks
+                    saveTasks;
                   } else {
                     alert("Error! Missing Information! Please try again!");
                   }
-                }}>
-              {languageData.add}
-            </Button>
-            <Button 
-            variant="contained"
-            id="closeModal"
-            onClick={() => {
-              // Reset all the form fields or close the dialog
-              setTaskName("New Task");
-              setTaskTime(0);
-              setTaskDesc("Task Description");
-              setSubtaskDesc("");
-              setSubtaskList([]);
-              setTaskFile("");
-              document.getElementById("modal").close();
-            }}>{languageData.cancel}</Button>              
+                }}
+              >
+                {languageData.add}
+              </Button>
+              <Button
+                variant="contained"
+                id="closeModal"
+                onClick={() => {
+                  // Reset all the form fields or close the dialog
+                  setTaskName("New Task");
+                  setTaskTime(0);
+                  setTaskDesc("Task Description");
+                  setSubtaskDesc("");
+                  setSubtaskList([]);
+                  setTaskFile("");
+                  document.getElementById("modal").close();
+                }}
+              >
+                {languageData.cancel}
+              </Button>
             </DialogContent>
           </dialog>
 
@@ -1039,9 +1091,9 @@ export default function TaskManager() {
 }
 
 const EmailForm = (email, subject, from_name, message, bcc, cc) => {
-  const serviceId = 'service_ydqwgth';
-  const templateId = 'template_69t7fmd';
-  const publicKey = 'fjIa52LVlUWhGQqPw';
+  const serviceId = "service_ydqwgth";
+  const templateId = "template_69t7fmd";
+  const publicKey = "fjIa52LVlUWhGQqPw";
 
   const templateParams = {
     recipient: email,
@@ -1050,18 +1102,19 @@ const EmailForm = (email, subject, from_name, message, bcc, cc) => {
     message: message,
     bcc: bcc,
     cc: cc,
-  }
+  };
 
-  emailjs.send(serviceId, templateId, templateParams, publicKey)
+  emailjs
+    .send(serviceId, templateId, templateParams, publicKey)
     .then((response) => {
-      console.log('Email sent successfully!', response);
-      alert("Email sent successfully!")
+      console.log("Email sent successfully!", response);
+      alert("Email sent successfully!");
     })
     .catch((error) => {
-      console.error('Error sending email:', error);
-      alert("Error sending email!")
+      console.error("Error sending email:", error);
+      alert("Error sending email!");
     });
-}
+};
 
 function TodoList({
   list,
@@ -1078,9 +1131,8 @@ function TodoList({
   const location = useLocation();
   let Color;
   if (location.state == null) {
-    Color = sessionStorage.getItem('system_color');
-  }
-  else {
+    Color = sessionStorage.getItem("system_color");
+  } else {
     Color = location.state.color_choice;
   }
 
@@ -1095,30 +1147,34 @@ function TodoList({
     },
   });
 
-  const emailModal = document.querySelector("#emailModal")
-  const openEmailModal = document.querySelector("#openEmailModal")
-  const closeEmailModal = document.querySelector("#closeEmailModal")
+  const emailModal = document.querySelector("#emailModal");
+  const openEmailModal = document.querySelector("#openEmailModal");
+  const closeEmailModal = document.querySelector("#closeEmailModal");
 
   const [toEmail, setToEmail] = useState("");
   const [ccEmails, setCCEmails] = useState("");
   const [bccEmails, setBCCEmails] = useState("");
-  const [emailSubject, setEmailSubject] = useState(``); 
+  const [emailSubject, setEmailSubject] = useState(``);
   const [emailContent, setEmailContent] = useState(``);
 
   function parseTaskContent(task) {
-    const subject = `From ScheduSmart: Task - ${task.title}`
+    const subject = `From ScheduSmart: Task - ${task.title}`;
     const content = `Task Name: ${task.title}\nTask Due Date: ${task.date}
     \nTask Description: ${task.desc}
-    \nSubTasks: ${task.sub_tasks.map((subtask) =>  {return `\n${subtask.id + 1} - ${subtask.name}`})}
-    \nFrom,\nScheduSmart`
-    setEmailSubject(subject)
-    setEmailContent(content)
+    \nSubTasks: ${task.sub_tasks.map((subtask) => {
+      return `\n${subtask.id + 1} - ${subtask.name}`;
+    })}
+    \nFrom,\nScheduSmart`;
+    setEmailSubject(subject);
+    setEmailContent(content);
   }
 
   if (emailModal) {
-    openEmailModal && openEmailModal.addEventListener("click", () => emailModal.showModal());
+    openEmailModal &&
+      openEmailModal.addEventListener("click", () => emailModal.showModal());
 
-    closeEmailModal && closeEmailModal.addEventListener("click", () => emailModal.close());
+    closeEmailModal &&
+      closeEmailModal.addEventListener("click", () => emailModal.close());
   }
 
   let defaultList = list;
@@ -1137,11 +1193,9 @@ function TodoList({
 
   if (priorityOption !== 0) {
     let results = list.filter((task) => {
-      return (
-        task.priority == priorityOption
-      ); 
-    })
-    list = results; 
+      return task.priority == priorityOption;
+    });
+    list = results;
   } else {
     list = defaultList;
   }
@@ -1236,8 +1290,8 @@ function TodoList({
       desc: task.desc,
       start_time: "17:00",
       end_time: "18:00",
-      start_date: moment(today).format('YYYY-MM-DD'),
-      end_date: moment(last_workday).format('YYYY-MM-DD'),
+      start_date: moment(today).format("YYYY-MM-DD"),
+      end_date: moment(last_workday).format("YYYY-MM-DD"),
       location: "",
       calendar: calendarId,
       repetition_type: "daily",
@@ -1249,7 +1303,7 @@ function TodoList({
       type: "",
     };
     console.log(JSON.stringify(new_event));
-    console.log(calendarId)
+    console.log(calendarId);
     const response = await fetch(flaskURL + "/create_event", {
       method: "POST",
       headers: {
@@ -1260,13 +1314,13 @@ function TodoList({
     });
     if (!response.ok) {
       alert("Something went wrong, refresh your website!");
-      return days_diff
+      return days_diff;
     } else {
       switch (response.status) {
         case 201:
           console.log("Event created successfully");
           alert("Event Created Successfully!");
-          return days_diff
+          return days_diff;
         case 205:
           alert("Event not created!");
           return days_diff;
@@ -1309,250 +1363,310 @@ function TodoList({
     return link;
   };
 
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(true);
 
   const getPriority = (priority) => {
-    switch(priority) {
+    switch (priority) {
       case 1:
-        return "Important"
-      case 2: 
-        return "Overdue"
+        return "Important";
+      case 2:
+        return "Overdue";
       case 3:
-        return "Time Sensitive"
+        return "Time Sensitive";
     }
-  }
+  };
 
   return (
     <>
-    <Snackbar open={open} autoHideDuration={6000} onClose={() => {setOpen(false)}}>
-      <Alert severity="info" variant="filled" sx={{ width: '100%' }} onClose={() => {setOpen(false)}}>
-        <AlertTitle>The following tasks require your attention:</AlertTitle>
-        {sortedList.filter(task => task.priority !== 0).map((task) => (
-          <li>
-            {task.title} - {getPriority(task.priority)}
-          </li>
-        ))}
-      </Alert>
-    </Snackbar>
-    <dialog id="emailModal" style={{ background: theme.palette.secondary.main }}>
-      <DialogTitle style={{ color: "black" }}>{languageData.emailTask}</DialogTitle>
-      <DialogContent>
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-          style={{marginBottom: "15px", marginTop: "1px", width: "600px"}}
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <Alert
+          severity="info"
+          variant="filled"
+          sx={{ width: "100%" }}
+          onClose={() => {
+            setOpen(false);
+          }}
         >
-          <Grid item xs={12}>
-            <TextField
-              id="recipients"
-              type="email"
-              label="To"
-              size="small"
-              fullWidth
-              value={toEmail}
-              onChange={(e) => {setToEmail(e.target.value)}}
-            />
+          <AlertTitle>The following tasks require your attention:</AlertTitle>
+          {sortedList
+            .filter((task) => task.priority !== 0)
+            .map((task) => (
+              <li>
+                {task.title} - {getPriority(task.priority)}
+              </li>
+            ))}
+        </Alert>
+      </Snackbar>
+      <dialog
+        id="emailModal"
+        style={{ background: theme.palette.secondary.main }}
+      >
+        <DialogTitle style={{ color: "black" }}>
+          {languageData.emailTask}
+        </DialogTitle>
+        <DialogContent>
+          <Grid
+            container
+            spacing={2}
+            alignItems="center"
+            style={{ marginBottom: "15px", marginTop: "1px", width: "600px" }}
+          >
+            <Grid item xs={12}>
+              <TextField
+                id="recipients"
+                type="email"
+                label="To"
+                size="small"
+                fullWidth
+                value={toEmail}
+                onChange={(e) => {
+                  setToEmail(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="carbonCopy"
+                type="email"
+                label="CC"
+                size="small"
+                fullWidth
+                multiple
+                value={ccEmails}
+                onChange={(e) => {
+                  setCCEmails(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="blindCarbonCopy"
+                type="email"
+                label="BCC"
+                size="small"
+                fullWidth
+                multiple
+                value={bccEmails}
+                onChange={(e) => {
+                  setBCCEmails(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="subject"
+                label="Subject"
+                size="small"
+                fullWidth
+                value={emailSubject}
+                onChange={(e) => {
+                  setEmailSubject(e.target.value);
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="content"
+                label="Contents"
+                size="large"
+                fullWidth
+                multiline={true}
+                minRows={5}
+                value={emailContent}
+                onChange={(e) => {
+                  setEmailContent(e.target.value);
+                }}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="carbonCopy"
-              type="email"
-              label="CC"
-              size="small"
-              fullWidth
-              multiple
-              value={ccEmails}
-              onChange={(e) => {setCCEmails(e.target.value)}}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="blindCarbonCopy"
-              type="email"
-              label="BCC"
-              size="small"
-              fullWidth
-              multiple
-              value={bccEmails}
-              onChange={(e) => {setBCCEmails(e.target.value)}}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="subject"
-              label="Subject"
-              size="small"
-              fullWidth
-              value={emailSubject}
-              onChange={(e) => {setEmailSubject(e.target.value)}}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="content"
-              label="Contents"
-              size="large"
-              fullWidth
-              multiline={true}
-              minRows={5}
-              value={emailContent}
-              onChange={(e) => {setEmailContent(e.target.value)}}
-            />
-          </Grid>
-        </Grid>
-        <Button
-          variant="contained"
-          id="closeEmailModal"
-          onClick={() => {
-            if (/\S+@\S+\.\S+/.test(toEmail)) {
-              const name = `${userData.first_name} ${userData.last_name}`
-              EmailForm(toEmail, emailSubject, name, emailContent, bccEmails, ccEmails);
+          <Button
+            variant="contained"
+            id="closeEmailModal"
+            onClick={() => {
+              if (/\S+@\S+\.\S+/.test(toEmail)) {
+                const name = `${userData.first_name} ${userData.last_name}`;
+                EmailForm(
+                  toEmail,
+                  emailSubject,
+                  name,
+                  emailContent,
+                  bccEmails,
+                  ccEmails
+                );
+                document.getElementById("emailModal").close();
+              } else {
+                alert("Invalid Email!");
+              }
+            }}
+          >
+            Send
+          </Button>
+          <Button
+            variant="contained"
+            id="closeEmailModal"
+            onClick={() => {
               document.getElementById("emailModal").close();
-            } else {
-              alert("Invalid Email!")
-            }
-          }}
-        >Send</Button>
-        <Button
-          variant="contained"
-          id="closeEmailModal"
-          onClick={() => {
-            document.getElementById("emailModal").close();
-          }}
-        >Close</Button>
-      </DialogContent>
-    </dialog>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>{languageData.title}</TableCell>
-          <TableCell>{languageData.progress}</TableCell>
-          <TableCell>{languageData.taskInformation}</TableCell>
-          <TableCell>{languageData.estimatedWorkload}</TableCell>
-          <TableCell>{languageData.deadline}</TableCell>
-          <TableCell>{languageData.attachFile}</TableCell>
-          <TableCell>{languageData.taskCheckList}</TableCell>
-          <TableCell>{languageData.action}</TableCell>
-          <TableCell>{languageData.tag}</TableCell>
-          <TableCell>{languageData.complete}</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {sortedList.map((task) => (
-          <TableRow key={task.id}>
-            <TableCell>{task.title}</TableCell>
-            <TableCell>
-              <CircularProgressWithLabel
-                variant="determinate"
-                value={progressValue(task.id) * 100}
-              />
-              <p style={{ align: "center" }}>
-                <small>{languageData.workTime + " "} {task.time_allo} {languageData.hours}</small>
-              </p>
-            </TableCell>
-            <TableCell>{task.desc}</TableCell>
-            <TableCell>{task.time} {languageData.hours}</TableCell>
-            <TableCell>{task.date}</TableCell>
-            <TableCell>
-              <a href={get_link(task.file_url)}>{languageData.getAttachFile}</a>
-            </TableCell>
-            <TableCell>
-              {task.sub_tasks &&
-                task.sub_tasks.map((sub_task) => (
-                  <p key={sub_task.id}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={sub_task.comp}
-                          onChange={(e) => {
-                            onToggleSubtask(
-                              task.id,
-                              sub_task.id,
-                              e.target.checked
-                            );
-                          }}  
-                        />
-                      }
-                      label={sub_task.name}
-                    />
-                  </p>
-                ))}
-            </TableCell>
-            <TableCell>
-              <Button
-                variant="contained"
-                size="medium"
-                style={{ marginBottom: "50px" }}
-                onClick={() => {
-                  const [year, month, day] = task.date.split("-").map(Number);
-                  const dueDate = new Date(year, month - 1, day);
-                  if (dueDate <= new Date()) {
-                    alert("Unable to schedule time for tasks past due!");
-                  } else if (task.scheduled === false) {
-                    handleCreateEvent(task).then((response) => {
-                      onScheduled(task.id, response);
-                      task.scheduled = true;
-                      task.time_allo = response;
-                    });
-                  } else {
-                    alert("Task already scheduled!");
-                  }
-                }}
-              >
-                <CalendarMonthIcon/>
-              </Button>
-              <Button
-                aria-label="email"
-                variant="contained"
-                size="medium"
-                color="primary"
-                id="openEmailModal"
-                onClick={() => {
-                  setToEmail("")
-                  setCCEmails("")
-                  setBCCEmails("")
-                  parseTaskContent(task)
-                }}
-              >
-                <SendIcon/>
-              </Button>
-            </TableCell>
-            <TableCell sx={{ m: 1, width: 200 }} size="small" >
-              <Select
-                labelId="priority"
-                id="priority"
-                value={task.priority}
-                label="priority"
-                onChange={(e) => {
-                  onPriorityChange(task.id, e.target.value)
-                }}
-              >
-                <MenuItem value={0}>{languageData.none}</MenuItem>
-                <MenuItem value={1}><StarRateIcon /></MenuItem>
-                <MenuItem value={2}><PriorityHighIcon /></MenuItem>
-                <MenuItem value={3}><AccessAlarmsIcon /></MenuItem>
-              </Select>
-            </TableCell>
-            <TableCell>
-              <Checkbox
-                {...label}
-                checked={task.completed}
-                onChange={(e) => {
-                  onToggle(task.id, e.target.checked);
-                }}
-              />
-            </TableCell>
+            }}
+          >
+            Close
+          </Button>
+        </DialogContent>
+      </dialog>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>{languageData.title}</TableCell>
+            <TableCell>{languageData.progress}</TableCell>
+            <TableCell>{languageData.taskInformation}</TableCell>
+            <TableCell>{languageData.estimatedWorkload}</TableCell>
+            <TableCell>{languageData.deadline}</TableCell>
+            <TableCell>{languageData.attachFile}</TableCell>
+            <TableCell>{languageData.taskCheckList}</TableCell>
+            <TableCell>{languageData.action}</TableCell>
+            <TableCell>{languageData.tag}</TableCell>
+            <TableCell>{languageData.complete}</TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {sortedList.map((task) => (
+            <TableRow key={task.id}>
+              <TableCell>{task.title}</TableCell>
+              <TableCell>
+                <CircularProgressWithLabel
+                  variant="determinate"
+                  value={progressValue(task.id) * 100}
+                />
+                <p style={{ align: "center" }}>
+                  <small>
+                    {languageData.workTime + " "} {task.time_allo}{" "}
+                    {languageData.hours}
+                  </small>
+                </p>
+              </TableCell>
+              <TableCell>{task.desc}</TableCell>
+              <TableCell>
+                {task.time} {languageData.hours}
+              </TableCell>
+              <TableCell>{task.date}</TableCell>
+              <TableCell>
+                <a href={get_link(task.file_url)}>
+                  {languageData.getAttachFile}
+                </a>
+              </TableCell>
+              <TableCell>
+                {task.sub_tasks &&
+                  task.sub_tasks.map((sub_task) => (
+                    <p key={sub_task.id}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={sub_task.comp}
+                            onChange={(e) => {
+                              onToggleSubtask(
+                                task.id,
+                                sub_task.id,
+                                e.target.checked
+                              );
+                            }}
+                          />
+                        }
+                        label={sub_task.name}
+                      />
+                    </p>
+                  ))}
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  size="medium"
+                  style={{ marginBottom: "50px" }}
+                  onClick={() => {
+                    const [year, month, day] = task.date.split("-").map(Number);
+                    const dueDate = new Date(year, month - 1, day);
+                    if (dueDate <= new Date()) {
+                      alert("Unable to schedule time for tasks past due!");
+                    } else if (task.scheduled === false) {
+                      handleCreateEvent(task).then((response) => {
+                        onScheduled(task.id, response);
+                        task.scheduled = true;
+                        task.time_allo = response;
+                      });
+                    } else {
+                      alert("Task already scheduled!");
+                    }
+                  }}
+                >
+                  <CalendarMonthIcon />
+                </Button>
+                <Button
+                  aria-label="email"
+                  variant="contained"
+                  size="medium"
+                  color="primary"
+                  id="openEmailModal"
+                  onClick={() => {
+                    setToEmail("");
+                    setCCEmails("");
+                    setBCCEmails("");
+                    parseTaskContent(task);
+                  }}
+                >
+                  <SendIcon />
+                </Button>
+              </TableCell>
+              <TableCell sx={{ m: 1, width: 200 }} size="small">
+                <Select
+                  labelId="priority"
+                  id="priority"
+                  value={task.priority}
+                  label="priority"
+                  onChange={(e) => {
+                    onPriorityChange(task.id, e.target.value);
+                  }}
+                >
+                  <MenuItem value={0}>{languageData.none}</MenuItem>
+                  <MenuItem value={1}>
+                    <StarRateIcon />
+                  </MenuItem>
+                  <MenuItem value={2}>
+                    <PriorityHighIcon />
+                  </MenuItem>
+                  <MenuItem value={3}>
+                    <AccessAlarmsIcon />
+                  </MenuItem>
+                </Select>
+              </TableCell>
+              <TableCell>
+                <Checkbox
+                  {...label}
+                  checked={task.completed}
+                  onChange={(e) => {
+                    onToggle(task.id, e.target.checked);
+                  }}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
   );
 }
 
-
-function CompletedList({ list, onToggle, option, keyword, deleteFunction, languageData}) {
+function CompletedList({
+  list,
+  onToggle,
+  option,
+  keyword,
+  deleteFunction,
+  languageData,
+}) {
   let defaultList = list;
   let sortedList = defaultList;
   if (keyword !== "") {
@@ -1636,9 +1750,11 @@ function CompletedList({ list, onToggle, option, keyword, deleteFunction, langua
             </TableCell>
             <TableCell>
               <Button
-                onClick={() => {deleteFunction(task.id)}}
+                onClick={() => {
+                  deleteFunction(task.id);
+                }}
               >
-                <DeleteForeverIcon/>
+                <DeleteForeverIcon />
               </Button>
             </TableCell>
           </TableRow>

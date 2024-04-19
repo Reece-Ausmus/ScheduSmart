@@ -157,11 +157,14 @@ export default function MainFrame() {
         setLanguage(dataOfUser.language);
       }
       console.log("c", dataOfUser);
-      if (dataOfUser.system_color != undefined && dataOfUser.system_color != null) {
-        setColor(dataOfUser.system_color)
-        sessionStorage.setItem('system_color', dataOfUser.system_color);
+      if (
+        dataOfUser.system_color != undefined &&
+        dataOfUser.system_color != null
+      ) {
+        setColor(dataOfUser.system_color);
+        sessionStorage.setItem("system_color", dataOfUser.system_color);
       } else {
-        sessionStorage.setItem('system_color', "1");
+        sessionStorage.setItem("system_color", "1");
       }
       const newCalendars = dataOfUser.calendars;
       const updatedCalendarList = [...calendarList];

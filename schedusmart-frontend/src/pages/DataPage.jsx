@@ -65,31 +65,30 @@ export default function DataPage() {
   const location = useLocation();
   let Color;
   if (location.state == null) {
-    Color = sessionStorage.getItem('system_color');
-  }
-  else {
+    Color = sessionStorage.getItem("system_color");
+  } else {
     Color = location.state.color_choice;
   }
-  
-    const theme = createTheme({
-      palette: {
-        primary: {
-          main: Colors[Color].value.primary,
-        },
-        secondary: {
-          main: Colors[Color].value.secondary,
-        },
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: Colors[Color].value.primary,
       },
-      components: {
-        MuiDataGrid: {
-          styleOverrides: {
-            root: {
-              backgroundColor: "gray",
-            },
+      secondary: {
+        main: Colors[Color].value.secondary,
+      },
+    },
+    components: {
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "gray",
           },
         },
       },
-    });
+    },
+  });
 
   const [timeFilter, setTimeFilter] = useState(0);
   const handleTimeFilterChange = (e) => {
@@ -317,8 +316,9 @@ export default function DataPage() {
                 `${(Math.floor(busiestTime / 100) % 12 || 12)
                   .toString()
                   .padStart(2, "0")}:${(busiestTime % 100)
-                    .toString()
-                    .padStart(2, "0")}${Math.floor(busiestTime / 100) >= 12 ? " PM" : " AM"
+                  .toString()
+                  .padStart(2, "0")}${
+                  Math.floor(busiestTime / 100) >= 12 ? " PM" : " AM"
                 }`
               }
             />
