@@ -1,9 +1,9 @@
 === Weekly Team Report (Team 30: ScheduSmart) ===
 
 Week 9	(Srum master: Reece Ausmus)
-MM/DD/YY    x hr    commit      description
-
-
+04/16/24    2 hr    33da0ea     Bar chart for event distribution
+04/18/24    1 hr    8ac6b7d     Gauge for busiest time
+04/18/24    1 hr    d18e1ae     Export data page as csv
 
 Week 10 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
@@ -11,7 +11,7 @@ will probably meet some time to prepare demo
 04/24/24    Discuss anything inhibiting demo of final product.
 
 [Individual Goals]
-Reece Ausmus:   goal
+Reece Ausmus:   Small changes to appearance and prepare for final presentation.
 Cassie Chang:   goal
 Stanley Huang:  goal
 Bradley Norris: goal
