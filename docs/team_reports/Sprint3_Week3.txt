@@ -8,6 +8,7 @@ Week 9	(Srum master: Reece Ausmus)
 04/18/24    1 hr    d18e1ae     Export data page as csv
 04/18/24    4 hr    7728abd     Added goal history and infinite rendering
 04/19/24    8 hr    d3d1656     finish all translation
+04/19/24    2 hr    153bc65     unittest
 
 Week 10 	(Plan) (Scrum master: Reece Ausmus)
 [Meetings]
@@ -16,7 +17,7 @@ will probably meet some time to prepare demo
 
 [Individual Goals]
 Reece Ausmus:   Small changes to appearance and prepare for final presentation.
-Cassie Chang:   goal
+Cassie Chang:   Practice for presentation and check for CI/CD
 Stanley Huang:  Practice for presentation.
 Bradley Norris: Practice for presentation and small UI fixes
 Himanshu Sinha: Practice for presentation, UI tweaks
