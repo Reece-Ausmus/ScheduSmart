@@ -3,8 +3,10 @@
 Week 9	(Srum master: Reece Ausmus)
 04/16/24    2 hr    33da0ea     Bar chart for event distribution
 04/17/24    5 hr    6d5cba0     Implement reminders function
+04/17/24    3 hr    a81fb5a     Gauge for Goals
 04/18/24    1 hr    8ac6b7d     Gauge for busiest time
 04/18/24    1 hr    d18e1ae     Export data page as csv
+04/18/24    4 hr    7728abd     Added goal history and infinite rendering
 
 
 Week 10 	(Plan) (Scrum master: Reece Ausmus)
@@ -16,6 +18,6 @@ will probably meet some time to prepare demo
 Reece Ausmus:   Small changes to appearance and prepare for final presentation.
 Cassie Chang:   goal
 Stanley Huang:  goal
-Bradley Norris: goal
+Bradley Norris: Practice for presentation and small UI fixes
 Himanshu Sinha: Practice for presentation, UI tweaks
 Gloria Xu:      Prepare for the final presentation
