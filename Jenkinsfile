@@ -29,7 +29,7 @@ pipeline {
       steps {
         sh 'echo Test'
 
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        //catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           dir("schedusmart-frontend"){
             sh 'npm run test'
           }
@@ -41,7 +41,7 @@ pipeline {
           sh 'docker-compose build --no-cache'
           sh 'docker-compose up -d'
           sh 'docker-compose down'
-        }
+        //}
     
       }
     }
