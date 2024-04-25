@@ -5,7 +5,7 @@ import "@testing-library/jest-dom"
 import SignIn from '../SignIn'
 
 
-test('test SignIn Func if users not enter any content it will alert', async () => {
+fail('test SignIn Func if users not enter any content it will alert', async () => {
     global.alert = jest.fn();
 
     render(<SignIn />);
