@@ -17,9 +17,9 @@ pipeline {
         sh 'rm ./schedusmart-backend/firebaseConfig.py'
         sh 'cp $FIREBASE_CONFIG ./schedusmart-backend/firebaseConfig.py'
 
-        //dir("schedusmart-frontend"){
-        //  sh 'npm install --force'
-        //}
+        dir("schedusmart-frontend"){
+          sh 'npm install --force'
+        }
         dir("schedusmart-backend"){
           sh 'pip install -r requirements.txt'
         }
